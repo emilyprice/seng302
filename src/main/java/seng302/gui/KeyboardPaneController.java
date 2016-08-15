@@ -146,6 +146,11 @@ public class KeyboardPaneController {
 
     private Boolean playMode;
 
+    /**
+     * Range slider for octaves of keyboard
+     */
+    private NoteRangeSlider slider;
+
 
     /**
      * Set up keyboard, by creating settings popOver and TouchPanes(keys) for the keyboard.
@@ -192,7 +197,7 @@ public class KeyboardPaneController {
         Label notes = new Label("");
 
         // Slider to select note range to show.
-        NoteRangeSlider slider = new NoteRangeSlider(notes, 12, bottomNote, topNote);
+        slider = new NoteRangeSlider(notes, 12, bottomNote, topNote);
 
         // Add to the settings VBox
         settings.getChildren().add(slider);
@@ -708,27 +713,57 @@ public class KeyboardPaneController {
             }
 
         }
-        blackKeys.setOnZoom(event -> {
-            System.out.println(event.getZoomFactor());
 
-            Integer newTop = Double.valueOf(topNote * event.getZoomFactor()).intValue();
-            if (topNote.equals(0) && event.getZoomFactor() > 1) {
-                newTop = 2;
+        keyboardBox.setOnZoomFinished(event -> {
+            System.out.println(event.getTotalZoomFactor());
+
+            //pinching inward is negative
+            if (event.getTotalZoomFactor() < 1) {
+                Integer newTop = Double.valueOf(topNote * 1.1* event.getZoomFactor()).intValue();
+                if (topNote.equals(0) && event.getZoomFactor() > 1) {
+                    newTop = 2;
+                }
+                System.out.println("newTop: " + newTop.toString());
+                Integer newBottom = Double.valueOf(bottomNote * 0.9 * event.getZoomFactor()).intValue();
+                if (bottomNote.equals(0) && event.getZoomFactor() < 1) {
+                    newBottom = 2;
+                }
+                System.out.println("newBottom: " + newBottom.toString());
+                topNote = Integer.min(newTop, 127);
+                bottomNote = Integer.max(0, newBottom);
+                System.out.println(topNote);
+                System.out.println(bottomNote);
+
+                //updates the range slider
+                slider.setLowValue(newBottom);
+                slider.setHighValue(newTop);
+                event.consume();
+
+            //pinching outward is positive
+            } else if (event.getTotalZoomFactor()> 1) {
+                Integer newTop = Double.valueOf(topNote * 0.9* event.getTotalZoomFactor()).intValue();
+                if (topNote.equals(0) && event.getTotalZoomFactor() > 1) {
+                    newTop = 2;
+                }
+                System.out.println("newTop: " + newTop.toString());
+                Integer newBottom = Double.valueOf(bottomNote * 1.1* event.getZoomFactor()).intValue();
+                if (bottomNote.equals(0) && event.getZoomFactor() < 1) {
+                    newBottom = 2;
+                }
+                System.out.println("newBottom: " + newBottom.toString());
+                topNote = Integer.min(newTop, 127);
+                bottomNote = Integer.max(0, newBottom);
+                System.out.println(topNote);
+                System.out.println(bottomNote);
+
+                //updates the range slider
+                slider.setLowValue(newBottom);
+                slider.setHighValue(newTop);
+                event.consume();
             }
-            System.out.println("newTop: " + newTop.toString());
-            Integer newBottom = Double.valueOf(bottomNote * event.getZoomFactor()).intValue();
-            if (bottomNote.equals(0) && event.getZoomFactor() < 1) {
-                newBottom = 2;
-            }
-            System.out.println("newBottom: " + newBottom.toString());
 
-            topNote = Integer.min(newTop, 127);
-            bottomNote = Integer.max(0, newBottom);
-            System.out.println(topNote);
-            System.out.println(bottomNote);
 
-            resetKeyboard();
-            event.consume();
+
         });
 
     }
