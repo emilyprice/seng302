@@ -17,7 +17,7 @@ public class BadgeManager {
 
     private ArrayList<Pair<String, String>> tutorBadgeData;
 
-    private HashMap<String, Badge> tutorBadgeMap;
+    private HashMap<String, ArrayList<Badge>> tutorBadgeMap;
 
 
     static private ArrayList<String> allTutors = new ArrayList<>();
@@ -61,10 +61,23 @@ public class BadgeManager {
         overallBadges = new ArrayList<>();
         tutorBadgeMap = new HashMap<>();
         for (String tutor:allTutors){
-            for(Pair badgeData: tutorBadgeData)
-                tutorBadgeMap.put(tutor, new Badge((String)badgeData.getKey(),  (String)badgeData.getValue()));
+            ArrayList<Badge> badges = new ArrayList<>();
+            badges.add(new Badge("Correct Questions", "number of questions correctly answered"));
+            badges.add(new Badge("100% sessions", "number of 100% tutor sessions"));
+            badges.add(new Badge("completed sessions", "number of 100% tutor sessions"));
+            tutorBadgeMap.put(tutor, badges);
         }
+    }
 
+
+    public void updateAllBadges(String tutorType){
+
+
+        //updat overall badges
+        //update tutor badges
+//        tutorBadgeMap.get(tutorType).get(0).updateBadgeProgress(tutorrecord);
+//        tutorBadgeMap.get(tutorType).get(1).updateBadgeProgress(tutorrecord);
+//        tutorBadgeMap.get(tutorType).get(2).updateBadgeProgress(tutorrecord);
 
     }
 }

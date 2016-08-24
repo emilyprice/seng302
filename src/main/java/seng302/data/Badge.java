@@ -11,6 +11,8 @@ public class Badge {
 
     private Integer type; // bronze silver gold plat
 
+    private Integer dificulty;
+
     private Image image;
 
     private Integer nextBadgeProgress;
