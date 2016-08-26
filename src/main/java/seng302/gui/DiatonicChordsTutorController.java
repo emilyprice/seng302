@@ -132,7 +132,7 @@ public class DiatonicChordsTutorController extends TutorController {
             record.addQuestionAnswer(questionList);
             env.getRootController().setTabTitle(getTabID(), true);
             if (manager.answered == manager.questions) {
-                finished();
+                finished("diatonicChordTutor");
             }
         });
 
@@ -243,7 +243,7 @@ public class DiatonicChordsTutorController extends TutorController {
         env.getRootController().setTabTitle(getTabID(), true);
 
         if (manager.answered == manager.questions) {
-            finished();
+            finished("diatonicChordTutor");
         }
 
     }

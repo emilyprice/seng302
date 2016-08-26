@@ -217,7 +217,7 @@ public class KeySignaturesTutorController extends TutorController {
             record.addQuestionAnswer(recordQuestion);
             env.getRootController().setTabTitle(getTabID(), true);
             if (manager.answered == manager.questions) {
-                finished();
+                finished("keySignatureTutor");
             }
         });
 
@@ -251,7 +251,7 @@ public class KeySignaturesTutorController extends TutorController {
             env.getRootController().setTabTitle(getTabID(), true);
             // Shows the correct answer
             if (manager.answered == manager.questions) {
-                finished();
+                finished("keySignatureTutor");
             }
         });
 
@@ -288,7 +288,7 @@ public class KeySignaturesTutorController extends TutorController {
                 env.getRootController().setTabTitle(getTabID(), true);
                 // Shows the correct answer
                 if (manager.answered == manager.questions) {
-                    finished();
+                    finished("keySignatureTutor");
                 }
             }
 
@@ -329,7 +329,7 @@ public class KeySignaturesTutorController extends TutorController {
                     env.getRootController().setTabTitle(getTabID(), true);
                     // Shows the correct answer
                     if (manager.answered == manager.questions) {
-                        finished();
+                        finished("keySignatureTutor");
                     }
                 }
 
@@ -497,7 +497,7 @@ public class KeySignaturesTutorController extends TutorController {
             record.addQuestionAnswer(recordQuestion);
             env.getRootController().setTabTitle(getTabID(), true);
             if (manager.answered == manager.questions) {
-                finished();
+                finished("keySignatureTutor");
             }
         });
 
@@ -530,7 +530,7 @@ public class KeySignaturesTutorController extends TutorController {
             env.getRootController().setTabTitle(getTabID(), true);
             // Shows the correct answer
             if (manager.answered == manager.questions) {
-                finished();
+                finished("keySignatureTutor");
             }
         });
 
@@ -567,7 +567,7 @@ public class KeySignaturesTutorController extends TutorController {
                 env.getRootController().setTabTitle(getTabID(), true);
                 // Shows the correct answer
                 if (manager.answered == manager.questions) {
-                    finished();
+                    finished("keySignatureTutor");
                 }
             }
 
@@ -606,7 +606,7 @@ public class KeySignaturesTutorController extends TutorController {
                 env.getRootController().setTabTitle(getTabID(), true);
                 // Shows the correct answer
                 if (manager.answered == manager.questions) {
-                    finished();
+                    finished("keySignatureTutor");
                 }
             }
 
@@ -818,7 +818,7 @@ public class KeySignaturesTutorController extends TutorController {
             record.addQuestionAnswer(recordQuestion);
             env.getRootController().setTabTitle(getTabID(), true);
             if (manager.answered == manager.questions) {
-                finished();
+                finished("keySignatureTutor");
             }
         });
 
@@ -877,7 +877,7 @@ public class KeySignaturesTutorController extends TutorController {
             env.getRootController().setTabTitle(getTabID(), true);
             // Shows the correct answer
             if (manager.answered == manager.questions) {
-                finished();
+                finished("keySignatureTutor");
             }
         });
 

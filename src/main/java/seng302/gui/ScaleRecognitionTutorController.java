@@ -174,7 +174,7 @@ public class ScaleRecognitionTutorController extends TutorController {
         env.getRootController().setTabTitle("scaleTutor", true);
 
         if (manager.answered == manager.questions) {
-            finished();
+            finished("scaleTutor");
         }
     }
 
@@ -227,7 +227,7 @@ public class ScaleRecognitionTutorController extends TutorController {
             record.addQuestionAnswer(question);
             env.getRootController().setTabTitle(getTabID(), true);
             if (manager.answered == manager.questions) {
-                finished();
+                finished("ScaleTutor");
             }
         });
 

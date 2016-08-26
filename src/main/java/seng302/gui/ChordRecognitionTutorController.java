@@ -223,7 +223,7 @@ public class ChordRecognitionTutorController extends TutorController {
             record.addQuestionAnswer(question);
             env.getRootController().setTabTitle(getTabID(), true);
             if (manager.answered == manager.questions) {
-                finished();
+                    finished("chordTutor");
             }
         });
 
@@ -302,7 +302,7 @@ public class ChordRecognitionTutorController extends TutorController {
         env.getRootController().setTabTitle(getTabID(), true);
 
         if (manager.answered == manager.questions) {
-            finished();
+            finished("chordTutor");
         }
     }
 

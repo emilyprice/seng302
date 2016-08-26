@@ -762,7 +762,7 @@ public class ChordSpellingTutorController extends TutorController {
         manager.answered += 1;
 
         if (manager.answered == manager.questions) {
-            finished();
+            finished("chordSpellingTutor");
         }
     }
 
@@ -787,7 +787,7 @@ public class ChordSpellingTutorController extends TutorController {
 
         env.getRootController().setTabTitle(getTabID(), true);
         if (manager.answered == manager.questions) {
-            finished();
+            finished("chordSpellingTutor");
         }
     }
 

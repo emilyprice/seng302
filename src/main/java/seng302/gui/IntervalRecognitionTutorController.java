@@ -154,7 +154,7 @@ public class IntervalRecognitionTutorController extends TutorController {
             record.addQuestionAnswer(question);
             env.getRootController().setTabTitle(getTabID(), true);
             if (manager.answered == manager.questions) {
-                finished();
+                finished("intervalTutor");
             }
         });
 
@@ -185,7 +185,7 @@ public class IntervalRecognitionTutorController extends TutorController {
             env.getRootController().setTabTitle(getTabID(), true);
             // Shows the correct answer
             if (manager.answered == manager.questions) {
-                finished();
+                finished("intervalTutor");
             }
         });
 

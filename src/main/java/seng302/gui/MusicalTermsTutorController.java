@@ -247,7 +247,7 @@ public class MusicalTermsTutorController extends TutorController {
 
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(1)).getChildren().get(1).setDisable(true);
             if (manager.answered == manager.questions) {
-                finished();
+                finished("musicalTermTutor");
             }
         });
 
@@ -278,7 +278,7 @@ public class MusicalTermsTutorController extends TutorController {
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(2)).getChildren().get(1).setDisable(true);
 
             if (manager.answered == manager.questions) {
-                finished();
+                finished("musicalTermTutor");
             }
         });
 
@@ -309,7 +309,7 @@ public class MusicalTermsTutorController extends TutorController {
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(3)).getChildren().get(1).setDisable(true);
 
             if (manager.answered == manager.questions) {
-                finished();
+                finished("musicalTermTutor");
             }
         });
 
@@ -331,7 +331,7 @@ public class MusicalTermsTutorController extends TutorController {
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(3)).getChildren().get(1).setDisable(true);
             ((VBox) (rowPane.getChildren().get(0))).getChildren().get(4).setDisable(true); //disable skip
             if (manager.answered == manager.questions) {
-                finished();
+                finished("musicalTermTutor");
             }
         });
 

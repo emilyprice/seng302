@@ -9,6 +9,7 @@ import org.json.simple.parser.JSONParser;
 import seng302.App;
 import seng302.Environment;
 import seng302.data.Term;
+import seng302.managers.BadgeManager;
 import seng302.utility.FileHandler;
 import seng302.utility.OutputTuple;
 
@@ -37,6 +38,8 @@ public class User {
 
     private ProjectHandler projectHandler;
 
+    private BadgeManager badgeManager;
+
     private Environment env;
 
     private JSONObject properties;
@@ -54,7 +57,7 @@ public class User {
      *  User constructor used for generating new users.
      * @param userName
      * @param password
-     * @param env
+     +*6* @param env
      */
     public User(String userName, String password, Environment env){
         userDirectory = Paths.get("UserData/"+userName);
@@ -79,6 +82,7 @@ public class User {
         this.profilePic = new Image(userDirectory.toUri() + "/profilePicture");
 
         projectHandler = new ProjectHandler(env, userName);
+        badgeManager = new BadgeManager();
         //loadFullProperties();
     }
 
@@ -95,6 +99,7 @@ public class User {
         properties = new JSONObject();
         loadBasicProperties();
         this.profilePic = new Image(userDirectory.toUri() + "/profilePicture");
+        badgeManager = new BadgeManager();
 
 
     }
@@ -316,6 +321,8 @@ public class User {
     public String getUserLastName() {
         return userLastName;
     }
+
+    public BadgeManager getBadgeManager(){return badgeManager;}
 
 
 

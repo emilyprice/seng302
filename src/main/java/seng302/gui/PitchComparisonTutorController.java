@@ -200,7 +200,7 @@ public class PitchComparisonTutorController extends TutorController {
         manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
 
         if (manager.answered == manager.questions) {
-            finished();
+            finished("pitchTutor");
         }
 
         return correctChoice;
