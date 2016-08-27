@@ -82,7 +82,7 @@ public class User {
         this.profilePic = new Image(userDirectory.toUri() + "/profilePicture");
 
         projectHandler = new ProjectHandler(env, userName);
-        badgeManager = new BadgeManager();
+        badgeManager = new BadgeManager(env);
         //loadFullProperties();
     }
 
@@ -99,7 +99,7 @@ public class User {
         properties = new JSONObject();
         loadBasicProperties();
         this.profilePic = new Image(userDirectory.toUri() + "/profilePicture");
-        badgeManager = new BadgeManager();
+        badgeManager = new BadgeManager(env);
 
 
     }

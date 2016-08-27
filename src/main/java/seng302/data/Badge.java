@@ -40,6 +40,11 @@ public class Badge {
     public void updateBadgeProgress(Integer progress){
 
         badgeProgress += progress;
+        if(badgeLevels == null){
+            updateImage();
+            // notify user
+            return;
+        }
 
         if(badgeProgress > badgeLevels.get(currentBadge)){
             currentBadge += 1;
@@ -50,6 +55,5 @@ public class Badge {
 
     private void updateImage(){
         //this.image = new image
-
     }
 }
