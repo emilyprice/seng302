@@ -1,8 +1,15 @@
 package seng302.gui;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -17,6 +24,7 @@ import javafx.stage.Stage;
 import seng302.Environment;
 import seng302.Users.User;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,27 +39,44 @@ public class UserLoginController {
     HBox recentUsersHbox;
 
     @FXML
-    TextField usernameInput;
+    JFXTextField usernameInput;
 
     @FXML
-    PasswordField passwordInput;
+    JFXPasswordField passwordInput;
 
     @FXML
-    Button btnRegister;
+    JFXButton btnRegister;
 
     @FXML
     Label labelError;
 
     @FXML
-    Button btnLogIn;
+    JFXButton btnLogin;
 
     Environment env;
+    RequiredFieldValidator passwordValidator;
 
     ArrayList<RecentUserController> recentUsers = new ArrayList<>();
 
 
     public UserLoginController(){
 
+    }
+
+    @FXML
+    public void initialize() {
+
+
+        passwordValidator = new RequiredFieldValidator();
+
+        passwordInput.getValidators().add(passwordValidator);
+        passwordInput.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                passwordValidator.setMessage("Password Required");
+                passwordInput.validate();
+            }
+
+        });
     }
 
     public void setEnv(Environment env){
@@ -74,6 +99,13 @@ public class UserLoginController {
     }
 
 
+    /**
+     * Loads all recent users and collects information about them (dp, password etc)
+     *
+     * @param username
+     * @param image
+     * @return
+     */
     private Node generateRecentUser(String username, Image image){
 
         Node recentUser;
@@ -98,7 +130,9 @@ public class UserLoginController {
     }
 
 
-
+    /**
+     * Displays imageBoxs of recent users.
+     */
     public void displayRecentUsers(){
         String name;
         //Image image = new Image(getClass().getResourceAsStream
@@ -115,28 +149,45 @@ public class UserLoginController {
 
     }
 
-    private Boolean validCredentials(String username, String password){
-        if(username.length() > 0 && password.length() > 0) //Must be atleast one character.
-            return true;
 
-        return false;
-
-
-    }
-
+    /**
+     * Creates a register scene and opens it.
+     */
     @FXML
     protected void register(){
 
+        FXMLLoader loader1 = new FXMLLoader();
+        loader1.setLocation(getClass().getResource("/Views/UserRegistration.fxml"));
 
-        if (!(env.getUserHandler().getUserNames().contains(usernameInput.getText())) && validCredentials(usernameInput.getText(), passwordInput.getText())){
-            env.getUserHandler().createUser(usernameInput.getText(), passwordInput.getText());
-            logIn();
+        Parent root1 = null;
+        try {
+            root1 = loader1.load();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        else{
+        Scene scene1 = new Scene(root1);
+        Stage registerStage = (Stage) btnLogin.getScene().getWindow();
 
-            labelError.setText("User already exists!");
-            labelError.setTextFill(javafx.scene.paint.Color.RED);
-        }
+        registerStage.setTitle("Register new user");
+        registerStage.setScene(scene1);
+
+        registerStage.setOnCloseRequest(event -> {
+            System.exit(0);
+            event.consume();
+        });
+
+        registerStage.setMinWidth(600);
+        Double initialHeight = registerStage.getHeight();
+        registerStage.setMinHeight(initialHeight);
+
+        registerStage.show();
+        UserRegisterController userRegisterController = loader1.getController();
+        userRegisterController.setEnv(env);
+
+
+
+
+
     }
 
     @FXML
@@ -153,20 +204,21 @@ public class UserLoginController {
 
 
         if(env.getUserHandler().userPassExists(usernameInput.getText(), passwordInput.getText())){
-
-
             env.getUserHandler().setCurrentUser(usernameInput.getText());
 
             //Close login window.
-            Stage stage = (Stage) btnLogIn.getScene().getWindow();
+            Stage stage = (Stage) btnLogin.getScene().getWindow();
             stage.close();
 
             env.getRootController().showWindow(true);
         }else{
 
-            final Label message = new Label("");
-            labelError.setText("Invalid username or password.");
-            labelError.setTextFill(javafx.scene.paint.Color.RED);
+            passwordValidator.setMessage("Invalid username or password.");
+            passwordInput.clear();
+            passwordInput.validate();
+            passwordInput.requestFocus();
+
+
 
         }
 

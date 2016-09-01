@@ -23,17 +23,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
 
-import javafx.scene.control.TextInputDialog;
 import seng302.Environment;
-import seng302.data.Term;
+
 import seng302.utility.InstrumentUtility;
 import seng302.utility.OutputTuple;
 
@@ -88,8 +84,7 @@ public class Project {
         projectSettings.put("transcript", transcriptString);
 
 
-        String musicalTermsJSON = gson.toJson(env.getMttDataManager().getTerms());
-        projectSettings.put("musicalTerms", musicalTermsJSON);
+
 
         projectSettings.put("rhythm", gson.toJson(env.getPlayer().getRhythmHandler().getRhythmTimings()));
 
@@ -103,7 +98,7 @@ public class Project {
 
     /**
      * load all saved project properties from the project json file.
-     * This currently supports Tempo, working transcript, musical terms and rhythm setting.
+     * This currently supports Tempo, working transcript and rhythm setting.
      *
      */
     private void loadProperties() {
@@ -115,6 +110,7 @@ public class Project {
         } catch (Exception e) {
             tempo = 120;
         }
+
         env.getPlayer().setTempo(tempo);
 
 
@@ -127,15 +123,7 @@ public class Project {
         env.getTranscriptManager().setTranscriptContent(transcript);
         env.getRootController().setTranscriptPaneText(env.getTranscriptManager().convertToText());
 
-        //Musical Terms
-        Type termsType = new TypeToken<ArrayList<Term>>() {
-        }.getType();
-        ArrayList<Term> terms = gson.fromJson((String) projectSettings.get("musicalTerms"), termsType);
 
-        if (terms != null) {
-
-            env.getMttDataManager().setTerms(terms);
-        }
 
         //Rhythm
         int[] rhythms;
@@ -192,8 +180,6 @@ public class Project {
      * Handles Saving a .json Project file, for the specified project address
      * @param projectAddress Project directory address.
      */
-
-
     public void saveProject(String projectAddress) {
 
         //Add all settings to such as tempo speed to the project here.
@@ -209,13 +195,9 @@ public class Project {
 
             tutorHandler.saveTutorRecordsToFile(projectAddress);
             env.getRootController().clearAllIndicators();
-
             projectSettings.put("tempo", env.getPlayer().getTempo());
-
             env.getRootController().setWindowTitle(projectName);
-
             currentProjectPath = projectAddress;
-
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -265,29 +247,6 @@ public class Project {
 
     }
 
-    /**
-     * Checking functionality specifically for musical saved musical terms.
-     */
-    public void checkmusicTerms() {
-        String saveName = (projectName == null || projectName.length() < 1) ? "No Project" : this.projectName;
-        if (projectSettings.containsKey("musicalTerms")) {
-            Type termsType = new TypeToken<ArrayList<Term>>() {
-            }.getType();
-            if (!projectSettings.get("musicalTerms").equals(new Gson().fromJson((String) projectSettings.get("muscalTerms"), termsType))) {
-                env.getRootController().setWindowTitle(saveName + "*");
-                saved = false;
-            }
-        } else {
-            if (env.getRootController() != null) {
-                env.getRootController().setWindowTitle(saveName + "*");
-                saved = false;
-            }
-
-        }
-
-
-    }
-
 
     /**
      * Loads a project, specifed by the project name.
@@ -297,14 +256,12 @@ public class Project {
     public void loadProject(String pName) {
         try {
 
-
-            env.resetEnvironment();
+            env.resetProjectEnvironment();
             String path = projectDirectory.toString();
 
             try {
 
                 projectSettings = (JSONObject) parser.parse(new FileReader(path + "/" + pName + ".json"));
-
 
             } catch (FileNotFoundException f) {
                 //Project doesn't exist? Create it.
@@ -324,26 +281,19 @@ public class Project {
                         System.err.println("Well UserData directory failed to create.. lost cause.");
                     }
 
-                    //projectHandler.projectList.remove(pName);
                     return;
                 } else {
                     //.json project files are corrupt.
-                    //env.getRootController().errorAlert("Project properties are corrupt - resetting values.");
                     saveProject(path);
                 }
 
             }
 
             this.projectName = pName;
-
             loadProperties();
-
             currentProjectPath = path;
-            //projectHandler.updateProjectList();
-
             env.getRootController().setWindowTitle(pName);
             //ignore
-
 
         } catch (FileNotFoundException e) {
             System.err.println("File not found, printing exception..");
@@ -366,8 +316,6 @@ public class Project {
     public boolean isSaved() {
         return saved;
     }
-
-
 
     public Boolean isProject() {
         return currentProjectPath != null;

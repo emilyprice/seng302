@@ -101,7 +101,6 @@ public class TranscriptPaneController {
      */
     @FXML
     private void goAction() {
-
         String text = txtCommand.getText();
         txtCommand.setText("");
         executeAndPrintToTranscript(text);

@@ -9,9 +9,6 @@ package seng302.Users;
  * Created by Jonty on 12-Apr-16.
  */
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,17 +18,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Optional;
 
 import javafx.scene.control.TextInputDialog;
 import seng302.Environment;
-import seng302.data.Term;
-import seng302.utility.OutputTuple;
 
 public class ProjectHandler {
 
@@ -56,9 +50,6 @@ public class ProjectHandler {
 
         loadProjectList();
         loadDefaultProject();
-
-
-
 
     }
 

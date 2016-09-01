@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -48,5 +49,12 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
+      <JFXButton fx:id="btnDeleteUser" buttonType="RAISED" layoutX="13.0" layoutY="225.0" onAction="#deleteUser"
+                 ripplerFill="#6b3939" style="-fx-background-color: red; -fx-border-color: darkred;" text="Delete User"
+                 textFill="WHITE">
+         <opaqueInsets>
+            <Insets left="10.0" top="10.0"/>
+         </opaqueInsets>
+      </JFXButton>
    </children>
 </AnchorPane>

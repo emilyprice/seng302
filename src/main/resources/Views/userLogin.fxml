@@ -1,58 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import com.jfoenix.validation.*?>
+<?import com.jfoenix.controls.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleKeyPressed" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserLoginController">
+<AnchorPane minHeight="400.0" minWidth="600.0" onKeyPressed="#handleKeyPressed" prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="seng302.gui.UserLoginController">
    <children>
-       <HBox fx:id="recentUsersHbox" alignment="CENTER" layoutX="10.0" layoutY="79.0" maxHeight="191.0" maxWidth="580.0" minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="580.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-       <HBox alignment="CENTER" layoutY="221.0" prefHeight="114.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+       <StackPane layoutX="178.0" layoutY="232.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500"
+                  minWidth="500.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="500.0" prefWidth="500.0"
+                  style="-fx-background-color: white;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0"
+                  AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0">
            <children>
-               <GridPane prefHeight="136.0" prefWidth="409.0">
-                   <columnConstraints>
-                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="10.0" prefWidth="110.0" />
-                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="3.0" prefWidth="10.0" />
-                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="299.0" minWidth="10.0" prefWidth="250.0" />
-                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="218.0" minWidth="1.0" prefWidth="110.0" />
-                   </columnConstraints>
-                   <rowConstraints>
-                       <RowConstraints maxHeight="108.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                       <RowConstraints maxHeight="105.0" minHeight="3.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                       <RowConstraints maxHeight="97.0" minHeight="0.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                       <RowConstraints maxHeight="97.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                   </rowConstraints>
+               <HBox alignment="CENTER" layoutY="221.0" prefHeight="114.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0"
+                     AnchorPane.rightAnchor="0.0"/>
+               <VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
+                     StackPane.alignment="CENTER">
                    <children>
-                       <Label text="User Name:" GridPane.halignment="RIGHT" />
-                       <Label text="Password:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                       <TextField fx:id="usernameInput" prefHeight="25.0" prefWidth="125.0" GridPane.columnIndex="2" />
-                       <PasswordField fx:id="passwordInput" prefHeight="25.0" prefWidth="126.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                       <Label fx:id="labelError" prefHeight="15.0" prefWidth="231.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                       <HBox alignment="CENTER" prefHeight="19.0" prefWidth="188.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                       <HBox alignment="TOP_CENTER" prefHeight="46.0" prefWidth="600.0">
                            <children>
-                               <Button fx:id="btnLogIn" mnemonicParsing="false" onAction="#logIn" prefHeight="25.0" prefWidth="80.0" text="Sign in">
+                               <Label text="Allegro" textAlignment="CENTER" textFill="#f28b15">
+                                   <font>
+                                       <Font name="System Bold" size="32.0"/>
+                                   </font>
+                               </Label>
+                           </children>
+                           <VBox.margin>
+                               <Insets bottom="10.0"/>
+                           </VBox.margin>
+                       </HBox>
+
+                       <HBox fx:id="recentUsersHbox" alignment="CENTER" maxHeight="191.0" maxWidth="450.0"
+                             minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="450.0">
+                           <VBox.margin>
+                               <Insets bottom="30.0"/>
+                           </VBox.margin>
+                       </HBox>
+                       <JFXTextField fx:id="usernameInput" focusColor="#d98921" labelFloat="true" maxWidth="300.0"
+                                     promptText="Username">
+                           <font>
+                               <Font size="14.0"/>
+                           </font>
+                           <VBox.margin>
+                               <Insets bottom="20.0"/>
+                           </VBox.margin>
+                       </JFXTextField>
+                       <JFXPasswordField fx:id="passwordInput" focusColor="#d98921" labelFloat="true" maxWidth="300.0"
+                                         promptText="Password">
+                           <VBox.margin>
+                               <Insets bottom="30.0"/>
+                           </VBox.margin>
+                       </JFXPasswordField>
+                       <HBox alignment="CENTER" prefHeight="19.0" prefWidth="188.0">
+                           <children>
+
+
+                           <JFXButton fx:id="btnLogin" buttonType="RAISED" onAction="#logIn" prefHeight="25.0"
+                                          prefWidth="100.0" ripplerFill="#00bfa5" style="-fx-background-color: #1DE9B6;"
+                                          text="Sign in">
+                                   <VBox.margin>
+                                       <Insets bottom="20.0" top="30.0"/>
+                                   </VBox.margin>
+                                   <font>
+                                       <Font size="14.0"/>
+                                   </font>
                                    <HBox.margin>
-                                       <Insets right="20.0" />
+                                       <Insets right="30.0"/>
                                    </HBox.margin>
-                               </Button>
-                               <Button fx:id="btnRegister" mnemonicParsing="false" onAction="#register" prefWidth="80.0" text="Register" HBox.hgrow="NEVER" />
+                               </JFXButton>
+                               <JFXButton fx:id="btnRegister" buttonType="RAISED" mnemonicParsing="false"
+                                          onAction="#register" prefHeight="25.0" prefWidth="100.0" ripplerFill="#fb8c00"
+                                          style="-fx-background-color: #FFB74D;" text="Register">
+                                   <VBox.margin>
+                                       <Insets bottom="20.0" top="30.0"/>
+                                   </VBox.margin>
+                                   <font>
+                                       <Font size="14.0"/>
+                                   </font>
+                                   <HBox.margin>
+                                       <Insets left="30.0"/>
+                                   </HBox.margin>
+
+                               </JFXButton>
+
                            </children>
                        </HBox>
                    </children>
-               </GridPane>
+               </VBox>
            </children>
-       </HBox>
-       <HBox alignment="TOP_CENTER" layoutY="21.0" prefHeight="46.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-           <children>
-               <Label text="Allegro" textAlignment="CENTER" textFill="#f28b15">
-                   <font>
-                       <Font name="System Bold" size="32.0" />
-                   </font>
-               </Label>
-           </children>
-       </HBox>
+           <effect>
+               <DropShadow/>
+           </effect>
+
+       </StackPane>
    </children>
 </AnchorPane>

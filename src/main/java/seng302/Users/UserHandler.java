@@ -1,15 +1,15 @@
 package seng302.Users;
 
+import org.apache.commons.io.FileDeleteStrategy;
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import seng302.Environment;
+import seng302.utility.FileHandler;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,6 +45,12 @@ public class UserHandler {
         return userList;
     }
 
+    /**
+     * Returns a Collection of User Objects, which containing basic information about users.
+     * To be used before logging into a user.
+     *
+     * @return
+     */
     public HashMap<String, User> getUsers(){
         ArrayList<String> names = (ArrayList<String>) userList;
         HashMap<String, User> users = new HashMap<>();
@@ -142,7 +148,11 @@ public class UserHandler {
     }
 
 
-
+    /**
+     * Creates a new user for the given username/password.
+     * @param user
+     * @param password
+     */
     public void createUser(String user, String password){
         this.currentUser = new User(user, password, env);
         updateUserList(user);
@@ -168,7 +178,15 @@ public class UserHandler {
             }
             recentUsers.add(username);
         }
+        saveUserList();
 
+
+    }
+
+    /**
+     * Writes the currently saved user settings to disc.
+     */
+    private void saveUserList() {
         try { //Save list of projects.
             UsersInfo.put("users", userList);
             UsersInfo.put("recentUsers", recentUsers);
@@ -206,6 +224,46 @@ public class UserHandler {
 
         //update User drop down to display user's name
         env.getRootController().updateUserInfo(userName);
+
+    }
+
+
+    /**
+     * Full deletes the specified user incl. project files.
+     * @param username
+     */
+    public void deleteUser(String username) {
+
+        //Step 1.For some reason this needs to be called? (all it does is delete the project handler
+        this.getCurrentUser().delete();
+
+        //Step 2. Delete from list of users/recent users.
+        this.userList.remove(username);
+        this.recentUsers.remove(username);
+        saveUserList();
+
+        //Step 3. Close the main window, which helps remove any file locks and request garbage collection.
+        env.getRootController().getStage().close();
+        System.gc();
+
+        //Step 4. Delete all user folders and files.
+        File userDir = Paths.get("UserData/" + username).toFile();
+
+        if (userDir.isDirectory()) {
+            Boolean res = FileHandler.deleteDirectory(userDir);
+            if (!res) env.getRootController().errorAlert("Failed to fully remove the deleted user directory.");
+        } else {
+            System.err.println("Could not delete the user directory");
+        }
+
+
+        //Step 5. Open the User login window.
+        try {
+            this.env.getRootController().logOutUser();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

@@ -1,5 +1,7 @@
 package seng302.utility;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,6 +40,24 @@ public class FileHandler {
             //System.out.println("File copied :: " + destinationFolder);
         }
     }
+
+    /**
+     * Recursibvely deletes a directory and all it's content
+     * @param dir
+     * @return successful. (true if successfully deleted everything, false otherwise)
+     */
+    public static Boolean deleteDirectory(File dir) {
+        try {
+            FileUtils.forceDelete(dir);
+            return true;
+        } catch (IOException e) {
+            return false;
+
+
+        }
+
+    }
+
 
 
 }

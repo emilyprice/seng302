@@ -2,10 +2,9 @@ package seng302;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import seng302.Users.TutorHandler;
+import seng302.Users.ProjectHandler;
 import seng302.Users.UserHandler;
 import seng302.gui.RootController;
-import seng302.Users.ProjectHandler;
 import seng302.managers.TranscriptManager;
 import seng302.utility.EditHistory;
 import seng302.utility.MusicalTermsTutorBackEnd;
@@ -19,7 +18,6 @@ public class Environment {
     private String recordLocation;
     private EditHistory em = new EditHistory(this);
     private BooleanProperty shiftPressed;
-    private TutorHandler tutorHandler;
 
     public RootController getRootController() {
         return rootController;
@@ -46,6 +44,21 @@ public class Environment {
         userHandler = new UserHandler(this);
     }
 
+
+    /**
+     * Similar to the restEnvironment function, except it doesn't reset the MusicalTermsManager.
+     */
+    public void resetProjectEnvironment() {
+        executor = new DslExecutor(this);
+        player = new MusicPlayer();
+        transcriptManager = new TranscriptManager();
+        recordLocation = null;
+        em = new EditHistory(this);
+
+        if (rootController != null) rootController.reset();
+
+    }
+
     /**
      * Resets the environment so it clears the existing saved information.
      */
@@ -54,15 +67,11 @@ public class Environment {
         player = new MusicPlayer();
         transcriptManager = new TranscriptManager();
         mttDataManager = new MusicalTermsTutorBackEnd();
-
-
         recordLocation = null;
         em = new EditHistory(this);
 
-        if (rootController != null) {
-            //reset this too
-            rootController.reset();
-        }
+        if (rootController != null) rootController.reset();
+
 
     }
 
@@ -115,9 +124,6 @@ public class Environment {
     public UserHandler getUserHandler() {
         return userHandler;
     }
-
-    public TutorHandler getTutorHandler(){ return tutorHandler;}
-
 
     public EditHistory getEditManager() {
         return this.em;

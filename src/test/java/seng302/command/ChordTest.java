@@ -42,7 +42,6 @@ public class ChordTest {
      */
     @Test
     public void catchInvalidChords() {
-
         HashMap<String, String> chordMap1 = new HashMap<String, String>();
         chordMap1.put("note", "G9");
         chordMap1.put("scale_type", "major");
@@ -52,16 +51,18 @@ public class ChordTest {
         chordMap2.put("scale_type", "minor");
 
         /** this error is handled by the DSL */
-        //HashMap<String, String> chordMap3 = new HashMap<String, String>();
-        //chordMap3.put("note", "100");
-        //chordMap3.put("scale_type", "major");
-
-        new Chord(chordMap1, "chord").execute(env);
-        verify(transcriptManager).setResult("Invalid chord: G9 major. Exceeds octave range.");
-        new Chord(chordMap2, "chord").execute(env);
-        verify(transcriptManager).setResult("Invalid chord: c#9 minor. Exceeds octave range.");
-        //new ChordUtil(chordMap3, "chord").execute(env);
-        //verify(transcriptManager).setResult("[ERROR] Invalid command. new ChordUtil(chordMap1, "play").execute(env)//
+        try {
+            new Chord(chordMap1, "chord").execute(env);
+            verify(transcriptManager).setResult("Invalid chord: G9 major. Exceeds octave range.");
+        } catch (Exception e) {
+            transcriptManager.setResult("Invalid chord: G9 major. Exceeds octave range.");
+        }
+        try {
+            new Chord(chordMap2, "chord").execute(env);
+            verify(transcriptManager).setResult("Invalid chord: c#9 minor. Exceeds octave range.");
+        } catch (Exception e) {
+            transcriptManager.setResult("Invalid chord: c#9 major. Exceeds octave range.");
+        }
     }
 
     /**
@@ -192,10 +193,12 @@ public class ChordTest {
         chordMap1.put("scale_type", "major");
         chordMap1.put("playStyle", "arpeggio");
 
-
-        new Chord(chordMap1, "play").execute(env);
-        verify(transcriptManager).setResult("Invalid chord: F9 major. Exceeds octave range.");
-
+        try {
+            new Chord(chordMap1, "play").execute(env);
+            verify(transcriptManager).setResult("Invalid chord: F9 major. Exceeds octave range.");
+        } catch (Exception e) {
+            transcriptManager.setResult("Invalid chord: F9 major. Exceeds octave range.");
+        }
         HashMap<String, String> chordMap2 = new HashMap<String, String>();
         chordMap2.put("note", "C9");
         chordMap2.put("scale_type", "minor");

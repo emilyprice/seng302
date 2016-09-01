@@ -59,3 +59,10 @@ How the test passed:
  mix of correctly and incorrectly, after answering all five questions correct and all five incorrect
 2) In all of these cases, the question set was cleared of remaining questions and the sequential
  tests were unaffected.
+
+##Test 8: "Harmonic Minor" scales are available to be included in the tutoring session
+PASS
+How the test passed:
+1) I opened a new tutoring session, and expanded the scale type combo box
+2) I selected "Harmonic Minor" and deselected all other choices
+3) Upon clicking Go, each question presented was a scale of the type Harmonic Minor.

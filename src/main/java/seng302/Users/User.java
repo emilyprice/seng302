@@ -55,9 +55,9 @@ public class User {
 
     /**
      *  User constructor used for generating new users.
-     * @param userName
-     * @param password
-     +*6* @param env
+     * @param userName username
+     * @param password password to set for the corresponding user.
+     * @param env
      */
     public User(String userName, String password, Environment env){
         userDirectory = Paths.get("UserData/"+userName);
@@ -89,6 +89,7 @@ public class User {
     /**
      * Loads basic user properties (Picture, Name, Password etc.)
      * Used when loading a collection of users (Login screen)
+     * This should only load properties which NEED to be loaded before the user logs in.
      * @param env
      * @param user user name
      */
@@ -106,13 +107,15 @@ public class User {
 
     /**
      * loads extensive user properties (after user login)
+     * This should load all properties which aren't neccessary before the user logs in.
      */
     public void loadFullProperties(){
         /**
          * Current Theme
          * Musical Terms
+         * Full name
          * Project Handler
-         *
+         * Theme
          */
 
         //Load musical terms property
@@ -122,13 +125,43 @@ public class User {
         ArrayList<Term> terms = gson.fromJson((String) properties.get("musicalTerms"), termsType);
 
         if (terms != null) {
-
             env.getMttDataManager().setTerms(terms);
         }
+
+        try {
+            userFirstName = (properties.get("firstName")).toString();
+        } catch (NullPointerException e) {
+            userFirstName = "";
+        }
+
+        try {
+            userLastName = (properties.get("lastName")).toString();
+        } catch (NullPointerException e) {
+            userLastName = "";
+        }
+
+        try {
+            //Theme
+            themeColor = (properties.get("themeColor")).toString();
+        } catch (NullPointerException e) {
+            themeColor = "white";
+        }
+
+
 
         projectHandler = new ProjectHandler(env, userName);
 
 
+
+
+    }
+
+    /**
+     * This needs to be called to unlock the project folders to allow them to be deleted.
+     */
+    public void delete() {
+
+        this.projectHandler = null;
 
 
     }
@@ -139,18 +172,15 @@ public class User {
         return projectHandler;}
 
     /**
-     * Loads basic properties which need be readed in login screen.
+     * Loads basic properties which need be read by the login screen.
      */
     private void loadBasicProperties() {
         /**
-         * Properties:
+         * Basic properties:
          *  PhotoID - Stored as default 'userPicture.png'
          *  Last sign in time
-         *  name
+         *  username
          *  Password
-         *  Musical terms
-         *  Maybe default tempo?
-         *  Theme
          *
          */
         Gson gson = new Gson();
@@ -173,36 +203,12 @@ public class User {
 
         }
 
-        try {
-            //name
-            userFullName = (properties.get("fullName")).toString();
-        }catch (NullPointerException e){
-            userFullName = userName;
-        }
-
-        try {
-            userFirstName = (properties.get("firstName")).toString();
-        } catch (NullPointerException e) {
-            userFirstName = "";
-        }
-
-        try {
-            userLastName = (properties.get("lastName")).toString();
-        } catch (NullPointerException e) {
-            userLastName = "";
-        }
-
 
         //Password
         userPassword = (properties.get("password")).toString();
 
 
-        try {
-            //Theme
-            themeColor = (properties.get("themeColor")).toString();
-        }catch(NullPointerException e){
-            themeColor = "white";
-        }
+
     }
 
 
@@ -224,7 +230,6 @@ public class User {
 
         String lastSignInJSON = gson.toJson(lastSignIn);
         properties.put("signInTime", lastSignInJSON);
-
 
 
     }
@@ -287,6 +292,30 @@ public class User {
             //invalid path (Poor project naming)
             env.getRootController().errorAlert("Invalid file name - try again.");
             //createNewProject();
+        }
+
+
+    }
+
+
+    /**
+     * Checking functionality specifically for musical saved musical terms.
+     */
+    public void checkmusicTerms() {
+        //String saveName = (projectName == null || projectName.length() < 1) ? "No Project" : this.projectName;
+        if (properties.containsKey("musicalTerms")) {
+            Type termsType = new TypeToken<ArrayList<Term>>() {
+            }.getType();
+            if (!properties.get("musicalTerms").equals(new Gson().fromJson((String) properties.get("muscalTerms"), termsType))) {
+                env.getRootController().setWindowTitle(getProjectHandler().getCurrentProject().projectName + "*");
+                getProjectHandler().getCurrentProject().saved = false;
+            }
+        } else {
+            if (env.getRootController() != null) {
+                env.getRootController().setWindowTitle(getProjectHandler().getCurrentProject().projectName + "*");
+                getProjectHandler().getCurrentProject().saved = false;
+            }
+
         }
 
 

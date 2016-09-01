@@ -97,7 +97,7 @@ public class App extends Application {
 
                 controller.setStage(primaryStage);
 
-                controller.showLoginWindow(true);
+                controller.showLoginWindow(new Stage());
                 //primaryStage.show();
                 //controller.setPrimaryStage(primaryStage);
             } catch (NullPointerException e) {

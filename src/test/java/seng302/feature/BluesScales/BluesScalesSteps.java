@@ -4,9 +4,12 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import seng302.Environment;
+import seng302.MusicPlayer;
 import seng302.gui.RootController;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by Elliot on 29/07/2016.
@@ -15,11 +18,15 @@ public class BluesScalesSteps {
     Environment env;
     String result;
 
+    MusicPlayer player;
+
     @Given("I am on the transcript pane")
     public void createEnvironment() {
         env = new Environment();
         RootController rootController = new RootController();
         env.setRootController(rootController);
+        player = mock(MusicPlayer.class);
+        env.setPlayer(player);
 
     }
 

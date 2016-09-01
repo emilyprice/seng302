@@ -21,6 +21,7 @@ public class MusicalTermsTutorBackEnd {
     }
 
     public void setTerms(ArrayList<Term> t) {
+
         this.terms = t;
     }
 
