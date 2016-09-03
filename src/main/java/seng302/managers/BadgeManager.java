@@ -12,16 +12,9 @@ import java.util.HashMap;
  */
 public class BadgeManager {
 
-
     private ArrayList<Badge> overallBadges;
-
-
-
-
     private HashMap<String, ArrayList<Badge>> tutorBadgeMap;
     private HashMap<String, Boolean> tutor100AllMAp;
-
-
     static private ArrayList<String> allTutors = new ArrayList<>();
     private Environment env;
 
@@ -98,7 +91,6 @@ public class BadgeManager {
 
 
     public void updateAllBadges(String tutorType, Integer userScore){
-
         //updat overall badges
         //update tutor badges
         tutorBadgeMap.get(tutorType).get(0).updateBadgeProgress(userScore);

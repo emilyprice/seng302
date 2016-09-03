@@ -23,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Pair;
@@ -39,6 +40,9 @@ public class UserPageController {
 
     @FXML
     VBox stats;
+
+    @FXML
+    HBox badgesHBox;
 
     @FXML
     StackedBarChart stackedBar;
@@ -259,7 +263,14 @@ public class UserPageController {
 
 
             makeLineGraph(dateAndTime);
+            updateBadgesDisplay();
         }
+    }
+
+    private void updateBadgesDisplay() {
+        Image gradHat = new Image(String.valueOf(UserPageController.class.getResource("/images/grad-hat-badge")));
+        ImageView badgeView = new ImageView(gradHat);
+        badgesHBox.getChildren().add(badgeView);
     }
 
     public void updateImage() {

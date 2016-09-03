@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.HBox?>
 <SplitPane dividerPositions="0.3" xmlns="http://javafx.com/javafx/8"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserPageController">
     <items>
@@ -79,6 +80,12 @@
                         </LineChart>
                         <Label prefHeight="15.0" prefWidth="56.0" text="Badges"
                                textAlignment="CENTER"/>
+                        <HBox fx:id="badgesHbox" alignment="CENTER" maxHeight="191.0" maxWidth="450.0"
+                              minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="450.0">
+                            <VBox.margin>
+                                <Insets bottom="30.0"/>
+                            </VBox.margin>
+                        </HBox>
                         <AnchorPane maxHeight="85.0" maxWidth="351.0" minHeight="-Infinity"
                                     minWidth="-Infinity" prefHeight="85.0" prefWidth="351.0"/>
                     </children>
