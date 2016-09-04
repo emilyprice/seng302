@@ -4,8 +4,7 @@ import javafx.util.Pair;
 import seng302.Environment;
 import seng302.data.Badge;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by jmw280 on 24/08/16.
@@ -18,9 +17,13 @@ public class BadgeManager {
     static private ArrayList<String> allTutors = new ArrayList<>();
     private Environment env;
 
+    private Set<Integer> instrumentsPlayed;
+
+
 
     public BadgeManager(Environment env){
         this.env = env;
+        instrumentsPlayed = new HashSet<>();
         populateTutorList();
         populate100AllTutorMap();
         initalizeAllBadges();
@@ -102,6 +105,20 @@ public class BadgeManager {
 
     }
 
+    /**
+     * used once an instrument has been set to update the list of used instruments and if a new instrument has been
+     * played then it updates the " musician badge
+     * @param id instrument id
+     */
+    public void updateInstrument(Integer id){
+        Integer tempSize = instrumentsPlayed.size();
+        instrumentsPlayed.add(id);
+        if(instrumentsPlayed.size() > tempSize){
+            Badge instrumentBadge = overallBadges.get(2);
+            instrumentBadge.updateBadgeProgress(1);
+        }
+
+    }
 
     public void updateOverallBadges(){
 //        if(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getModeManager().currentUnlocks == 11) {
