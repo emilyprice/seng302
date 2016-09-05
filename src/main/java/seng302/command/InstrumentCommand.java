@@ -1,6 +1,7 @@
 package seng302.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sound.midi.Instrument;
@@ -105,6 +106,7 @@ public class InstrumentCommand implements Command {
             chosenInstrument = InstrumentUtility.getInstrumentByName(instrumentName, env);
             try {
                 env.getTranscriptManager().setResult("Selected Instrument: " + chosenInstrument.getName());
+                env.getUserHandler().getCurrentUser().getBadgeManager().updateInstrument(Arrays.asList(InstrumentUtility.getInstruments(env)).indexOf(instrumentName));
                 saveInstrumentEditHistory(chosenInstrument, env);
                 player.setInstrument(chosenInstrument);
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().checkChanges("instrument");
@@ -116,6 +118,7 @@ public class InstrumentCommand implements Command {
             try {
                 chosenInstrument = InstrumentUtility.getInstrumentById(instrumentId, env);
                 env.getTranscriptManager().setResult("Selected Instrument: " + chosenInstrument.getName());
+                env.getUserHandler().getCurrentUser().getBadgeManager().updateInstrument(instrumentId);
                 saveInstrumentEditHistory(chosenInstrument, env);
                 player.setInstrument(chosenInstrument);
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().checkChanges("instrument");

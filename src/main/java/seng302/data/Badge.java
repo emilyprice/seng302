@@ -13,13 +13,13 @@ public class Badge {
 
     private Integer type; // bronze silver gold plat
 
-    private Integer currentBadge;
+    public Integer currentBadge;
 
     private Image image;
 
     private Integer badgeProgress;
 
-    private ArrayList<Integer> badgeLevels;
+    public ArrayList<Integer> badgeLevels;
 
 
     private String description;
