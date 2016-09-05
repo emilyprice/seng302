@@ -29,6 +29,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -68,6 +69,12 @@ public class UserPageController {
 
     @FXML
     ImageView thirdBadgeView1;
+
+    @FXML
+    ImageView lockView;
+
+    @FXML
+    StackPane thirdBadgeStack;
 
     @FXML
     StackedBarChart stackedBar;
@@ -295,14 +302,7 @@ public class UserPageController {
     private void updateBadgesDisplay() {
         Image gradHatImg = new Image(String.valueOf(UserPageController.class.getResource("/images/grad-hat-badge.png")));
         Image ribbonAwardImg = new Image(String.valueOf(UserPageController.class.getResource("/images/ribbon-award.png")));
-//        final Image gradHat = new Image(Main.class.getResourceAsStream("button.png"));
-//        ImageView gradHatView = new ImageView(gradHatImg);
-
-//        ImageFilter filter = new GrayFilter(true, 50);
-
-//        ImageProducer producer = new FilteredImageSource(colorImage.getSource(), filter);
-//        Image mage = Toolkit.getDefaultToolkit().createImage(producer);
-
+        Image lockImg = new Image("/images/lock.png");
 
         SepiaTone sepiaTone = new SepiaTone();
         sepiaTone.setLevel(1.0);
@@ -310,6 +310,10 @@ public class UserPageController {
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
 
+        ImageView thirdBadgeView = new ImageView();
+        ImageView lockView = new ImageView();
+
+        thirdBadgeStack.getChildren().addAll(thirdBadgeView, lockView);
 
         firstBadgeView.setImage(ribbonAwardImg);
         secondBadgeView.setImage(ribbonAwardImg);
@@ -323,10 +327,15 @@ public class UserPageController {
         secondBadgeView1.setEffect(sepiaTone);
         thirdBadgeView1.setEffect(blackout);
 
-//        graduHatView.setEffect(blackout);
-//        gradHatView.setImage(gradHatImg);
-//        badgesHBox.setEffect();
-//        badgesHBox.getChildren().add(graduHatView);
+        lockView.setImage(lockImg);
+        lockView.fitHeightProperty().setValue(50);
+        lockView.fitWidthProperty().setValue(50);
+//        lockView.relocate(thirdBadgeView.getX(), (thirdBadgeView.getY()+100));
+        thirdBadgeView.fitHeightProperty().setValue(90);
+        thirdBadgeView.fitWidthProperty().setValue(90);
+//        lockView.fitHeightProperty(thirdBadgeView.getFitHeight());
+
+
     }
 
     public void updateImage() {
