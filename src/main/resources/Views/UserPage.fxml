@@ -71,16 +71,13 @@
                                   <VBox.margin>
                                       <Insets bottom="30.0" />
                                   </VBox.margin>
-                           <children>
-                              <ImageView fx:id="firstBadgeView" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
-                              <ImageView fx:id="secondBadgeView" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
-                              <StackPane fx:id="thirdBadgeStack" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <!--<ImageView fx:id="thirdBadgeView" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />-->
-                                    <!--<ImageView fx:id="lockView" fitHeight="60.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" />-->
-                                 </children>
-                              </StackPane>
-                           </children>
+                                   <children>
+                                      <ImageView fx:id="firstBadgeView" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
+                                      <ImageView fx:id="secondBadgeView" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
+                                      <StackPane fx:id="thirdBadgeStack" prefHeight="90.0" prefWidth="120.0">
+                                         <children></children>
+                                      </StackPane>
+                                   </children>
                               </HBox>
                         <HBox fx:id="badgesHbox1" alignment="CENTER" maxHeight="191.0" maxWidth="450.0" minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="450.0" spacing="4.0">
                            <children>

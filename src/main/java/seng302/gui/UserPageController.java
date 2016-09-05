@@ -333,8 +333,6 @@ public class UserPageController {
 //        lockView.relocate(thirdBadgeView.getX(), (thirdBadgeView.getY()+100));
         thirdBadgeView.fitHeightProperty().setValue(90);
         thirdBadgeView.fitWidthProperty().setValue(90);
-//        lockView.fitHeightProperty(thirdBadgeView.getFitHeight());
-
 
     }
 
