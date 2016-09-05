@@ -3,6 +3,10 @@ package seng302.gui;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
+import java.awt.*;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,11 +21,14 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -43,6 +50,24 @@ public class UserPageController {
 
     @FXML
     HBox badgesHBox;
+
+    @FXML
+    ImageView firstBadgeView;
+
+    @FXML
+    ImageView secondBadgeView;
+
+    @FXML
+    ImageView thirdBadgeView;
+
+    @FXML
+    ImageView firstBadgeView1;
+
+    @FXML
+    ImageView secondBadgeView1;
+
+    @FXML
+    ImageView thirdBadgeView1;
 
     @FXML
     StackedBarChart stackedBar;
@@ -268,9 +293,40 @@ public class UserPageController {
     }
 
     private void updateBadgesDisplay() {
-        Image gradHat = new Image(String.valueOf(UserPageController.class.getResource("/images/grad-hat-badge")));
-        ImageView badgeView = new ImageView(gradHat);
-        badgesHBox.getChildren().add(badgeView);
+        Image gradHatImg = new Image(String.valueOf(UserPageController.class.getResource("/images/grad-hat-badge.png")));
+        Image ribbonAwardImg = new Image(String.valueOf(UserPageController.class.getResource("/images/ribbon-award.png")));
+//        final Image gradHat = new Image(Main.class.getResourceAsStream("button.png"));
+//        ImageView gradHatView = new ImageView(gradHatImg);
+
+//        ImageFilter filter = new GrayFilter(true, 50);
+
+//        ImageProducer producer = new FilteredImageSource(colorImage.getSource(), filter);
+//        Image mage = Toolkit.getDefaultToolkit().createImage(producer);
+
+
+        SepiaTone sepiaTone = new SepiaTone();
+        sepiaTone.setLevel(1.0);
+
+        ColorAdjust blackout = new ColorAdjust();
+        blackout.setBrightness(-1.0);
+
+
+        firstBadgeView.setImage(ribbonAwardImg);
+        secondBadgeView.setImage(ribbonAwardImg);
+        thirdBadgeView.setImage(ribbonAwardImg);
+        firstBadgeView1.setImage(gradHatImg);
+        secondBadgeView1.setImage(gradHatImg);
+        thirdBadgeView1.setImage(gradHatImg);
+
+        secondBadgeView.setEffect(sepiaTone);
+        thirdBadgeView.setEffect(blackout);
+        secondBadgeView1.setEffect(sepiaTone);
+        thirdBadgeView1.setEffect(blackout);
+
+//        graduHatView.setEffect(blackout);
+//        gradHatView.setImage(gradHatImg);
+//        badgesHBox.setEffect();
+//        badgesHBox.getChildren().add(graduHatView);
     }
 
     public void updateImage() {
