@@ -72,22 +72,22 @@ public class BadgeManager {
         //intalize tutor badges
         for (String tutor:allTutors){
             ArrayList<Badge> badges = new ArrayList<>();
-            badges.add(new Badge("Correct Questions", "number of questions correctly answered", questionBadges));
-            badges.add(new Badge("100% sessions", "number of 100% tutor sessions", sessionBadges));
-            badges.add(new Badge("completed sessions", "number of 100% tutor sessions", sessionBadges));
+            badges.add(new Badge("Correct Questions", "number of questions correctly answered", questionBadges, 0, 0));
+            badges.add(new Badge("100% sessions", "number of 100% tutor sessions", sessionBadges, 0, 0));
+            badges.add(new Badge("completed sessions", "number of 100% tutor sessions", sessionBadges, 0, 0));
 
             if( tutor.equals("musicalTermTutor")){
-                badges.add(new Badge("terms added", "number of musical terms added", sessionBadges));
+                badges.add(new Badge("terms added", "number of musical terms added", sessionBadges, 0, 0));
             }
             tutorBadgeMap.put(tutor, badges);
         }
 
         //initalize overall badges
-        overallBadges.add(new Badge("All tutors", "Unlocked all tutors", null));
-        overallBadges.add(new Badge("All tutors master", "100% in all tutors", null));
-        overallBadges.add(new Badge("Musician","number of instruments used", sessionBadges));
-        overallBadges.add(new Badge("Speedster", "successfully force set the tempo", null));
-        overallBadges.add(new Badge("TwinkleTwinkle", "find hidden secret", null));
+        overallBadges.add(new Badge("All tutors", "Unlocked all tutors", null, 0, 0));
+        overallBadges.add(new Badge("All tutors master", "100% in all tutors", null, 0, 0));
+        overallBadges.add(new Badge("Musician","number of instruments used", sessionBadges, 0, 0));
+        overallBadges.add(new Badge("Speedster", "successfully force set the tempo", null, 0, 0));
+        overallBadges.add(new Badge("TwinkleTwinkle", "find hidden secret", null, 0, 0));
 
 
     }
@@ -134,5 +134,8 @@ public class BadgeManager {
     }
 
 
+    public ArrayList<Badge> getOverallBadges(){
+        return overallBadges;
+    }
 
 }

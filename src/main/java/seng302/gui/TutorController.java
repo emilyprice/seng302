@@ -141,9 +141,9 @@ public abstract class TutorController {
         env.getPlayer().stop();
         userScore = getScore(manager.correct, manager.answered);
         System.out.println(userScore);
-        System.out.println(env.getUserHandler().getCurrentUser().getBadgeManager());
+        System.out.println(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager());
         System.out.println(Math.round(userScore)/10);
-        env.getUserHandler().getCurrentUser().getBadgeManager().updateAllBadges(tutorType,Math.round(userScore)/10);
+        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().updateAllBadges(tutorType,Math.round(userScore)/10);
         outputText = String.format("You have finished the tutor.\n" +
                         "You answered %d questions, and skipped %d questions.\n" +
                         "You answered %d questions correctly, %d questions incorrectly.\n" +

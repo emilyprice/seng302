@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import seng302.Environment;
 
+import seng302.managers.BadgeManager;
 import seng302.utility.InstrumentUtility;
 import seng302.utility.OutputTuple;
 
@@ -46,6 +47,7 @@ public class Project {
     Path projectDirectory;
     public String currentProjectPath, projectName;
 
+    private seng302.managers.BadgeManager badgeManager;
     boolean saved = true;
 
     Environment env;
@@ -58,6 +60,7 @@ public class Project {
         projectSettings = new JSONObject();
         tutorHandler = new TutorHandler(env);
         projectHandler = projectH;
+        badgeManager = new BadgeManager(env);
 
         loadProject(projectName);
         loadProperties();
@@ -89,6 +92,13 @@ public class Project {
         projectSettings.put("rhythm", gson.toJson(env.getPlayer().getRhythmHandler().getRhythmTimings()));
 
         projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
+
+        System.out.println(badgeManager.getOverallBadges().get(2));
+        String badgeString = gson.toJson(badgeManager.getOverallBadges().get(2));
+        System.out.println(badgeString);
+
+        //projectSettings.put("badges", badgeString);
+
 
     }
 
@@ -324,5 +334,7 @@ public class Project {
     public String getCurrentProjectPath() {
         return currentProjectPath;
     }
+
+    public BadgeManager getBadgeManager(){return badgeManager;}
 
 }

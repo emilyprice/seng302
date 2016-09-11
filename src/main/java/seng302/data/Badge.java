@@ -11,11 +11,10 @@ public class Badge {
 
     private String name;
 
-    private Integer type; // bronze silver gold plat
 
-    public Integer currentBadge;
+    public Integer currentBadgeType;
 
-    private Image image;
+    public Image image;
 
     private Integer badgeProgress;
 
@@ -25,13 +24,12 @@ public class Badge {
     private String description;
 
 
-    public Badge(String name, String description, ArrayList badgeLevels){
+    public Badge(String name, String description, ArrayList badgeLevels, Integer badgeProgress, Integer currentBadgeType){
         this.name = name;
-        this.currentBadge = 0;
+        this.currentBadgeType = currentBadgeType;
         //this.image = image;
         this.description = description;
-        this.type = 0;
-        this.badgeProgress = 0;
+        this.badgeProgress = badgeProgress;
         this.badgeLevels = badgeLevels;
 
     }
@@ -46,8 +44,8 @@ public class Badge {
             return;
         }
 
-        if(badgeProgress > badgeLevels.get(currentBadge)){
-            currentBadge += 1;
+        if(badgeProgress > badgeLevels.get(currentBadgeType)){
+            currentBadgeType += 1;
             updateImage();
         }
     }
@@ -56,4 +54,6 @@ public class Badge {
     private void updateImage(){
         //this.image = new image
     }
+
+
 }

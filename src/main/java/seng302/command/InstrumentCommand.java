@@ -106,7 +106,7 @@ public class InstrumentCommand implements Command {
             chosenInstrument = InstrumentUtility.getInstrumentByName(instrumentName, env);
             try {
                 env.getTranscriptManager().setResult("Selected Instrument: " + chosenInstrument.getName());
-                env.getUserHandler().getCurrentUser().getBadgeManager().updateInstrument(Arrays.asList(InstrumentUtility.getInstruments(env)).indexOf(instrumentName));
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().updateInstrument(Arrays.asList(InstrumentUtility.getInstruments(env)).indexOf(instrumentName));
                 saveInstrumentEditHistory(chosenInstrument, env);
                 player.setInstrument(chosenInstrument);
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().checkChanges("instrument");
@@ -118,7 +118,7 @@ public class InstrumentCommand implements Command {
             try {
                 chosenInstrument = InstrumentUtility.getInstrumentById(instrumentId, env);
                 env.getTranscriptManager().setResult("Selected Instrument: " + chosenInstrument.getName());
-                env.getUserHandler().getCurrentUser().getBadgeManager().updateInstrument(instrumentId);
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().updateInstrument(instrumentId);
                 saveInstrumentEditHistory(chosenInstrument, env);
                 player.setInstrument(chosenInstrument);
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().checkChanges("instrument");

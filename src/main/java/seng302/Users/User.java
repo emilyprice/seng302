@@ -38,7 +38,6 @@ public class User {
 
     private ProjectHandler projectHandler;
 
-    private BadgeManager badgeManager;
 
     private Environment env;
 
@@ -82,7 +81,6 @@ public class User {
         this.profilePic = new Image(userDirectory.toUri() + "/profilePicture");
 
         projectHandler = new ProjectHandler(env, userName);
-        badgeManager = new BadgeManager(env);
         //loadFullProperties();
     }
 
@@ -100,7 +98,6 @@ public class User {
         properties = new JSONObject();
         loadBasicProperties();
         this.profilePic = new Image(userDirectory.toUri() + "/profilePicture");
-        badgeManager = new BadgeManager(env);
 
 
     }
@@ -223,7 +220,6 @@ public class User {
         properties.put("themeColor", this.themeColor);
         properties.put("firstName", this.userFirstName);
         properties.put("lastName", this.userLastName);
-
 
         String musicalTermsJSON = gson.toJson(env.getMttDataManager().getTerms());
         properties.put("musicalTerms", musicalTermsJSON);
@@ -351,7 +347,7 @@ public class User {
         return userLastName;
     }
 
-    public BadgeManager getBadgeManager(){return badgeManager;}
+
 
 
 
