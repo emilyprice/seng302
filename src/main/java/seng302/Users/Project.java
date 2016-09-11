@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import seng302.Environment;
 
+import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 import seng302.utility.InstrumentUtility;
 import seng302.utility.OutputTuple;
@@ -93,11 +94,10 @@ public class Project {
 
         projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
 
-        System.out.println(badgeManager.getOverallBadges().get(2));
-        String badgeString = gson.toJson(badgeManager.getOverallBadges().get(2));
-        System.out.println(badgeString);
 
-        //projectSettings.put("badges", badgeString);
+        projectSettings.put("OverallBadges", gson.toJson(badgeManager.getOverallBadges()));
+        projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
+
 
 
     }

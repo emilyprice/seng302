@@ -138,4 +138,8 @@ public class BadgeManager {
         return overallBadges;
     }
 
+    public HashMap getTutorBadges(){
+        return tutorBadgeMap;
+    }
+
 }

@@ -12,22 +12,21 @@ public class Badge {
     private String name;
 
 
-    public Integer currentBadgeType;
+    public int currentBadgeType;
 
-    public Image image;
+    //public Image image;
 
-    private Integer badgeProgress;
+    public int badgeProgress;
 
     public ArrayList<Integer> badgeLevels;
 
 
-    private String description;
+    public String description;
 
 
-    public Badge(String name, String description, ArrayList badgeLevels, Integer badgeProgress, Integer currentBadgeType){
+    public Badge(String name, String description, ArrayList<Integer> badgeLevels, Integer badgeProgress, Integer currentBadgeType){
         this.name = name;
         this.currentBadgeType = currentBadgeType;
-        //this.image = image;
         this.description = description;
         this.badgeProgress = badgeProgress;
         this.badgeLevels = badgeLevels;
