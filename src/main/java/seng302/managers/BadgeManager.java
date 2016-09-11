@@ -29,6 +29,12 @@ public class BadgeManager {
         initalizeAllBadges();
     }
 
+    public void replaceBadges(HashMap<String, ArrayList<Badge>> tutorBadgeMap, ArrayList<Badge> overallBadges){
+
+        this.tutorBadgeMap = tutorBadgeMap;
+        this.overallBadges = overallBadges;
+    }
+
     private void populateTutorList(){
         allTutors.add("pitchTutor");
         allTutors.add("intervalTutor");

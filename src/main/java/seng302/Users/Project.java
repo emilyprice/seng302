@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import seng302.Environment;
 
@@ -165,6 +166,22 @@ public class Project {
         }
         env.getPlayer().setInstrument(instrument);
 
+
+        //badges
+        //overallBadges
+        ArrayList<Badge> overallBadges;
+        Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
+        }.getType();
+        overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
+
+        //tutorBadges
+        HashMap<String, ArrayList<Badge>> tutorBadges;
+        Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
+        }.getType();
+        tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
+
+        badgeManager.replaceBadges(tutorBadges, overallBadges);
+        System.out.println("badges replaced");
 
         env.getTranscriptManager().unsavedChanges = false;
 
