@@ -1,6 +1,5 @@
 package seng302.managers;
 
-import javafx.util.Pair;
 import seng302.Environment;
 import seng302.data.Badge;
 
@@ -13,7 +12,7 @@ public class BadgeManager {
 
     private ArrayList<Badge> overallBadges;
     private HashMap<String, ArrayList<Badge>> tutorBadgeMap;
-    private HashMap<String, Boolean> tutor100AllMAp;
+    private HashMap<String, Boolean> tutor100AllMap;
     static private ArrayList<String> allTutors = new ArrayList<>();
     private Environment env;
 
@@ -35,6 +34,10 @@ public class BadgeManager {
         this.overallBadges = overallBadges;
     }
 
+    public void replaceTutor100AllMap(HashMap<String, Boolean> map){
+        tutor100AllMap = map;
+    }
+
     private void populateTutorList(){
         allTutors.add("pitchTutor");
         allTutors.add("intervalTutor");
@@ -48,9 +51,9 @@ public class BadgeManager {
 
 
     private void populate100AllTutorMap(){
-        tutor100AllMAp = new HashMap<>();
+        tutor100AllMap = new HashMap<>();
         for (String tutor : allTutors){
-            tutor100AllMAp.put(tutor, false);
+            tutor100AllMap.put(tutor, false);
         }
     }
 
@@ -105,7 +108,7 @@ public class BadgeManager {
         tutorBadgeMap.get(tutorType).get(0).updateBadgeProgress(userScore);
         tutorBadgeMap.get(tutorType).get(1).updateBadgeProgress(1);
         if(userScore == 10) {
-            tutor100AllMAp.put(tutorType, true);
+            tutor100AllMap.put(tutorType, true);
             tutorBadgeMap.get(tutorType).get(2).updateBadgeProgress(1);
         }
 
@@ -131,7 +134,7 @@ public class BadgeManager {
 //            overallBadges.get(0).updateBadgeProgress(1);
 //        }
 
-        if(!tutor100AllMAp.containsValue(false)){
+        if(!tutor100AllMap.containsValue(false)){
             overallBadges.get(1).updateBadgeProgress(1);
         }
 
@@ -146,6 +149,10 @@ public class BadgeManager {
 
     public HashMap getTutorBadges(){
         return tutorBadgeMap;
+    }
+
+    public HashMap get100TutorBadges(){
+        return tutor100AllMap;
     }
 
 }

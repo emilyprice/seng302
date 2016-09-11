@@ -33,7 +33,6 @@ public class Badge {
 
     }
 
-
     public void updateBadgeProgress(Integer progress){
 
         badgeProgress += progress;

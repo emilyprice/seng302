@@ -96,8 +96,9 @@ public class Project {
         projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
 
 
-        projectSettings.put("OverallBadges", gson.toJson(badgeManager.getOverallBadges()));
+        projectSettings.put("overallBadges", gson.toJson(badgeManager.getOverallBadges()));
         projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
+        projectSettings.put("tutor100Map", gson.toJson(badgeManager.get100TutorBadges()));
 
 
 
@@ -181,7 +182,14 @@ public class Project {
         tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
 
         badgeManager.replaceBadges(tutorBadges, overallBadges);
-        System.out.println("badges replaced");
+
+        //100tutorMap
+        HashMap<String, Boolean> tutor100Map;
+        Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
+        }.getType();
+        tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+
+        badgeManager.replaceTutor100AllMap(tutor100Map);
 
         env.getTranscriptManager().unsavedChanges = false;
 
