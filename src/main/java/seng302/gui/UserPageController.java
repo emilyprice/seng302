@@ -9,12 +9,14 @@ import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
@@ -29,6 +31,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
@@ -36,6 +39,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Pair;
 import seng302.Environment;
+import seng302.data.Badge;
+import seng302.managers.BadgeManager;
 
 /**
  * Created by jmw280 on 22/08/16.
@@ -50,7 +55,10 @@ public class UserPageController {
     VBox stats;
 
     @FXML
-    HBox badgesHBox;
+    private HBox badgesHBox;
+
+    @FXML
+    VBox badgesVBox;
 
     @FXML
     ImageView firstBadgeView;
@@ -300,39 +308,67 @@ public class UserPageController {
     }
 
     private void updateBadgesDisplay() {
-        Image gradHatImg = new Image(String.valueOf(UserPageController.class.getResource("/images/grad-hat-badge.png")));
-        Image ribbonAwardImg = new Image(String.valueOf(UserPageController.class.getResource("/images/ribbon-award.png")));
-        Image lockImg = new Image("/images/lock.png");
 
-        SepiaTone sepiaTone = new SepiaTone();
-        sepiaTone.setLevel(1.0);
+        ArrayList levels = new ArrayList<Integer>();
+        Badge grad = new Badge("gradHat", "yadda yadda", levels, 1, 1);
+        Badge ribbon = new Badge("ribbonAward", "some ribbon thing", levels, 0, 1);
+        ArrayList<Badge> badgeList = new ArrayList();
 
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
 
-        ImageView thirdBadgeView = new ImageView();
-        ImageView lockView = new ImageView();
+        badgeList.add(grad);
+        badgeList.add(ribbon);
+        GridPane badgeGrid = new GridPane();
+        badgeGrid.setPadding(new Insets(0, 10, 0, 10));
+        badgeGrid.setHgap(10);
+        badgeGrid.setVgap(10);
+        int i = 0;
 
-        thirdBadgeStack.getChildren().addAll(thirdBadgeView, lockView);
+        for (Badge b : badgeList) {
+            Image bImage = new Image("/images/"+b.name+".png");
+            b.badgeImage = bImage;
+            ImageView bView = new ImageView(bImage);
+            bView.fitHeightProperty().setValue(70);
+            bView.fitWidthProperty().setValue(70);
 
-        firstBadgeView.setImage(ribbonAwardImg);
-        secondBadgeView.setImage(ribbonAwardImg);
-        thirdBadgeView.setImage(ribbonAwardImg);
-        firstBadgeView1.setImage(gradHatImg);
-        secondBadgeView1.setImage(gradHatImg);
-        thirdBadgeView1.setImage(gradHatImg);
+            StackPane badgeStack = new StackPane(bView);
+            badgeGrid.add(badgeStack, i, 0);
+            i++;
+        }
+        badgesVBox.getChildren().add(badgeGrid);
 
-        secondBadgeView.setEffect(sepiaTone);
-        thirdBadgeView.setEffect(blackout);
-        secondBadgeView1.setEffect(sepiaTone);
-        thirdBadgeView1.setEffect(blackout);
 
-        lockView.setImage(lockImg);
-        lockView.fitHeightProperty().setValue(50);
-        lockView.fitWidthProperty().setValue(50);
-//        lockView.relocate(thirdBadgeView.getX(), (thirdBadgeView.getY()+100));
-        thirdBadgeView.fitHeightProperty().setValue(90);
-        thirdBadgeView.fitWidthProperty().setValue(90);
+//        Image gradHatImg = new Image(String.valueOf(UserPageController.class.getResource("/images/gradHat.png")));
+//        Image ribbonAwardImg = new Image(String.valueOf(UserPageController.class.getResource("/images/ribbonAward.png")));
+//        Image lockImg = new Image("/images/lock.png");
+//
+//        SepiaTone sepiaTone = new SepiaTone();
+//        sepiaTone.setLevel(1.0);
+//
+//        ImageView thirdBadgeView = new ImageView();
+//        ImageView lockView = new ImageView();
+
+//        thirdBadgeStack.getChildren().addAll(thirdBadgeView, lockView);
+//
+//        firstBadgeView.setImage(ribbonAwardImg);
+//        secondBadgeView.setImage(ribbonAwardImg);
+//        thirdBadgeView.setImage(ribbonAwardImg);
+//        firstBadgeView1.setImage(gradHatImg);
+//        secondBadgeView1.setImage(gradHatImg);
+//        thirdBadgeView1.setImage(gradHatImg);
+//
+//        secondBadgeView.setEffect(sepiaTone);
+//        thirdBadgeView.setEffect(blackout);
+//        secondBadgeView1.setEffect(sepiaTone);
+//        thirdBadgeView1.setEffect(blackout);
+//
+//        lockView.setImage(lockImg);
+//        lockView.fitHeightProperty().setValue(50);
+//        lockView.fitWidthProperty().setValue(50);
+////        lockView.relocate(thirdBadgeView.getX(), (thirdBadgeView.getY()+100));
+//        thirdBadgeView.fitHeightProperty().setValue(90);
+//        thirdBadgeView.fitWidthProperty().setValue(90);
 
     }
 

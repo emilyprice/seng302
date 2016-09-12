@@ -9,12 +9,12 @@ import java.util.ArrayList;
  */
 public class Badge {
 
-    private String name;
+    public String name;
 
 
     public int currentBadgeType;
 
-    //public Image image;
+    public Image badgeImage;
 
     public int badgeProgress;
 
@@ -30,7 +30,7 @@ public class Badge {
         this.description = description;
         this.badgeProgress = badgeProgress;
         this.badgeLevels = badgeLevels;
-
+        this.badgeImage = null;
     }
 
     public void updateBadgeProgress(Integer progress){

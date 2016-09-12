@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class BadgeManager {
 
-    private ArrayList<Badge> overallBadges;
+    private static ArrayList<Badge> overallBadges;
     private HashMap<String, ArrayList<Badge>> tutorBadgeMap;
     private HashMap<String, Boolean> tutor100AllMap;
     static private ArrayList<String> allTutors = new ArrayList<>();
@@ -143,7 +143,7 @@ public class BadgeManager {
     }
 
 
-    public ArrayList<Badge> getOverallBadges(){
+    public static ArrayList<Badge> getOverallBadges(){
         return overallBadges;
     }
 

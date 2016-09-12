@@ -65,29 +65,8 @@
                             </yAxis>
                         </LineChart>
                         <Label prefHeight="15.0" prefWidth="56.0" text="Badges" textAlignment="CENTER" />
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                              <HBox fx:id="badgesHbox" alignment="CENTER" maxHeight="191.0" maxWidth="450.0" minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="450.0" spacing="4.0">
-                                  <VBox.margin>
-                                      <Insets bottom="30.0" />
-                                  </VBox.margin>
-                                   <children>
-                                      <ImageView fx:id="firstBadgeView" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
-                                      <ImageView fx:id="secondBadgeView" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
-                                      <StackPane fx:id="thirdBadgeStack" prefHeight="90.0" prefWidth="120.0">
-                                         <children></children>
-                                      </StackPane>
-                                   </children>
-                              </HBox>
-                        <HBox fx:id="badgesHbox1" alignment="CENTER" maxHeight="191.0" maxWidth="450.0" minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="450.0" spacing="4.0">
-                           <children>
-                              <ImageView fx:id="firstBadgeView1" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
-                              <ImageView fx:id="secondBadgeView1" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
-                               <ImageView fx:id="thirdBadgeView1" fitHeight="90.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
-
-                           </children>
-                        </HBox>
-                     </children>
+                  <VBox fx:id="badgesVBox" prefHeight="200.0" prefWidth="100.0">
+                     <children></children>
                   </VBox>
                         <AnchorPane maxHeight="85.0" maxWidth="351.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="85.0" prefWidth="351.0" />
                     </children>
