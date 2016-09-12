@@ -316,6 +316,10 @@ public class UserPageController {
 
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
+        Image lockImg = new Image("/images/lock.png");
+        ImageView lockView = new ImageView(lockImg);
+        lockView.fitHeightProperty().setValue(45);
+        lockView.fitWidthProperty().setValue(45);
 
         badgeList.add(grad);
         badgeList.add(ribbon);
@@ -333,42 +337,20 @@ public class UserPageController {
             bView.fitWidthProperty().setValue(70);
 
             StackPane badgeStack = new StackPane(bView);
+            if (b.badgeProgress == 0) {
+                bView.setEffect(blackout);
+                badgeStack.getChildren().add(lockView);
+            }
             badgeGrid.add(badgeStack, i, 0);
             i++;
         }
         badgesVBox.getChildren().add(badgeGrid);
 
-
-//        Image gradHatImg = new Image(String.valueOf(UserPageController.class.getResource("/images/gradHat.png")));
-//        Image ribbonAwardImg = new Image(String.valueOf(UserPageController.class.getResource("/images/ribbonAward.png")));
-//        Image lockImg = new Image("/images/lock.png");
-//
 //        SepiaTone sepiaTone = new SepiaTone();
 //        sepiaTone.setLevel(1.0);
 //
-//        ImageView thirdBadgeView = new ImageView();
-//        ImageView lockView = new ImageView();
-
-//        thirdBadgeStack.getChildren().addAll(thirdBadgeView, lockView);
-//
-//        firstBadgeView.setImage(ribbonAwardImg);
-//        secondBadgeView.setImage(ribbonAwardImg);
-//        thirdBadgeView.setImage(ribbonAwardImg);
-//        firstBadgeView1.setImage(gradHatImg);
-//        secondBadgeView1.setImage(gradHatImg);
-//        thirdBadgeView1.setImage(gradHatImg);
-//
-//        secondBadgeView.setEffect(sepiaTone);
-//        thirdBadgeView.setEffect(blackout);
 //        secondBadgeView1.setEffect(sepiaTone);
 //        thirdBadgeView1.setEffect(blackout);
-//
-//        lockView.setImage(lockImg);
-//        lockView.fitHeightProperty().setValue(50);
-//        lockView.fitWidthProperty().setValue(50);
-////        lockView.relocate(thirdBadgeView.getX(), (thirdBadgeView.getY()+100));
-//        thirdBadgeView.fitHeightProperty().setValue(90);
-//        thirdBadgeView.fitWidthProperty().setValue(90);
 
     }
 
