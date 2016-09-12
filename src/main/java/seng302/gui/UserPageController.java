@@ -310,8 +310,8 @@ public class UserPageController {
     private void updateBadgesDisplay() {
 
         ArrayList levels = new ArrayList<Integer>();
-        Badge grad = new Badge("gradHat", "yadda yadda", levels, 1, 1);
-        Badge ribbon = new Badge("ribbonAward", "some ribbon thing", levels, 0, 1);
+        Badge grad = new Badge("gradHat", "yadda yadda", levels, 3, 1);
+        Badge ribbon = new Badge("ribbonAward", "some ribbon thing", levels, 1, 1);
         ArrayList<Badge> badgeList = new ArrayList();
 
         ColorAdjust blackout = new ColorAdjust();
@@ -340,17 +340,26 @@ public class UserPageController {
             if (b.badgeProgress == 0) {
                 bView.setEffect(blackout);
                 badgeStack.getChildren().add(lockView);
+            } else if (b.badgeProgress == 1) {
+                SepiaTone sepiaTone = new SepiaTone();
+                bView.setEffect(sepiaTone);
+            } else if (b.badgeProgress == 2) {
+                ColorAdjust silver = new ColorAdjust();
+                silver.setHue(0);
+                silver.setSaturation(-1);
+                silver.setBrightness(0.32);
+                bView.setEffect(silver);
+            } else if ( b.badgeProgress == 3) {
+                ColorAdjust gold = new ColorAdjust();
+                gold.setHue(-0.888);
+                gold.setSaturation(1);
+                gold.setBrightness(0.4);
+                bView.setEffect(gold);
             }
             badgeGrid.add(badgeStack, i, 0);
             i++;
         }
         badgesVBox.getChildren().add(badgeGrid);
-
-//        SepiaTone sepiaTone = new SepiaTone();
-//        sepiaTone.setLevel(1.0);
-//
-//        secondBadgeView1.setEffect(sepiaTone);
-//        thirdBadgeView1.setEffect(blackout);
 
     }
 
