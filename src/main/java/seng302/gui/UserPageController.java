@@ -310,8 +310,8 @@ public class UserPageController {
     private void updateBadgesDisplay() {
 
         ArrayList levels = new ArrayList<Integer>();
-        Badge grad = new Badge("gradHat", "yadda yadda", levels, 3, 1);
-        Badge ribbon = new Badge("ribbonAward", "some ribbon thing", levels, 1, 1);
+        Badge grad = new Badge("gradHat", "yadda yadda", levels, 2, 1);
+        Badge ribbon = new Badge("ribbonAward", "some ribbon thing", levels, 2, 1);
         ArrayList<Badge> badgeList = new ArrayList();
 
         ColorAdjust blackout = new ColorAdjust();
@@ -356,7 +356,11 @@ public class UserPageController {
                 gold.setBrightness(0.4);
                 bView.setEffect(gold);
             }
-            badgeGrid.add(badgeStack, i, 0);
+            VBox badgeBox = new VBox();
+            Label badgeName = new Label(b.name);
+            badgeBox.getChildren().addAll(badgeStack, badgeName);
+            badgeBox.setAlignment(Pos.CENTER);
+            badgeGrid.add(badgeBox, i, 0);
             i++;
         }
         badgesVBox.getChildren().add(badgeGrid);
