@@ -12,7 +12,7 @@ public class BadgeManager {
 
     private static ArrayList<Badge> overallBadges;
     private static HashMap<String, ArrayList<Badge>> tutorBadgeMap;
-    private HashMap<String, Boolean> tutor100AllMap;
+    private static HashMap<String, Boolean> tutor100AllMap;
     static private ArrayList<String> allTutors = new ArrayList<>();
     private Environment env;
 
@@ -29,7 +29,6 @@ public class BadgeManager {
     }
 
     public void replaceBadges(HashMap<String, ArrayList<Badge>> tutorBadgeMap, ArrayList<Badge> overallBadges){
-
         this.tutorBadgeMap = tutorBadgeMap;
         this.overallBadges = overallBadges;
     }
@@ -98,6 +97,9 @@ public class BadgeManager {
         overallBadges.add(new Badge("Speedster", "successfully force set the tempo", null, 0, 0, "speedster"));
         overallBadges.add(new Badge("TwinkleTwinkle", "find hidden secret", null, 0, 0, "twinkle"));
 
+        replaceBadges(tutorBadgeMap, overallBadges);
+        System.out.println("tutorBadgeMap: " + tutorBadgeMap);
+        System.out.println("overallBadgeMap: "+overallBadges);
     }
 
 
@@ -147,6 +149,7 @@ public class BadgeManager {
     }
 
     public static HashMap getTutorBadges(){
+        System.out.println("tutorBadgeMap in getter: "+tutorBadgeMap);
         return tutorBadgeMap;
     }
 

@@ -39,6 +39,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.*;
 import javafx.util.Pair;
 import seng302.Environment;
 import seng302.data.Badge;
@@ -57,34 +58,7 @@ public class UserPageController {
     VBox stats;
 
     @FXML
-    private HBox badgesHBox;
-
-    @FXML
     VBox badgesVBox;
-
-    @FXML
-    ImageView firstBadgeView;
-
-    @FXML
-    ImageView secondBadgeView;
-
-    @FXML
-    ImageView thirdBadgeView;
-
-    @FXML
-    ImageView firstBadgeView1;
-
-    @FXML
-    ImageView secondBadgeView1;
-
-    @FXML
-    ImageView thirdBadgeView1;
-
-    @FXML
-    ImageView lockView;
-
-    @FXML
-    StackPane thirdBadgeStack;
 
     @FXML
     StackedBarChart stackedBar;
@@ -100,6 +74,9 @@ public class UserPageController {
 
     @FXML
     Label chartTitle;
+
+    @FXML
+    GridPane badgeGrid;
 
     @FXML
     LineChart lineChart;
@@ -316,8 +293,11 @@ public class UserPageController {
         Badge ribbon = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 2, "ribbonAward");
         ArrayList<Badge> badgeList = new ArrayList();
 
+        HashMap tutorBadges = BadgeManager.getTutorBadges();
 //        ArrayList<Badge> tutorBadges = BadgeManager.getOverallBadges();
-//        System.out.println("Badges pls: "+tutorBadges);
+//        HashMap tutorBadges = BadgeManager.getTutorBadges();
+        System.out.println("Badges pls: "+tutorBadges);
+
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
         Image lockImg = new Image("/images/lock.png");
@@ -327,15 +307,10 @@ public class UserPageController {
 
         badgeList.add(grad);
         badgeList.add(ribbon);
-        GridPane badgeGrid = new GridPane();
-        badgeGrid.setPadding(new Insets(5, 20, 5, 20));
-        badgeGrid.setHgap(10);
-        badgeGrid.setVgap(10);
         int i = 0;
 
         for (Badge b : badgeList) {
             Image bImage = new Image("/images/"+b.imageName+".png");
-//            b.badgeImage = bImage;
             ImageView bView = new ImageView(bImage);
             bView.fitHeightProperty().setValue(70);
             bView.fitWidthProperty().setValue(70);
@@ -362,6 +337,7 @@ public class UserPageController {
             }
             VBox badgeBox = new VBox();
             Label badgeName = new Label(b.name);
+            badgeName.setFont(javafx.scene.text.Font.font(16));
             Label description = new Label(b.description);
             ProgressBar progressBar = new ProgressBar();
             progressBar.setProgress(b.badgeProgress);
@@ -371,7 +347,6 @@ public class UserPageController {
             badgeGrid.add(badgeBox, i, 0);
             i++;
         }
-        badgesVBox.getChildren().add(badgeGrid);
 
     }
 
