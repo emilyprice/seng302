@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -23,6 +24,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.SepiaTone;
@@ -310,10 +312,12 @@ public class UserPageController {
     private void updateBadgesDisplay() {
 
         ArrayList levels = new ArrayList<Integer>();
-        Badge grad = new Badge("gradHat", "yadda yadda", levels, 2, 1);
-        Badge ribbon = new Badge("ribbonAward", "some ribbon thing", levels, 2, 1);
+        Badge grad = new Badge("Graduation", "Yadda yadda", levels, 0.25, 2, "gradHat");
+        Badge ribbon = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 2, "ribbonAward");
         ArrayList<Badge> badgeList = new ArrayList();
 
+//        ArrayList<Badge> tutorBadges = BadgeManager.getOverallBadges();
+//        System.out.println("Badges pls: "+tutorBadges);
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
         Image lockImg = new Image("/images/lock.png");
@@ -324,32 +328,32 @@ public class UserPageController {
         badgeList.add(grad);
         badgeList.add(ribbon);
         GridPane badgeGrid = new GridPane();
-        badgeGrid.setPadding(new Insets(0, 10, 0, 10));
+        badgeGrid.setPadding(new Insets(5, 20, 5, 20));
         badgeGrid.setHgap(10);
         badgeGrid.setVgap(10);
         int i = 0;
 
         for (Badge b : badgeList) {
-            Image bImage = new Image("/images/"+b.name+".png");
-            b.badgeImage = bImage;
+            Image bImage = new Image("/images/"+b.imageName+".png");
+//            b.badgeImage = bImage;
             ImageView bView = new ImageView(bImage);
             bView.fitHeightProperty().setValue(70);
             bView.fitWidthProperty().setValue(70);
 
             StackPane badgeStack = new StackPane(bView);
-            if (b.badgeProgress == 0) {
+            if (b.currentBadgeType == 0) {
                 bView.setEffect(blackout);
                 badgeStack.getChildren().add(lockView);
-            } else if (b.badgeProgress == 1) {
+            } else if (b.currentBadgeType == 1) {
                 SepiaTone sepiaTone = new SepiaTone();
                 bView.setEffect(sepiaTone);
-            } else if (b.badgeProgress == 2) {
+            } else if (b.currentBadgeType == 2) {
                 ColorAdjust silver = new ColorAdjust();
                 silver.setHue(0);
                 silver.setSaturation(-1);
                 silver.setBrightness(0.32);
                 bView.setEffect(silver);
-            } else if ( b.badgeProgress == 3) {
+            } else if ( b.currentBadgeType == 3) {
                 ColorAdjust gold = new ColorAdjust();
                 gold.setHue(-0.888);
                 gold.setSaturation(1);
@@ -358,8 +362,12 @@ public class UserPageController {
             }
             VBox badgeBox = new VBox();
             Label badgeName = new Label(b.name);
-            badgeBox.getChildren().addAll(badgeStack, badgeName);
+            Label description = new Label(b.description);
+            ProgressBar progressBar = new ProgressBar();
+            progressBar.setProgress(b.badgeProgress);
+            badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
             badgeBox.setAlignment(Pos.CENTER);
+            badgeBox.setSpacing(4);
             badgeGrid.add(badgeBox, i, 0);
             i++;
         }

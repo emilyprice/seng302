@@ -14,9 +14,9 @@ public class Badge {
 
     public int currentBadgeType;
 
-    public Image badgeImage;
+    public String imageName;
 
-    public int badgeProgress;
+    public double badgeProgress;
 
     public ArrayList<Integer> badgeLevels;
 
@@ -24,13 +24,13 @@ public class Badge {
     public String description;
 
 
-    public Badge(String name, String description, ArrayList<Integer> badgeLevels, Integer badgeProgress, Integer currentBadgeType){
+    public Badge(String name, String description, ArrayList<Integer> badgeLevels, double badgeProgress, Integer currentBadgeType, String imageName){
         this.name = name;
         this.currentBadgeType = currentBadgeType;
         this.description = description;
         this.badgeProgress = badgeProgress;
         this.badgeLevels = badgeLevels;
-        this.badgeImage = null;
+        this.imageName = imageName;
     }
 
     public void updateBadgeProgress(Integer progress){

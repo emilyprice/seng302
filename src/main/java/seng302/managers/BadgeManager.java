@@ -11,7 +11,7 @@ import java.util.*;
 public class BadgeManager {
 
     private static ArrayList<Badge> overallBadges;
-    private HashMap<String, ArrayList<Badge>> tutorBadgeMap;
+    private static HashMap<String, ArrayList<Badge>> tutorBadgeMap;
     private HashMap<String, Boolean> tutor100AllMap;
     static private ArrayList<String> allTutors = new ArrayList<>();
     private Environment env;
@@ -81,29 +81,28 @@ public class BadgeManager {
         //intalize tutor badges
         for (String tutor:allTutors){
             ArrayList<Badge> badges = new ArrayList<>();
-            badges.add(new Badge("Correct Questions", "number of questions correctly answered", questionBadges, 0, 0));
-            badges.add(new Badge("100% sessions", "number of 100% tutor sessions", sessionBadges, 0, 0));
-            badges.add(new Badge("completed sessions", "number of 100% tutor sessions", sessionBadges, 0, 0));
+            badges.add(new Badge("Correct Questions", "number of questions correctly answered", questionBadges, 0, 0, "mark"));
+            badges.add(new Badge("100% sessions", "number of 100% tutor sessions", sessionBadges, 0, 0, "sessions"));
+            badges.add(new Badge("completed sessions", "number of 100% tutor sessions", sessionBadges, 0, 0, "sessions"));
 
             if( tutor.equals("musicalTermTutor")){
-                badges.add(new Badge("terms added", "number of musical terms added", sessionBadges, 0, 0));
+                badges.add(new Badge("terms added", "number of musical terms added", sessionBadges, 0, 0, "terms"));
             }
             tutorBadgeMap.put(tutor, badges);
         }
 
-        //initalize overall badges
-        overallBadges.add(new Badge("All tutors", "Unlocked all tutors", null, 0, 0));
-        overallBadges.add(new Badge("All tutors master", "100% in all tutors", null, 0, 0));
-        overallBadges.add(new Badge("Musician","number of instruments used", sessionBadges, 0, 0));
-        overallBadges.add(new Badge("Speedster", "successfully force set the tempo", null, 0, 0));
-        overallBadges.add(new Badge("TwinkleTwinkle", "find hidden secret", null, 0, 0));
-
+        //initialise overall badges
+        overallBadges.add(new Badge("All tutors", "Unlocked all tutors", null, 0, 0, "tutor"));
+        overallBadges.add(new Badge("All tutors master", "100% in all tutors", null, 0, 0, "tutor-master"));
+        overallBadges.add(new Badge("Musician","number of instruments used", sessionBadges, 0, 0, "musician"));
+        overallBadges.add(new Badge("Speedster", "successfully force set the tempo", null, 0, 0, "speedster"));
+        overallBadges.add(new Badge("TwinkleTwinkle", "find hidden secret", null, 0, 0, "twinkle"));
 
     }
 
 
     public void updateAllBadges(String tutorType, Integer userScore){
-        //updat overall badges
+        //update overall badges
         //update tutor badges
         tutorBadgeMap.get(tutorType).get(0).updateBadgeProgress(userScore);
         tutorBadgeMap.get(tutorType).get(1).updateBadgeProgress(1);
@@ -147,7 +146,7 @@ public class BadgeManager {
         return overallBadges;
     }
 
-    public HashMap getTutorBadges(){
+    public static HashMap getTutorBadges(){
         return tutorBadgeMap;
     }
 
