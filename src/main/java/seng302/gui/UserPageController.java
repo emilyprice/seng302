@@ -73,6 +73,12 @@ public class UserPageController {
     JFXListView listView;
 
     @FXML
+    ImageView lockView;
+
+    @FXML
+    ColorAdjust blackout;
+
+    @FXML
     Label chartTitle;
 
     @FXML
@@ -92,6 +98,7 @@ public class UserPageController {
 
     private Environment env;
 
+    private int gridCount;
 
     public UserPageController() {
     }
@@ -289,65 +296,67 @@ public class UserPageController {
     private void updateBadgesDisplay() {
 
         ArrayList levels = new ArrayList<Integer>();
-        Badge grad = new Badge("Graduation", "Yadda yadda", levels, 0.25, 2, "gradHat");
-        Badge ribbon = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 2, "ribbonAward");
+        Badge grad = new Badge("Graduation", "Yadda yadda", levels, 0.25, 1, "gradHat");
+        Badge ribbon = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 0, "ribbonAward");
         ArrayList<Badge> badgeList = new ArrayList();
 
         HashMap tutorBadges = BadgeManager.getTutorBadges();
 //        ArrayList<Badge> tutorBadges = BadgeManager.getOverallBadges();
 //        HashMap tutorBadges = BadgeManager.getTutorBadges();
-        System.out.println("Badges pls: "+tutorBadges);
+//        System.out.println("Badges pls: " + tutorBadges);
 
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
+        this.blackout = blackout;
         Image lockImg = new Image("/images/lock.png");
         ImageView lockView = new ImageView(lockImg);
         lockView.fitHeightProperty().setValue(45);
         lockView.fitWidthProperty().setValue(45);
+        this.lockView = lockView;
 
         badgeList.add(grad);
         badgeList.add(ribbon);
-        int i = 0;
+        badgeList.forEach(this::addBadgeToGrid);
 
-        for (Badge b : badgeList) {
-            Image bImage = new Image("/images/"+b.imageName+".png");
-            ImageView bView = new ImageView(bImage);
-            bView.fitHeightProperty().setValue(70);
-            bView.fitWidthProperty().setValue(70);
+    }
 
-            StackPane badgeStack = new StackPane(bView);
-            if (b.currentBadgeType == 0) {
-                bView.setEffect(blackout);
-                badgeStack.getChildren().add(lockView);
-            } else if (b.currentBadgeType == 1) {
-                SepiaTone sepiaTone = new SepiaTone();
-                bView.setEffect(sepiaTone);
-            } else if (b.currentBadgeType == 2) {
-                ColorAdjust silver = new ColorAdjust();
-                silver.setHue(0);
-                silver.setSaturation(-1);
-                silver.setBrightness(0.32);
-                bView.setEffect(silver);
-            } else if ( b.currentBadgeType == 3) {
-                ColorAdjust gold = new ColorAdjust();
-                gold.setHue(-0.888);
-                gold.setSaturation(1);
-                gold.setBrightness(0.4);
-                bView.setEffect(gold);
-            }
-            VBox badgeBox = new VBox();
-            Label badgeName = new Label(b.name);
-            badgeName.setFont(javafx.scene.text.Font.font(16));
-            Label description = new Label(b.description);
-            ProgressBar progressBar = new ProgressBar();
-            progressBar.setProgress(b.badgeProgress);
-            badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
-            badgeBox.setAlignment(Pos.CENTER);
-            badgeBox.setSpacing(4);
-            badgeGrid.add(badgeBox, i, 0);
-            i++;
+    public void addBadgeToGrid(Badge b) {
+        Image bImage = new Image("/images/"+b.imageName+".png");
+        ImageView bView = new ImageView(bImage);
+        bView.fitHeightProperty().setValue(70);
+        bView.fitWidthProperty().setValue(70);
+
+        StackPane badgeStack = new StackPane(bView);
+        ColorAdjust badgeEffect = new ColorAdjust();
+        if (b.currentBadgeType == 0) {
+            badgeEffect = this.blackout;
+            badgeStack.getChildren().add(this.lockView);
+        } else if (b.currentBadgeType == 1) {
+            badgeEffect.setHue(-0.88);
+            badgeEffect.setSaturation(0.94);
+            badgeEffect.setBrightness(-0.25);
+        } else if (b.currentBadgeType == 2) {
+            badgeEffect.setHue(0);
+            badgeEffect.setSaturation(-1);
+            badgeEffect.setBrightness(0.32);
+        } else if ( b.currentBadgeType == 3) {
+            badgeEffect.setHue(-0.888);
+            badgeEffect.setSaturation(1);
+            badgeEffect.setBrightness(0.4);
         }
+        bView.setEffect(badgeEffect);
 
+        VBox badgeBox = new VBox();
+        Label badgeName = new Label(b.name);
+        badgeName.setFont(javafx.scene.text.Font.font(16));
+        Label description = new Label(b.description);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setProgress(b.badgeProgress);
+        badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
+        badgeBox.setAlignment(Pos.CENTER);
+        badgeBox.setSpacing(4);
+        badgeGrid.add(badgeBox, gridCount, 0);
+        gridCount++;
     }
 
     public void updateImage() {
