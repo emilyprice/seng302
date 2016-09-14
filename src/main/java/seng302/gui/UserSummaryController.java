@@ -1,6 +1,8 @@
 package seng302.gui;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -124,8 +126,8 @@ public class UserSummaryController {
 
         ArrayList levels = new ArrayList<Integer>();
         Badge grad = new Badge("Graduation", "Yadda yadda", levels, 0.25, 1, "gradHat");
-        Badge pitch = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 2, "tuning-fork");
-        Badge terms = new Badge("Terms Tutor", "Some ribbon thing", levels, 0.15, 0, "open-book");
+        Badge pitch = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 0, "tuning-fork");
+        Badge terms = new Badge("Terms Tutor", "Some ribbon thing", levels, 0.15, 2, "open-book");
         ArrayList<Badge> generalBadges = new ArrayList();
         ArrayList<Badge> tutorBadges = new ArrayList();
 
@@ -146,8 +148,17 @@ public class UserSummaryController {
         generalBadges.add(grad);
         tutorBadges.add(pitch);
         tutorBadges.add(terms);
-        tutorBadges.forEach(this::addTutorBadgeToGrid);
+        Collections.sort(generalBadges, new badgeComparator());
         generalBadges.forEach(this::addBadgeToGrid);
+        Collections.sort(tutorBadges, new badgeComparator());
+        tutorBadges.forEach(this::addTutorBadgeToGrid);
+    }
+
+    public static class badgeComparator implements Comparator<Badge> {
+        @Override
+        public int compare(Badge b1, Badge b2) {
+            return (b1.currentBadgeType > b2.currentBadgeType) ? -1: (b1.currentBadgeType < b2.currentBadgeType) ? 1:0;
+        }
     }
 
     public void addBadgeToGrid(Badge b) {
