@@ -375,6 +375,7 @@ public class TutorStatsController {
         generalBadges.add(grad);
         tutorBadges.add(pitch);
         tutorBadges.add(terms);
+        badgeGrid.getChildren().removeAll();
         tutorBadges.forEach(this::addTutorBadgeToGrid);
     }
     
