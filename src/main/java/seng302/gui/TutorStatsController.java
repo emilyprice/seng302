@@ -4,6 +4,8 @@ import com.jfoenix.controls.JFXButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -376,7 +378,15 @@ public class TutorStatsController {
         tutorBadges.add(pitch);
         tutorBadges.add(terms);
         badgeGrid.getChildren().removeAll();
+        Collections.sort(tutorBadges, new badgeComparator());
         tutorBadges.forEach(this::addTutorBadgeToGrid);
+    }
+
+    public static class badgeComparator implements Comparator<Badge> {
+        @Override
+        public int compare(Badge b1, Badge b2) {
+            return (b1.currentBadgeType > b2.currentBadgeType) ? -1: (b1.currentBadgeType < b2.currentBadgeType) ? 1:0;
+        }
     }
     
 
