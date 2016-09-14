@@ -179,7 +179,7 @@ public class ScaleRecognitionTutorController extends TutorController {
 
         handleAccordion();
         if (manager.answered == manager.questions) {
-            finished("scaleTutor");
+            finished();
         }
     }
 
@@ -231,7 +231,7 @@ public class ScaleRecognitionTutorController extends TutorController {
             record.addQuestionAnswer(question);
             handleAccordion();
             if (manager.answered == manager.questions) {
-                finished("ScaleTutor");
+                finished();
             }
         });
 

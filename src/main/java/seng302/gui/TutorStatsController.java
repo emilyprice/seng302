@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javafx.animation.Interpolator;
@@ -20,9 +21,13 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -32,6 +37,8 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 import seng302.Environment;
+import seng302.data.Badge;
+import seng302.managers.BadgeManager;
 
 /**
  * Controller for the tutor stats pane,  used in the user page for all tutors.
@@ -106,9 +113,12 @@ public class TutorStatsController {
     private Label badgesLabel;
 
     @FXML
-    private AnchorPane badgesAnchor;
+    private GridPane badgeGrid;
 
     String currentTutor;
+    private ColorAdjust blackout;
+    private ImageView lockView;
+    private int gridCount;
 
     public void create(Environment env) {
         this.env = env;
@@ -338,6 +348,83 @@ public class TutorStatsController {
             return label;
         }
     }
+
+    public void updateBadgesDisplay() {
+
+        ArrayList levels = new ArrayList<Integer>();
+        Badge grad = new Badge("Graduation", "Yadda yadda", levels, 0.25, 1, "gradHat");
+        Badge pitch = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 2, "tuning-fork");
+        Badge terms = new Badge("Terms Tutor", "Some ribbon thing", levels, 0.15, 0, "open-book");
+        ArrayList<Badge> generalBadges = new ArrayList();
+        ArrayList<Badge> tutorBadges = new ArrayList();
+
+//        HashMap someTutorBadges = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getTutorBadges();
+//        ArrayList<Badge> tutorBadges = BadgeManager.getOverallBadges();
+//        HashMap tutorBadges = BadgeManager.getTutorBadges();
+//        System.out.println("Badges pls whaat: " + someTutorBadges);
+
+        ColorAdjust blackout = new ColorAdjust();
+        blackout.setBrightness(-1.0);
+        this.blackout = blackout;
+        Image lockImg = new Image("/images/lock.png");
+        ImageView lockView = new ImageView(lockImg);
+        lockView.fitHeightProperty().setValue(45);
+        lockView.fitWidthProperty().setValue(45);
+        this.lockView = lockView;
+
+        generalBadges.add(grad);
+        tutorBadges.add(pitch);
+        tutorBadges.add(terms);
+        tutorBadges.forEach(this::addTutorBadgeToGrid);
+    }
+    
+
+    public void addTutorBadgeToGrid(Badge b) {
+        Image ribbonImage = new Image("/images/ribbonAward.png");
+        ImageView rView = new ImageView(ribbonImage);
+        rView.fitHeightProperty().setValue(70);
+        rView.fitWidthProperty().setValue(70);
+        Image bImage = new Image("/images/"+b.imageName+".png");
+        ImageView bView = new ImageView(bImage);
+        bView.fitHeightProperty().setValue(26);
+        bView.fitWidthProperty().setValue(26);
+
+        StackPane badgeStack = new StackPane(rView, bView);
+        badgeStack.getChildren().get(1).setTranslateY(-13);
+        badgeStack.getChildren().get(1).setTranslateX(-0.6);
+        ColorAdjust badgeEffect = new ColorAdjust();
+        if (b.currentBadgeType == 0) {
+            badgeEffect = this.blackout;
+            badgeStack.getChildren().remove(1);
+            badgeStack.getChildren().add(this.lockView);
+        } else if (b.currentBadgeType == 1) {
+            badgeEffect.setHue(-0.88);
+            badgeEffect.setSaturation(0.94);
+            badgeEffect.setBrightness(-0.25);
+        } else if (b.currentBadgeType == 2) {
+            badgeEffect.setHue(0);
+            badgeEffect.setSaturation(-1);
+            badgeEffect.setBrightness(0.32);
+        } else if ( b.currentBadgeType == 3) {
+            badgeEffect.setHue(-0.888);
+            badgeEffect.setSaturation(1);
+            badgeEffect.setBrightness(0.4);
+        }
+        rView.setEffect(badgeEffect);
+
+        VBox badgeBox = new VBox();
+        Label badgeName = new Label(b.name);
+        badgeName.setFont(javafx.scene.text.Font.font(16));
+        Label description = new Label(b.description);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setProgress(b.badgeProgress);
+        badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
+        badgeBox.setAlignment(Pos.CENTER);
+        badgeBox.setSpacing(4);
+        badgeGrid.add(badgeBox, gridCount, 0);
+        gridCount++;
+    }
+
 
 
     @FXML

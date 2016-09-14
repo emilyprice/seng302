@@ -10,9 +10,9 @@ import java.util.*;
  */
 public class BadgeManager {
 
-    private static ArrayList<Badge> overallBadges;
-    private static HashMap<String, ArrayList<Badge>> tutorBadgeMap;
-    private static HashMap<String, Boolean> tutor100AllMap;
+    private ArrayList<Badge> overallBadges;
+    private HashMap<String, ArrayList<Badge>> tutorBadgeMap;
+    private HashMap<String, Boolean> tutor100AllMap;
     static private ArrayList<String> allTutors = new ArrayList<>();
     private Environment env;
 
@@ -144,11 +144,11 @@ public class BadgeManager {
     }
 
 
-    public static ArrayList<Badge> getOverallBadges(){
+    public ArrayList<Badge> getOverallBadges(){
         return overallBadges;
     }
 
-    public static HashMap getTutorBadges(){
+    public HashMap getTutorBadges(){
         System.out.println("tutorBadgeMap in getter: "+tutorBadgeMap);
         return tutorBadgeMap;
     }

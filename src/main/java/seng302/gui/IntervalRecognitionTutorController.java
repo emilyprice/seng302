@@ -164,7 +164,7 @@ public class IntervalRecognitionTutorController extends TutorController {
             record.addQuestionAnswer(question);
             handleAccordion();
             if (manager.answered == manager.questions) {
-                finished("intervalTutor");
+                finished();
             }
         });
 
@@ -194,7 +194,7 @@ public class IntervalRecognitionTutorController extends TutorController {
             // Shows the correct answer
             handleAccordion();
             if (manager.answered == manager.questions) {
-                finished("intervalTutor");
+                finished();
             }
         });
 

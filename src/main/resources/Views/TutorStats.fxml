@@ -16,6 +16,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.GridPane?>
 <VBox fx:id="stats" alignment="TOP_CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0"
       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
       BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8"
@@ -157,7 +158,7 @@
         </LineChart>
         <Label fx:id="badgesLabel" prefHeight="15.0" prefWidth="56.0" text="Badges"
                textAlignment="CENTER"/>
-        <AnchorPane fx:id="badgesAnchor" maxHeight="85.0" maxWidth="351.0" minHeight="-Infinity"
+        <GridPane fx:id="badgeGrid" maxHeight="85.0" maxWidth="351.0" minHeight="-Infinity"
                     minWidth="-Infinity" prefHeight="85.0" prefWidth="351.0"/>
     </children>
     <padding>

@@ -200,7 +200,7 @@ public class PitchComparisonTutorController extends TutorController {
 
         handleAccordion();
         if (manager.answered == manager.questions) {
-            finished("pitchTutor");
+            finished();
         }
 
         return correctChoice;

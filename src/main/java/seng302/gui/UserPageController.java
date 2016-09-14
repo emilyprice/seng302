@@ -61,53 +61,24 @@ import seng302.managers.BadgeManager;
  */
 public class UserPageController {
 
-
-    @FXML
-    AnchorPane contentPane;
-
     @FXML
     SplitPane userView;
 
     @FXML
     JFXListView listView;
-    
-    @FXML
-    VBox badgesVBox;
-
-    @FXML
-    StackedBarChart stackedBar;
 
     @FXML
     private JFXButton btnSettings;
-
 
     @FXML
     Label txtFullName;
 
     @FXML
     ImageView imageDP2;
-    
-    @FXML
-    ImageView lockView;
-
-    @FXML
-    ColorAdjust blackout;
-
-    @FXML
-    Label chartTitle;
 
     @FXML
     JFXBadge levelBadge;
     
-    @FXML
-    GridPane badgeGrid;
-
-    @FXML
-    LineChart lineChart;
-
-    @FXML
-    Label latestAttempt;
-
     @FXML
     ScrollPane currentPage;
 
@@ -117,7 +88,6 @@ public class UserPageController {
     StringConverter convert;
 
     private TutorStatsController statsController;
-    private int gridCount;
 
     private Environment env;
 
@@ -325,115 +295,6 @@ public class UserPageController {
 
     }
 
-//
-//            makeLineGraph(dateAndTime);
-//            updateBadgesDisplay();
-//        }
-//    }
-
-    private void updateBadgesDisplay() {
-
-        ArrayList levels = new ArrayList<Integer>();
-        Badge grad = new Badge("Graduation", "Yadda yadda", levels, 0.25, 1, "gradHat");
-        Badge pitch = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 2, "tuning-fork");
-        Badge terms = new Badge("Terms Tutor", "Some ribbon thing", levels, 0.15, 0, "open-book");
-        ArrayList<Badge> generalBadges = new ArrayList();
-        ArrayList<Badge> tutorBadges = new ArrayList();
-
-//        HashMap tutorBadges = BadgeManager.getTutorBadges();
-//        ArrayList<Badge> tutorBadges = BadgeManager.getOverallBadges();
-//        HashMap tutorBadges = BadgeManager.getTutorBadges();
-//        System.out.println("Badges pls: " + tutorBadges);
-
-        ColorAdjust blackout = new ColorAdjust();
-        blackout.setBrightness(-1.0);
-        this.blackout = blackout;
-        Image lockImg = new Image("/images/lock.png");
-        ImageView lockView = new ImageView(lockImg);
-        lockView.fitHeightProperty().setValue(45);
-        lockView.fitWidthProperty().setValue(45);
-        this.lockView = lockView;
-
-        generalBadges.add(grad);
-        tutorBadges.add(pitch);
-        tutorBadges.add(terms);
-        tutorBadges.forEach(this::addTutorBadgeToGrid);
-        generalBadges.forEach(this::addBadgeToGrid);
-    }
-
-    public void addBadgeToGrid(Badge b) {
-        Image bImage = new Image("/images/"+b.imageName+".png");
-        ImageView bView = new ImageView(bImage);
-        bView.fitHeightProperty().setValue(70);
-        bView.fitWidthProperty().setValue(70);
-
-        StackPane badgeStack = new StackPane(bView);
-        ColorAdjust badgeEffect = new ColorAdjust();
-        if (b.currentBadgeType == 0) {
-            badgeEffect = this.blackout;
-            badgeStack.getChildren().add(this.lockView);
-        }
-        bView.setEffect(badgeEffect);
-
-        VBox badgeBox = new VBox();
-        Label badgeName = new Label(b.name);
-        badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label description = new Label(b.description);
-        ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress);
-        badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
-        badgeBox.setAlignment(Pos.CENTER);
-        badgeBox.setSpacing(4);
-        badgeGrid.add(badgeBox, gridCount, 0);
-        gridCount++;
-    }
-
-    public void addTutorBadgeToGrid(Badge b) {
-        Image ribbonImage = new Image("/images/ribbonAward.png");
-        ImageView rView = new ImageView(ribbonImage);
-        rView.fitHeightProperty().setValue(70);
-        rView.fitWidthProperty().setValue(70);
-        Image bImage = new Image("/images/"+b.imageName+".png");
-        ImageView bView = new ImageView(bImage);
-        bView.fitHeightProperty().setValue(26);
-        bView.fitWidthProperty().setValue(26);
-
-        StackPane badgeStack = new StackPane(rView, bView);
-        badgeStack.getChildren().get(1).setTranslateY(-13);
-        badgeStack.getChildren().get(1).setTranslateX(-0.6);
-        ColorAdjust badgeEffect = new ColorAdjust();
-        if (b.currentBadgeType == 0) {
-            badgeEffect = this.blackout;
-            badgeStack.getChildren().remove(1);
-            badgeStack.getChildren().add(this.lockView);
-        } else if (b.currentBadgeType == 1) {
-            badgeEffect.setHue(-0.88);
-            badgeEffect.setSaturation(0.94);
-            badgeEffect.setBrightness(-0.25);
-        } else if (b.currentBadgeType == 2) {
-            badgeEffect.setHue(0);
-            badgeEffect.setSaturation(-1);
-            badgeEffect.setBrightness(0.32);
-        } else if ( b.currentBadgeType == 3) {
-            badgeEffect.setHue(-0.888);
-            badgeEffect.setSaturation(1);
-            badgeEffect.setBrightness(0.4);
-        }
-        rView.setEffect(badgeEffect);
-
-        VBox badgeBox = new VBox();
-        Label badgeName = new Label(b.name);
-        badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label description = new Label(b.description);
-        ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress);
-        badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
-        badgeBox.setAlignment(Pos.CENTER);
-        badgeBox.setSpacing(4);
-        badgeGrid.add(badgeBox, gridCount, 0);
-        gridCount++;
-    }
-
     /**
      * Displays the page containing summary information about the user's current project
      */
@@ -482,6 +343,7 @@ public class UserPageController {
 
             statsController.create(env);
             statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
+            statsController.updateBadgesDisplay();
 
             listView.getSelectionModel().select(tutor);
 
