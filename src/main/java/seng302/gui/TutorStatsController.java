@@ -354,13 +354,13 @@ public class TutorStatsController {
     public void updateBadgesDisplay() {
 
         ArrayList levels = new ArrayList<Integer>();
-        Badge grad = new Badge("Graduation", "Yadda yadda", levels, 0.25, 1, "gradHat");
+        Badge grad = new Badge("Some Badge", "Yadda yadda", levels, 0.25, 1, "gradHat");
         Badge pitch = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 2, "tuning-fork");
         Badge terms = new Badge("Terms Tutor", "Some ribbon thing", levels, 0.15, 0, "open-book");
         ArrayList<Badge> generalBadges = new ArrayList();
         ArrayList<Badge> tutorBadges = new ArrayList();
 
-//        HashMap someTutorBadges = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getTutorBadges();
+        HashMap someTutorBadges = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getTutorBadges();
 //        ArrayList<Badge> tutorBadges = BadgeManager.getOverallBadges();
 //        HashMap tutorBadges = BadgeManager.getTutorBadges();
 //        System.out.println("Badges pls whaat: " + someTutorBadges);
