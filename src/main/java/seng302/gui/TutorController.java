@@ -210,23 +210,23 @@ public abstract class TutorController {
     /**
      * Saves a record of the tutoring session to a file.
      */
-    public void saveRecord() {
-
-        //show a file picker
-        FileChooser fileChooser = new FileChooser();
-        if (currentProject.isProject()) {
-            env.getRootController().checkProjectDirectory();
-            fileChooser.setInitialDirectory(Paths.get(currentProject.getCurrentProjectPath()).toFile());
-        }
-        File file = fileChooser.showSaveDialog(stage);
-
-        if (file != null) {
-            fileDir = file.getParentFile();
-            path = file.getAbsolutePath();
-            env.setRecordLocation(path);
-            tutorHandler.saveTutorRecordsToFile(path, record);
-        }
-    }
+//    public void saveRecord() {
+//
+//        //show a file picker
+//        FileChooser fileChooser = new FileChooser();
+//        if (currentProject.isProject()) {
+//            env.getRootController().checkProjectDirectory();
+//            fileChooser.setInitialDirectory(Paths.get(currentProject.getCurrentProjectPath()).toFile());
+//        }
+//        File file = fileChooser.showSaveDialog(stage);
+//
+//        if (file != null) {
+//            fileDir = file.getParentFile();
+//            path = file.getAbsolutePath();
+//            env.setRecordLocation(path);
+//            tutorHandler.saveTutorRecordsToFile(path, record);
+//        }
+//    }
 
     /**
      * Calculates a user's score after a tutoring session

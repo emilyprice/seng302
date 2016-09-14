@@ -132,7 +132,7 @@ public class DiatonicChordsTutorController extends TutorController {
             record.addQuestionAnswer(questionList);
             handleAccordion();
             if (manager.answered == manager.questions) {
-                finished("diatonicChordTutor");
+                finished();
             }
         });
 
@@ -242,7 +242,7 @@ public class DiatonicChordsTutorController extends TutorController {
 
         handleAccordion();
         if (manager.answered == manager.questions) {
-            finished("diatonicChordTutor");
+            finished();
         }
 
     }

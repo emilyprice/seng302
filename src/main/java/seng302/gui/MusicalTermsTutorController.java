@@ -266,7 +266,7 @@ public class MusicalTermsTutorController extends TutorController {
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(1)).getChildren().get(1).setDisable(true);
             handleAccordion();
             if (manager.answered == manager.questions) {
-                finished("musicalTermTutor");
+                finished();
             }
         });
 
@@ -297,7 +297,7 @@ public class MusicalTermsTutorController extends TutorController {
 
             handleAccordion();
             if (manager.answered == manager.questions) {
-                finished("musicalTermTutor");
+                finished();
             }
         });
 
@@ -328,7 +328,7 @@ public class MusicalTermsTutorController extends TutorController {
 
             handleAccordion();
             if (manager.answered == manager.questions) {
-                finished("musicalTermTutor");
+                finished();
             }
         });
 
@@ -349,7 +349,7 @@ public class MusicalTermsTutorController extends TutorController {
             ((VBox) (rowPane.getChildren().get(0))).getChildren().get(4).setDisable(true); //disable skip
             handleAccordion();
             if (manager.answered == manager.questions) {
-                finished("musicalTermTutor");
+                finished();
             }
         });
 
