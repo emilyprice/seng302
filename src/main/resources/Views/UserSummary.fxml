@@ -107,8 +107,13 @@
                 <Insets top="20.0"/>
             </padding>
         </Label>
-        <GridPane fx:id="badgeGrid" />
+        <GridPane fx:id="badgeGrid">
+            <padding>
+                <Insets top="5" left="20" bottom="5" right="20"></Insets>
+            </padding>
+        </GridPane>
         <AnchorPane maxHeight="85.0" maxWidth="351.0" minHeight="-Infinity" minWidth="-Infinity"
-                    prefHeight="85.0" prefWidth="351.0"/>
+                    prefHeight="85.0" prefWidth="351.0"></AnchorPane>
+
     </children>
 </VBox>

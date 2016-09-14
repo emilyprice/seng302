@@ -159,7 +159,12 @@
         <Label fx:id="badgesLabel" prefHeight="15.0" prefWidth="56.0" text="Badges"
                textAlignment="CENTER"/>
         <GridPane fx:id="badgeGrid" maxHeight="85.0" maxWidth="351.0" minHeight="-Infinity"
-                    minWidth="-Infinity" prefHeight="85.0" prefWidth="351.0"/>
+                    minWidth="-Infinity" prefHeight="85.0" prefWidth="351.0">
+            <padding>
+                <Insets top="5" left="20" bottom="5" right="20"></Insets>
+            </padding>
+        </GridPane>
+
     </children>
     <padding>
         <Insets top="20.0"/>
