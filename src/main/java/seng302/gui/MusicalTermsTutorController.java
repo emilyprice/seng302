@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -35,7 +36,7 @@ public class MusicalTermsTutorController extends TutorController {
     VBox questionRows;
 
     @FXML
-    AnchorPane IntervalRecognitionTab;
+    AnchorPane MusicalTermsAnchor;
 
     @FXML
     Button btnGo;
@@ -71,11 +72,13 @@ public class MusicalTermsTutorController extends TutorController {
      */
     @FXML
     void goAction(ActionEvent event) {
+        paneInit.setVisible(false);
         paneQuestions.setVisible(true);
-        paneResults.setVisible(false);
         record = new TutorRecord();
         manager.resetEverything();
         manager.questions = selectedQuestions;
+        qPanes = new ArrayList<>();
+
         if (manager.questions >= 1) {
             termsBeingViewed = new ArrayList<Term>(dataManager.getTerms());
             // Run the tutor
@@ -84,7 +87,18 @@ public class MusicalTermsTutorController extends TutorController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("No Musical Terms Added");
                 alert.setContentText("There are no terms to be tested on. \nTo add them use the 'add musical term' command");
+                alert.setOnCloseRequest(Event -> {
+                    try {
+                        String tutorName = env.getRootController().getHeader();
+                        env.getRootController().showUserPage();
+                        env.getUserPageController().showPage(tutorName);
+                    } catch (Exception e) {
+                        paneQuestions.setVisible(false);
+                        paneInit.setVisible(true);
+                    }
+                });
                 alert.showAndWait();
+                paneInit.setVisible(true);
 
             } else {//if there are terms to display
                 for (int i = 0; i < manager.questions; i++) {
@@ -96,10 +110,15 @@ public class MusicalTermsTutorController extends TutorController {
                     termsBeingViewed.remove(randomNumber);
                     Pair<String, Term> dummyPair = new Pair<String, Term>("", term);
                     HBox questionRow = generateQuestionPane(dummyPair);
-                    questionRows.getChildren().add(questionRow);
-                    VBox.setMargin(questionRow, new Insets(10, 10, 10, 10));
+                    TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+                    qPane.setPadding(new Insets(2, 2, 2, 2));
+                    qPanes.add(qPane);
 
+                    VBox.setMargin(questionRow, new Insets(10, 10, 10, 10));
                 }
+                qAccordion.getPanes().addAll(qPanes);
+                qAccordion.setExpandedPane(qAccordion.getPanes().get(0));
+                questionRows.getChildren().add(qAccordion);
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -241,11 +260,11 @@ public class MusicalTermsTutorController extends TutorController {
                     correct.toString()
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
 
             styleAnswer(rowPane, currentTerm, originOptions, categoryOptions, definitionOptions);
 
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(1)).getChildren().get(1).setDisable(true);
+            handleAccordion();
             if (manager.answered == manager.questions) {
                 finished("musicalTermTutor");
             }
@@ -271,12 +290,12 @@ public class MusicalTermsTutorController extends TutorController {
                     correct.toString()
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
 
             styleAnswer(rowPane, currentTerm, categoryOptions, definitionOptions, originOptions);
 
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(2)).getChildren().get(1).setDisable(true);
 
+            handleAccordion();
             if (manager.answered == manager.questions) {
                 finished("musicalTermTutor");
             }
@@ -302,12 +321,12 @@ public class MusicalTermsTutorController extends TutorController {
                     correct.toString()
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
 
             styleAnswer(rowPane, currentTerm, definitionOptions, categoryOptions, originOptions);
 
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(3)).getChildren().get(1).setDisable(true);
 
+            handleAccordion();
             if (manager.answered == manager.questions) {
                 finished("musicalTermTutor");
             }
@@ -321,15 +340,14 @@ public class MusicalTermsTutorController extends TutorController {
                     "2"
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle("musicalTermTutor", true);
 
             formatSkippedQuestion(rowPane);
-            manager.questions -= 1;
             manager.add(new Pair(currentTerm.getMusicalTermName(), currentTerm), 2);
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(1)).getChildren().get(1).setDisable(true);
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(2)).getChildren().get(1).setDisable(true);
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(3)).getChildren().get(1).setDisable(true);
             ((VBox) (rowPane.getChildren().get(0))).getChildren().get(4).setDisable(true); //disable skip
+            handleAccordion();
             if (manager.answered == manager.questions) {
                 finished("musicalTermTutor");
             }
@@ -386,7 +404,6 @@ public class MusicalTermsTutorController extends TutorController {
 
             }
             ((VBox) (rowPane.getChildren().get(0))).getChildren().get(4).setDisable(true);
-            manager.answered += 1;
         }
     }
 

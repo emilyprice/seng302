@@ -1,16 +1,23 @@
 package seng302.gui;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.JFXTextField;
+
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.Environment;
@@ -33,13 +40,19 @@ public class UserSettingsController {
     private AnchorPane chordSpellingAnchor;
 
     @FXML
-    private Button uploadPhotoButton;
+    private JFXButton btnUploadImage;
+
 
     @FXML
-    private TextField lastNameField;
+    private JFXTextField txtFName;
 
     @FXML
-    private TextField firstNameField;
+    private JFXTextField txtLName;
+    @FXML
+    private JFXButton btnEditFName;
+
+    @FXML
+    private JFXButton btnEditLName;
 
     @FXML
     private JFXButton btnDeleteUser;
@@ -53,14 +66,38 @@ public class UserSettingsController {
     public void create(Environment env) {
         this.env = env;
         this.imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
+        env.getRootController().setHeader("User Settings");
         userHandler = env.getUserHandler();
         try {
-            firstNameField.setText(userHandler.getCurrentUser().getUserFirstName());
-            lastNameField.setText(userHandler.getCurrentUser().getUserLastName());
+            txtFName.setText(userHandler.getCurrentUser().getUserFirstName());
+            txtLName.setText(userHandler.getCurrentUser().getUserLastName());
         } catch (Exception e) {
-            firstNameField.clear();
-            lastNameField.clear();
+            txtFName.clear();
+            txtFName.clear();
         }
+    }
+
+    @FXML
+    public void initialize() {
+        String css = this.getClass().getResource("/css/user_settings.css").toExternalForm();
+
+
+        ImageView imgUpload = new ImageView(new Image(getClass().getResourceAsStream("/images/file_upload_white_36dp.png"), 25, 25, false, false));
+
+
+        ImageView imgEdit = new ImageView(new Image(getClass().getResourceAsStream("/images/edit_mode_black_18dp.png"), 18, 18, false, false));
+
+
+        btnEditFName.setGraphic(imgEdit);
+        btnEditLName.setGraphic(new ImageView(imgEdit.getImage()));
+        btnUploadImage.setGraphic(imgUpload);
+
+        txtFName.setDisable(true);
+        txtFName.setEditable(false);
+
+        txtLName.setDisable(true);
+        txtLName.setEditable(false);
+
     }
 
     /**
@@ -74,60 +111,95 @@ public class UserSettingsController {
         Stage stage = new Stage();
         File file = fileChooser.showOpenDialog(stage);
         Path userPath = userHandler.getCurrentUserPath();
-        Path filePath = Paths.get(userPath.toString()+"/profilePicture");
+        Path filePath = Paths.get(userPath.toString() + "/profilePicture");
 
         try {
             FileHandler.copyFolder(file, filePath.toFile());
-            userHandler.getCurrentUser().setUserPicture(new Image(filePath.toUri().toString()));
+            userHandler.getCurrentUser().setUserPicture(filePath);
             imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
             env.getRootController().updateImage();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
 
         }
     }
 
+    /**
+     * Action listener for the first name edit/save button.
+     */
     @FXML
     private void editFirstName() {
-        if (editFirstNameButton.getText().equals("Edit")) {
-            firstNameField.setDisable(false);
-            firstNameField.setEditable(true);
-            firstNameField.requestFocus();
-            editFirstNameButton.setText("Save");
+        if (btnEditFName.getText().equals("Edit")) {
+            txtFName.setDisable(false);
+            txtFName.setEditable(true);
+            txtFName.requestFocus();
+            btnEditFName.setText("Save");
         } else {
             // Save changes
-            firstNameField.setDisable(true);
-            userHandler.getCurrentUser().setUserFirstName(firstNameField.getText());
+            txtFName.setDisable(true);
+            userHandler.getCurrentUser().setUserFirstName(txtFName.getText());
             userHandler.getCurrentUser().updateProperties();
             userHandler.getCurrentUser().saveProperties();
-            firstNameField.setEditable(false);
-            editFirstNameButton.setText("Edit");
+            txtFName.setEditable(false);
+            btnEditFName.setText("Edit");
         }
     }
 
+    /**
+     * On click action for the last name edit/save button.
+     */
     @FXML
     private void editLastName() {
-        if (editLastNameButton.getText().equals("Edit")) {
-            lastNameField.setDisable(false);
-            lastNameField.setEditable(true);
-            lastNameField.requestFocus();
-            editLastNameButton.setText("Save");
+        if (btnEditLName.getText().equals("Edit")) {
+            txtLName.setDisable(false);
+            txtLName.setEditable(true);
+            txtLName.requestFocus();
+            btnEditLName.setText("Save");
         } else {
             // Save changes
-            lastNameField.setDisable(true);
-            userHandler.getCurrentUser().setUserLastName(lastNameField.getText());
+            txtLName.setDisable(true);
+            userHandler.getCurrentUser().setUserLastName(txtLName.getText());
             userHandler.getCurrentUser().updateProperties();
             userHandler.getCurrentUser().saveProperties();
-            lastNameField.setEditable(false);
-            editLastNameButton.setText("Edit");
+            txtLName.setEditable(false);
+            btnEditLName.setText("Edit");
         }
     }
 
+    /**
+     * Shows a delete user confimation dialog, and deletes the current user if suitable.
+     */
     @FXML
     private void deleteUser() {
 
-        env.getUserHandler().deleteUser(env.getUserHandler().getCurrentUser().getUserName());
+        FXMLLoader popupLoader = new FXMLLoader(getClass().getResource("/Views/PopUpModal.fxml"));
+        try {
+            BorderPane modal = (BorderPane) popupLoader.load();
+            JFXPopup popup = new JFXPopup();
+            popup.setContent(modal);
+
+            popup.setPopupContainer(env.getRootController().paneMain);
+            popup.setSource(btnDeleteUser);
+            popup.show(JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT);
+            Label header = (Label) modal.lookup("#lblHeader");
+
+            JFXButton btnCancel = (JFXButton) modal.lookup("#btnCancel");
+            btnCancel.setOnAction((e) -> popup.close());
+
+            ((JFXButton) modal.lookup("#btnDelete")).
+                    setOnAction((event) -> {
+                        env.getUserHandler().deleteUser(env.getUserHandler().getCurrentUser().getUserName());
+                        popup.close();
+                    });
+
+
+            header.setText("Are you sure you wish to delete user: " + userHandler.getCurrentUser().getUserName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
+
+
 }
+

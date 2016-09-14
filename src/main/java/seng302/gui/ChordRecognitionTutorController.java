@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Pair;
@@ -51,17 +52,24 @@ public class ChordRecognitionTutorController extends TutorController {
      */
     private void goAction(ActionEvent event) {
         record = new TutorRecord();
+        paneInit.setVisible(false);
         paneQuestions.setVisible(true);
-        paneResults.setVisible(false);
         manager.resetEverything();
         manager.questions = selectedQuestions;
+        qPanes = new ArrayList<>();
 
         questionRows.getChildren().clear();
         for (int i = 0; i < manager.questions; i++) {
             HBox questionRow = setUpQuestion();
-            questionRows.getChildren().add(questionRow);
+            TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+            qPane.setPadding(new Insets(2, 2, 2, 2));
+            qPanes.add(qPane);
             questionRows.setMargin(questionRow, new Insets(10, 10, 10, 10));
         }
+
+        qAccordion.getPanes().addAll(qPanes);
+        qAccordion.setExpandedPane(qAccordion.getPanes().get(0));
+        questionRows.getChildren().add(qAccordion);
     }
 
 
@@ -127,33 +135,8 @@ public class ChordRecognitionTutorController extends TutorController {
                 chordType = "major";
         }
         Note randNote = Note.getRandomNote();
-//        return generateQuestionPane(randNote, chordType);
         return generateQuestionPane(new Pair<>(randNote, chordType));
     }
-
-
-    /**
-     * Given a type of scale (major or minor) and a starting note, returns a list of notes of scale
-     * @param startNote The first note in the scale
-     * @param scaleType Either major or minor
-     * @return Arraylist of notes in a scale
-     */
-//    public ArrayList<Note> getScale(Note startNote, String scaleType) {
-//        // Add # octaves and up/down selection here.
-//        ArrayList<Note> scale;
-//        if (playChords.getValue().equals("Up")) {
-//            scale = startNote.getOctaveScale(scaleType, octaves.getValue(), true);
-//        } else if (playChords.getValue().equals("UpDown")) {
-//            scale = startNote.getOctaveScale(scaleType, octaves.getValue(), true);
-//            ArrayList<Note> notes = new ArrayList<Note>(scale);
-//            Collections.reverse(notes);
-//            scale.addAll(notes);
-//        } else {
-//            scale = startNote.getOctaveScale(scaleType, octaves.getValue(), false);
-//        }
-//
-//        return scale;
-//    }
 
 
     /**
@@ -213,7 +196,6 @@ public class ChordRecognitionTutorController extends TutorController {
             // Disables only input buttons
             disableButtons(questionRow, 1, 3);
             formatSkippedQuestion(questionRow);
-            manager.questions -= 1;
             manager.add(noteAndChordType, 2);
             String[] question = new String[]{
                     String.format("%s scale from %s", chordType, startNote.getNote()),
@@ -221,7 +203,7 @@ public class ChordRecognitionTutorController extends TutorController {
                     "2"
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
+            handleAccordion();
             if (manager.answered == manager.questions) {
                     finished("chordTutor");
             }
@@ -276,7 +258,6 @@ public class ChordRecognitionTutorController extends TutorController {
      * @param questionRow   The HBox containing GUI question data
      */
     public void handleQuestionAnswer(String userAnswer, Pair correctAnswer, HBox questionRow) {
-        manager.answered += 1;
         Integer correct;
         disableButtons(questionRow, 1, 3);
         if (userAnswer.equals(correctAnswer.getValue())) {
@@ -299,7 +280,8 @@ public class ChordRecognitionTutorController extends TutorController {
                 Integer.toString(correct)
         };
         record.addQuestionAnswer(question);
-        env.getRootController().setTabTitle(getTabID(), true);
+
+        handleAccordion();
 
         if (manager.answered == manager.questions) {
             finished("chordTutor");

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.shape.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -12,10 +13,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import com.jfoenix.controls.JFXButton?>
 
 <TitledPane fx:id="keyPane" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" maxHeight="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.KeyboardPaneController">
    <content>
-       <StackPane fx:id="keyboardStack" alignment="TOP_LEFT" focusTraversable="true" maxHeight="100.0" prefHeight="0.0">
+       <StackPane fx:id="keyboardStack" alignment="TOP_LEFT" focusTraversable="true" maxHeight="100.0" prefHeight="0.0" styleClass="noDivider">
           <padding>
               <Insets bottom="0" left="0" right="0" top="0" />
           </padding>
@@ -30,24 +32,35 @@
       </StackPane>
    </content>
    <graphic>
-       <HBox maxWidth="1.7976931348623157E308" prefHeight="20.0">
+       <HBox maxWidth="1.7976931348623157E308" prefHeight="20.0" spacing="8.0" styleClass="primary">
          <children>
-             <StackPane alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="20.0" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="13.0">
+             <StackPane fx:id="titlePaneKeyboard" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="20.0" styleClass="primary" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="13.0">
                <children>
-                   <Label focusTraversable="false" prefHeight="9.0" prefWidth="62.0" text="Keyboard" StackPane.alignment="CENTER" />
+                   <Label focusTraversable="false" prefHeight="9.0" prefWidth="62.0" styleClass="primary" text="Keyboard" StackPane.alignment="CENTER">
+                       <StackPane.margin>
+                           <Insets right="20.0" />
+                       </StackPane.margin>
+                   </Label>
                </children>
             </StackPane>
-             <StackPane fx:id="rightStack" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" pickOnBounds="false" prefHeight="48.0">
+             <StackPane fx:id="rightStack" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" pickOnBounds="false" prefHeight="48.0" styleClass="primary">
                <children>
-                   <Button fx:id="settingsButton" focusTraversable="false" minHeight="10.0" mnemonicParsing="false" onAction="#toggleSettings" prefHeight="20.0" prefWidth="14.0" text="Settings" />
+                   <JFXButton fx:id="settingsButton" focusTraversable="false" minHeight="10.0" mnemonicParsing="false" onAction="#toggleSettings" prefHeight="20.0" prefWidth="14.0" styleClass="secondaryControl" text="Settings"> <StackPane.margin> <Insets right="20.0" /> </StackPane.margin> </JFXButton>
                </children>
             </StackPane>
-             <StackPane fx:id="scalesStackPane" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false">
+             <StackPane fx:id="scalesStackPane" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" styleClass="primary">
                  <children>
-                     <Button fx:id="displayScalesButton" focusTraversable="false" mnemonicParsing="false" onAction="#toggleDisplayScales" prefHeight="25.0" prefWidth="150.0" text="Display Scales" />
+                     <JFXButton fx:id="displayScalesButton" focusTraversable="false" mnemonicParsing="false" onAction="#toggleDisplayScales" prefHeight="25.0" prefWidth="150.0" styleClass="secondaryControl" text="Display Scales" />
                  </children>
              </StackPane>
          </children>
       </HBox>
    </graphic>
+   <padding>
+      <Insets bottom="2.0" top="2.0" />
+   </padding>
+   <styleClass>
+      <String fx:value="primary" />
+      <String fx:value="noDivider" />
+   </styleClass>
 </TitledPane>

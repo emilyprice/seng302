@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -37,7 +38,7 @@ public class PitchComparisonTutorController extends TutorController {
     AnchorPane pitchTutorAnchor;
 
     @FXML
-    VBox sliderBox;
+    VBox paneInit;
 
     @FXML
     ComboBox<MidiNotePair> cbxUpper;
@@ -72,11 +73,11 @@ public class PitchComparisonTutorController extends TutorController {
      */
     @FXML
     private void goAction() {
-//        manager.questions = 0;
+        paneInit.setVisible(false);
         paneQuestions.setVisible(true);
-        paneResults.setVisible(false);
         record = new TutorRecord();
         manager.answered = 0;
+        qPanes = new ArrayList<>();
 
         if (lowerSet && upperSet) {
             questionRows.getChildren().clear();
@@ -91,10 +92,15 @@ public class PitchComparisonTutorController extends TutorController {
 
                 Pair<String, String> midis = new Pair<String, String>(midiOne, midiTwo);
                 HBox rowPane = generateQuestionPane(midis);
-                questionRows.getChildren().add(rowPane);
+                TitledPane qPane = new TitledPane("Question " + (i + 1), rowPane);
+                qPane.setPadding(new Insets(2, 2, 2, 2));
+                qPanes.add(qPane);
+
                 VBox.setMargin(rowPane, new Insets(10, 10, 10, 10));
             }
-
+            qAccordion.getPanes().addAll(qPanes);
+            qAccordion.setExpandedPane(qAccordion.getPanes().get(0));
+            questionRows.getChildren().add(qAccordion);
 
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -117,7 +123,7 @@ public class PitchComparisonTutorController extends TutorController {
         super.create(env);
         initialiseQuestionSelector();
         rangeSlider = new NoteRangeSlider(notes, 12, 60, 72);
-        sliderBox.getChildren().add(1, rangeSlider);
+        paneInit.getChildren().add(1, rangeSlider);
         lowerSet = true;
         upperSet = true;
     }
@@ -151,7 +157,6 @@ public class PitchComparisonTutorController extends TutorController {
             };
 
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
         } else if (((ToggleButton) row.getChildren().get(2)).isSelected()) { //Same
             row.getChildren().get(2).setStyle("-fx-text-fill: white;-fx-background-color: black");
             if (note1 == note2) correctChoice = 1;
@@ -162,7 +167,6 @@ public class PitchComparisonTutorController extends TutorController {
             };
 
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
         } else if (((ToggleButton) row.getChildren().get(3)).isSelected()) { //Lower
             row.getChildren().get(3).setStyle("-fx-text-fill: white;-fx-background-color: black");
             if (noteComparison(false, note1, note2)) {
@@ -174,11 +178,9 @@ public class PitchComparisonTutorController extends TutorController {
                     correctChoice.toString()
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
         } else if (((ToggleButton) row.getChildren().get(4)).isSelected()) { //Skip
             row.getChildren().get(4).setStyle("-fx-text-fill: white;-fx-background-color: black");
             correctChoice = 2;
-            manager.questions -= 1;
 
             String[] question = new String[]{
                     String.format("Is %s higher or lower than %s", note2.getNote(), note1.getNote()),
@@ -186,19 +188,17 @@ public class PitchComparisonTutorController extends TutorController {
                     correctChoice.toString()
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
         }
 
         if (correctChoice == 1) {
             formatCorrectQuestion(row);
-            manager.answered += 1;
         } else if (correctChoice == 2) formatSkippedQuestion(row);
         else {
             formatIncorrectQuestion(row);
-            manager.answered += 1;
         }
         manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
 
+        handleAccordion();
         if (manager.answered == manager.questions) {
             finished("pitchTutor");
         }

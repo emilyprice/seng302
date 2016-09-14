@@ -1,5 +1,6 @@
 package seng302.command;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import seng302.Environment;
 import seng302.MusicPlayer;
@@ -287,9 +290,90 @@ public class ScaleTest {
     }
 
 
-    /**
-     * #########################################
-     */
+    @Test
+    public void setsCorrectIonianResultUp() {
+        new Scale("C", "ionian", "note").execute(env);
+        verify(transcriptManager).setResult("C D E F G A B C");
+    }
+
+    @Test
+    public void setsCorrectIonianResultDown() {
+        new Scale("C", "ionian", "play", "down").execute(env);
+        verify(transcriptManager).setResult("C B A G F E D C");
+    }
+
+    @Test
+    public void setsCorrectDorianResultUp() {
+        new Scale("C", "dorian", "note").execute(env);
+        verify(transcriptManager).setResult("C D Eb F G A Bb C");
+    }
+
+    @Test
+    public void setsCorrectDorianResultDown() {
+        new Scale("C", "dorian", "play", "down").execute(env);
+        verify(transcriptManager).setResult("C Bb A G F Eb D C");
+    }
+
+    @Test
+    public void setsCorrectPhrygianResultUp() {
+        new Scale("C", "phrygian", "note").execute(env);
+        verify(transcriptManager).setResult("C Db Eb F G Ab Bb C");
+    }
+
+    @Test
+    public void setsCorrectPhrygianResultDown() {
+        new Scale("C", "phrygian", "play", "down").execute(env);
+        verify(transcriptManager).setResult("C Bb Ab G F Eb Db C");
+    }
+
+    @Test
+    public void setsCorrectLydianResultUp() {
+        new Scale("C", "lydian", "note").execute(env);
+        verify(transcriptManager).setResult("C D E F# G A B C");
+    }
+
+    @Test
+    public void setsCorrectLydianResultDown() {
+        new Scale("C", "lydian", "play", "down").execute(env);
+        verify(transcriptManager).setResult("C B A G F# E D C");
+    }
+
+    @Test
+    public void setsCorrectMixolydianResultUp() {
+        new Scale("C", "mixolydian", "note").execute(env);
+        verify(transcriptManager).setResult("C D E F G A Bb C");
+    }
+
+    @Test
+    public void setsCorrectMixolydianResultDown() {
+        new Scale("C", "mixolydian", "play", "down").execute(env);
+        verify(transcriptManager).setResult("C Bb A G F E D C");
+    }
+
+    @Test
+    public void setsCorrectAeolianResultUp() {
+        new Scale("C", "aeolian", "note").execute(env);
+        verify(transcriptManager).setResult("C D Eb F G Ab Bb C");
+    }
+
+    @Test
+    public void setsCorrectAeolianResultDown() {
+        new Scale("C", "aeolian", "play", "down").execute(env);
+        verify(transcriptManager).setResult("C Bb Ab G F Eb D C");
+    }
+
+    @Test
+    public void setsCorrectLocrianResultUp() {
+        new Scale("C", "locrian", "note").execute(env);
+        verify(transcriptManager).setResult("C Db Eb F Gb Ab Bb C");
+    }
+
+    @Test
+    public void setsCorrectLocrianResultDown() {
+        new Scale("C", "locrian", "play", "down").execute(env);
+        verify(transcriptManager).setResult("C Bb Ab Gb F Eb Db C");
+    }
+
 
 
 }

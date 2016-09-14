@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -62,10 +63,11 @@ public class ScaleRecognitionTutorController extends TutorController {
         if (ccbScales.getCheckModel().getCheckedIndices().size() != 0) {
             scaleError.setVisible(false);
             record = new TutorRecord();
+            paneInit.setVisible(false);
             paneQuestions.setVisible(true);
-            paneResults.setVisible(false);
             manager.resetEverything();
             manager.questions = selectedQuestions;
+            qPanes = new ArrayList<>();
 
             this.playDirection = direction.getSelectionModel().getSelectedItem();
             this.playOctaves = octaves.getSelectionModel().getSelectedItem();
@@ -74,9 +76,16 @@ public class ScaleRecognitionTutorController extends TutorController {
             questionRows.getChildren().clear();
             for (int i = 0; i < manager.questions; i++) {
                 HBox questionRow = setUpQuestion();
-                questionRows.getChildren().add(questionRow);
+                TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+                qPane.setPadding(new Insets(2, 2, 2, 2));
+                qPanes.add(qPane);
                 VBox.setMargin(questionRow, new Insets(10, 10, 10, 10));
             }
+
+            qAccordion.getPanes().addAll(qPanes);
+            qAccordion.setExpandedPane(qAccordion.getPanes().get(0));
+            questionRows.getChildren().add(qAccordion);
+
         } else {
             scaleError.setVisible(true);
         }
@@ -91,7 +100,7 @@ public class ScaleRecognitionTutorController extends TutorController {
         initialiseQuestionSelector();
         rand = new Random();
         direction.getItems().addAll("Up", "Down", "UpDown");
-        ccbScales.getItems().addAll("Major", "Minor", "Melodic Minor", "Blues", "Major Pentatonic", "Minor Pentatonic", "Harmonic Minor");
+        ccbScales.getItems().addAll("Major", "Minor", "Melodic Minor", "Blues", "Major Pentatonic", "Minor Pentatonic", "Major Mode", "Melodic Minor Mode", "Harmonic Minor");
 
         ccbScales.getCheckModel().check(0); //Only major/minor selected by default
         ccbScales.getCheckModel().check(1);
@@ -145,7 +154,6 @@ public class ScaleRecognitionTutorController extends TutorController {
      * @param questionRow   The HBox containing GUI question data
      */
     public void handleQuestionAnswer(String userAnswer, Pair correctAnswer, HBox questionRow) {
-        manager.answered += 1;
         Integer correct;
         disableButtons(questionRow, 1, 3);
         if (userAnswer.equals(correctAnswer.getValue())) {
@@ -168,8 +176,8 @@ public class ScaleRecognitionTutorController extends TutorController {
                 correct.toString()
         };
         record.addQuestionAnswer(question);
-        env.getRootController().setTabTitle("scaleTutor", true);
 
+        handleAccordion();
         if (manager.answered == manager.questions) {
             finished("scaleTutor");
         }
@@ -214,7 +222,6 @@ public class ScaleRecognitionTutorController extends TutorController {
             // Disables only input buttons
             disableButtons(questionRow, 1, 3);
             formatSkippedQuestion(questionRow);
-            manager.questions -= 1;
             manager.add(noteAndScaleType, 2);
             String[] question = new String[]{
                     String.format("%s scale from %s", scaleType, startNote.getNote()),
@@ -222,7 +229,7 @@ public class ScaleRecognitionTutorController extends TutorController {
                     "2"
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
+            handleAccordion();
             if (manager.answered == manager.questions) {
                 finished("ScaleTutor");
             }

@@ -30,7 +30,6 @@ import seng302.Environment;
 public class ProjectHandler {
 
     private Project currentProject;
-    //private ArrayList<String> projects = new ArrayList<String>();
     Environment env;
     String lastOpened;
     public Path projectsDirectory;
@@ -42,8 +41,13 @@ public class ProjectHandler {
     JSONParser parser = new JSONParser(); //parser for reading project
 
 
+    /**
+     * Creates a new project handler and loads all of a user's projects
+     *
+     * @param env  The environment in which the project handler is created
+     * @param user The user whose projects are being loaded
+     */
     public ProjectHandler(Environment env, String user){
-        //Iterate through user directory and load all
         this.userName = user;
         projectsDirectory = Paths.get("UserData/"+user+"/Projects");
         this.env = env;
@@ -71,12 +75,21 @@ public class ProjectHandler {
         return currentProject;
     }
 
+    /**
+     * Given the name of a project, changes the user over to that project.
+     * @param projName The name of the project to be loaded
+     */
     public void setCurrentProject(String projName){
 
         this.currentProject = new Project(env, projName, this);
         updateProjectList(projName);
-
-
+        try {
+            env.getRootController().updateLevelBadge();
+            env.getUserPageController().updateLevelBadge();
+        }
+        catch (Exception e) {
+            System.err.println("Root controller not initialised");
+        }
     }
 
 
@@ -185,7 +198,6 @@ public class ProjectHandler {
                         setCurrentProject(resultString);
 
                         getCurrentProject().saveProject(path.toString().replace("\\", "/"));
-                        //setWindowTitle(resultString);
 
                     } catch (IOException e) {
                         //Failed to create the directory.

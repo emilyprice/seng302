@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Pair;
 import seng302.Environment;
@@ -115,7 +116,6 @@ public class DiatonicChordsTutorController extends TutorController {
             // Disables only input buttons
             disableButtons(questionRow, 1, 3);
             formatSkippedQuestion(questionRow);
-            manager.questions -= 1;
             manager.add(data, 2);
             String questionString;
             if (getTypeOfQuestion(questionAnswer) == 1) {
@@ -130,7 +130,7 @@ public class DiatonicChordsTutorController extends TutorController {
                     "2"
             };
             record.addQuestionAnswer(questionList);
-            env.getRootController().setTabTitle(getTabID(), true);
+            handleAccordion();
             if (manager.answered == manager.questions) {
                 finished("diatonicChordTutor");
             }
@@ -196,15 +196,14 @@ public class DiatonicChordsTutorController extends TutorController {
     }
 
     /**
-     * Reacts accordingly to a user's input. Formats the question row as to whether the question
-     * was answered correctly or not. Also saves the tutor record.
+     * Reacts accordingly to a user's input. Formats the question row as to whether the question was
+     * answered correctly or not. Also saves the tutor record.
      *
-     * @param userAnswer  The user's selection, as text
-     * @param questionAndAnswer        A pair containing the starting note and scale type
-     * @param questionRow The HBox containing GUI question data
+     * @param userAnswer        The user's selection, as text
+     * @param questionAndAnswer A pair containing the starting note and scale type
+     * @param questionRow       The HBox containing GUI question data
      */
     public void handleQuestionAnswer(String userAnswer, Pair questionAndAnswer, HBox questionRow) {
-        manager.answered += 1;
         Integer correct;
         disableButtons(questionRow, 1, 2);
         String correctAnswer = (String) questionAndAnswer.getValue();
@@ -240,8 +239,8 @@ public class DiatonicChordsTutorController extends TutorController {
             };
         }
         record.addQuestionAnswer(question);
-        env.getRootController().setTabTitle(getTabID(), true);
 
+        handleAccordion();
         if (manager.answered == manager.questions) {
             finished("diatonicChordTutor");
         }
@@ -276,12 +275,12 @@ public class DiatonicChordsTutorController extends TutorController {
      */
     private void goAction(ActionEvent event) {
         record = new TutorRecord();
+        paneInit.setVisible(false);
         paneQuestions.setVisible(true);
-        paneResults.setVisible(false);
         manager.resetEverything();
         manager.questions = selectedQuestions;
-
         rand = new Random();
+        qPanes = new ArrayList<>();
 
         questionRows.getChildren().clear();
         for (int i = 0; i < manager.questions; i++) {
@@ -293,9 +292,14 @@ public class DiatonicChordsTutorController extends TutorController {
                 type = 2;
                 questionRow = generateQuestionPane(generateQuestionTypeTwo());
             }
-            questionRows.getChildren().add(questionRow);
+            TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+            qPane.setPadding(new Insets(2, 2, 2, 2));
+            qPanes.add(qPane);
             questionRows.setMargin(questionRow, new Insets(10, 10, 10, 10));
         }
+        qAccordion.getPanes().addAll(qPanes);
+        qAccordion.setExpandedPane(qAccordion.getPanes().get(0));
+        questionRows.getChildren().add(qAccordion);
 
     }
 

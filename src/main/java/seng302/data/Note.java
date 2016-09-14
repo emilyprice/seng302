@@ -2,6 +2,7 @@ package seng302.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -284,28 +285,98 @@ public class Note {
      * @return array list of notes in the scale. If any notes are null, the scale returned will be
      * null.
      */
-    public ArrayList<Note> getOctaveScale(String type, int octaves, boolean up) {
+    public ArrayList<Note>
+    getOctaveScale(String type, int octaves, boolean up) {
         ArrayList<Note> scaleNotes = new ArrayList<>();
         List<Integer> semitones;
         Note currentNote = this;
         scaleNotes.add(currentNote);
+        if(type.toLowerCase().equals("melodic minor mode")) {
+            List<String> melodicMinorModes = new ArrayList<String>(Arrays.asList("minormajor", "dorian b2", "lydian #5", "lydian dominant", "mixolydian b6", "locrian #2", "altered"));
+            Random rand = new Random();
+            type = (melodicMinorModes.get(rand.nextInt(melodicMinorModes.size())));
+        }
+        if(type.toLowerCase().equals("major mode")) {
+            Random rand = new Random();
+            List<String> majorModes = new ArrayList<String>(Arrays.asList("ionian", "dorian", "phrygian", "lydian", "mixolydian", "aeolian", "locrian"));
+            type = (majorModes.get(rand.nextInt(majorModes.size())));
+        }
+
         if (up) {
-            if (type.equalsIgnoreCase("major")) {
-                semitones = Arrays.asList(2, 4, 5, 7, 9, 11, 12);
-            } else if (type.equalsIgnoreCase("minor")) {
-                semitones = Arrays.asList(2, 3, 5, 7, 8, 10, 12);
-            } else if (type.equalsIgnoreCase("melodic minor")) {
-                semitones = Arrays.asList(2, 3, 5, 7, 9, 11, 12);
-            } else if (type.equalsIgnoreCase("blues")) {
-                semitones = Arrays.asList(3, 5, 6, 7, 10, 12);
-            } else if (type.equalsIgnoreCase("major pentatonic")) {
-                semitones = Arrays.asList(2, 4, 7, 9, 12);
-            } else if (type.equalsIgnoreCase("minor pentatonic")) {
-                semitones = Arrays.asList(3, 5, 7, 10, 12);
-            } else if (type.equalsIgnoreCase("harmonic minor")) {
-                semitones = Arrays.asList(2, 3, 5, 7, 8, 11, 12);
-            } else {
-                throw new IllegalArgumentException("Invalid scale type: '" + type + "'.");
+            switch (type.toLowerCase()) {
+                case "major":
+                    semitones = Arrays.asList(2, 4, 5, 7, 9, 11, 12);
+                    break;
+                case "minor":
+                    semitones = Arrays.asList(2, 3, 5, 7, 8, 10, 12);
+                    break;
+                case "melodic minor":
+                    semitones = Arrays.asList(2, 3, 5, 7, 9, 11, 12);
+                    break;
+                case "ionian":
+                    //D E F G A B C
+                    semitones = Arrays.asList(2, 4, 5, 7, 9, 11, 12);
+                    break;
+                case "dorian":
+                    semitones = Arrays.asList(2, 3, 5, 7, 9, 10, 12);
+                    break;
+                case "phrygian":
+                    semitones = Arrays.asList(1, 3, 5, 7, 8, 10, 12);
+                    break;
+                case "lydian":
+                    semitones = Arrays.asList(2, 4, 6, 7, 9, 11, 12);
+                    break;
+                case "mixolydian":
+                    semitones = Arrays.asList(2, 4, 5, 7, 9, 10, 12);
+                    break;
+                case "aeolian":
+                    semitones = Arrays.asList(2, 3, 5, 7, 8, 10, 12);
+                    break;
+                case "locrian":
+                    semitones = Arrays.asList(1, 3, 5, 6, 8, 10, 12);
+                    break;
+                case "minormajor":
+                    // Melodic Minor Modes I
+                    semitones = Arrays.asList(2, 3, 5, 7, 9, 11, 12);
+                    break;
+                case "dorian b2":
+                    // Melodic Minor Modes II
+                    semitones = Arrays.asList(1, 3, 5, 7, 9, 10, 12);
+                    break;
+                case "lydian #5":
+                    // Melodic Minor Modes III
+                    semitones = Arrays.asList(2, 4, 6, 8, 9, 11, 12);
+                    break;
+                case "lydian dominant":
+                    // Melodic Minor Modes IV
+                    semitones = Arrays.asList(2, 4, 6, 7, 9, 10, 12);
+                    break;
+                case "mixolydian b6":
+                    // Melodic Minor Modes V
+                    semitones = Arrays.asList(2, 4, 5, 7, 8, 10, 12);
+                    break;
+                case "locrian #2":
+                    // Melodic Minor Modes VI
+                    semitones = Arrays.asList(2, 3, 5, 6, 8, 10, 12);
+                    break;
+                case "altered":
+                    // Melodic Minor Modes VII
+                    semitones = Arrays.asList(1, 3, 4 ,6, 8, 10, 12);
+                    break;
+                case "blues":
+                    semitones = Arrays.asList(3, 5, 6, 7, 10, 12);
+                    break;
+                case "major pentatonic":
+                    semitones = Arrays.asList(2, 4, 7, 9, 12);
+                    break;
+                case "minor pentatonic":
+                    semitones = Arrays.asList(3, 5, 7, 10, 12);
+                    break;
+                case "harmonic minor":
+                    semitones = Arrays.asList(2, 3, 5, 7, 8, 11, 12);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid scale type: '" + type + "'.");
             }
             for (int i = 0; i < octaves; i++) {
                 for (int j = 0; j < semitones.size(); j++) {
@@ -314,22 +385,51 @@ public class Note {
                 currentNote = currentNote.semitoneUp(semitones.get(semitones.size()-1));
             }
         } else {
-            if (type.equalsIgnoreCase("major")) {
-                semitones = Arrays.asList(1, 3, 5, 7, 8, 10, 12);
-            } else if (type.equalsIgnoreCase("minor")) {
-                semitones = Arrays.asList(2, 4, 5, 7, 9, 10, 12);
-            } else if (type.equalsIgnoreCase("melodic minor")) {
-                semitones = Arrays.asList(2, 4, 5, 7, 9, 10, 12);
-            } else if (type.equalsIgnoreCase("blues")) {
-                semitones = Arrays.asList(2, 5, 6, 7, 9, 12);
-            } else if (type.equalsIgnoreCase("major pentatonic")) {
-                semitones = Arrays.asList(3, 5, 8, 10, 12);
-            } else if (type.equalsIgnoreCase("minor pentatonic")) {
-                semitones = Arrays.asList(2, 5, 7, 9, 12);
-            } else if (type.equalsIgnoreCase("harmonic minor")) {
-                semitones = Arrays.asList(1, 4, 5, 7, 9, 10, 12);
-            } else {
-                throw new IllegalArgumentException("Invalid scale type: '" + type + "'.");
+            switch (type.toLowerCase()) {
+                case "major":
+                    semitones = Arrays.asList(1, 3, 5, 7, 8, 10, 12);
+                    break;
+                case "minor":
+                    semitones = Arrays.asList(2, 4, 5, 7, 9, 10, 12);
+                    break;
+                case "melodic minor":
+                    semitones = Arrays.asList(2, 4, 5, 7, 9, 10, 12);
+                    break;
+                case "ionian":
+                    semitones = Arrays.asList(1, 3, 5, 7, 8, 10, 12);
+                    break;
+                case "dorian":
+                    semitones = Arrays.asList(2, 3, 5, 7, 9, 10, 12);
+                    break;
+                case "phrygian":
+                    semitones = Arrays.asList(2, 4, 5, 7, 9, 11, 12);
+                    break;
+                case "lydian":
+                    semitones = Arrays.asList(1, 3, 5, 6, 8, 10, 12);
+                    break;
+                case "mixolydian":
+                    semitones = Arrays.asList(2, 3, 5, 7, 8, 10, 12);
+                    break;
+                case "aeolian":
+                    semitones = Arrays.asList(2, 4, 5, 7, 9, 10, 12);
+                    break;
+                case "locrian":
+                    semitones = Arrays.asList(2, 4, 6, 7, 9, 11, 12);
+                    break;
+                case "blues":
+                    semitones = Arrays.asList(2, 5, 6, 7, 9, 12);
+                    break;
+                case "major pentatonic":
+                    semitones = Arrays.asList(3, 5, 8, 10, 12);
+                    break;
+                case "minor pentatonic":
+                    semitones = Arrays.asList(2, 5, 7, 9, 12);
+                    break;
+                case "harmonic minor":
+                    semitones = Arrays.asList(1, 4, 5, 7, 9, 10, 12);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid scale type: '" + type + "'.");
             }
             for (int i = 0; i < octaves; i++) {
                 for (int j = 0; j < semitones.size(); j++) {

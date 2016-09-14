@@ -50,11 +50,11 @@ public class Help implements Command {
                 env.getTranscriptManager().setResult(generateHelpResult(result));
             } else {
                 env.getTranscriptManager().setResult("Showing DSL Reference");
-                env.getRootController().getTranscriptController().showDslRef();
+                env.getRootController().showDslRef();
             }
         } catch (Exception e) {
             env.getTranscriptManager().setResult("Showing DSL Reference");
-            env.getRootController().getTranscriptController().showDslRef();
+            env.getRootController().showDslRef();
         }
 
 

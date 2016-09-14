@@ -258,11 +258,9 @@ public class UserHandler {
 
 
         //Step 5. Open the User login window.
-        try {
-            this.env.getRootController().logOutUser();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        this.env.getRootController().logOutUser();
+
 
 
     }

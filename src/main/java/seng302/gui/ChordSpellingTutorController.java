@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -42,9 +42,6 @@ public class ChordSpellingTutorController extends TutorController {
     ComboBox numEnharmonics;
 
     @FXML
-    HBox settingsBox;
-
-    @FXML
     Button btnGo;
 
     @FXML
@@ -62,12 +59,14 @@ public class ChordSpellingTutorController extends TutorController {
     private String[] validChordNames = {"major", "minor", "minor 7th",
             "major 7th", "seventh", "diminished", "half diminished 7th", "diminished 7th"};
 
-    CheckComboBox<String> chordTypes = new CheckComboBox<String>();
+    @FXML
+    CheckComboBox<String> chordTypes;
 
     /**
      * What type the generated chords are, i.e. major, minor
      */
-    private ArrayList<String> validChords = new ArrayList<String>();
+//    private ArrayList<String> validChords = new ArrayList<String>();
+    ObservableList<String> validChords;
 
     private String enharmonicsRequired;
 
@@ -97,16 +96,10 @@ public class ChordSpellingTutorController extends TutorController {
             chordTypes.getItems().add(validChordName);
         }
 
-        chordTypes.getCheckModel().getCheckedIndices().addListener((ListChangeListener<Integer>) c -> {
-            validChords.clear();
-            validChords.addAll(chordTypes.getCheckModel().getCheckedIndices().stream().map(index -> validChordNames[index]).collect(Collectors.toList()));
-        });
+        chordTypes.getCheckModel().clearChecks();
+        chordTypes.getCheckModel().check(0);
+        chordTypes.getCheckModel().check(1);
 
-        // Defaults to having all options selected
-        selectAllChordTypes();
-
-        //Adds to the settings, after its label
-        settingsBox.getChildren().add(1, chordTypes);
     }
 
     /**
@@ -124,20 +117,27 @@ public class ChordSpellingTutorController extends TutorController {
      */
     private void goAction(ActionEvent event) {
         if (chordTypes.getCheckModel().getCheckedIndices().size() != 0) {
-            chordError.setVisible(false);
             record = new TutorRecord();
+            paneInit.setVisible(false);
             paneQuestions.setVisible(true);
-            paneResults.setVisible(false);
             manager.resetEverything();
             manager.questions = selectedQuestions;
             enharmonicsRequired = (String) numEnharmonics.getValue();
+            qPanes = new ArrayList<>();
+
+            this.validChords = chordTypes.getCheckModel().getCheckedItems();
 
             questionRows.getChildren().clear();
             for (int i = 0; i < manager.questions; i++) {
                 HBox questionRow = setUpQuestion();
-                questionRows.getChildren().add(questionRow);
+                TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+                qPane.setPadding(new Insets(2, 2, 2, 2));
+                qPanes.add(qPane);
                 questionRows.setMargin(questionRow, new Insets(10, 10, 10, 10));
             }
+            qAccordion.getPanes().addAll(qPanes);
+            qAccordion.setExpandedPane(qAccordion.getPanes().get(0));
+            questionRows.getChildren().add(qAccordion);
         } else {
             chordError.setVisible(true);
         }
@@ -452,17 +452,20 @@ public class ChordSpellingTutorController extends TutorController {
     }
 
     /**
-     * Randomly decides whether the chord will be major or minor.
-     * Will be extended for further chord types
+     * Randomly decides whether the chord will be major or minor. Will be extended for further chord
+     * types
+     *
      * @return either "major" or "minor" as a string
      */
     private String generateRandomChordType() {
+        this.validChords = chordTypes.getCheckModel().getCheckedItems();
         int chordType = rand.nextInt(validChords.size());
         return validChords.get(chordType);
     }
 
     /**
      * Generates a "valid chord". That is, its name is valid and its notes match its name.
+     *
      * @return A Pair object of Chord Name, Notes in Chord
      */
     private Pair<String, ArrayList<Note>> generateValidChord() {
@@ -506,7 +509,7 @@ public class ChordSpellingTutorController extends TutorController {
             //example, if you're +7 above the note, you take that one and go down 7 semitones?
             for (int i = 0; i < 8; i++) {
                 Note thisNote = startingNote.semitoneDown(i);
-                if (thisNote != correctNote) {
+                if (noteEnharmonicComparison(correctNote, thisNote)) {
                     surroundingNotes.add(randomiseNoteName(thisNote));
                 } else {
                     surroundingNotes.add(OctaveUtil.removeOctaveSpecifier(correctNote.getNote()));
@@ -517,16 +520,34 @@ public class ChordSpellingTutorController extends TutorController {
             //so, if you're -7 below the note, you take that and go up 7 semitones
             for (int i = 0; i < 8; i++) {
                 Note thisNote = startingNote.semitoneUp(i);
-                if (thisNote != correctNote) {
+                if (noteEnharmonicComparison(correctNote, thisNote)) {
                     surroundingNotes.add(randomiseNoteName(thisNote));
                 } else {
                     surroundingNotes.add(OctaveUtil.removeOctaveSpecifier(correctNote.getNote()));
                 }
             }
         }
-
         return surroundingNotes;
 
+    }
+
+    /**
+     * Method used to compare the correct note and the note to be added to answer options.
+     *
+     * @param correctNote the right note answer
+     * @param thisNote    the note to be added
+     * @return comparison boolean that represents the comparison result
+     */
+    private boolean noteEnharmonicComparison(Note correctNote, Note thisNote) {
+        char correctNoteLetter = correctNote.getNote().charAt(0);
+        boolean comparison = true;
+
+        if (thisNote.getEnharmonicWithLetter(correctNoteLetter) != null) {
+            if (thisNote.getEnharmonicWithLetter(correctNoteLetter).equals(correctNote.getNote())) {
+                comparison = false;
+            }
+        }
+        return comparison;
     }
 
     /**
@@ -581,7 +602,6 @@ public class ChordSpellingTutorController extends TutorController {
         Collections.shuffle(chordNames);
         return chordNames;
     }
-
 
 
     /**
@@ -731,9 +751,10 @@ public class ChordSpellingTutorController extends TutorController {
                 answeredCorrectly.toString()
         };
         record.addQuestionAnswer(question);
-        env.getRootController().setTabTitle(getTabID(), true);
-
-        updateManagerCompletedQuestion();
+        handleAccordion();
+        if (manager.answered == manager.questions) {
+            finished();
+        }
     }
 
     /**
@@ -755,17 +776,6 @@ public class ChordSpellingTutorController extends TutorController {
 
     }
 
-    /**
-     * Once a question has been completely answered, the question manager is updated.
-     */
-    private void updateManagerCompletedQuestion() {
-        manager.answered += 1;
-
-        if (manager.answered == manager.questions) {
-            finished("chordSpellingTutor");
-        }
-    }
-
 
     /**
      * Run when a user elects to skip a question. Saves that question to the manager as skipped, and
@@ -780,14 +790,13 @@ public class ChordSpellingTutorController extends TutorController {
         // Disables only input buttons
         disableButtons(questionRow, 1, 3);
         formatSkippedQuestion(questionRow);
-        manager.questions -= 1;
         manager.add(new Pair<>(finalData, questionType), 2);
 
         record.addQuestionAnswer(questionInfo);
 
-        env.getRootController().setTabTitle(getTabID(), true);
+        handleAccordion();
         if (manager.answered == manager.questions) {
-            finished("chordSpellingTutor");
+            finished();
         }
     }
 
@@ -797,7 +806,8 @@ public class ChordSpellingTutorController extends TutorController {
      * Resets the settings inputs
      */
     void resetInputs() {
-        selectAllChordTypes();
+        chordTypes.getCheckModel().clearChecks();
+        chordTypes.getCheckModel().checkIndices(0, 1);
         numEnharmonics.getSelectionModel().selectFirst();
         allowFalseChords.setSelected(false);
     }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<VBox fx:id="stats" alignment="TOP_CENTER" layoutY="-13.0" prefWidth="500.0" spacing="10.0"
+      AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+      AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserSummaryController">
+    <children>
+        <AnchorPane fx:id="userSummary">
+            <children>
+                <VBox fx:id="levelVBox" alignment="TOP_CENTER" spacing="10.0"
+                      AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <Label text="Level Progress" BorderPane.alignment="CENTER">
+                            <font>
+                                <Font name="System Bold" size="18.0"/>
+                            </font>
+                        </Label>
+                        <ProgressBar fx:id="pbLevel" layoutX="103.0" layoutY="60.0" maxHeight="20"
+                                     prefWidth="200.0" progress="0.0"/>
+                        <Label fx:id="highXp" alignment="CENTER_RIGHT" layoutX="103.0"
+                               layoutY="84.0" maxHeight="17.0" prefWidth="200.0" text="Label"
+                               textAlignment="RIGHT"/>
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" left="10.0" right="10.0" top="40.0"/>
+                    </padding>
+                </VBox>
+            </children>
+        </AnchorPane>
+        <Label fx:id="overallStats" alignment="CENTER" contentDisplay="CENTER"
+               text="Overall Stats" textAlignment="CENTER">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+            <padding>
+                <Insets top="20.0"/>
+            </padding>
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+        </Label>
+        <StackPane fx:id="overallRectangleStack" alignment="CENTER_LEFT"
+                   maxHeight="40.0" maxWidth="400.0" prefHeight="150.0"
+                   prefWidth="500.0">
+            <children>
+                <HBox fx:id="OverallRectangleHBox" alignment="CENTER"
+                      maxHeight="70.0" prefHeight="70.0" prefWidth="200.0">
+                    <children>
+                        <Rectangle fx:id="overallCorrect" fill="WHITE" height="40.0"
+                                   stroke="BLACK" strokeLineCap="BUTT"
+                                   strokeLineJoin="BEVEL" strokeMiterLimit="0.0"
+                                   strokeType="OUTSIDE" strokeWidth="0.0"
+                                   width="250.0"/>
+                        <Rectangle fx:id="overallIncorrect" fill="WHITE"
+                                   height="40.0" stroke="BLACK" strokeLineCap="BUTT"
+                                   strokeLineJoin="BEVEL" strokeMiterLimit="0.0"
+                                   strokeType="OUTSIDE" strokeWidth="0.0"
+                                   width="250.0"/>
+                    </children>
+                </HBox>
+                <Label fx:id="overallCorrectLabel" text="0 Correct">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                </Label>
+                <Label fx:id="overallIncorrectLabel" layoutX="10.0" layoutY="22.0"
+                       text="0 Incorrect" textAlignment="RIGHT"
+                       StackPane.alignment="CENTER_RIGHT">
+                    <padding>
+                        <Insets right="10.0"/>
+                    </padding>
+                </Label>
+                <Line fx:id="classAverage" endX="50.0" rotate="90.0"
+                      strokeWidth="3.0">
+                    <StackPane.margin>
+                        <Insets left="220.0"/>
+                    </StackPane.margin>
+                    <effect>
+                        <DropShadow blurType="GAUSSIAN" height="72.61"
+                                    radius="22.965" width="21.25"/>
+                    </effect>
+                </Line>
+            </children>
+            <VBox.margin>
+                <Insets bottom="20.0" left="10.0" right="10.0" top="20.0"/>
+            </VBox.margin>
+        </StackPane>
+        <Label prefHeight="27.0" prefWidth="89.0" text="Badges" textAlignment="CENTER">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+            <padding>
+                <Insets top="20.0"/>
+            </padding>
+        </Label>
+        <AnchorPane maxHeight="85.0" maxWidth="351.0" minHeight="-Infinity" minWidth="-Infinity"
+                    prefHeight="85.0" prefWidth="351.0"/>
+    </children>
+</VBox>

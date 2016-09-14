@@ -1,4 +1,9 @@
+
+
+
+
 .split-pane {
+
     -fx-base: #f1f0f0;
     -fx-background-color: {0}{1};
     -fx-border-color: {0};
@@ -8,8 +13,15 @@
     -fx-focus-color: derive({0}, 50%);
     -fx-faint-focus-color: derive({0}, 70%);
     -fx-accent: derive({0}, 40%);
+    -fx-border-style: none;
 
 }
+
+.noDivider .split-pane *.split-pane-divider{
+    -fx-padding: 0 1 0 1;
+
+}
+
 .tab-pane > .tab-header-area > .headers-region > .tab {
     -fx-background-color: derive({0}, 80%);
 }
@@ -23,7 +35,7 @@
 }
 
 .menu-bar {
-    -fx-accent: derive({0}, 80%)
+    -fx-accent: derive({0}, 80%);
 }
 
 .text-area {
@@ -31,6 +43,241 @@
 }
 
 .tab-header-background {
+
     -fx-background-color: {0};
 }
+
+.primary{
+    -fx-background-color: {0};
+    -fx-text-fill: {0}{1}{2};
+}
+
+.secondary{
+    -fx-background-color: {0}{1};
+    -fx-text-fill: {0}{1}{2}{3} ;
+}
+
+#keyPane > .title {
+    /* common styles for title, eg */
+    -fx-background-color: {0} ;
+}
+
+
+#settingsMenu > #sidePane {
+    -fx-background-color: derive({0}, 40%);
+}
+#settingsMenu > #sidePane > JFXButton {
+    -fx-background-color: derive({0}, 80%);
+    -fx-text-fill: {0}{1}{2} ;
+    -fx-font-size: 16;
+    -fx-border-color: {0};
+    -fx-border-width: 2px;
+}
+
+#settingsMenu > #sidePane > JFXButton {
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.8), 0, 0.0, 0, 1);
+}
+
+#settingsMenu > #sidePane > JFXButton:hover {
+    -fx-background-color: {0};
+    -fx-border: 0;
+
+}
+
+
+
+.settingsAnchor {
+   -fx-background-color: {0};
+  -fx-border: 0;
+
+}
+.settingsAnchor .jfx-list-view {
+   -fx-background-color: {0};
+  -fx-border: 0;
+
+}
+.settingsAnchor .jfx-list-view  .jfx-list-cell {
+    -fx-background-color: derive({0}, 80%);
+
+
+}
+.settingsAnchor .jfx-list-view  .jfx-list-cell .label {
+
+    -fx-text-fill: {0}{1}{2};
+    -fx-font-size: 16;
+
+
+
+}
+
+.settingsAnchor .jfx-list-cell:hover {
+  -fx-background-color: derive({0}, 10%);
+  -fx-text-fill: {0}{1}{2};
+
+}
+
+.primaryControl {
+    -fx-background-color: {0};
+    -fx-text-fill: {0}{1}{2} ;
+
+
+}
+
+.secondaryControl {
+    -fx-background-color: {0}{1};
+    -fx-text-fill: {0}{1}{2}{3} ;
+
+}
+
+.userPageSidePane {
+    -fx-background-color: {0};
+
+}
+
+.settingsMenu {
+    -fx-background-color: {0};
+    -fx-text-fill: {0}{1}{2} ;
+}
+
+#userPage {
+    -fx-background-color: {0};
+    -fx-text-fill: {0}{1}{2} ;
+}
+
+#userpage .userPagePrimary{
+    -fx-background-color: {0};
+
+
+}
+
+#topBar {
+    -fx-background-color: {0};
+    -fx-text-fill: {0}{1}{2} ;
+    -fx-border-color : {0};
+
+
+}
+
+.sideMenu{
+    -fx-background-color: {0};
+
+    -fx-border-color : {0};
+
+
+}
+
+.sideMenu .jfx-list-cell {
+    -fx-background-color: {0}{1};
+    -fx-pref-height: 50px;
+    -fx-pref-tile-height: 50px ;
+
+
+}
+.sideMenu .jfx-list-cell .label {
+    -fx-text-fill: {0}{1}{2}{3};
+    -fx-font-size: 16;
+}
+
+.sideMenu .jfx-list-cell:odd {
+    -fx-background-color: derive({0}{1}, -5%);
+
+
+}
+
+.sideMenu .jfx-list-cell:selected {
+    -fx-background-color: {0};
+    -fx-text-fill: {0}{1}{2};
+
+}
+.sideMenu .jfx-list-cell:selected .label {
+   -fx-font-size: 16;
+    -fx-text-fill: {0}{1}{2};
+}
+
+
+
+.sideMenu .jfx-list-cell .jfx-rippler {
+    -fx-background-color: {0};
+
+}
+
+
+
+
+
+.sideMenu .jfx-list-cell:hover {
+    -fx-background-color: derive({0}, 10%);
+    -fx-text-fill: {0}{1}{2};
+
+
+
+}
+
+#userSplitPane *.split-pane-divider {
+    -fx-padding: 0 1 0 1;
+}
+
+.primaryText {
+
+    -fx-text-fill: {0}{1}{2};
+}
+.secondaryText {
+
+    -fx-text-fill: {0}{1}{2}{3};
+}
+
+
+.flatDropDown .menu-button {
+    -fx-background-radius: 0;
+    -fx-background-radius: 0 0 0 0;
+    -fx-background-color: {0}{1};
+
+}
+
+
+.flatDropDown .menu-button > .arrow-button {
+    -fx-padding: 0;
+
+
+}
+
+.flatDropDown .menu-button > .arrow-button > .arrow {
+    -fx-padding: 0;
+
+
+}
+
+.icons-badge .badge-pane {
+    -fx-background-color: {0};
+    -fx-text-fill: {0}{1}{2};
+    -fx-background-radius: 23;
+    -fx-pref-width: 23;
+    -fx-pref-height: 23;
+    -fx-alignment: center;
+}
+
+.icons-badge-large .badge-pane {
+    -fx-background-color: {0};
+    -fx-text-fill: {0}{1}{2};
+    -fx-border-radius: 35;
+    -fx-border-color: {0}{1};
+    -fx-background-radius: 35;
+    -fx-pref-width: 35;
+    -fx-pref-height: 35;
+    -fx-alignment: center;
+}
+
+.settings-badge .badge-pane {
+
+    -fx-background-image: url("images/lock.png");
+    -fx-image: url("images/settings_gear.png");
+
+    -fx-text-fill: {0}{1}{2};
+    -fx-background-radius: 35;
+    -fx-pref-width: 35;
+    -fx-pref-height: 35;
+    -fx-alignment: center;
+}
+
+
 

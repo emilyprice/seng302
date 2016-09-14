@@ -1,5 +1,7 @@
 package seng302.gui;
 
+import com.jfoenix.controls.JFXButton;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -16,6 +18,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import seng302.Environment;
 import seng302.command.Command;
@@ -38,7 +41,7 @@ public class TranscriptPaneController {
     public TextField txtCommand;
 
     @FXML
-    private Button btnGo;
+    private JFXButton btnGo;
 
     @FXML
     private MenuItem menuQuit;
@@ -71,16 +74,27 @@ public class TranscriptPaneController {
     ToolBar playbackToolbar;
 
     @FXML
-    private Button helpButton;
+    AnchorPane transcriptAnchor;
 
-    private DslReferenceController dslRefControl;
+    private boolean isExpanded;
 
 
     @FXML
     private void initialize() {
-        dslRefControl = new DslReferenceController(this);
+        hideTranscript();
         // Text field can only request focus once everything has been loaded.
         Platform.runLater(() -> txtCommand.requestFocus());
+    }
+
+    public void hideTranscript() {
+        isExpanded = false;
+        playbackToolbar.setMaxWidth(0);
+        txtTranscript.setMaxWidth(0);
+        txtCommand.setMaxWidth(0);
+        btnGo.setMaxWidth(0);
+        transcriptAnchor.setVisible(false);
+        transcriptAnchor.setMinWidth(0);
+        transcriptAnchor.setMaxWidth(0);
     }
 
     /**
@@ -133,11 +147,6 @@ public class TranscriptPaneController {
 
     private void printToTranscript() {
         txtTranscript.appendText(env.getTranscriptManager().getLastCommand());
-    }
-
-    @FXML
-    public void showDslRef() {
-        dslRefControl.getPopover().show(helpButton);
     }
 
 
@@ -282,5 +291,21 @@ public class TranscriptPaneController {
         txtCommand.positionCaret(txtCommand.getText().length());
     }
 
+    public void showTranscript() {
+        if (!isExpanded) {
+            playbackToolbar.setMaxWidth(Region.USE_COMPUTED_SIZE);
+            txtTranscript.setMaxWidth(Region.USE_COMPUTED_SIZE);
+            txtCommand.setMaxWidth(Region.USE_COMPUTED_SIZE);
+            btnGo.setMaxWidth(Region.USE_COMPUTED_SIZE);
+            transcriptAnchor.setVisible(true);
+            transcriptAnchor.setMaxWidth(Region.USE_COMPUTED_SIZE);
+            isExpanded = true;
+            env.getRootController().resizeSplitPane(0.75);
+        } else {
+            hideTranscript();
+            env.getRootController().resizeSplitPane(1.0);
+        }
+
+    }
 
 }

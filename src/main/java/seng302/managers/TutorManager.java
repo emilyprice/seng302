@@ -67,6 +67,7 @@ public class TutorManager {
      * @param outcome value that represents if the question was answered correctly
      */
     public void add(Pair pair, int outcome) {
+        answered += 1;
         if (outcome == 0) {
             // Wrong answer
             incorrect += 1;

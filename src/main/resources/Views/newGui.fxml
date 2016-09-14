@@ -3,177 +3,212 @@
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXBadge?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<AnchorPane fx:id="paneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="457.0" minWidth="700.0" prefHeight="457.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.RootController">
-   <children>
-       <VBox prefHeight="457.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-           <children>
-               <!--<children>-->
-               <MenuBar fx:id="menuFileBar" minHeight="-Infinity" prefHeight="29.0" prefWidth="500.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                   <menus>
-                       <Menu mnemonicParsing="false" onShowing="#bindOpenObjects" text="File">
-                     <items>
-                         <MenuItem fx:id="menuQuit" accelerator="Shortcut+Q" mnemonicParsing="false" onAction="#closeApplication" text="Quit" />
-                         <Menu fx:id="menuOpenProjects" mnemonicParsing="false" text="Open Project" />
-                         <Menu mnemonicParsing="false" text="Import">
-                             <items>
-                                 <MenuItem fx:id="MenuImportTranscript" mnemonicParsing="false" onAction="#importTranscript" text="Import Transcript" />
-                                 <MenuItem fx:id="MenuImportCommands" mnemonicParsing="false" onAction="#importCommands" text="Import Commands" />
-                             </items>
-                         </Menu>
-                         <Menu mnemonicParsing="false" text="New..">
-                             <items>
-                                 <MenuItem fx:id="menuNewProject" accelerator="Shortcut+N" mnemonicParsing="false" onAction="#newProject" text="Project" />
+<?import javafx.scene.text.Font?>
+<AnchorPane fx:id="paneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="457.0"
+            minWidth="700.0" prefHeight="457.0" prefWidth="700.0" style="-fx-border-style: none;"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="seng302.gui.RootController">
+    <children>
+        <VBox prefHeight="457.0" prefWidth="700.0" style="-fx-border-style: none;"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+            <children>
+                <!--<children>-->
+                <MenuBar fx:id="menuFileBar" minHeight="-Infinity" prefHeight="29.0"
+                         prefWidth="500.0" style="-fx-border-style: none;"
+                         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                         AnchorPane.topAnchor="0.0">
+                    <menus>
+                        <Menu mnemonicParsing="false" onShowing="#bindOpenObjects" text="File">
+                            <items>
+                                <MenuItem fx:id="menuQuit" accelerator="Shortcut+Q"
+                                          mnemonicParsing="false" onAction="#closeApplication"
+                                          text="Quit"/>
+                                <Menu fx:id="menuOpenProjects" mnemonicParsing="false"
+                                      text="Open Project"/>
+                                <Menu mnemonicParsing="false" text="Import">
+                                    <items>
+                                        <MenuItem fx:id="MenuImportTranscript"
+                                                  mnemonicParsing="false"
+                                                  onAction="#importTranscript"
+                                                  text="Import Transcript"/>
+                                        <MenuItem fx:id="MenuImportCommands" mnemonicParsing="false"
+                                                  onAction="#importCommands"
+                                                  text="Import Commands"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="New..">
+                                    <items>
+                                        <MenuItem fx:id="menuNewProject" accelerator="Shortcut+N"
+                                                  mnemonicParsing="false" onAction="#newProject"
+                                                  text="Project"/>
 
-                             </items>
-                         </Menu>
-                         <Menu mnemonicParsing="false" text="Save...">
-                             <items>
-                                 <MenuItem fx:id="menuSaveProject" accelerator="Shortcut+S" mnemonicParsing="false" onAction="#saveProject" text="Save Project" />
-                                 <MenuItem fx:id="MenuSave" mnemonicParsing="false" onAction="#saveTranscript" text="Export Transcript" />
-                                 <MenuItem fx:id="menuSaveCommands" mnemonicParsing="false" onAction="#saveCommands" text="Export Commands Only" />
-                             </items>
-                         </Menu>
-                     </items>
-                       </Menu>
-                       <Menu mnemonicParsing="false" text="Edit">
-                           <items>
-                               <MenuItem fx:id="menuClearTranscript" mnemonicParsing="false" onAction="#clearTranscript" text="Clear Transcript" />
-                               <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#undo" text="Undo" />
-                               <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#redo" text="Redo" />
-                           </items>
-                       </Menu>
-                       <Menu mnemonicParsing="false" text="View">
-                           <items>
-                               <Menu mnemonicParsing="false" text="Keyboard Options">
-                                   <items>
-                                       <MenuItem fx:id="showHideKeyboard" mnemonicParsing="false" onAction="#showHideKeyboard" text="Toggle Keyboard">
-                                           <accelerator>
-                                               <KeyCodeCombination alt="UP" code="K" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                                           </accelerator>
-                                       </MenuItem>
-                                       <SeparatorMenuItem mnemonicParsing="false" />
-                                       <RadioMenuItem mnemonicParsing="false" onAction="#toggleShowKeyboardNotesAlways" text="Always show note name">
-                                           <toggleGroup>
-                                               <ToggleGroup fx:id="keyboardOptions" />
-                                           </toggleGroup>
-                                       </RadioMenuItem>
-                                       <RadioMenuItem mnemonicParsing="false" onAction="#toggleShowKeyboardNotesAction" text="Show note on action" toggleGroup="$keyboardOptions" />
-                                       <RadioMenuItem mnemonicParsing="false" onAction="#stopShowingNotesOnKeyboard" selected="true" text="Do not show note names" toggleGroup="$keyboardOptions" />
-                           </items>
-                               </Menu>
-                               <MenuItem fx:id="skinGuiButton" mnemonicParsing="false"
-                                         onAction="#createColorTab" text="Skin GUI"/>
-                           </items>
-                       </Menu>
-                  <Menu mnemonicParsing="false" onShowing="#bindOpenObjects" text="Tutors">
-                     <items>
-                         <Menu mnemonicParsing="false" text="Chords">
-                             <items>
-                                 <MenuItem fx:id="menuCRT" mnemonicParsing="false"
-                                           onAction="#openChordTutor" text="Chord Recognition"/>
-                                 <MenuItem fx:id="menuCST" mnemonicParsing="false"
-                                           onAction="#openSpellingTutor" text="Chord Spelling"/>
-                                 <MenuItem fx:id="menuDCT" mnemonicParsing="false"
-                                           onAction="#openDiatonicChordTutor"
-                                           text="Diatonic Chords"/>
-                             </items>
-                         </Menu>
-                         <Menu mnemonicParsing="false" text="Scales">
-                             <items>
-                                 <MenuItem fx:id="menuSCT" mnemonicParsing="false"
-                                           onAction="#openScaleTutor" text="Scale Recognition"/>
-                                 <MenuItem fx:id="menuKST" mnemonicParsing="false"
-                                           onAction="#openKeySignatureTutor" text="Key Signature"/>
-                             </items>
-                         </Menu>
-                        <MenuItem fx:id="menuPCT" mnemonicParsing="false" onAction="#openPitchTutor" text="Pitch Comparison " />
-                        <MenuItem fx:id="menuIRT" mnemonicParsing="false" onAction="#openIntervalTutor" text="Interval Recognition" />
-                        <MenuItem fx:id="menuMTT" mnemonicParsing="false" onAction="#openMusicalTermTutor" text="Musical Terms" />
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Save...">
+                                    <items>
+                                        <MenuItem fx:id="menuSaveProject" accelerator="Shortcut+S"
+                                                  mnemonicParsing="false" onAction="#saveProject"
+                                                  text="Save Project"/>
+                                        <MenuItem fx:id="MenuSave" mnemonicParsing="false"
+                                                  onAction="#saveTranscript"
+                                                  text="Export Transcript"/>
+                                        <MenuItem fx:id="menuSaveCommands" mnemonicParsing="false"
+                                                  onAction="#saveCommands"
+                                                  text="Export Commands Only"/>
+                                    </items>
+                                </Menu>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem fx:id="menuClearTranscript" mnemonicParsing="false"
+                                          onAction="#clearTranscript" text="Clear Transcript"/>
+                                <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#undo"
+                                          text="Undo"/>
+                                <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#redo"
+                                          text="Redo"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="View">
+                            <items>
+                                <Menu mnemonicParsing="false" text="Keyboard Options">
+                                    <items>
+                                        <MenuItem fx:id="showHideKeyboard" mnemonicParsing="false"
+                                                  onAction="#showHideKeyboard"
+                                                  text="Toggle Keyboard">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="K" control="UP"
+                                                                    meta="UP" shift="UP"
+                                                                    shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <RadioMenuItem mnemonicParsing="false"
+                                                       onAction="#toggleShowKeyboardNotesAlways"
+                                                       text="Always show note name">
+                                            <toggleGroup>
+                                                <ToggleGroup fx:id="keyboardOptions"/>
+                                            </toggleGroup>
+                                        </RadioMenuItem>
+                                        <RadioMenuItem mnemonicParsing="false"
+                                                       onAction="#toggleShowKeyboardNotesAction"
+                                                       text="Show note on action"
+                                                       toggleGroup="$keyboardOptions"/>
+                                        <RadioMenuItem mnemonicParsing="false"
+                                                       onAction="#stopShowingNotesOnKeyboard"
+                                                       selected="true" text="Do not show note names"
+                                                       toggleGroup="$keyboardOptions"/>
+                                    </items>
+                                </Menu>
+                                <RadioMenuItem mnemonicParsing="false" onAction="#toggleTranscript"
+                                               text="Show Transcript"/>
+                                <MenuItem fx:id="menuHelpWindow" mnemonicParsing="false"
+                                          onAction="#showDslRef" text="DSL Reference Card"/>
 
-                     </items>
-                  </Menu>
-                   </menus>
-               </MenuBar>
-               <SplitPane fx:id="splitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" VBox.vgrow="ALWAYS">
-                   <items>
-                       <TabPane fx:id="TabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="698.0" tabClosingPolicy="ALL_TABS">
-                           <tabs>
-                               <Tab fx:id="transcriptPane" onSelectionChanged="#onTranscriptTab" text="Transcript">
-                                   <content>
-                                       <fx:include fx:id="transcript" source="TranscriptPane.fxml" />
-                                       <!--<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />-->
+                            </items>
+                        </Menu>
 
-                                   </content>
-                               </Tab>
-                               <!--<Tab text="Pitch Tutor">-->
-                                   <!--<content>-->
-                                       <!--<fx:include fx:id="PitchComparisonTab" source="PitchComparisonPane.fxml" />-->
-                                   <!--</content>-->
-                               <!--</Tab>-->
-                               <!--<Tab text="Interval Tutor">-->
-                                   <!--<content>-->
-                                       <!--<fx:include fx:id="IntervalRecognitionTab" source="IntervalRecognitionPane.fxml" />-->
-                                   <!--</content>-->
-                               <!--</Tab>-->
-                               <!--<Tab onSelectionChanged="#reloadNumberTerms" text="Musical Terms Tutor">-->
-                                   <!--<content>-->
-                                       <!--<fx:include fx:id="MusicalTermsTab" source="MusicalTermsPane.fxml" />-->
-                                   <!--</content>-->
-                               <!--</Tab>-->
-                               <!--<Tab text="Scale Tutor">-->
-                                   <!--<content>-->
-                                       <!--<fx:include fx:id="ScaleRecognitionTab" source="ScaleRecognitionPane.fxml" />-->
-                                   <!--</content>-->
-                               <!--</Tab>-->
-                           </tabs>
-                       </TabPane>
-                       <fx:include fx:id="keyboardPane" source="KeyboardPane.fxml" />
-                   </items>
-                   <VBox.margin>
-                       <Insets />
-                   </VBox.margin>
-               </SplitPane>
-           </children>
-       </VBox>
-      <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="100.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
-         <children>
+                    </menus>
+                </MenuBar>
+                <HBox fx:id="userBar" alignment="CENTER" maxHeight="30.0" minHeight="30.0"
+                      prefHeight="30.0" prefWidth="700.0" style="-fx-border-style: none;"
+                      styleClass="primary">
+                    <children>
+                        <Label fx:id="txtHeader" styleClass="primaryText" text="header">
+                            <font>
+                                <Font name="Droid Sans Bold" size="21.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                      prefHeight="10000.0" prefWidth="100000.0"
+                      style="-fx-border-style: none; -fx-border-color: red; -fx-border-width: 0;"
+                      styleClass="noDivider" AnchorPane.bottomAnchor="0.0"
+                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                      AnchorPane.topAnchor="0.0">
+                    <children>
+                        <SplitPane fx:id="splitPane" dividerPositions="0.5"
+                                   maxHeight="1.7976931348623157E308"
+                                   maxWidth="1.7976931348623157E308" orientation="VERTICAL"
+                                   prefHeight="10000.0" prefWidth="1000000.0"
+                                   style="-fx-border-style: none;" styleClass="noDivider"
+                                   VBox.vgrow="ALWAYS">
+                            <items>
+                                <SplitPane fx:id="transcriptSplitPane" dividerPositions="1.0"
+                                           style="-fx-border-style: none; -fx-border-width: 0;"
+                                           styleClass="noDivider">
+                                    <items>
+                                        <AnchorPane fx:id="centerPane"
+                                                    maxHeight="1.7976931348623157E308"
+                                                    maxWidth="1.7976931348623157E308"
+                                                    style="-fx-border-style: none; -fx-border-color: red; -fx-border-width: 0;"/>
+                                        <fx:include fx:id="transcriptPane"
+                                                    source="TranscriptPane.fxml"/>
+                                    </items>
+                                </SplitPane>
+                                <fx:include fx:id="keyboardPane" source="KeyboardPane.fxml"/>
+                            </items>
+                            <VBox.margin>
+                                <Insets/>
+                            </VBox.margin>
+                        </SplitPane>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <HBox fx:id="userDPBox" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity"
+              nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="100.0"
+              AnchorPane.rightAnchor="20.0"
+              AnchorPane.topAnchor="20.0" styleClass="flatDropDown" >
+            <children>
+                <JFXBadge fx:id="levelBadge" position="TOP_RIGHT" styleClass="icons-badge" text="1">
+                    <control>
 
+                        <ImageView fx:id="imageDP" fitHeight="50" fitWidth="50">
+                            <image>
+                                <Image url="images/testDP.jpg"/>
+                            </image>
+                            <HBox.margin>
+                                <Insets right="5.0"/>
+                            </HBox.margin>
+                        </ImageView>
+                    </control>
+                </JFXBadge>
+                <MenuButton fx:id="userDropDown" alignment="CENTER" contentDisplay="LEFT"
+                            ellipsisString="user" mnemonicParsing="false" text="user"
+                            textOverrun="CENTER_ELLIPSIS" >
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#logOutUser" text="Logout"/>
+                        <MenuItem fx:id="userSettingsButton" mnemonicParsing="false"
+                                  onAction="#launchSettings" text="Settings"/>
+                    </items>
+                </MenuButton>
+            </children>
+        </HBox>
 
-           <ImageView fx:id="imageDP" fitHeight="50" fitWidth="50">
-   <image>
-                  <Image url="images/testDP.jpg" />
-   </image>
-               <HBox.margin>
-                  <Insets right="5.0" />
-               </HBox.margin>
-           </ImageView>
-             <MenuButton fx:id="userDropDown" alignment="CENTER" contentDisplay="LEFT" ellipsisString="user"
-                         mnemonicParsing="false" text="user" textOverrun="CENTER_ELLIPSIS">
-              <items>
-                  <MenuItem mnemonicParsing="false" onAction="#logOutUser" text="Logout" />
-                  <MenuItem fx:id="userSettingsButton" mnemonicParsing="false" onAction="#launchUserSettings" text="User Settings" />
-              </items>
-            </MenuButton>
-         </children>
-      </HBox>
-
-   </children>
-   <!--</children>-->
+    </children>
+    <!--</children>-->
 </AnchorPane>

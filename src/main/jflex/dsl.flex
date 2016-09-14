@@ -99,7 +99,7 @@ Note = [A-G|a-g]([#|b|x]|(bb))?[0-8]?|[A|B|D|E|F|G|a|b|d|e|f|g]([#|b|x]|(bb))?("
 MidiNote = (0?[0-9]?[0-9]|1[01][0-9]|12[0-7])
 Atom = [^\s|;]+
 SemiColon = ";"
-ScaleType = "major"|"minor"|"melodic minor"|"mel minor"|"blues"|"major pentatonic"|"minor pentatonic"|"harmonic minor"|"harm minor"
+ScaleType = "major"|"minor"|"melodic minor"|"mel minor"|"ionian"|"dorian"|"phrygian"|"lydian"|"mixolydian"|"aeolian"|"locrian"|"minormajor"|"dorian b2"|"lydian #5"|"lydian dominant"|"mixolydian b6"|"locrian #2"|"altered"|"blues"|"major pentatonic"|"minor pentatonic"|"harmonic minor"|"harm minor"
 PlayStyle = "arpeggio"
 SharedChordAndInterval = "diminished 7th"|"diminished seventh"|"major 7th"|"major seventh"|"minor 7th"|"minor seventh"
 ChordType = "seventh"|"7th"|"half dim"|"half diminished"|"half diminished 7th"|"half diminished seventh"|"half dim seventh"|"half dim 7th"|"dim seventh"|"dim 7th"|"dim"|"diminished"
@@ -167,6 +167,8 @@ RomanNumerals = (I|II|III|IV|V|VI|VII)
     "quality of"        {return symbol(DslSymbol.COMMAND_QUALITY_OF);}
     "chord function"    {return symbol(DslSymbol.COMMAND_CHORD_FUNCTION);}
     "function of"       {return symbol(DslSymbol.COMMAND_FUNCTION_OF);}
+    "mode of"           {return symbol(DslSymbol.COMMAND_GET_MODE);}
+    "parent of"         {return symbol(DslSymbol.COMMAND_PARENT_OF);}
     {RomanNumerals}     {return symbol(DslSymbol.ROMAN_NUMERALS, new String(yytext()));}
     {SharpsFlats}       {return symbol(DslSymbol.SHARPSFLATS, new String(yytext()));}
     {PlayStyle}         {return symbol(DslSymbol.PLAY_STYLE, new String(yytext())); }

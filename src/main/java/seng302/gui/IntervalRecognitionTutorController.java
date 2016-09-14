@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -32,7 +33,7 @@ public class IntervalRecognitionTutorController extends TutorController {
     Button btnGo;
 
     @FXML
-    VBox range;
+    VBox paneInit;
 
     @FXML
     Label notes;
@@ -49,17 +50,19 @@ public class IntervalRecognitionTutorController extends TutorController {
     public void create(Environment env) {
         super.create(env);
         initialiseQuestionSelector();
-        initaliseRangeSelector();
+//        initaliseRangeSelector();
+        rangeSlider = new NoteRangeSlider(notes, 24, 48, 72);
+        paneInit.getChildren().add(1, rangeSlider);
     }
 
     /**
      * Creates the Range selector that can be used to select the range of notes that will be played
      * It has a Minimum range of two octaves.
      */
-    private void initaliseRangeSelector() {
-        rangeSlider = new NoteRangeSlider(notes, 24, 48, 72);
-        range.getChildren().add(1, rangeSlider);
-    }
+//    private void initaliseRangeSelector() {
+//        rangeSlider = new NoteRangeSlider(notes, 24, 48, 72);
+//        range.getChildren().add(1, rangeSlider);
+//    }
 
     /**
      * Run when the user clicks the "Go" button. Generates and displays a new set of questions.
@@ -67,19 +70,27 @@ public class IntervalRecognitionTutorController extends TutorController {
      * @param event The mouse click that initiated the method.
      */
     public void goAction(ActionEvent event) {
+        paneInit.setVisible(false);
         paneQuestions.setVisible(true);
-        paneResults.setVisible(false);
         record = new TutorRecord();
         manager.resetEverything();
         manager.questions = selectedQuestions;
+        qPanes = new ArrayList<>();
+
         if (manager.questions >= 1) {
             // Run the tutor
             questionRows.getChildren().clear();
             for (int i = 0; i < manager.questions; i++) {
                 HBox questionRow = setUpQuestion();
-                questionRows.getChildren().add(questionRow);
+                TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+                qPane.setPadding(new Insets(2, 2, 2, 2));
+                qPanes.add(qPane);
                 VBox.setMargin(questionRow, new Insets(10, 10, 10, 10));
             }
+            qAccordion.getPanes().addAll(qPanes);
+            qAccordion.setExpandedPane(qAccordion.getPanes().get(0));
+            questionRows.getChildren().add(qAccordion);
+
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Invalid Number of Intervals");
@@ -144,7 +155,6 @@ public class IntervalRecognitionTutorController extends TutorController {
             // Disables only input buttons
             disableButtons(questionRow, 1, 3);
             formatSkippedQuestion(questionRow);
-            manager.questions -= 1;
             manager.add(pair, 2);
             String[] question = new String[]{
                     String.format("Interval between %s and %s", firstNote.getNote(), secondNote.getNote()),
@@ -152,7 +162,7 @@ public class IntervalRecognitionTutorController extends TutorController {
                     "2"
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
+            handleAccordion();
             if (manager.answered == manager.questions) {
                 finished("intervalTutor");
             }
@@ -170,7 +180,6 @@ public class IntervalRecognitionTutorController extends TutorController {
                 formatIncorrectQuestion(questionRow);
                 manager.add(pair, 0);
             }
-            manager.answered += 1;
             Integer correct = 0;
             if (options.getValue().equals(thisInterval.getName())) {
                 correct = 1;
@@ -182,8 +191,8 @@ public class IntervalRecognitionTutorController extends TutorController {
                     correct.toString()
             };
             record.addQuestionAnswer(question);
-            env.getRootController().setTabTitle(getTabID(), true);
             // Shows the correct answer
+            handleAccordion();
             if (manager.answered == manager.questions) {
                 finished("intervalTutor");
             }
