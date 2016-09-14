@@ -94,8 +94,8 @@ public class BadgeManager {
         overallBadges.add(new Badge("All tutors", "Unlock all tutors", null, 0, 1, "gradHat"));
         overallBadges.add(new Badge("Tutor master", "100% in all tutors", null, 0, 1, "gradHat"));
         overallBadges.add(new Badge("Musician","Number of instruments used", sessionBadges, 0, 1, "gradHat"));
-        overallBadges.add(new Badge("Speedster", "Force set the tempo", null, 0, 1, "gradHat"));
-        overallBadges.add(new Badge("TwinkleTwinkle", "Find hidden secret", null, 0, 1, "twinkle"));
+        overallBadges.add(new Badge("Speedster", "Force set the tempo", null, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("TwinkleTwinkle", "Find hidden secret", null, 0, 0, "twinkle"));
 
         replaceBadges(tutorBadgeMap, overallBadges);
     }
@@ -154,4 +154,11 @@ public class BadgeManager {
         return tutor100AllMap;
     }
 
+    public void unlockBadge(String badgeName) {
+        overallBadges.stream().filter(b -> b.name.equals(badgeName)).forEach(b -> {
+            System.out.println("Unllocked badge woohoo");
+            b.currentBadgeType = 1;
+            updateOverallBadges();
+        });
+    }
 }

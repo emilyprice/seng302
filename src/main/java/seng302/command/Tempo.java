@@ -38,6 +38,7 @@ public class Tempo implements Command {
      * an error message will raise and notify the user
      */
     public Tempo(String tempo, boolean force) {
+        Environment env;
         this.isSetter = true;
         this.force = force;
         try {
@@ -81,6 +82,10 @@ public class Tempo implements Command {
             // Only change the tempo under valid circumstances
             if (force || inValidRange(tempo)) {
                 env.getPlayer().setTempo(tempo);
+            }
+            if (force) {
+                System.out.println("Got the force set");
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Speedster");
             }
 
 

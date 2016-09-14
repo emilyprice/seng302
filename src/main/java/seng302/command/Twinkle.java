@@ -18,6 +18,7 @@ public class Twinkle implements Command {
     }
 
     public void execute(Environment env) {
+        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("TwinkleTwinkle");
         ArrayList<Note> song = new ArrayList<Note>();
         song.add(Note.lookup("C4"));
         song.add(Note.lookup("C4"));
