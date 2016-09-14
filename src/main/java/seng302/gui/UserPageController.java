@@ -325,11 +325,11 @@ public class UserPageController {
 
     }
 
-
-            makeLineGraph(dateAndTime);
-            updateBadgesDisplay();
-        }
-    }
+//
+//            makeLineGraph(dateAndTime);
+//            updateBadgesDisplay();
+//        }
+//    }
 
     private void updateBadgesDisplay() {
 
