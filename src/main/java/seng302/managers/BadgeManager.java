@@ -65,18 +65,18 @@ public class BadgeManager {
 
 
         ArrayList<Integer> sessionBadges = new ArrayList<>();
-        sessionBadges.add(0);
-        sessionBadges.add(5);
-        sessionBadges.add(15);
-        sessionBadges.add(45);
+//        sessionBadges.add(0);
+        sessionBadges.add(1);
+        sessionBadges.add(8);
+        sessionBadges.add(25);
         sessionBadges.add(100);
 
         ArrayList<Integer> questionBadges = new ArrayList<>();
-        questionBadges.add(0);
+//        questionBadges.add(0);
         questionBadges.add(10);
-        questionBadges.add(45);
-        questionBadges.add(100);
-        questionBadges.add(500);
+        questionBadges.add(50);
+        questionBadges.add(120);
+        questionBadges.add(600);
 
         //intalize tutor badges
         for (String tutor:allTutors){
@@ -95,7 +95,7 @@ public class BadgeManager {
         overallBadges.add(new Badge("All tutors", null, "Unlock all tutors", null, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", null, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Musician", null, "Number of instruments used", sessionBadges, 0, 0, "gradHat"));
-        overallBadges.add(new Badge("Eggs in baskets", null, "Create three projects", sessionBadges, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Eggs in baskets", null, "Create three projects", null, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "gradHat"));
         overallBadges.add(new Badge("TwinkleTwinkle", null, "Find hidden secret", null, 0, 0, "twinkle"));
 
@@ -163,5 +163,20 @@ public class BadgeManager {
             b.badgeProgress = 1;
             updateOverallBadges();
         });
+    }
+
+    public void updateTutorBadges(String tutorName, int correct, int answered) {
+        ArrayList badges = tutorBadgeMap.get(tutorName);
+//        double progress = ((double)correct / (double) answered);
+        for (Object badg : badges) {
+            Badge b = (Badge) badg;
+            if (b.name.equals("Correct Questions")) {
+                b.updateBadgeProgress(correct);
+            } else if (b.name.equals("Completed Sessions")) {
+                b.updateBadgeProgress(1);
+            } else if (b.name.equals("100% Sessions") && (correct == answered)) {
+                b.updateBadgeProgress(1);
+            }
+        }
     }
 }

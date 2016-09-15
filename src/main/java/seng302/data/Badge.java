@@ -35,8 +35,8 @@ public class Badge {
         this.imageName = imageName;
     }
 
-    public void updateBadgeProgress(Integer progress){
-
+    public void updateBadgeProgress(double progress){
+        System.out.println("Updating progress: "+progress+" Current goal: "+badgeLevels.get(currentBadgeType));
         badgeProgress += progress;
         if(badgeLevels == null){
             updateImage();
@@ -44,9 +44,11 @@ public class Badge {
             return;
         }
 
-        if(badgeProgress > badgeLevels.get(currentBadgeType)){
+        if(badgeProgress >= badgeLevels.get(currentBadgeType)){
+            System.out.println("Upgrading");
             currentBadgeType += 1;
-            updateImage();
+            badgeProgress = 0;
+//            updateImage();
         }
     }
 

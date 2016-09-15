@@ -148,6 +148,7 @@ public abstract class TutorController {
      */
     protected void finished() {
         env.getPlayer().stop();
+        String tutorName = env.getRootController().getHeader();
 
         //Calculates and gives a user their experience.
         //Note: I've ignored "skipped questions" here, as you won't be able to "skip" a
@@ -155,6 +156,7 @@ public abstract class TutorController {
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().isCompetitiveMode) {
             int expGained = ExperienceCalculator.calculateExperience(manager.correct, manager.questions);
             env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(expGained);
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().updateTutorBadges(tutorName, manager.correct, manager.answered);
         }
 
         userScore = getScore(manager.correct, manager.answered);
@@ -163,7 +165,6 @@ public abstract class TutorController {
         record.setFinished();
         record.setDate();
 
-        String tutorName = env.getRootController().getHeader();
         if (currentProject != null) {
             currentProject.saveCurrentProject();
             String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
