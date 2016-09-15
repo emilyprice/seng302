@@ -344,7 +344,6 @@ public class UserPageController {
             statsController.create(env);
             statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
             statsController.updateBadgesDisplay();
-
             listView.getSelectionModel().select(tutor);
 
 

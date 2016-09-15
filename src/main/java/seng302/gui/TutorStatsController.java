@@ -357,7 +357,7 @@ public class TutorStatsController {
         Badge grad = new Badge("Some Badge", "Yadda yadda", levels, 0.25, 1, "gradHat");
         Badge pitch = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 2, "tuning-fork");
         Badge terms = new Badge("Terms Tutor", "Some ribbon thing", levels, 0.15, 0, "open-book");
-        ArrayList<Badge> generalBadges = new ArrayList();
+//        ArrayList<Badge> generalBadges = new ArrayList();
         ArrayList<Badge> tutorBadges = new ArrayList();
 
         HashMap someTutorBadges = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getTutorBadges();
@@ -374,9 +374,19 @@ public class TutorStatsController {
         lockView.fitWidthProperty().setValue(45);
         this.lockView = lockView;
 
-        generalBadges.add(grad);
-        tutorBadges.add(pitch);
-        tutorBadges.add(terms);
+//        generalBadges.add(grad);
+//        tutorBadges.add(pitch);
+//        tutorBadges.add(terms);
+        HashMap tutorBadgeMap = BadgeManager.getTutorBadges();
+
+        for (Object tutor : tutorBadgeMap.keySet()) {
+            if (tutor.toString().equals(tutorName.getText())) {
+                for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {
+                    tutorBadges.add((Badge) b);
+                }
+            }
+        }
+
         badgeGrid.getChildren().removeAll();
         Collections.sort(tutorBadges, new badgeComparator());
         tutorBadges.forEach(this::addTutorBadgeToGrid);

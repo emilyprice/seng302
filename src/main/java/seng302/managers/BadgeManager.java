@@ -38,14 +38,15 @@ public class BadgeManager {
     }
 
     private void populateTutorList(){
-        allTutors.add("pitchTutor");
-        allTutors.add("intervalTutor");
-        allTutors.add("musicalTermTutor");
-        allTutors.add("scaleTutor");
-        allTutors.add("chordTutor");
-        allTutors.add("chordSpellingTutor");
-        allTutors.add("diatonicChordTutor");
-        allTutors.add("keySignatureTutor");
+        allTutors.add("Pitch Comparison Tutor");
+        allTutors.add("Interval Recognition Tutor");
+        allTutors.add("Musical Terms Tutor");
+        allTutors.add("Scale Recognition Tutor");
+        allTutors.add("Chord Recognition Tutor");
+        allTutors.add("Chord Spelling Tutor");
+        allTutors.add("Diatonic Chord Tutor");
+        allTutors.add("Key Signature Tutor");
+        allTutors.add("Scale Modes Tutor");
     }
 
 

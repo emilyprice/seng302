@@ -138,7 +138,7 @@ public class UserSummaryController {
         HashMap tutorBadgeMap = BadgeManager.getTutorBadges();
 //        ArrayList<Badge> tutorBadges = new ArrayList<>(tutorBadgeMap.values());
         ArrayList<Badge> generalBadges = BadgeManager.getOverallBadges();
-        System.out.println("Badges pls: " + tutorBadgeMap);
+//        System.out.println("Badges pls: " + tutorBadgeMap);
 
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
@@ -245,6 +245,7 @@ public class UserSummaryController {
         badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
+//        System.out.println(b.name + ", " + badgeStack.getChildren());
         badgeGrid.add(badgeBox, gridX, gridY);
         if (gridX < 5) {
             gridX++;
