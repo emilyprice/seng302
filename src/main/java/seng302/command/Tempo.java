@@ -83,9 +83,12 @@ public class Tempo implements Command {
                 env.getPlayer().setTempo(tempo);
             }
             if (force) {
-                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Speedster");
+                try {
+                    env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Speedster");
+                } catch (NullPointerException e) {
+                    // For Git testing. Badges are not yet generated when testing
+                }
             }
-
 
             env.getTranscriptManager().setResult(result);
             //Update project saved state
