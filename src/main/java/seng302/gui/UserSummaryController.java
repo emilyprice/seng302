@@ -128,17 +128,10 @@ public class UserSummaryController {
 
     private void updateBadgesDisplay() {
 
-        ArrayList levels = new ArrayList<Integer>();
-        Badge grad = new Badge("Some Badge", "Yadda yadda", levels, 0.25, 1, "gradHat");
-        Badge pitch = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 0, "tuning-fork");
-        Badge terms = new Badge("Terms Tutor", "Some ribbon thing", levels, 0.15, 2, "open-book");
-//        ArrayList<Badge> generalBadges = new ArrayList();
         ArrayList<Badge> tutorBadges = new ArrayList();
 
         HashMap tutorBadgeMap = BadgeManager.getTutorBadges();
-//        ArrayList<Badge> tutorBadges = new ArrayList<>(tutorBadgeMap.values());
         ArrayList<Badge> generalBadges = BadgeManager.getOverallBadges();
-//        System.out.println("Badges pls: " + tutorBadgeMap);
 
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
@@ -155,9 +148,6 @@ public class UserSummaryController {
             }
         }
 
-//        generalBadges.add(grad);
-//        tutorBadges.add(pitch);
-//        tutorBadges.add(terms);
         Collections.sort(generalBadges, new badgeComparator());
         generalBadges.forEach(this::addBadgeToGrid);
         Collections.sort(tutorBadges, new badgeComparator());
@@ -239,10 +229,11 @@ public class UserSummaryController {
         VBox badgeBox = new VBox();
         Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
+        Label tutorName = new Label(b.tutorName);
         Label description = new Label(b.description);
         ProgressBar progressBar = new ProgressBar();
         progressBar.setProgress(b.badgeProgress);
-        badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
+        badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
 //        System.out.println(b.name + ", " + badgeStack.getChildren());

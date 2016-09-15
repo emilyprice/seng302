@@ -81,22 +81,23 @@ public class BadgeManager {
         //intalize tutor badges
         for (String tutor:allTutors){
             ArrayList<Badge> badges = new ArrayList<>();
-            badges.add(new Badge("Correct Questions", "number of questions correctly answered", questionBadges, 0, 0, "tuning-fork"));
-            badges.add(new Badge("Completed Sessions", "number of tutor sessions completed", sessionBadges, 0, 0, "tuning-fork"));
-            badges.add(new Badge("100% Sessions", "number of 100% tutor sessions", sessionBadges, 0, 0, "tuning-fork"));
+            badges.add(new Badge("Correct Questions", tutor, "number of questions correctly answered", questionBadges, 0, 0, "tuning-fork"));
+            badges.add(new Badge("Completed Sessions", tutor, "number of tutor sessions completed", sessionBadges, 0, 0, "tuning-fork"));
+            badges.add(new Badge("100% Sessions", tutor, "number of 100% tutor sessions", sessionBadges, 0, 0, "tuning-fork"));
 
             if( tutor.equals("Musical Terms Tutor")){
-                badges.add(new Badge("terms added", "number of musical terms added", sessionBadges, 0, 0, "open-book"));
+                badges.add(new Badge("terms added", tutor, "number of musical terms added", sessionBadges, 0, 0, "open-book"));
             }
             tutorBadgeMap.put(tutor, badges);
         }
 
         //initialise overall badges
-        overallBadges.add(new Badge("All tutors", "Unlock all tutors", null, 0, 1, "gradHat"));
-        overallBadges.add(new Badge("Tutor master", "100% in all tutors", null, 0, 1, "gradHat"));
-        overallBadges.add(new Badge("Musician","Number of instruments used", sessionBadges, 0, 1, "gradHat"));
-        overallBadges.add(new Badge("Speedster", "Force set the tempo", null, 0, 0, "gradHat"));
-        overallBadges.add(new Badge("TwinkleTwinkle", "Find hidden secret", null, 0, 0, "twinkle"));
+        overallBadges.add(new Badge("All tutors", null, "Unlock all tutors", null, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", null, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Musician", null, "Number of instruments used", sessionBadges, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Eggs in baskets", null, "Create three projects", sessionBadges, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("TwinkleTwinkle", null, "Find hidden secret", null, 0, 0, "twinkle"));
 
         replaceBadges(tutorBadgeMap, overallBadges);
     }
