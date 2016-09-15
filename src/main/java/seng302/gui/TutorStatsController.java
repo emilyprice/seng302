@@ -419,13 +419,14 @@ public class TutorStatsController {
         rView.setEffect(badgeEffect);
 
         VBox badgeBox = new VBox();
-        Label badgeName = new Label(b.name+" "+b.badgeProgress);
+        Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
         Label tutorName = new Label(this.tutorName.getText());
         Label description = new Label(b.description);
+        Label progressDesc = new Label((int) b.badgeProgress+" out of "+b.badgeLevels.get(b.currentBadgeType));
         ProgressBar progressBar = new ProgressBar();
         progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
-        badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description);
+        badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description, progressDesc);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
         badgeGrid.add(badgeBox, gridCount, 0);
