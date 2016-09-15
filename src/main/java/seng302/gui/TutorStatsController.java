@@ -352,18 +352,7 @@ public class TutorStatsController {
     }
 
     public void updateBadgesDisplay() {
-
-        ArrayList levels = new ArrayList<Integer>();
-        Badge grad = new Badge("Some Badge", "Yadda yadda", levels, 0.25, 1, "gradHat");
-        Badge pitch = new Badge("Pitch Tutor", "Some ribbon thing", levels, 0.75, 2, "tuning-fork");
-        Badge terms = new Badge("Terms Tutor", "Some ribbon thing", levels, 0.15, 0, "open-book");
-//        ArrayList<Badge> generalBadges = new ArrayList();
         ArrayList<Badge> tutorBadges = new ArrayList();
-
-        HashMap someTutorBadges = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getTutorBadges();
-//        ArrayList<Badge> tutorBadges = BadgeManager.getOverallBadges();
-//        HashMap tutorBadges = BadgeManager.getTutorBadges();
-//        System.out.println("Badges pls whaat: " + someTutorBadges);
 
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
@@ -374,9 +363,6 @@ public class TutorStatsController {
         lockView.fitWidthProperty().setValue(45);
         this.lockView = lockView;
 
-//        generalBadges.add(grad);
-//        tutorBadges.add(pitch);
-//        tutorBadges.add(terms);
         HashMap tutorBadgeMap = BadgeManager.getTutorBadges();
 
         for (Object tutor : tutorBadgeMap.keySet()) {
@@ -398,7 +384,6 @@ public class TutorStatsController {
             return (b1.currentBadgeType > b2.currentBadgeType) ? -1: (b1.currentBadgeType < b2.currentBadgeType) ? 1:0;
         }
     }
-    
 
     public void addTutorBadgeToGrid(Badge b) {
         Image ribbonImage = new Image("/images/ribbonAward.png");
@@ -436,10 +421,11 @@ public class TutorStatsController {
         VBox badgeBox = new VBox();
         Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
+        Label tutorName = new Label(this.tutorName.getText());
         Label description = new Label(b.description);
         ProgressBar progressBar = new ProgressBar();
         progressBar.setProgress(b.badgeProgress);
-        badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
+        badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
         badgeGrid.add(badgeBox, gridCount, 0);

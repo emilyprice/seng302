@@ -82,10 +82,10 @@ public class BadgeManager {
         for (String tutor:allTutors){
             ArrayList<Badge> badges = new ArrayList<>();
             badges.add(new Badge("Correct Questions", "number of questions correctly answered", questionBadges, 0, 0, "tuning-fork"));
-            badges.add(new Badge("100% sessions", "number of 100% tutor sessions", sessionBadges, 0, 0, "tuning-fork"));
-            badges.add(new Badge("completed sessions", "number of 100% tutor sessions", sessionBadges, 0, 0, "tuning-fork"));
+            badges.add(new Badge("Completed Sessions", "number of tutor sessions completed", sessionBadges, 0, 0, "tuning-fork"));
+            badges.add(new Badge("100% Sessions", "number of 100% tutor sessions", sessionBadges, 0, 0, "tuning-fork"));
 
-            if( tutor.equals("musicalTermTutor")){
+            if( tutor.equals("Musical Terms Tutor")){
                 badges.add(new Badge("terms added", "number of musical terms added", sessionBadges, 0, 0, "open-book"));
             }
             tutorBadgeMap.put(tutor, badges);
