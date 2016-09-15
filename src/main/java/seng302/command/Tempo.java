@@ -84,7 +84,6 @@ public class Tempo implements Command {
                 env.getPlayer().setTempo(tempo);
             }
             if (force) {
-                System.out.println("Got the force set");
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Speedster");
             }
 

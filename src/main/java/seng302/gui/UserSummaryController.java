@@ -67,7 +67,9 @@ public class UserSummaryController {
     private ImageView lockView;
     @FXML
     private GridPane badgeGrid;
-    private int gridCount;
+    private int gridX = 0;
+    private int gridY = 0;
+
 
     /**
      * Initializes the user summary controller and draws its graphs
@@ -133,10 +135,10 @@ public class UserSummaryController {
 //        ArrayList<Badge> generalBadges = new ArrayList();
         ArrayList<Badge> tutorBadges = new ArrayList();
 
-//        HashMap someTutorBadges = BadgeManager.getTutorBadges();
-//        ArrayList<Badge> tutorBadges = BadgeManager.getOverallBadges();
+        HashMap tutorBadgeMap = BadgeManager.getTutorBadges();
+//        ArrayList<Badge> tutorBadges = new ArrayList<>(tutorBadgeMap.values());
         ArrayList<Badge> generalBadges = BadgeManager.getOverallBadges();
-//        System.out.println("Badges pls: " + tutorBadges);
+        System.out.println("Badges pls: " + tutorBadgeMap);
 
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
@@ -147,10 +149,15 @@ public class UserSummaryController {
         lockView.fitWidthProperty().setValue(45);
         this.lockView = lockView;
 
+        for (Object tutor : tutorBadgeMap.keySet()) {
+            for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {
+                tutorBadges.add((Badge) b);
+            }
+        }
+
 //        generalBadges.add(grad);
-        tutorBadges.add(pitch);
-        tutorBadges.add(terms);
-        System.out.println(generalBadges);
+//        tutorBadges.add(pitch);
+//        tutorBadges.add(terms);
         Collections.sort(generalBadges, new badgeComparator());
         generalBadges.forEach(this::addBadgeToGrid);
         Collections.sort(tutorBadges, new badgeComparator());
@@ -187,8 +194,13 @@ public class UserSummaryController {
         badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
-        badgeGrid.add(badgeBox, gridCount, 0);
-        gridCount++;
+        badgeGrid.add(badgeBox, gridX, gridY);
+        if (gridX < 5) {
+            gridX++;
+        } else {
+            gridX = 0;
+            gridY++;
+        }
     }
 
     public void addTutorBadgeToGrid(Badge b) {
@@ -233,7 +245,11 @@ public class UserSummaryController {
         badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
-        badgeGrid.add(badgeBox, gridCount, 0);
-        gridCount++;
-    }
+        badgeGrid.add(badgeBox, gridX, gridY);
+        if (gridX < 5) {
+            gridX++;
+        } else {
+            gridX = 0;
+            gridY++;
+        }    }
 }

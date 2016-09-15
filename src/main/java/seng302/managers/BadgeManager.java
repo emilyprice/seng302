@@ -11,8 +11,8 @@ import java.util.*;
 public class BadgeManager {
 
     private static ArrayList<Badge> overallBadges;
-    private HashMap<String, ArrayList<Badge>> tutorBadgeMap;
-    private HashMap<String, Boolean> tutor100AllMap;
+    private static HashMap<String, ArrayList<Badge>> tutorBadgeMap;
+    private static HashMap<String, Boolean> tutor100AllMap;
     static private ArrayList<String> allTutors = new ArrayList<>();
     private Environment env;
 
@@ -146,18 +146,19 @@ public class BadgeManager {
         return overallBadges;
     }
 
-    public HashMap getTutorBadges(){
+    public static HashMap getTutorBadges(){
         return tutorBadgeMap;
     }
 
-    public HashMap get100TutorBadges(){
+    public static HashMap get100TutorBadges(){
         return tutor100AllMap;
     }
 
     public void unlockBadge(String badgeName) {
         overallBadges.stream().filter(b -> b.name.equals(badgeName)).forEach(b -> {
-            System.out.println("Unllocked badge woohoo");
+            System.out.println("Unlocked badge woohoo");
             b.currentBadgeType = 1;
+            b.badgeProgress = 1;
             updateOverallBadges();
         });
     }
