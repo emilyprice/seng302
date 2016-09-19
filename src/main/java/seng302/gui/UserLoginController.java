@@ -50,6 +50,9 @@ public class UserLoginController {
     Label labelError;
 
     @FXML
+    JFXTextField txtClassroom;
+
+    @FXML
     JFXButton btnLogin;
 
     Environment env;
@@ -187,7 +190,10 @@ public class UserLoginController {
     protected void logIn() {
 
 
-        DatabaseReference users = env.getFirebase().child("users/"+usernameInput.getText());
+        //if(env.getFirebase().child(txtClassroom.)
+        
+
+        DatabaseReference users = env.getFirebase().child("classrooms/" + txtClassroom.getText() +  "/users/"+usernameInput.getText());
 
 
 

@@ -246,7 +246,7 @@ public class User {
 
             DatabaseReference firebase = env.getFirebase();
 
-            DatabaseReference user = firebase.child("users/" + userName);
+            DatabaseReference user = firebase.child("classrooms/group5/users/" + userName);
 
 
             user.setValue(properties);

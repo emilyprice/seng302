@@ -177,7 +177,7 @@ public class UserRegisterController {
     @FXML
     protected void register() {
 
-        DatabaseReference users = env.getFirebase().child("users/"+txtUsername.getText());
+        DatabaseReference users = env.getFirebase().child("classrooms/"+ "group5" + " users/"+txtUsername.getText());
 
 
 

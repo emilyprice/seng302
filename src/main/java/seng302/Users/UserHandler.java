@@ -38,6 +38,9 @@ public class UserHandler {
     final Path userDirectory = Paths.get("UserData"); //Default user path for now, before user compatibility is set up.
 
 
+
+    private String classRoom;
+
     public UserHandler(Environment env){
         this.env = env;
 
@@ -267,6 +270,14 @@ public class UserHandler {
 
 
 
+    }
+
+    public String getClassRoom() {
+        return classRoom;
+    }
+
+    public void setClassRoom(String classRoom) {
+        this.classRoom = classRoom;
     }
 
 }
