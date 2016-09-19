@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.sound.midi.Instrument;
 
@@ -61,6 +62,10 @@ public class Project {
     private Boolean isCompetitiveMode;
 
     private Boolean visualiserOn;
+
+
+
+
 
     /**
      * Constructor for creating a new project.
@@ -115,6 +120,8 @@ public class Project {
         System.out.println(visualiserOn);
 
         projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
+
+        projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
 
     }
 
@@ -215,10 +222,20 @@ public class Project {
             visualiserOn = false;
         }
 
+    }
 
-        env.getTranscriptManager().unsavedChanges = false;
 
 
+    /**
+     * Loads in the data for the stage map in regards to which tutors are locked and unlocked.
+     *
+     */
+    public void loadStageMapData() {
+        Gson gson = new Gson();
+        HashMap<String, Boolean> unlockMap;
+        Type mapType = new TypeToken<HashMap<String, Boolean>>(){}.getType();
+        unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
+        env.getStageMapController().unlockStatus = unlockMap;
     }
 
 
@@ -289,6 +306,9 @@ public class Project {
                 break;
             case "visualiserOn":
                 currentValue = this.visualiserOn;
+                break;
+            case "unlockMap":
+                currentValue = env.getStageMapController().getUnlockStatus();
                 break;
         }
 

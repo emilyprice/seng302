@@ -118,11 +118,12 @@ public class StageMapController {
         unlockStatus = new HashMap<>();
         converted = new HashMap<>();
 
-        generateLockingStatus();
+//        generateLockingStatus();
         generateTutorOrder();
         generateTutorAndButtonNames();
         generateConverted();
         visualiseLockedTutors();
+        System.out.println(unlockStatus);
     }
 
     /**
