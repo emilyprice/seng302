@@ -174,7 +174,6 @@ public class UserSummaryController {
 
         ColorAdjust badgeEffect = new ColorAdjust();
         if (b.currentBadgeType == 0) {
-            System.out.println("O level badge");
             badgeEffect = this.blackout;
             badgeStack = new StackPane(bView, lockView);
         } else {
@@ -187,7 +186,11 @@ public class UserSummaryController {
         badgeName.setFont(javafx.scene.text.Font.font(16));
         Label description = new Label(b.description);
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress);
+        if (b.badgeLevels != null) {
+            progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
+        } else {
+            progressBar.setProgress(b.badgeProgress);
+        }
         badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
