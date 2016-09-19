@@ -166,12 +166,19 @@ public class UserSummaryController {
         ImageView bView = new ImageView(bImage);
         bView.fitHeightProperty().setValue(70);
         bView.fitWidthProperty().setValue(70);
+        StackPane badgeStack;
+        Image lockImg = new Image("/images/lock.png");
+        ImageView lockView = new ImageView(lockImg);
+        lockView.fitHeightProperty().setValue(40);
+        lockView.fitWidthProperty().setValue(40);
 
-        StackPane badgeStack = new StackPane(bView);
         ColorAdjust badgeEffect = new ColorAdjust();
         if (b.currentBadgeType == 0) {
+            System.out.println("O level badge");
             badgeEffect = this.blackout;
-            badgeStack.getChildren().add(this.lockView);
+            badgeStack = new StackPane(bView, lockView);
+        } else {
+            badgeStack = new StackPane(bView);
         }
         bView.setEffect(badgeEffect);
 
@@ -202,15 +209,15 @@ public class UserSummaryController {
         ImageView bView = new ImageView(bImage);
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
+        Image lockImg = new Image("/images/lock.png");
+        ImageView lockView = new ImageView(lockImg);
+        lockView.fitHeightProperty().setValue(40);
+        lockView.fitWidthProperty().setValue(40);
 
-        StackPane badgeStack = new StackPane(rView, bView);
-        badgeStack.getChildren().get(1).setTranslateY(-13);
-        badgeStack.getChildren().get(1).setTranslateX(-0.6);
         ColorAdjust badgeEffect = new ColorAdjust();
         if (b.currentBadgeType == 0) {
             badgeEffect = this.blackout;
-            badgeStack.getChildren().remove(1);
-            badgeStack.getChildren().add(this.lockView);
+            bView = lockView;
         } else if (b.currentBadgeType == 1) {
             badgeEffect.setHue(-0.88);
             badgeEffect.setSaturation(0.94);
@@ -225,6 +232,9 @@ public class UserSummaryController {
             badgeEffect.setBrightness(0.4);
         }
         rView.setEffect(badgeEffect);
+        StackPane badgeStack = new StackPane(rView, bView);
+        badgeStack.getChildren().get(1).setTranslateY(-13);
+        badgeStack.getChildren().get(1).setTranslateX(-0.6);
 
         VBox badgeBox = new VBox();
         Label badgeName = new Label(b.name);
