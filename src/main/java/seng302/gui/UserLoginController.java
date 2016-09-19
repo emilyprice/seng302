@@ -1,5 +1,9 @@
 package seng302.gui;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -8,6 +12,8 @@ import com.jfoenix.validation.RequiredFieldValidator;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -180,25 +186,54 @@ public class UserLoginController {
     @FXML
     protected void logIn() {
 
-        if (env.getUserHandler().userPassExists(usernameInput.getText(), passwordInput.getText())) {
-            env.getUserHandler().setCurrentUser(usernameInput.getText());
 
-            //Close login window.
-            Stage stage = (Stage) btnLogin.getScene().getWindow();
-            stage.close();
+        DatabaseReference users = env.getFirebase().child("users/"+usernameInput.getText());
 
-            env.getRootController().showWindow(true);
 
-        } else {
 
-            passwordValidator.setMessage("Invalid username or password.");
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Platform.runLater(() -> authenticate(dataSnapshot));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+
+    }
+
+    private void authenticate(DataSnapshot firebaseData){
+        if(firebaseData.exists()) {
+            //User exists
+            String pass = firebaseData.child("password").getValue().toString();
+            System.out.println("oinside authenticate");
+            if (pass.equals(passwordInput.getText())) {
+                System.out.println("CORRECT PASSWORD");
+                env.getUserHandler().setCurrentUser(usernameInput.getText());
+                Stage stage = (Stage) btnLogin.getScene().getWindow();
+                stage.close();
+                env.getRootController().showWindow(true);
+            } else {
+                passwordValidator.setMessage("Invalid password.");
+                passwordInput.clear();
+                passwordInput.validate();
+                passwordInput.requestFocus();
+            }
+        }
+        else {
+            passwordValidator.setMessage("Invalid username.");
             passwordInput.clear();
             passwordInput.validate();
-            passwordInput.requestFocus();
-
-
+            usernameInput.requestFocus();
         }
 
     }
+
+
 
 }

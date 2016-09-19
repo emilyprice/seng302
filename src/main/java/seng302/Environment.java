@@ -75,6 +75,10 @@ public class Environment {
     //userpage
     private UserPageController userPageController;
 
+
+    private DatabaseReference firebase;
+
+
     public StageMapController stageMapController;
 
     public StageMapController getStageMapController() {
@@ -116,10 +120,10 @@ public class Environment {
         }
 
         // As an admin, the app has access to read and write all data, regardless of Security Rules
-        DatabaseReference ref = FirebaseDatabase
+        firebase = FirebaseDatabase
                 .getInstance()
                 .getReference("");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Object document = dataSnapshot.getValue();
@@ -135,6 +139,13 @@ public class Environment {
 
 
     }
+
+
+    public DatabaseReference getFirebase() {
+        return firebase;
+    }
+
+
 
 
 

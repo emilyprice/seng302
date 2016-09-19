@@ -1,5 +1,6 @@
 package seng302.Users;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -243,6 +244,13 @@ public class User {
         try {
             updateProperties();
 
+            DatabaseReference firebase = env.getFirebase();
+
+            DatabaseReference user = firebase.child("users/" + userName);
+
+
+            user.setValue(properties);
+
             FileWriter file = new FileWriter(userDirectory + "/user_properties.json");
             file.write(properties.toJSONString());
             file.flush();
@@ -267,11 +275,8 @@ public class User {
 
             if (!Files.isDirectory(userDirectory)) {
                 try {
-
                     Files.createDirectories(userDirectory);
-
                     saveProperties();
-
 
                 } catch (IOException e) {
                     //Failed to create the directory.

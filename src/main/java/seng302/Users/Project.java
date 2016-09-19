@@ -9,6 +9,7 @@ package seng302.Users;
  * Created by Jonty on 12-Apr-16.
  */
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -97,6 +98,9 @@ public class Project {
      * write to disk)
      */
     private void saveProperties() {
+
+
+
         Gson gson = new Gson();
         projectSettings.put("tempo", env.getPlayer().getTempo());
         String transcriptString = gson.toJson(env.getTranscriptManager().getTranscriptTuples());
@@ -245,6 +249,11 @@ public class Project {
     public void saveProject(String projectAddress) {
 
         //Add all settings such as tempo speed to the project here.
+
+        DatabaseReference projectfirebase = env.getFirebase().child("users/" +
+                env.getUserHandler().getCurrentUser().getUserName() +"/projects/" + projectName);
+
+        projectfirebase.setValue(projectSettings);
 
         try {
             Gson gson = new Gson();

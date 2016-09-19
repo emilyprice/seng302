@@ -1,11 +1,16 @@
 package seng302.gui;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -177,6 +182,23 @@ public class UserRegisterController {
      */
     @FXML
     protected void register() {
+
+//        DatabaseReference users = env.getFirebase().child("users/"+usernameInput.getText());
+//
+//
+//
+//        users.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Platform.runLater(() -> authenticate(dataSnapshot));
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//
+//        });
 
         if (validCredentials()) {
             env.getThemeHandler().setDefaultTheme();
