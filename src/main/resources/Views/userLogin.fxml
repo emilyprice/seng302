@@ -28,7 +28,7 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </HBox>
-            <JFXTextField fx:id="txtClassroom" focusColor="#d98921" labelFloat="true" maxWidth="300.0" promptText="Classroom">
+            <JFXTextField fx:id="txtClassroom" focusColor="#d98921" labelFloat="true" maxWidth="300.0" promptText="Classroom" text="group5">
                <font>
                   <Font size="14.0" />
                </font>

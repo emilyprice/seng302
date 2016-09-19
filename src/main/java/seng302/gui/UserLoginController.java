@@ -191,13 +191,13 @@ public class UserLoginController {
 
 
         //if(env.getFirebase().child(txtClassroom.)
-        
-
-        DatabaseReference users = env.getFirebase().child("classrooms/" + txtClassroom.getText() +  "/users/"+usernameInput.getText());
 
 
+        DatabaseReference classRoom = env.getFirebase().child("classrooms/" + txtClassroom.getText());
 
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+        classRoom.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Platform.runLater(() -> authenticate(dataSnapshot));
@@ -213,30 +213,46 @@ public class UserLoginController {
 
     }
 
-    private void authenticate(DataSnapshot firebaseData){
-        if(firebaseData.exists()) {
-            //User exists
-            String pass = firebaseData.child("password").getValue().toString();
-            System.out.println("oinside authenticate");
-            if (pass.equals(passwordInput.getText())) {
-                System.out.println("CORRECT PASSWORD");
-                env.getUserHandler().setCurrentUser(usernameInput.getText());
-                Stage stage = (Stage) btnLogin.getScene().getWindow();
-                stage.close();
-                env.getRootController().showWindow(true);
+    private void authenticate(DataSnapshot fbClass) {
+        if (fbClass.exists()) {
+            DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
+
+            if (userfb.exists()) {
+                //User exists
+                env.getUserHandler().setClassRoom(txtClassroom.getText());
+                String pass = userfb.child("password").getValue().toString();
+                System.out.println("oinside authenticate");
+                if (pass.equals(passwordInput.getText())) {
+                    System.out.println("CORRECT PASSWORD");
+                    env.getUserHandler().setCurrentUser(usernameInput.getText());
+                    Stage stage = (Stage) btnLogin.getScene().getWindow();
+                    stage.close();
+                    env.getRootController().showWindow(true);
+                } else {
+                    passwordValidator.setMessage("Invalid password.");
+                    passwordInput.clear();
+                    passwordInput.validate();
+                    passwordInput.requestFocus();
+                }
             } else {
-                passwordValidator.setMessage("Invalid password.");
+                //User doesn't exist
+                passwordValidator.setMessage("Invalid username.");
                 passwordInput.clear();
                 passwordInput.validate();
-                passwordInput.requestFocus();
+                usernameInput.requestFocus();
             }
+
         }
-        else {
-            passwordValidator.setMessage("Invalid username.");
-            passwordInput.clear();
-            passwordInput.validate();
-            usernameInput.requestFocus();
+        else{
+            System.out.println("classroom doesn't exist");
+            //Handle classroom doesn't exist
+            passwordValidator.setMessage("Classroom doesn't exist.");
+            txtClassroom.clear();
+            txtClassroom.validate();
+            txtClassroom.requestFocus();
         }
+
+
 
     }
 
