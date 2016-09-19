@@ -1,5 +1,8 @@
 package seng302;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
@@ -14,6 +17,9 @@ import seng302.managers.ThemeHandler;
 import seng302.managers.TranscriptManager;
 import seng302.utility.EditHistory;
 import seng302.utility.MusicalTermsTutorBackEnd;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class Environment {
 
@@ -90,7 +96,48 @@ public class Environment {
         shiftPressed = new SimpleBooleanProperty(false);
         userHandler = new UserHandler(this);
         themeHandler = new ThemeHandler();
+
+        initializeFirebase();
     }
+
+    private void initializeFirebase(){
+
+        try{
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setServiceAccount(new FileInputStream("Allegro-e09e379e137e.json")) //Allegro-e09e379e137e.json
+                    .setDatabaseUrl("https://allegro-8ce55.firebaseio.com/")
+                    .build();
+            FirebaseApp.initializeApp(options);
+        }catch(FileNotFoundException fe){
+
+        }
+        for(FirebaseApp a : FirebaseApp.getApps()){
+            System.out.println(a);
+        }
+
+        // As an admin, the app has access to read and write all data, regardless of Security Rules
+        DatabaseReference ref = FirebaseDatabase
+                .getInstance()
+                .getReference("");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Object document = dataSnapshot.getValue();
+                System.out.println(document);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+
+    }
+
+
+
 
 
     /**
