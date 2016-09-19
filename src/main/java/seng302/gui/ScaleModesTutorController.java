@@ -6,10 +6,8 @@ import com.jfoenix.controls.JFXSlider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -50,6 +48,14 @@ public class ScaleModesTutorController extends TutorController {
         initialiseQuestionSelector();
         rand = new Random();
         ccbModes.getItems().addAll("Major Scales", "Melodic Minor Scales", "Both");
+
+        if (currentProject.getIsCompetitiveMode()) {
+            ccbModes.setValue("Both");
+            ccbModes.setDisable(true);
+
+        } else {
+            ccbModes.getSelectionModel().selectFirst();
+        }
     }
 
 
@@ -82,16 +88,24 @@ public class ScaleModesTutorController extends TutorController {
         questionRows.getChildren().clear();
         for (int i = 0; i < manager.questions; i++) {
             HBox questionRow;
+            Pair question;
+            String qString;
             if (rand.nextBoolean()) {
                 type = 1;
                 questionType = possibleTypes.get(questionChooser.nextInt(numPossTypes));
-                questionRow = generateQuestionPane(generateQuestionTypeOne(questionType));
+                question = generateQuestionTypeOne(questionType);
+                Pair questionPair = (Pair) question.getKey();
+                qString = String.format(typeOneText, questionPair.getKey(), questionPair.getValue());
+                questionRow = generateQuestionPane(question);
             } else {
                 type = 2;
                 questionType = possibleTypes.get(questionChooser.nextInt(numPossTypes));
-                questionRow = generateQuestionPane(generateQuestionTypeTwo(questionType));
+                question = generateQuestionTypeTwo(questionType);
+                Pair questionPair = (Pair) question.getKey();
+                qString = String.format(typeTwoText, questionPair.getKey(), questionPair.getValue());
+                questionRow = generateQuestionPane(question);
             }
-            TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+            TitledPane qPane = new TitledPane((i + 1) + ". " + qString, questionRow);
             qPane.setPadding(new Insets(2, 2, 2, 2));
             qPanes.add(qPane);
             questionRows.setMargin(questionRow, new Insets(10, 10, 10, 10));
@@ -136,7 +150,7 @@ public class ScaleModesTutorController extends TutorController {
         String scaleType = (String) ((Pair) question.getValue()).getValue();
 
         //splitting up the answer. e.g D and dorian
-        String answer = (String) ((Pair)question.getValue()).getKey();
+        String answer = (String) ((Pair) question.getValue()).getKey();
         answers.add(answer); //adding correct answer to answers array
         Integer degree = (Integer) ((Pair) question.getKey()).getValue();
 
@@ -199,10 +213,10 @@ public class ScaleModesTutorController extends TutorController {
 
         ComboBox options = new ComboBox<>();
         ArrayList answers = new ArrayList(); //stores the options that appear in the tutor. One correct answer contain
-        answers.add((String) (((Pair)question.getValue()).getKey()));
+        answers.add((String) (((Pair) question.getValue()).getKey()));
 
         // Scale type for making sure the scale type is correct
-        String questionScaleType = (String) (((Pair)question.getValue()).getValue());
+        String questionScaleType = (String) (((Pair) question.getValue()).getValue());
 
         //adds 8 answers to answers array
         while (answers.size() < 8) {
@@ -245,7 +259,7 @@ public class ScaleModesTutorController extends TutorController {
             manager.add(questionAndAnswer, 0);
             formatIncorrectQuestion(questionRow);
             //Shows the correct answer
-            questionRow.getChildren().get(3).setVisible(true);
+            questionRow.getChildren().get(2).setVisible(true);
         }
 
 
@@ -256,7 +270,7 @@ public class ScaleModesTutorController extends TutorController {
         if (getTypeOfQuestion(questionAndAnswer) == 1) {
             question = new String[]{
                     String.format(typeOneText,
-                            ((String)questionPair.getKey()).concat(" ".concat(scaleType)),
+                            ((String) questionPair.getKey()).concat(" ".concat(scaleType)),
                             questionPair.getValue()),
                     userAnswer,
                     String.valueOf(correct)
@@ -289,21 +303,18 @@ public class ScaleModesTutorController extends TutorController {
      * @return questionRow the pane that contains the question and relevant buttons and combobox for
      * answering.
      */
-    @Override
     HBox generateQuestionPane(Pair questionAnswer) {
 
         Pair data = (Pair) questionAnswer.getKey();
-        String answer = (String) ((Pair)questionAnswer.getValue()).getKey();
-        String scaleType = (String) ((Pair)questionAnswer.getValue()).getValue();
+        String answer = (String) ((Pair) questionAnswer.getValue()).getKey();
+        String scaleType = (String) ((Pair) questionAnswer.getValue()).getValue();
         final HBox questionRow = new HBox();
         final ComboBox<String> options;
-        Label question;
+
         if (getTypeOfQuestion(questionAnswer) == 1) {
-            question = new Label(String.format(typeOneText, ((String)data.getKey()).concat(" ".concat(scaleType)), data.getValue()));
             options = generateChoices(questionAnswer);
 
         } else {
-            question = new Label(String.format(typeTwoText, data.getKey(), data.getValue()));
             options = generateChoices2(questionAnswer);
         }
         formatQuestionRow(questionRow);
@@ -312,7 +323,6 @@ public class ScaleModesTutorController extends TutorController {
 
 
         options.setOnAction(event ->
-                //System.out.println("check clicked answer")
                 handleQuestionAnswer(options.getValue().toLowerCase(), questionAnswer, questionRow, scaleType)
         );
 
@@ -323,7 +333,9 @@ public class ScaleModesTutorController extends TutorController {
             // Disables only input buttons
             disableButtons(questionRow, 1, 3);
             formatSkippedQuestion(questionRow);
+
             manager.add(data, 2);
+
             String questionString;
 
             if (getTypeOfQuestion(questionAnswer) == 1) {
@@ -345,10 +357,14 @@ public class ScaleModesTutorController extends TutorController {
 
         });
 
-        questionRow.getChildren().add(0, question);
-        questionRow.getChildren().add(1, options);
-        questionRow.getChildren().add(2, skip);
-        questionRow.getChildren().add(3, correctAnswer);
+        if (isCompMode) {
+            skip.setVisible(false);
+            skip.setManaged(false);
+        }
+
+        questionRow.getChildren().add(0, options);
+        questionRow.getChildren().add(1, skip);
+        questionRow.getChildren().add(2, correctAnswer);
 
         questionRow.prefWidthProperty().bind(paneQuestions.prefWidthProperty());
         return questionRow;

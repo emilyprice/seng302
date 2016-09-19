@@ -38,6 +38,7 @@ public class TutorFactory {
 
 
         env.getRootController().showUserBar(true);
+        env.getRootController().setHeader(tutorName);
         switch (tutorName) {
             case "Pitch Comparison Tutor":
                 openPitchTutor();
@@ -65,6 +66,9 @@ public class TutorFactory {
                 break;
             case "Scale Modes Tutor":
                 openScaleModesTutor();
+                break;
+            case "Scale Spelling Tutor":
+                openScaleSpellingTutor();
                 break;
         }
     }
@@ -234,6 +238,17 @@ public class TutorFactory {
         scaleModesTutorController.create(env);
 
 
+    }
+
+    @FXML
+    private void openScaleSpellingTutor() {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/ScaleSpellingPane.fxml"));
+
+        loadNode(loader);
+
+        ScaleSpellingTutorController scaleSpellingTutorController = loader.getController();
+        scaleSpellingTutorController.create(env);
     }
 
     /**

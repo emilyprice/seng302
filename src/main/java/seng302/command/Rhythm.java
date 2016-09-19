@@ -39,7 +39,7 @@ public class Rhythm implements Command {
             this.rhythm = rhythmStyle;
 
             if (rhythmStyle.equals("heavy")) {
-                this.result = "Rhythm set to heavy swing timing (3/2 1/4).";
+                this.result = "Rhythm set to heavy swing timing (3/4 1/4).";
                 this.divisions = new float[]{3.0f / 4.0f, 1.0f / 4.0f};
             } else if (rhythmStyle.equals("medium")) {
                 this.result = "Rhythm set to medium swing timing (2/3 1/3).";

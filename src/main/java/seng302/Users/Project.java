@@ -62,7 +62,9 @@ public class Project {
     Environment env;
     public TutorHandler tutorHandler;
 
-    public Boolean isCompetitiveMode;
+    private Boolean isCompetitiveMode;
+
+    private Boolean visualiserOn;
 
     /**
      * Constructor for creating a new project.
@@ -81,11 +83,10 @@ public class Project {
         isCompetitiveMode = true;
         this.experience = 0;
         this.level = 1;
+        this.visualiserOn = false;
         badgeManager = new BadgeManager(env);
-
         loadProject(projectName);
         loadProperties();
-
 
     }
 
@@ -115,13 +116,14 @@ public class Project {
         projectSettings.put("level", this.level);
         projectSettings.put("experience", this.experience);
 
-
+        projectSettings.put("competitionMode", gson.toJson(isCompetitiveMode.toString()));
+        System.out.println(visualiserOn);
+        projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
+        
         projectSettings.put("overallBadges", gson.toJson(badgeManager.getOverallBadges()));
         projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
         projectSettings.put("tutor100Map", gson.toJson(badgeManager.get100TutorBadges()));
-
-
-
+        
     }
 
 
@@ -197,6 +199,30 @@ public class Project {
             //If level has never been set, (ie old account), default to 1
             level = 1;
         }
+        try {
+            String mode = gson.fromJson((String) projectSettings.get("competitionMode"), String.class);
+            if (mode.equals("true")) {
+                setToCompetitionMode();
+            } else {
+                setToPracticeMode();
+            }
+        } catch (Exception e) {
+            // Defaults to comp mode
+            setToCompetitionMode();
+        }
+
+        try {
+            String isVisOn = gson.fromJson((String) projectSettings.get("visualiserOn"), String.class);
+            if (isVisOn.equals("true")) {
+                visualiserOn = true;
+            } else {
+                visualiserOn = false;
+            }
+        } catch (Exception e) {
+            // Off by default
+            visualiserOn = false;
+        }
+
 
         //badges
         //overallBadges
@@ -260,7 +286,7 @@ public class Project {
             file.close();
 
             projectSettings.put("tempo", env.getPlayer().getTempo());
-            env.getRootController().setWindowTitle(projectName);
+            env.getRootController().removeUnsavedChangesIndicator();
             currentProjectPath = projectAddress;
         } catch (IOException e) {
 
@@ -277,35 +303,36 @@ public class Project {
      * @param propName property id which is stored in the Json project file.
      */
     public void checkChanges(String propName) {
-
-        String saveName = (projectName == null) ? "No Project" : this.projectName;
-
-        if (propName.equals("tempo")) {
-
-
-            if (projectSettings.containsKey("tempo") && !(projectSettings.get("tempo").equals(String.valueOf(env.getPlayer().getTempo())))) { //If not equal
-
-                env.getRootController().setWindowTitle(saveName + "*");
-                saved = false;
-            }
-        } else if (propName.equals("rhythm")) {
-
-
-            if (projectSettings.containsKey("rhythm") && !(projectSettings.get("rhythm").equals(env.getPlayer().getRhythmHandler().getRhythmTimings()))) { //If not equal
-
-                env.getRootController().setWindowTitle(saveName + "*");
-                saved = false;
-            }
-        } else if (propName.equals("instrument")) {
-
-
-            if (projectSettings.containsKey("instrument") && !(projectSettings.get("instrument").equals(env.getPlayer().getInstrument().getName()))) { //If not equal
-
-                env.getRootController().setWindowTitle(saveName + "*");
-                saved = false;
-            }
+        Object currentValue = null;
+        switch (propName) {
+            case "tempo":
+                currentValue = String.valueOf(env.getPlayer().getTempo());
+                break;
+            case "rhythm":
+                currentValue = env.getPlayer().getRhythmHandler().getRhythmTimings();
+                break;
+            case "instrument":
+                currentValue = env.getPlayer().getInstrument().getName();
+                break;
+            case "competitionMode":
+                currentValue = this.isCompetitiveMode;
+                break;
+            case "visualiserOn":
+                currentValue = this.visualiserOn;
+                break;
         }
 
+        try {
+            if (projectSettings.containsKey(propName) && !(projectSettings.get(propName).equals(currentValue))) {
+                env.getRootController().addUnsavedChangesIndicator();
+                saved = false;
+            } else if (!projectSettings.containsKey(propName)) {
+                env.getRootController().addUnsavedChangesIndicator();
+                saved = false;
+            }
+        } catch (Exception e) {
+            System.err.println("Invalid property being checked for save");
+        }
 
     }
 
@@ -354,7 +381,7 @@ public class Project {
             this.projectName = pName;
             loadProperties();
             currentProjectPath = path;
-            env.getRootController().setWindowTitle(pName);
+            env.getRootController().setWindowTitle("Allegro - " + pName);
             //ignore
 
         } catch (FileNotFoundException e) {
@@ -385,6 +412,32 @@ public class Project {
 
     public String getCurrentProjectPath() {
         return currentProjectPath;
+    }
+
+    public boolean getIsCompetitiveMode() {
+        return isCompetitiveMode;
+    }
+
+    private void setToCompetitionMode() {
+        this.isCompetitiveMode = true;
+        env.getRootController().disallowTranscript();
+        env.getRootController().getTranscriptController().hideTranscript();
+        env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
+    }
+
+    private void setToPracticeMode() {
+        this.isCompetitiveMode = false;
+        env.getRootController().allowTranscript();
+        env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
+    }
+
+    public void setIsCompetitiveMode(boolean isCompetitiveMode) {
+        if (isCompetitiveMode) {
+            setToCompetitionMode();
+        } else {
+            setToPracticeMode();
+        }
+        checkChanges("competitionMode");
     }
 
 
@@ -421,6 +474,15 @@ public class Project {
 
     public Integer getLevel() {
         return this.level;
+    }
+
+    public void setVisualiserOn(boolean isOn) {
+        visualiserOn = isOn;
+        checkChanges("visualiserOn");
+    }
+
+    public boolean getVisualiserOn() {
+        return visualiserOn;
     }
 
     public BadgeManager getBadgeManager(){return badgeManager;}

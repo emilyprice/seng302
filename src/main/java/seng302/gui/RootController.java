@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.effect.DropShadow;
@@ -125,6 +126,9 @@ public class RootController implements Initializable {
     private MenuButton userDropDown;
 
     @FXML
+    private RadioMenuItem menuTranscript;
+
+    @FXML
     public void onTranscriptTab() {
         Platform.runLater(() -> transcriptPaneController.txtCommand.requestFocus());
     }
@@ -147,6 +151,13 @@ public class RootController implements Initializable {
 
         userDropDown.setEllipsisString("User");
         userDropDown.setText("User");
+        if (transcriptPaneController.getIsExpanded()) {
+            transcriptPaneController.showTranscript();
+            menuTranscript.setSelected(true);
+        } else {
+            transcriptPaneController.hideTranscript();
+            menuTranscript.setSelected(false);
+        }
 
     }
 
@@ -199,6 +210,8 @@ public class RootController implements Initializable {
             stage.show();
             resizeSplitPane(1.0);
             updateImage();
+            menuTranscript.setSelected(false);
+            toggleTranscript();
             try {
                 showUserPage();
             } catch (IOException e) {
@@ -227,13 +240,29 @@ public class RootController implements Initializable {
      */
     @FXML
     private void closeApplication() {
+
+        showCloseWindow("close");
+
+    }
+
+
+    /**
+     * handles checking whether the project is saved, and shows a dialogue if necessary.
+     *
+     * @param option close option either 'close' or 'logout'.
+     */
+    protected void showCloseWindow(String option) {
         if (env.getUserHandler().getCurrentUser() != null && !env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().isSaved()) {
+
+            String closeText = option.equals("close") ? "Quit" : "Logout";
+
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("Unsaved changes");
 
             ButtonType btnSaveProject = new ButtonType("Save project");
 
-            ButtonType btnQuit = new ButtonType("Quit");
+
+            ButtonType btnQuit = new ButtonType(closeText);
             ButtonType btnCancel = new ButtonType("Cancel");
 
             alert.getButtonTypes().setAll(btnSaveProject, btnQuit, btnCancel);
@@ -245,22 +274,35 @@ public class RootController implements Initializable {
 
             if (result.get() == btnSaveProject) {
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
-                System.exit(0);
+                if (option.equals("close")) {
+                    System.exit(0);
+                } else if (option.equals("logout")) {
+                    logOutUser();
+                }
+
             } else if (result.get() == btnQuit) {
-                System.exit(0);
+                if (option.equals("close")) {
+                    System.exit(0);
+                } else if (option.equals("logout")) {
+                    logOutUser();
+                }
             }
 
 
         } else if (env.getTranscriptManager().unsavedChanges) {
             env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
-            System.exit(0);
+
+            if (option.equals("close")) System.exit(0);
+            else if (option.equals("logout")) logOutUser();
+
         } else {
 
-            System.exit(0);
+            if (option.equals("close")) System.exit(0);
+            else if (option.equals("logout")) logOutUser();
         }
 
-
     }
+
 
     @FXML
     private void showHideKeyboard() {
@@ -381,19 +423,26 @@ public class RootController implements Initializable {
 
     }
 
+    /**
+     * User dropdown logout option.
+     */
     @FXML
-    public void logOutUser(){
+    private void logoutButtonClick() {
+        showCloseWindow("logout");
+    }
+
+    /**
+     * Handles logging out the user showing the login screen.
+     */
+    public void logOutUser() {
         try {
             stage.close();
             showLoginWindow();
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
 
-
     }
-
-
 
 
     /**
@@ -587,6 +636,10 @@ public class RootController implements Initializable {
         transcriptPaneController.setTranscriptPane(text);
     }
 
+    public KeyboardPaneController getKeyboardPaneController() {
+        return this.keyboardPaneController;
+    }
+
 
     public void checkProjectDirectory() {
         Path path = Paths.get("UserData/Projects/");
@@ -747,7 +800,21 @@ public class RootController implements Initializable {
      * sets the title of the application to the text input
      */
     public void setWindowTitle(String text) {
-        this.stage.setTitle("Allegro - " + text);
+        this.stage.setTitle(text);
+    }
+
+    public String getWindowTitle() {
+        return this.stage.getTitle();
+    }
+
+    public void addUnsavedChangesIndicator() {
+        if (!this.stage.getTitle().contains("*")) {
+            this.stage.setTitle(this.stage.getTitle() + "*");
+        }
+    }
+
+    public void removeUnsavedChangesIndicator() {
+        this.stage.setTitle(this.stage.getTitle().replace("*", ""));
     }
 
 
@@ -787,7 +854,12 @@ public class RootController implements Initializable {
     @FXML
     public void toggleTranscript() {
         transcriptSplitPane.setDividerPositions(1.0);
-        transcriptPaneController.showTranscript();
+
+        if (menuTranscript.isSelected()) {
+            transcriptPaneController.showTranscript();
+        } else {
+            transcriptPaneController.hideTranscript();
+        }
     }
 
     public TutorFactory getTutorFactory() {
@@ -811,4 +883,14 @@ public class RootController implements Initializable {
     public String getHeader() {
         return txtHeader.getText();
     }
+
+    public void disallowTranscript() {
+        menuTranscript.setDisable(true);
+        menuTranscript.setSelected(false);
+    }
+
+    public void allowTranscript() {
+        menuTranscript.setDisable(false);
+    }
+
 }

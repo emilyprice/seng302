@@ -1,24 +1,70 @@
 
+.toggle-button, .button {
+    -fx-background-color: white;
+    -fx-effect: null;
+    -fx-text-fill: black;
+    -fx-font-family: 'Roboto';
+    -fx-font-weight: bold;
+    -fx-background-insets: 0.0;
+    -fx-background-radius: 3.0;
+    -fx-padding: 0.5em;
+    -fx-alignment: CENTER;
+}
+
+.button-raised .button .text, .button-flat .button .text {
+    -fx-text-weight: Bold;
+}
+
+.button:default {
+    -fx-background-color: {0};
+    -fx-text-fill: {2};
+}
+
+.toggle-button:disabled .button:disabled{
+    -fx-background-color: derive({0}, 80.0%);
+}
+
+.toggle-button:selected {
+    -fx-background-color: red;
+}
+
+
+.toggle-button:armed, .toggle-button:selected, .button:armed, .button:default:armed
+{
+    -fx-background-color: {0};
+    -fx-text-fill: {2};
+}
 
 
 
 .split-pane {
 
     -fx-base: #f1f0f0;
-    -fx-background-color: {0}{1};
+    -fx-background-color: white;
+    fx-border-width: 0;
     -fx-border-color: {0};
     -fx-control-inner-background: #FFFFFF;
     -fx-body-color: linear-gradient(to bottom, derive(-fx-color, 35.0%) 0%, derive(-fx-color, -6.0%) 100%);
-    -fx-text-box-border: derive(-fx-background, 9.189189189189179%);
+    -fx-text-box-border: transparent;
     -fx-focus-color: derive({0}, 50%);
     -fx-faint-focus-color: derive({0}, 70%);
     -fx-accent: derive({0}, 40%);
     -fx-border-style: none;
+    -fx-border-style: none;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 
+
+}
+
+.noDivider {
+    -fx-border-width: 0;
 }
 
 .noDivider .split-pane *.split-pane-divider{
     -fx-padding: 0 1 0 1;
+    fx-box-border: transparent;
 
 }
 
@@ -27,15 +73,18 @@
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected:top {
-    -fx-background-color: {0}{1};
+    -fx-background-color: {1};
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
-    -fx-border-color: {0}{1};
+    -fx-border-color: {0};
 }
 
 .menu-bar {
+    -fx-accent: {0};
     -fx-accent: derive({0}, 80%);
+    -fx-border-style: none;
+     -fx-border-width: 0;
 }
 
 .text-area {
@@ -49,12 +98,12 @@
 
 .primary{
     -fx-background-color: {0};
-    -fx-text-fill: {0}{1}{2};
+    -fx-text-fill: {2};
 }
 
 .secondary{
-    -fx-background-color: {0}{1};
-    -fx-text-fill: {0}{1}{2}{3} ;
+    -fx-background-color: {1};
+    -fx-text-fill: {3} ;
 }
 
 #keyPane > .title {
@@ -68,7 +117,7 @@
 }
 #settingsMenu > #sidePane > JFXButton {
     -fx-background-color: derive({0}, 80%);
-    -fx-text-fill: {0}{1}{2} ;
+    -fx-text-fill: {2} ;
     -fx-font-size: 16;
     -fx-border-color: {0};
     -fx-border-width: 2px;
@@ -103,7 +152,7 @@
 }
 .settingsAnchor .jfx-list-view  .jfx-list-cell .label {
 
-    -fx-text-fill: {0}{1}{2};
+    -fx-text-fill: {0};
     -fx-font-size: 16;
 
 
@@ -112,47 +161,49 @@
 
 .settingsAnchor .jfx-list-cell:hover {
   -fx-background-color: derive({0}, 10%);
-  -fx-text-fill: {0}{1}{2};
+  -fx-text-fill: {2};
 
 }
 
 .primaryControl {
     -fx-background-color: {0};
-    -fx-text-fill: {0}{1}{2} ;
-
-
+    -fx-text-fill: {2} ;
+    -fx-padding: 0.7em;
 }
 
 .secondaryControl {
-    -fx-background-color: {0}{1};
-    -fx-text-fill: {0}{1}{2}{3} ;
+    -fx-background-color: {1};
+    -fx-text-fill: {3} ;
 
 }
 
 .userPageSidePane {
     -fx-background-color: {0};
-
+    -fx-text-fill: {2} ;
 }
 
 .settingsMenu {
     -fx-background-color: {0};
-    -fx-text-fill: {0}{1}{2} ;
+    -fx-text-fill: {2} ;
 }
 
 #userPage {
     -fx-background-color: {0};
     -fx-text-fill: {0}{1}{2} ;
+    -fx-border-width: 0;
+    -fx-border-style: none;
+    -fx-text-fill: {2} ;
 }
 
 #userpage .userPagePrimary{
     -fx-background-color: {0};
-
+        -fx-text-fill: {2} ;
 
 }
 
 #topBar {
     -fx-background-color: {0};
-    -fx-text-fill: {0}{1}{2} ;
+    -fx-text-fill: {2} ;
     -fx-border-color : {0};
 
 
@@ -160,40 +211,38 @@
 
 .sideMenu{
     -fx-background-color: {0};
-
     -fx-border-color : {0};
-
 
 }
 
 .sideMenu .jfx-list-cell {
-    -fx-background-color: {0}{1};
-    -fx-pref-height: 50px;
-    -fx-pref-tile-height: 50px ;
+    -fx-background-color: {1};
+    -fx-pref-height: 40px;
+    -fx-pref-tile-height: 40px ;
+    -fx-text-fill: {3};
 
 
 }
 .sideMenu .jfx-list-cell .label {
-    -fx-text-fill: {0}{1}{2}{3};
-    -fx-font-size: 16;
+    -fx-text-fill: {3};
+
+
 }
 
 .sideMenu .jfx-list-cell:odd {
-    -fx-background-color: derive({0}{1}, -5%);
-
-
+    -fx-background-color: derive({1}, -5%);
 }
 
 .sideMenu .jfx-list-cell:selected {
     -fx-background-color: {0};
-    -fx-text-fill: {0}{1}{2};
+    -fx-text-fill: {2};
 
 }
 .sideMenu .jfx-list-cell:selected .label {
-   -fx-font-size: 16;
-    -fx-text-fill: {0}{1}{2};
-}
 
+    -fx-text-fill: {2};
+
+}
 
 
 .sideMenu .jfx-list-cell .jfx-rippler {
@@ -201,17 +250,16 @@
 
 }
 
-
-
-
-
 .sideMenu .jfx-list-cell:hover {
     -fx-background-color: derive({0}, 10%);
-    -fx-text-fill: {0}{1}{2};
-
-
 
 }
+.sideMenu .jfx-list-cell:hover .label {
+    -fx-text-fill: {2};
+    -fx-text-fill: {2};
+
+}
+
 
 #userSplitPane *.split-pane-divider {
     -fx-padding: 0 1 0 1;
@@ -219,25 +267,31 @@
 
 .primaryText {
 
-    -fx-text-fill: {0}{1}{2};
+    -fx-text-fill: {2};
 }
 .secondaryText {
 
-    -fx-text-fill: {0}{1}{2}{3};
+    -fx-text-fill: {3};
 }
 
+#flatDropDown {
+    -fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
+}
 
 .flatDropDown .menu-button {
     -fx-background-radius: 0;
-    -fx-background-radius: 0 0 0 0;
-    -fx-background-color: {0}{1};
+    -fx-background-radius: 1 1 1 1;
+    -fx-background-color: white;
 
+}
+
+.flatDropDown .menu-button .label{
+        -fx-text-fill: black
 }
 
 
 .flatDropDown .menu-button > .arrow-button {
     -fx-padding: 0;
-
 
 }
 
@@ -249,7 +303,7 @@
 
 .icons-badge .badge-pane {
     -fx-background-color: {0};
-    -fx-text-fill: {0}{1}{2};
+    -fx-text-fill: {2};
     -fx-background-radius: 23;
     -fx-pref-width: 23;
     -fx-pref-height: 23;
@@ -258,13 +312,22 @@
 
 .icons-badge-large .badge-pane {
     -fx-background-color: {0};
-    -fx-text-fill: {0}{1}{2};
+    -fx-text-fill: {2};
     -fx-border-radius: 35;
-    -fx-border-color: {0}{1};
+    -fx-border-color: {1};
     -fx-background-radius: 35;
     -fx-pref-width: 35;
     -fx-pref-height: 35;
     -fx-alignment: center;
+}
+.settings-badge-large .badge-pane .label{
+    -fx-text-fill: {0}{1}{2};
+
+}
+
+
+.icons-badge-large .badge-pane .label, .icons-badge .badge-pane .label {
+    -fx-text-fill: {2};
 }
 
 .settings-badge .badge-pane {
@@ -272,12 +335,201 @@
     -fx-background-image: url("images/lock.png");
     -fx-image: url("images/settings_gear.png");
 
-    -fx-text-fill: {0}{1}{2};
+    -fx-text-fill: {2};
+
     -fx-background-radius: 35;
     -fx-pref-width: 35;
     -fx-pref-height: 35;
     -fx-alignment: center;
 }
+.settings-badge .badge-pane .label{
+    -fx-text-fill: {0}{1}{2};
+
+}
+
+.jfx-color-picker .label {
+    -fx-text-fill: {0}{1}{2};
+}
+
+.titled-pane:focused {
+    -fx-text-fill: black;
+}
+
+.titled-pane > .title {
+    -fx-background-color: white;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 2 2 0 0;
+    -fx-padding: 0.166667em 0.833333em 0.25em 0.833333em; /* 2 10 3 10 */
+}
+
+.titled-pane:focused > .title {
+    -fx-color: -fx-focus-color;
+}
+
+.titled-pane > .content {
+    -fx-border-width: 0;
+}
+
+.settingsGear .context-menu {
+
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
+
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Scroll Bar			                                                       *
+ *                                                                             *
+ ******************************************************************************/
+.scroll-bar:vertical>.track-background, .scroll-bar:horizontal>.track-background
+	{
+	-fx-background-color: white;
+	-fx-background-insets: 0.0;
+}
+
+.scroll-bar:vertical>.thumb, .scroll-bar:horizontal>.thumb {
+	-fx-background-color: {0};
+	-fx-background-insets: 0.0;
+	-fx-background-radius: 2.0;
+}
+
+.scroll-bar>.increment-button, .scroll-bar>.decrement-button,
+	.scroll-bar:hover>.increment-button, .scroll-bar:hover>.decrement-button
+	{
+	-fx-background-color: transparent;
+}
+
+.scroll-bar>.increment-button>.increment-arrow, .scroll-bar>.decrement-button>.decrement-arrow
+	{
+	-fx-background-color: {0};
+}
+
+.scroll-bar>.track-background {
+	-fx-background-color: transparent;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Slider                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+
+.timeSlider {
+	-fx-padding: 10 0 10 0;
+}
+
+.timeSlider:vertical {
+	-fx-padding: 0 10 0 10;
+}
+
+.timeSlider>.track {
+	-fx-background-color: white;
+	-fx-background-insets: 1.5;
+}
+
+.timeSlider>.thumb {
+	-fx-background-color: {1};
+}
+
+.timeSlider .axis {
+	-fx-tick-label-fill: {2};
+}
+
+.jfx-slider .thumb {
+	-fx-background-color: {0};
+}
+
+.jfx-slider .track {
+	-fx-background-color: #E0E0E0;
+	-fx-pref-height: 5px;
+	-fx-pref-width: 5px;
+}
 
 
 
+
+.tool-bar, .menu-bar { /* top */
+	-fx-background-color: white;
+	-fx-border-width: 0 0 2 0;
+	-fx-border-color: grey;
+	-fx-min-height: 28;
+	-fx-alignment: CENTER_LEFT;
+}
+
+.tool-bar .label {
+	-fx-font-size: 18;
+}
+
+.tool-bar .combo-box-base, .menu-bar .combo-base {
+	-fx-border-width: 0;
+}
+
+.keyboardButton {
+    -fx-background-color: {1};
+    -fx-text-fill: {3};
+    -fx-padding: 0.2em;
+    -fx-text-size: 10;
+}
+
+.combo-box-base, .choice-box {
+	-fx-background-color: transparent;
+	-fx-border-color: {0};
+	-fx-border-width: 0 0 2 0;
+	-fx-background-radius: 0;
+	-fx-border-radius: 0;
+}
+
+.combo-box:focused, .choice-box:focused {
+	-fx-border-color: {0};
+}
+
+.combo-box-base>.label, .choice-box>.label {
+	-fx-padding: 0.3em 0.3em 0.3em 0em;
+}
+
+.combo-box-base>.arrow-button, .choice-box>.open-button {
+	-fx-padding: 1em 0.7em 1em 0.5em;
+	-fx-background-radius: 0.0 2.0 2.0 0.0;
+}
+
+.combo-box-base>.arrow-button>.arrow, .choice-box>.open-button>.arrow {
+	-fx-background-color: {0};
+}
+
+.combo-box-base .arrow-button:hover .arrow, .spinner .increment-arrow-button:hover .increment-arrow,
+	.spinner .decrement-arrow-button:hover .decrement-arrow {
+	-fx-background-color: grey;
+}
+
+.menu-item:focused {
+	-fx-background-color: {0};
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: {2};
+}
+
+.menu-item .label {
+    -fx-text-fill: black;
+}
+.menu-item {
+    -fx-background-color: white;
+}
+
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Toggle Buttons                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.jfx-toggle-button {
+    -fx-toggle-color: {0};
+}
+
+.jfx-toggle-button .jfx-rippler{
+    -fx-rippler-fill: {0};
+}

@@ -139,13 +139,13 @@ public class ThemeHandler {
                     new BufferedReader(fileReader);
 
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains("{0}{1}{2}{3}")) { //Primary, Secondary, Primary font colour, secondary font colour.
+                if (line.contains("{3}")) { //Primary, Secondary, Primary font colour, secondary font colour.
 
                     templateCSS.add(MessageFormat.format(line, "", "", "", secondaryFont));
-                } else if (line.contains("{0}{1}{2}")) {
+                } else if (line.contains("{2}")) {
 
                     templateCSS.add(MessageFormat.format(line, "", "", primaryFont));
-                } else if (line.contains("{0}{1}")) {
+                } else if (line.contains("{1}")) {
                     templateCSS.add(MessageFormat.format(line, "", ldRGB));
                 } else if (line.contains("{0}")) {
                     templateCSS.add(MessageFormat.format(line, baseRGB));

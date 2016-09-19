@@ -51,18 +51,32 @@ public class IntervalRecognitionTutorController extends TutorController {
         super.create(env);
         initialiseQuestionSelector();
 //        initaliseRangeSelector();
-        rangeSlider = new NoteRangeSlider(notes, 24, 48, 72);
+
+        if (currentProject.getIsCompetitiveMode()) {
+            int lowValue = generateRangesliderDefault();
+            rangeSlider = new NoteRangeSlider(notes, 12, lowValue, lowValue + 24);
+            rangeSlider.setDisable(true);
+        } else {
+            rangeSlider = new NoteRangeSlider(notes, 24, 48, 72);
+
+        }
         paneInit.getChildren().add(1, rangeSlider);
     }
 
+
     /**
-     * Creates the Range selector that can be used to select the range of notes that will be played
-     * It has a Minimum range of two octaves.
+     * Generates default rangeslider value for competitive mode
      */
-//    private void initaliseRangeSelector() {
-//        rangeSlider = new NoteRangeSlider(notes, 24, 48, 72);
-//        range.getChildren().add(1, rangeSlider);
-//    }
+    private int generateRangesliderDefault() {
+        Random rand = new Random();
+        int num = rand.nextInt(127);
+        if (num + 24 > 127) {
+            return 103;
+        } else {
+            return num;
+        }
+
+    }
 
     /**
      * Run when the user clicks the "Go" button. Generates and displays a new set of questions.
@@ -82,7 +96,7 @@ public class IntervalRecognitionTutorController extends TutorController {
             questionRows.getChildren().clear();
             for (int i = 0; i < manager.questions; i++) {
                 HBox questionRow = setUpQuestion();
-                TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+                TitledPane qPane = new TitledPane((i + 1) + ". What is this interval?", questionRow);
                 qPane.setPadding(new Insets(2, 2, 2, 2));
                 qPanes.add(qPane);
                 VBox.setMargin(questionRow, new Insets(10, 10, 10, 10));
@@ -156,6 +170,8 @@ public class IntervalRecognitionTutorController extends TutorController {
             disableButtons(questionRow, 1, 3);
             formatSkippedQuestion(questionRow);
             manager.add(pair, 2);
+
+
             String[] question = new String[]{
                     String.format("Interval between %s and %s", firstNote.getNote(), secondNote.getNote()),
                     thisInterval.getName(),
@@ -197,6 +213,11 @@ public class IntervalRecognitionTutorController extends TutorController {
                 finished();
             }
         });
+
+        if (isCompMode) {
+            skip.setVisible(false);
+            skip.setManaged(false);
+        }
 
         questionRow.getChildren().add(0, play);
         questionRow.getChildren().add(1, options);

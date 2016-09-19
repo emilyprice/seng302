@@ -15,6 +15,19 @@ Feature: Blues Scales
       | A            | A C D Eb E G A    |
       | B            | B D E F F# A B    |
 
+      | C#           | C# E F# G G# B C#       |
+      | Db           | Db E Gb G Ab B Db       |
+      | D#           | D# F# G# A A# C# D#     |
+      | Eb           | Eb Gb Ab A Bb Db Eb     |
+      | F#           | F# A B C C# E F#        |
+      | Gb           | Gb A B C Db E Gb        |
+      | G#           | G# B C# D D# F# G#      |
+      | Ab           | Ab B Db D Eb Gb Ab      |
+      | A#           | A# C# D# E F G# A#      |
+      | Bb           | Bb Db Eb E F Ab Bb      |
+      | Cb           | Cb D E F Gb A Cb        |
+
+
       | c            | C Eb F Gb G Bb C  |
       | d            | D F G Ab A C D    |
       | e            | E G A Bb B D E    |

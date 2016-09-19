@@ -47,10 +47,10 @@ public class KeySignaturesTutorController extends TutorController {
      * ArrayLists containing the major and minor notes thats are used to populate the answer
      * comboboxs used for question type 2
      */
-    private ArrayList<String> majorSharps = new ArrayList<String>(Arrays.asList("C", "G", "D", "A", "E", "B", "F#", "C#"));
-    private ArrayList<String> majorFlats = new ArrayList<String>(Arrays.asList("Cb", "Gb", "Db", "Ab", "Eb", "Bb", "F", "C"));
-    private ArrayList<String> minorSharps = new ArrayList<String>(Arrays.asList("A", "E", "B", "F#", "C#", "G#", "D#", "A#"));
-    private ArrayList<String> minorFlats = new ArrayList<String>(Arrays.asList("Ab", "Eb", "Bb", "F", "C", "G", "D", "A"));
+    private ArrayList<String> majorSharps = new ArrayList<>(Arrays.asList("C", "G", "D", "A", "E", "B", "F#", "C#"));
+    private ArrayList<String> majorFlats = new ArrayList<>(Arrays.asList("Cb", "Gb", "Db", "Ab", "Eb", "Bb", "F", "C"));
+    private ArrayList<String> minorSharps = new ArrayList<>(Arrays.asList("A", "E", "B", "F#", "C#", "G#", "D#", "A#"));
+    private ArrayList<String> minorFlats = new ArrayList<>(Arrays.asList("Ab", "Eb", "Bb", "F", "C", "G", "D", "A"));
 
 
     @FXML
@@ -67,11 +67,7 @@ public class KeySignaturesTutorController extends TutorController {
 
         questionRows.getChildren().clear();
         for (int i = 0; i < manager.questions; i++) {
-            HBox questionRow = setUpQuestion();
-            TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
-            qPane.setPadding(new Insets(2, 2, 2, 2));
-            qPanes.add(qPane);
-            questionRows.setMargin(questionRow, new Insets(10, 10, 10, 10));
+            setUpQuestion(i);
         }
         qAccordion.getPanes().addAll(qPanes);
         qAccordion.setExpandedPane(qAccordion.getPanes().get(0));
@@ -86,11 +82,25 @@ public class KeySignaturesTutorController extends TutorController {
         super.create(env);
         initialiseQuestionSelector();
         scaleBox.getItems().addAll("Major", "Minor", "Both");
-        scaleBox.getSelectionModel().selectFirst();
         formBox.getItems().addAll("Listing sharps/flats", "Number of sharps/flats");
-        formBox.getSelectionModel().selectFirst();
         answerBox.getItems().addAll("Show Key Signature", "Show Name");
-        answerBox.getSelectionModel().selectFirst();
+
+        if (currentProject.getIsCompetitiveMode()) {
+            scaleBox.setDisable(true);
+            scaleBox.setValue("Both");
+            formBox.setDisable(true);
+            formBox.setValue("Both");
+            answerBox.setDisable(true);
+            answerBox.setValue("Both");
+
+        } else {
+
+            scaleBox.getSelectionModel().selectFirst();
+            formBox.getSelectionModel().selectFirst();
+            answerBox.getSelectionModel().selectFirst();
+
+        }
+
     }
 
 
@@ -108,40 +118,47 @@ public class KeySignaturesTutorController extends TutorController {
 
     /**
      * Prepares a new question, gets the values from the drop down options for the questions
-     *
-     * @return a question pane containing the question information
      */
-    public HBox setUpQuestion() {
+    public void setUpQuestion(int questionNo) {
         String scaletype;
         int questionType;
         boolean answerType;
 
-
-        //figure out the scale is wanted to be tested
-        if (scaleBox.getValue().equals("Major")) {
-            scaletype = "major";
-        } else if (scaleBox.getValue().equals("Minor")) {
-            scaletype = "minor";
-        } else {
+        if (currentProject.getIsCompetitiveMode()) {
+            Random rand = new Random();
             scaletype = "both";
-        }
-
-        //figure out the type of question wanted
-        if (answerBox.getValue().equals("Show Key Signature")) {
-            questionType = 0;
+            questionType = rand.nextInt(2);
+            answerType = rand.nextBoolean();
         } else {
-            questionType = 1;
+
+
+            //figure out the scale is wanted to be tested
+            if (scaleBox.getValue().equals("Major")) {
+                scaletype = "major";
+            } else if (scaleBox.getValue().equals("Minor")) {
+                scaletype = "minor";
+            } else {
+                scaletype = "both";
+            }
+
+            //figure out the type of question wanted
+            if (answerBox.getValue().equals("Show Key Signature")) {
+                questionType = 0;
+            } else {
+                questionType = 1;
+            }
+
+            if (formBox.getValue().equals("Listing sharps/flats")) {
+                answerType = true;
+
+            } else {
+                answerType = false;
+            }
         }
-
-        if (formBox.getValue().equals("Listing sharps/flats")) {
-            answerType = true;
-
-        } else {
-            answerType = false;
-        }
+        HBox questionRow = generateQuestionPane(new Pair<String, Pair>(scaletype, new Pair<>(questionType, answerType)), questionNo);
 
 
-        return generateQuestionPane(new Pair<String, Pair>(scaletype, new Pair<Integer, Boolean>(questionType, answerType)));
+        questionRows.setMargin(questionRow, new Insets(10, 10, 10, 10));
     }
 
 
@@ -152,13 +169,13 @@ public class KeySignaturesTutorController extends TutorController {
      *             type and answer type
      * @return a HBox that contains a single question
      */
-    @Override
-    public HBox generateQuestionPane(Pair pair) {
+    public HBox generateQuestionPane(Pair pair, int questionNo) {
 
+        // true if question type is 0 - show key signature
         if ((Integer) ((Pair) pair.getValue()).getKey() == 0) {
-            return generateQuestionType1Pane(pair);
-        } else {
-            return generateQuestionType2Pane(pair);
+            return generateQuestionType1Pane(pair, questionNo);
+        } else { // false is question type is 1 - show name
+            return generateQuestionType2Pane(pair, questionNo);
         }
     }
 
@@ -171,7 +188,7 @@ public class KeySignaturesTutorController extends TutorController {
      *             type and answer type
      * @return - returns a HBox containing the question pane
      */
-    private HBox generateNumQuestionType1Pane(final Pair pair) {
+    private HBox generateNumQuestionType1Pane(final Pair pair, int questionNo) {
         final HBox questionRow = new HBox();
         formatQuestionRow(questionRow);
         final ComboBox<String> options;
@@ -180,7 +197,6 @@ public class KeySignaturesTutorController extends TutorController {
 
         Button skip = new Button("Skip");
         styleSkipButton(skip);
-        Label questionText = new Label();
         Label correctAnswerLabel = new Label();
         final String question;
 
@@ -196,7 +212,9 @@ public class KeySignaturesTutorController extends TutorController {
         }
 
         question = numberOfSharps + sharpOrFlat;
-        questionText.setText(question);
+        TitledPane qPane = new TitledPane((questionNo + 1) + ". Which key contains " + question + "?", questionRow);
+        qPane.setPadding(new Insets(2, 2, 2, 2));
+        qPanes.add(qPane);
 
         options = generateType1ComboBox(question, (pair.getKey().equals("major")));
         options.setPrefHeight(30);
@@ -208,11 +226,13 @@ public class KeySignaturesTutorController extends TutorController {
             // Disables only input buttons
             formatSkippedQuestion(questionRow);
             manager.add(pair, 2);
+
+
             String correctAnswer = findCorrectAnswerNumSharpFlat(pair, question);
             if (pair.getKey().equals("both")) {
-                disableButtons(questionRow, 1, 4);
+                disableButtons(questionRow, 0, 3);
             } else {
-                disableButtons(questionRow, 1, 3);
+                disableButtons(questionRow, 0, 2);
             }
 
             String[] recordQuestion = new String[]{
@@ -229,7 +249,7 @@ public class KeySignaturesTutorController extends TutorController {
 
 
         options.setOnAction(event -> {
-            disableButtons(questionRow, 1, 3);
+            disableButtons(questionRow, 0, 2);
             Integer isCorrect = 0;
             String correctAnswer = findCorrectAnswerNumSharpFlat(pair, question.toString());
 
@@ -261,10 +281,10 @@ public class KeySignaturesTutorController extends TutorController {
         });
 
         majorOptions.setOnAction(event -> {
-            disableButtons(questionRow, 1, 2);
+            disableButtons(questionRow, 0, 1);
             if (!(minorOptions.getValue() == (null))) {
-                disableButtons(questionRow, 1, 4);
-                disableButtons(questionRow, 1, 3);
+                disableButtons(questionRow, 0, 3);
+                disableButtons(questionRow, 0, 2);
                 Integer isCorrect = 0;
                 String correctAnswer = findCorrectAnswerNumSharpFlat(pair, question.toString());
 
@@ -299,12 +319,12 @@ public class KeySignaturesTutorController extends TutorController {
         });
         minorOptions.setOnAction(event -> {
             // This handler colors the GUI depending on the user's input
-            disableButtons(questionRow, 2, 3);
+            disableButtons(questionRow, 1, 2);
             if (!(majorOptions.getValue() == null)) {
-                disableButtons(questionRow, 1, 4);
+                disableButtons(questionRow, 0, 3);
 
 
-                disableButtons(questionRow, 1, 3);
+                disableButtons(questionRow, 0, 2);
                 Integer isCorrect = 0;
                 String correctAnswer = findCorrectAnswerNumSharpFlat(pair, question.toString());
 
@@ -338,17 +358,20 @@ public class KeySignaturesTutorController extends TutorController {
 
         });
 
-        questionRow.getChildren().add(0, questionText);
+        if (isCompMode) {
+            skip.setVisible(false);
+            skip.setManaged(false);
+        }
 
         if (pair.getKey().equals("both")) {
-            questionRow.getChildren().add(1, majorOptions);
-            questionRow.getChildren().add(2, minorOptions);
-            questionRow.getChildren().add(3, skip);
-            questionRow.getChildren().add(4, correctAnswerLabel);
-        } else {
-            questionRow.getChildren().add(1, options);
+            questionRow.getChildren().add(0, majorOptions);
+            questionRow.getChildren().add(1, minorOptions);
             questionRow.getChildren().add(2, skip);
             questionRow.getChildren().add(3, correctAnswerLabel);
+        } else {
+            questionRow.getChildren().add(0, options);
+            questionRow.getChildren().add(1, skip);
+            questionRow.getChildren().add(2, correctAnswerLabel);
         }
 
         questionRow.prefWidthProperty().bind(paneQuestions.prefWidthProperty());
@@ -422,10 +445,12 @@ public class KeySignaturesTutorController extends TutorController {
      *             type and answer type
      * @return - returns a HBox containing the question pane
      */
-    public HBox generateQuestionType1Pane(final Pair pair) {
+    public HBox generateQuestionType1Pane(final Pair pair, int questionNo) {
 
+
+        // number of sharps and flats
         if (!(Boolean) (((Pair) pair.getValue()).getValue())) {
-            return (generateNumQuestionType1Pane(pair));
+            return (generateNumQuestionType1Pane(pair, questionNo));
         }
 
         final HBox questionRow = new HBox();
@@ -439,7 +464,6 @@ public class KeySignaturesTutorController extends TutorController {
 
         Button skip = new Button("Skip");
         styleSkipButton(skip);
-        Label questionText = new Label();
         Label correctAnswerLabel = new Label();
         final List<String> question;
 
@@ -448,7 +472,9 @@ public class KeySignaturesTutorController extends TutorController {
         possibleQuestions.addAll(KeySignature.getMinorKeySignatures().values());
 
         question = possibleQuestions.get(rand.nextInt(possibleQuestions.size())).getNotes();
-        questionText.setText(question.toString());
+        TitledPane qPane = new TitledPane((questionNo + 1) + ". Which key contains " + question + "?", questionRow);
+        qPane.setPadding(new Insets(2, 2, 2, 2));
+        qPanes.add(qPane);
 
 
         options = generateType1ComboBox(question.toString(), (pair.getKey().equals("major")));
@@ -461,16 +487,19 @@ public class KeySignaturesTutorController extends TutorController {
         skip.setOnAction(event -> {
             // Disables only input buttons
             formatSkippedQuestion(questionRow);
+
             manager.add(pair, 2);
+
+
             String correctAnswer = "";
 
             Boolean isBoth = false;
 
             if (pair.getKey().equals("both")) {
                 isBoth = true;
-                disableButtons(questionRow, 1, 4);
+                disableButtons(questionRow, 0, 3);
             } else {
-                disableButtons(questionRow, 1, 3);
+                disableButtons(questionRow, 0, 2);
             }
 
 
@@ -491,7 +520,7 @@ public class KeySignaturesTutorController extends TutorController {
 
 
             String[] recordQuestion = new String[]{
-                    String.format("Keys signature of %s %s", question, pair.getKey()),
+                    String.format("Key signature of %s %s", question, pair.getKey()),
                     correctAnswer,
                     "2"
             };
@@ -504,7 +533,7 @@ public class KeySignaturesTutorController extends TutorController {
 
 
         options.setOnAction(event -> {
-            disableButtons(questionRow, 1, 3);
+            disableButtons(questionRow, 0, 2);
             Integer isCorrect = 0;
             String correctAnswer = findCorrectAnswer(pair, question.toString());
 
@@ -537,9 +566,9 @@ public class KeySignaturesTutorController extends TutorController {
         majorOptions.setOnAction(event -> {
             disableButtons(questionRow, 1, 2);
             if (!(minorOptions.getValue() == (null))) {
-                disableButtons(questionRow, 1, 4);
+                disableButtons(questionRow, 0, 3);
 
-                disableButtons(questionRow, 1, 3);
+                disableButtons(questionRow, 0, 2);
                 Integer isCorrect = 0;
 
                 String correctAnswer = findCorrectAnswer(pair, question.toString());
@@ -574,12 +603,12 @@ public class KeySignaturesTutorController extends TutorController {
         });
 
         minorOptions.setOnAction(event -> {
-            disableButtons(questionRow, 2, 3);
+            disableButtons(questionRow, 1, 2);
             if (!(majorOptions.getValue() == null)) {
-                disableButtons(questionRow, 1, 4);
+                disableButtons(questionRow, 0, 3);
                 String correctAnswer = findCorrectAnswer(pair, question.toString());
 
-                disableButtons(questionRow, 1, 3);
+                disableButtons(questionRow, 0, 2);
                 Integer isCorrect = 0;
 
                 if (type1QuestionCorrectCheck(pair.getKey().toString(), question.toString(), false, majorOptions.getValue(), minorOptions.getValue())) {
@@ -611,18 +640,21 @@ public class KeySignaturesTutorController extends TutorController {
 
         });
 
-        questionRow.getChildren().add(0, questionText);
+        if (isCompMode) {
+            skip.setVisible(false);
+            skip.setManaged(false);
+        }
 
 
         if (pair.getKey().equals("both")) {
-            questionRow.getChildren().add(1, majorOptions);
-            questionRow.getChildren().add(2, minorOptions);
-            questionRow.getChildren().add(3, skip);
-            questionRow.getChildren().add(4, correctAnswerLabel);
-        } else {
-            questionRow.getChildren().add(1, options);
+            questionRow.getChildren().add(0, majorOptions);
+            questionRow.getChildren().add(1, minorOptions);
             questionRow.getChildren().add(2, skip);
             questionRow.getChildren().add(3, correctAnswerLabel);
+        } else {
+            questionRow.getChildren().add(0, options);
+            questionRow.getChildren().add(1, skip);
+            questionRow.getChildren().add(2, correctAnswerLabel);
         }
 
         questionRow.prefWidthProperty().bind(paneQuestions.prefWidthProperty());
@@ -725,7 +757,7 @@ public class KeySignaturesTutorController extends TutorController {
      *             type and answer type
      * @return - returns a HBox containing the question pane
      */
-    public HBox generateQuestionType2Pane(final Pair pair) {
+    public HBox generateQuestionType2Pane(final Pair pair, int questionNo) {
         Boolean isMajor = false;
 
         final HBox questionRow = new HBox();
@@ -749,15 +781,13 @@ public class KeySignaturesTutorController extends TutorController {
 
         if ((pair.getKey().equals("major")) || (random == 0)) {
             isMajor = true;
-            keysAsArray = new ArrayList<String>(KeySignature.getMajorKeySignatures().keySet());
-            questionText.setText(" Major");
+            keysAsArray = new ArrayList<>(KeySignature.getMajorKeySignatures().keySet());
             question = keysAsArray.get(rand.nextInt(keysAsArray.size()));
             options = generateMajorChoices(question, (Boolean) (((Pair) pair.getValue()).getValue()));
 
         } else if ((pair.getKey().equals("minor")) || (random == 1)) {
-            keysAsArray = new ArrayList<String>(KeySignature.getMinorKeySignatures().keySet());
+            keysAsArray = new ArrayList<>(KeySignature.getMinorKeySignatures().keySet());
             question = keysAsArray.get(rand.nextInt(keysAsArray.size()));
-            questionText.setText(" Minor");
             options = generateMinorChoices(question, (Boolean) (((Pair) pair.getValue()).getValue()));
 
         } else {
@@ -766,8 +796,14 @@ public class KeySignaturesTutorController extends TutorController {
             options = null;
             question = null;
         }
-
-        questionText.setText(question.concat(questionText.getText()));
+        TitledPane qPane;
+        if ((Boolean) ((Pair) pair.getValue()).getValue()) {
+            qPane = new TitledPane((questionNo + 1) + ". What is the key signature of " + question + " " + pair.getKey() + "?", questionRow);
+        } else {
+            qPane = new TitledPane((questionNo + 1) + ". How many sharps or flats does " + question + " " + pair.getKey() + " contain?", questionRow);
+        }
+        qPane.setPadding(new Insets(2, 2, 2, 2));
+        qPanes.add(qPane);
         options.setPrefHeight(30);
 
 
@@ -775,9 +811,12 @@ public class KeySignaturesTutorController extends TutorController {
 
         skip.setOnAction(event -> {
             // Disables only input buttons
-            disableButtons(questionRow, 1, 3);
+            disableButtons(questionRow, 0, 2);
             formatSkippedQuestion(questionRow);
+
             manager.add(pair, 2);
+
+
             String correctAnswer;
 
             if (fIsMajor) {
@@ -821,7 +860,7 @@ public class KeySignaturesTutorController extends TutorController {
 
         // This handler colors the GUI depending on the user's input
         options.setOnAction(event -> {
-            disableButtons(questionRow, 1, 3);
+            disableButtons(questionRow, 0, 2);
             Integer isCorrect = 0;
             String correctAnswerStr;
 
@@ -877,10 +916,14 @@ public class KeySignaturesTutorController extends TutorController {
             }
         });
 
-        questionRow.getChildren().add(0, questionText);
-        questionRow.getChildren().add(1, options);
-        questionRow.getChildren().add(2, skip);
-        questionRow.getChildren().add(3, correctAnswerLabel);
+        if (isCompMode) {
+            skip.setVisible(false);
+            skip.setManaged(false);
+        }
+
+        questionRow.getChildren().add(0, options);
+        questionRow.getChildren().add(1, skip);
+        questionRow.getChildren().add(2, correctAnswerLabel);
 
         questionRow.prefWidthProperty().bind(paneQuestions.prefWidthProperty());
         return questionRow;
@@ -1043,11 +1086,11 @@ public class KeySignaturesTutorController extends TutorController {
      * @return a combo box full of potential answers
      */
     private ComboBox<String> generateMajorChoices(String scale, Boolean keysignature) {
-        ComboBox<String> options = new ComboBox<String>();
+        ComboBox<String> options = new ComboBox<>();
         options.setPrefHeight(30);
 
-        ArrayList<List> optionsList = new ArrayList<List>();
-        ArrayList<String> optionsListNum = new ArrayList<String>();
+        ArrayList<List> optionsList = new ArrayList<>();
+        ArrayList<String> optionsListNum = new ArrayList<>();
         if ((KeySignature.getMajorKeySignatures().get(scale)).getNotes().get(0).contains("#")) {
 
             for (String keySig : majorSharps) {
@@ -1094,11 +1137,11 @@ public class KeySignaturesTutorController extends TutorController {
      * @return a combo box full of potential answers
      */
     private ComboBox<String> generateMinorChoices(String scale, Boolean keysignature) {
-        ComboBox<String> options = new ComboBox<String>();
+        ComboBox<String> options = new ComboBox<>();
         options.setPrefHeight(30);
 
-        ArrayList<List> optionsList = new ArrayList<List>();
-        ArrayList<String> optionsListNum = new ArrayList<String>();
+        ArrayList<List> optionsList = new ArrayList<>();
+        ArrayList<String> optionsListNum = new ArrayList<>();
         if ((KeySignature.getMinorKeySignatures().get(scale)).getNotes().get(0).contains("#")) {
 
             for (String keySig : minorSharps) {

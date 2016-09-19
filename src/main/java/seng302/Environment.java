@@ -2,8 +2,13 @@ package seng302;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Node;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Pair;
 import seng302.Users.UserHandler;
 import seng302.gui.RootController;
+import seng302.gui.StageMapController;
 import seng302.gui.UserPageController;
 import seng302.managers.ThemeHandler;
 import seng302.managers.TranscriptManager;
@@ -20,6 +25,19 @@ public class Environment {
     private EditHistory em = new EditHistory(this);
     private BooleanProperty shiftPressed;
     private ThemeHandler themeHandler;
+    private Pair currentFocussed;
+
+
+
+    private AnchorPane stagePane;
+
+    public AnchorPane getStagePane() {
+        return stagePane;
+    }
+
+    public void setStagePane(AnchorPane stagePane) {
+        this.stagePane = stagePane;
+    }
 
     public RootController getRootController() {
         return rootController;
@@ -37,17 +55,36 @@ public class Environment {
         this.userPageController = userPageController;
     }
 
+    public void setCurrentFocussed(TextField node, Boolean transcript, Node next) {
+        this.currentFocussed = new Pair(new Pair(node, next), transcript);
+    }
+
+    public Pair getCurrentFocussed() {
+        return currentFocussed;
+    }
+
     // Root Controller
     private RootController rootController;
 
     //userpage
     private UserPageController userPageController;
 
+    public StageMapController stageMapController;
+
+    public StageMapController getStageMapController() {
+        return this.stageMapController;
+    }
+
+    public void setStageMapController(StageMapController stageMapController) {
+        this.stageMapController = stageMapController;
+    }
+
+
     private UserHandler userHandler;
 
     public Environment() {
         executor = new DslExecutor(this);
-        player = new MusicPlayer();
+        player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();
         mttDataManager = new MusicalTermsTutorBackEnd();
         shiftPressed = new SimpleBooleanProperty(false);
@@ -61,7 +98,7 @@ public class Environment {
      */
     public void resetProjectEnvironment() {
         executor = new DslExecutor(this);
-        player = new MusicPlayer();
+        player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();
         recordLocation = null;
         em = new EditHistory(this);
@@ -72,7 +109,7 @@ public class Environment {
      */
     public void resetEnvironment() {
         executor = new DslExecutor(this);
-        player = new MusicPlayer();
+        player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();
         mttDataManager = new MusicalTermsTutorBackEnd();
         recordLocation = null;
@@ -149,4 +186,6 @@ public class Environment {
     public void setShiftPressed(boolean shiftPressed) {
         this.shiftPressed.setValue(shiftPressed);
     }
+
+
 }

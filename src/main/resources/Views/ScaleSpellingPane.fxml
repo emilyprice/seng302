@@ -4,7 +4,6 @@
 <?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,24 +13,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<AnchorPane fx:id="keySignaturesTutorAnchor" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="seng302.gui.KeySignaturesTutorController">
+<?import javafx.scene.control.ComboBox?>
+<AnchorPane fx:id="chordSpellingAnchor" prefHeight="450.0" prefWidth="700.0"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="seng302.gui.ScaleSpellingTutorController">
     <children>
         <HBox fx:id="settings" alignment="CENTER" layoutY="36.0" minWidth="400.0" prefHeight="362.0"
               spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0"
-              AnchorPane.topAnchor="60.0">
+              AnchorPane.topAnchor="56.0">
             <children>
                 <VBox fx:id="paneInit" alignment="CENTER" maxHeight="1.7976931348623157E308"
                       maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="362.0"
                       spacing="10.0">
                     <children>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="800.0" spacing="5">
+                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="600.0">
                             <children>
                                 <Label alignment="CENTER" contentDisplay="CENTER"
                                        minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0"
-                                       text="Number of Questions: "/>
-                                <Label fx:id="questions" contentDisplay="CENTER" prefHeight="30.0">
+                                       prefWidth="120.0" text="Number of Questions: "/>
+                                <Label fx:id="questions" contentDisplay="CENTER" prefHeight="30.0"
+                                       prefWidth="17.0">
                                     <font>
                                         <Font name="System Bold" size="13.0"/>
                                     </font>
@@ -49,30 +50,40 @@
                                 <Insets left="5.0"/>
                             </padding>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0" spacing="10.0">
+                        <HBox fx:id="settingsBox" alignment="CENTER" prefHeight="60.0"
+                              prefWidth="200.0" spacing="10.0">
                             <children>
-                                <Label text="Scale type:"/>
-                                <ComboBox fx:id="scaleBox" prefWidth="100.0" promptText="Major"/>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Question type:"/>
-                                <ComboBox fx:id="answerBox" onAction="#updateQuestionBox"
-                                          prefWidth="100.0" promptText="Show Key Signature"/>
-                                <Label fx:id="formLabel" text="Question form:">
+                                <Label text="Scale Types">
                                     <HBox.margin>
-                                        <Insets left="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                     </HBox.margin>
                                 </Label>
-                                <ComboBox fx:id="formBox" prefWidth="100.0"
-                                          promptText="Number of sharps/flats"/>
+                                <Label text="Input Mode">
+                                    <HBox.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <ComboBox fx:id="inputMode" prefWidth="100.0"/>
                             </children>
                             <VBox.margin>
                                 <Insets left="5.0"/>
                             </VBox.margin>
                         </HBox>
                         <BorderPane>
+                            <top>
+                                <Text fx:id="scaleError"
+                                      text="You must select at least one scale type" visible="false"
+                                      BorderPane.alignment="CENTER">
+                                    <BorderPane.margin>
+                                        <Insets bottom="5.0" left="20.0"/>
+                                    </BorderPane.margin>
+                                </Text>
+                            </top>
                             <bottom>
                                 <JFXButton id="btnGo" fx:id="btnGo" buttonType="RAISED"
                                            alignment="CENTER" onAction="#goAction" prefHeight="30.0"
-                                           prefWidth="90.0" styleClass="primaryControl" text="Go"
+                                           prefWidth="90.0" ripplerFill="#a4a4a4"
+                                           style="-fx-background-color: #5683bf;" text="Go"
                                            BorderPane.alignment="CENTER">
                                     <BorderPane.margin>
                                         <Insets bottom="5.0" left="20.0"/>

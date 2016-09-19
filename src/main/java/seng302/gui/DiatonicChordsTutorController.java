@@ -89,18 +89,10 @@ public class DiatonicChordsTutorController extends TutorController {
     }
 
 
-    @Override
     HBox generateQuestionPane(Pair questionAnswer) {
         Pair data = (Pair) questionAnswer.getKey();
         String answer = (String) questionAnswer.getValue();
         final HBox questionRow = new HBox();
-        Label question;
-        if (getTypeOfQuestion(questionAnswer) == 1) {
-            question = new Label(String.format(typeOneText, data.getKey(), data.getValue()));
-        } else {
-            Pair chord = (Pair) data.getValue();
-            question = new Label(String.format(typeTwoText, data.getKey(), chord.getKey() + " " + chord.getValue()));
-        }
         formatQuestionRow(questionRow);
 
         final Label correctAnswer = correctAnswer(answer);
@@ -116,7 +108,9 @@ public class DiatonicChordsTutorController extends TutorController {
             // Disables only input buttons
             disableButtons(questionRow, 1, 3);
             formatSkippedQuestion(questionRow);
+
             manager.add(data, 2);
+
             String questionString;
             if (getTypeOfQuestion(questionAnswer) == 1) {
                 questionString = String.format(typeOneText, data.getKey(), data.getValue());
@@ -136,10 +130,14 @@ public class DiatonicChordsTutorController extends TutorController {
             }
         });
 
-        questionRow.getChildren().add(0, question);
-        questionRow.getChildren().add(1, options);
-        questionRow.getChildren().add(2, skip);
-        questionRow.getChildren().add(3, correctAnswer);
+        if (isCompMode) {
+            skip.setVisible(false);
+            skip.setManaged(false);
+        }
+
+        questionRow.getChildren().add(0, options);
+        questionRow.getChildren().add(1, skip);
+        questionRow.getChildren().add(2, correctAnswer);
 
         questionRow.prefWidthProperty().bind(paneQuestions.prefWidthProperty());
         return questionRow;
@@ -216,7 +214,7 @@ public class DiatonicChordsTutorController extends TutorController {
             manager.add(questionAndAnswer, 0);
             formatIncorrectQuestion(questionRow);
             //Shows the correct answer
-            questionRow.getChildren().get(3).setVisible(true);
+            questionRow.getChildren().get(2).setVisible(true);
         }
         Pair questionPair = (Pair) questionAndAnswer.getKey();
         String[] question;
@@ -285,14 +283,27 @@ public class DiatonicChordsTutorController extends TutorController {
         questionRows.getChildren().clear();
         for (int i = 0; i < manager.questions; i++) {
             HBox questionRow;
+            Pair question;
+            String qString;
             if (rand.nextBoolean()) {
                 type = 1;
-                questionRow = generateQuestionPane(generateQuestionTypeOne());
+                question = generateQuestionTypeOne();
+                Pair questionPair = (Pair) question.getKey();
+                qString = String.format(typeOneText,
+                        questionPair.getKey(),
+                        questionPair.getValue());
+                questionRow = generateQuestionPane(question);
             } else {
                 type = 2;
-                questionRow = generateQuestionPane(generateQuestionTypeTwo());
+                question = generateQuestionTypeTwo();
+                Pair questionPair = (Pair) question.getKey();
+                Pair chord = (Pair) questionPair.getValue();
+                qString = String.format(typeTwoText,
+                        questionPair.getKey(),
+                        chord.getKey() + " " + chord.getValue());
+                questionRow = generateQuestionPane(question);
             }
-            TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+            TitledPane qPane = new TitledPane((i + 1) + ". " + qString, questionRow);
             qPane.setPadding(new Insets(2, 2, 2, 2));
             qPanes.add(qPane);
             questionRows.setMargin(questionRow, new Insets(10, 10, 10, 10));

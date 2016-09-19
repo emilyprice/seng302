@@ -142,7 +142,7 @@
             </VBox.margin>
         </StackPane>
         <LineChart fx:id="lineChart" horizontalZeroLineVisible="false" legendVisible="false"
-                   prefHeight="228.0" prefWidth="379.0" title="Past Results">
+                   minHeight="200.0" prefHeight="228.0" prefWidth="379.0" title="Past Results">
             <xAxis>
                 <CategoryAxis endMargin="10.0" side="BOTTOM" startMargin="10.0" tickLabelGap="1.0"
                               tickLabelsVisible="false" tickMarkVisible="false"/>
@@ -163,7 +163,6 @@
                 <Insets top="5" right="20" bottom="5" left="20" />
             </padding>
         </GridPane>
-
     </children>
     <padding>
         <Insets top="20.0"/>

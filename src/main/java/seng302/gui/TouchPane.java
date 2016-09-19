@@ -3,6 +3,8 @@ package seng302.gui;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.TouchEvent;
@@ -11,8 +13,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 import seng302.Environment;
 import seng302.data.Note;
+import seng302.utility.musicNotation.OctaveUtil;
 
 
 /**
@@ -54,13 +58,23 @@ public class TouchPane extends StackPane {
         EventHandler<TouchEvent> touchPress = event -> {
             if (touchId == -1) {
                 touchId = event.getTouchPoint().getId();
-                if (kpc.isPlayMode()) {
+                if (kpc.playMode().equals("play")) {
                     environment.getPlayer().noteOn(noteToPlay);
                     setHighlightOn();
                 } else {
-                    String prev = env.getRootController().getTranscriptController().txtCommand.getText();
-                    String newText = prev + " " + this.getNoteValue().getNote();
-                    env.getRootController().getTranscriptController().txtCommand.setText(newText);
+                    if (kpc.playMode().equals("transcript")) {
+                        String prev = env.getRootController().getTranscriptController().txtCommand.getText();
+                        String newText = prev + " " + this.getNoteValue().getNote();
+                        env.getRootController().getTranscriptController().txtCommand.setText(newText);
+                    } else if (!(Boolean) env.getCurrentFocussed().getValue() && !((TextField) ((Pair) env.getCurrentFocussed().getKey()).getKey()).isDisabled()) {
+                        ((TextField) ((Pair) env.getCurrentFocussed().getKey()).getKey()).setText(OctaveUtil.removeOctaveSpecifier(this.getNoteValue().getNote()));
+                        if (((Pair) env.getCurrentFocussed().getKey()).getValue() instanceof TextField) {
+                            ((TextField) ((Pair) env.getCurrentFocussed().getKey()).getValue()).requestFocus();
+                        } else {
+                            ((Button) ((Pair) env.getCurrentFocussed().getKey()).getValue()).fire();
+                        }
+                    }
+
                 }
             }
             event.consume();
@@ -70,10 +84,10 @@ public class TouchPane extends StackPane {
         EventHandler<TouchEvent> touchRelease = event -> {
             if (event.getTouchPoint().getId() == touchId) {
                 touchId = -1;
-                if (kpc.isPlayMode()) {
+                if (kpc.playMode().equals("play")) {
                     environment.getPlayer().noteOff(noteToPlay);
                     setHighlightOff();
-                } else {
+                } else if (kpc.playMode().equals("transcript")) {
                     env.getRootController().getTranscriptController().giveFocus();
                 }
             }
@@ -85,7 +99,7 @@ public class TouchPane extends StackPane {
 
         // Event handler for when mouse is released
         setOnMouseReleased(event -> {
-            if (kpc.isPlayMode()) {
+            if (kpc.playMode().equals("play")) {
                 if (!environment.isShiftPressed()) {
                     environment.getPlayer().noteOff(noteToPlay);
                     setHighlightOff();
@@ -93,7 +107,7 @@ public class TouchPane extends StackPane {
                         getChildren().clear();
                     }
                 }
-            } else {
+            } else if (kpc.playMode().equals("transcript")) {
                 env.getRootController().getTranscriptController().giveFocus();
             }
         });
@@ -101,7 +115,7 @@ public class TouchPane extends StackPane {
         // Event handler for when mouse is clicked
         setOnMousePressed(event -> {
             if (!event.isSynthesized()) {
-                if (kpc.isPlayMode()) {
+                if (kpc.playMode().equals("play")) {
                     if (environment.isShiftPressed()) {
                         keyboardPaneController.addMultiNote(noteToPlay, me);
                         setHighlightOn();
@@ -113,9 +127,19 @@ public class TouchPane extends StackPane {
                         getChildren().add(new Text(keyLabel));
                     }
                 } else {
-                    String prev = env.getRootController().getTranscriptController().txtCommand.getText();
-                    String newText = prev + " " + this.getNoteValue().getNote();
-                    env.getRootController().getTranscriptController().txtCommand.setText(newText);
+
+                    if (kpc.playMode().equals("transcript")) {
+                        String prev = env.getRootController().getTranscriptController().txtCommand.getText();
+                        String newText = prev + " " + this.getNoteValue().getNote();
+                        env.getRootController().getTranscriptController().txtCommand.setText(newText);
+                    } else if (!(Boolean) env.getCurrentFocussed().getValue() && !((TextField) ((Pair) env.getCurrentFocussed().getKey()).getKey()).isDisabled()) {
+                        ((TextField) ((Pair) env.getCurrentFocussed().getKey()).getKey()).setText(OctaveUtil.removeOctaveSpecifier(this.getNoteValue().getNote()));
+                        if (((Pair) env.getCurrentFocussed().getKey()).getValue() instanceof TextField) {
+                            ((TextField) ((Pair) env.getCurrentFocussed().getKey()).getValue()).requestFocus();
+                        } else {
+                            ((Button) ((Pair) env.getCurrentFocussed().getKey()).getValue()).fire();
+                        }
+                    }
                 }
             }
         });

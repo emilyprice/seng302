@@ -86,6 +86,9 @@ public class TranscriptPaneController {
         Platform.runLater(() -> txtCommand.requestFocus());
     }
 
+    /**
+     * Hides the transcript by shrinking its side of the transcript pane to nothing
+     */
     public void hideTranscript() {
         isExpanded = false;
         playbackToolbar.setMaxWidth(0);
@@ -95,6 +98,30 @@ public class TranscriptPaneController {
         transcriptAnchor.setVisible(false);
         transcriptAnchor.setMinWidth(0);
         transcriptAnchor.setMaxWidth(0);
+        try {
+            env.getRootController().resizeSplitPane(1.0);
+        } catch (Exception e) {
+            //env not yet loaded
+        }
+    }
+
+    /**
+     * Displays the transcript in a split pane, to the right of the main window
+     */
+    public void showTranscript() {
+        playbackToolbar.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        txtTranscript.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        txtCommand.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        btnGo.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        transcriptAnchor.setVisible(true);
+        transcriptAnchor.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        isExpanded = true;
+        try {
+            env.getRootController().resizeSplitPane(0.75);
+        } catch (Exception e) {
+            //env not yet loaded
+        }
+
     }
 
     /**
@@ -291,21 +318,8 @@ public class TranscriptPaneController {
         txtCommand.positionCaret(txtCommand.getText().length());
     }
 
-    public void showTranscript() {
-        if (!isExpanded) {
-            playbackToolbar.setMaxWidth(Region.USE_COMPUTED_SIZE);
-            txtTranscript.setMaxWidth(Region.USE_COMPUTED_SIZE);
-            txtCommand.setMaxWidth(Region.USE_COMPUTED_SIZE);
-            btnGo.setMaxWidth(Region.USE_COMPUTED_SIZE);
-            transcriptAnchor.setVisible(true);
-            transcriptAnchor.setMaxWidth(Region.USE_COMPUTED_SIZE);
-            isExpanded = true;
-            env.getRootController().resizeSplitPane(0.75);
-        } else {
-            hideTranscript();
-            env.getRootController().resizeSplitPane(1.0);
-        }
-
+    public boolean getIsExpanded() {
+        return isExpanded;
     }
 
 }

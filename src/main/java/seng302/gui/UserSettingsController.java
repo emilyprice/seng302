@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -57,7 +56,6 @@ public class UserSettingsController {
     @FXML
     private JFXButton btnDeleteUser;
 
-
     private Environment env;
 
     private UserHandler userHandler;
@@ -68,6 +66,7 @@ public class UserSettingsController {
         this.imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         env.getRootController().setHeader("User Settings");
         userHandler = env.getUserHandler();
+
         try {
             txtFName.setText(userHandler.getCurrentUser().getUserFirstName());
             txtLName.setText(userHandler.getCurrentUser().getUserLastName());
@@ -199,7 +198,5 @@ public class UserSettingsController {
         }
 
     }
-
-
 }
 

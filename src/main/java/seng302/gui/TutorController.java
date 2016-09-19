@@ -54,6 +54,15 @@ public abstract class TutorController {
 
     public List qPanes;
 
+    public boolean isCompMode;
+
+
+    Stage stage;
+
+    File fileDir;
+
+    String path;
+
     @FXML
     VBox questionRows;
 
@@ -87,13 +96,14 @@ public abstract class TutorController {
         manager = new TutorManager();
         currentProject = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject();
         tutorHandler = currentProject.getTutorHandler();
+        isCompMode = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode();
     }
 
     /**
      * Implements the settings of a slider used to select number of questions.
      */
     public void initialiseQuestionSelector() {
-        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().isCompetitiveMode) {
+        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             numQuestions.setValue(10);
             numQuestions.setDisable(true);
             selectedQuestions = 10;
@@ -153,7 +163,7 @@ public abstract class TutorController {
         //Calculates and gives a user their experience.
         //Note: I've ignored "skipped questions" here, as you won't be able to "skip" a
         //question in competition mode.
-        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().isCompetitiveMode) {
+        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             int expGained = ExperienceCalculator.calculateExperience(manager.correct, manager.questions);
             env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(expGained);
             env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().updateTutorBadges(tutorName, manager.correct, manager.answered);
@@ -165,6 +175,8 @@ public abstract class TutorController {
         record.setFinished();
         record.setDate();
 
+        String tutorName = env.getRootController().getHeader();
+        System.out.println("current project: " + currentProject);
         if (currentProject != null) {
             currentProject.saveCurrentProject();
             String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
@@ -180,6 +192,9 @@ public abstract class TutorController {
             paneQuestions.setVisible(false);
             paneInit.setVisible(true);
         }
+
+        env.getStageMapController().fetchTutorFile(tutorName);
+        env.getUserPageController();
 
         // Clear the current session
         manager.resetStats();
@@ -207,27 +222,6 @@ public abstract class TutorController {
     public TutorManager getManager() {
         return manager;
     }
-
-    /**
-     * Saves a record of the tutoring session to a file.
-     */
-//    public void saveRecord() {
-//
-//        //show a file picker
-//        FileChooser fileChooser = new FileChooser();
-//        if (currentProject.isProject()) {
-//            env.getRootController().checkProjectDirectory();
-//            fileChooser.setInitialDirectory(Paths.get(currentProject.getCurrentProjectPath()).toFile());
-//        }
-//        File file = fileChooser.showSaveDialog(stage);
-//
-//        if (file != null) {
-//            fileDir = file.getParentFile();
-//            path = file.getAbsolutePath();
-//            env.setRecordLocation(path);
-//            tutorHandler.saveTutorRecordsToFile(path, record);
-//        }
-//    }
 
     /**
      * Calculates a user's score after a tutoring session
@@ -284,7 +278,7 @@ public abstract class TutorController {
      * @param question The HBox containing info about a question
      */
     public void formatSkippedQuestion(HBox question) {
-        question.getParent().getParent().setStyle("-fx-border-color: grey; -fx-border-width: 2px;");
+        question.getParent().getParent().setStyle("-fx-border-color: grey; -fx-border-width: 0 0 0 10px;");
     }
 
     /**
@@ -293,7 +287,7 @@ public abstract class TutorController {
      * @param question The HBox containing info about a question
      */
     public void formatCorrectQuestion(HBox question) {
-        question.getParent().getParent().setStyle("-fx-border-color: green; -fx-border-width: 2px;");
+        question.getParent().getParent().setStyle("-fx-border-color: green; -fx-border-width: 0 0 0 10px;");
     }
 
     /**
@@ -302,7 +296,7 @@ public abstract class TutorController {
      * @param question The HBox containing info about a question
      */
     public void formatIncorrectQuestion(HBox question) {
-        question.getParent().getParent().setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+        question.getParent().getParent().setStyle("-fx-border-color: red; -fx-border-width: 0 0 0 10px;");
     }
 
     /**
@@ -311,7 +305,7 @@ public abstract class TutorController {
      * @param question The HBox containing info about a question
      */
     public void formatPartiallyCorrectQuestion(HBox question) {
-        question.getParent().getParent().setStyle("-fx-border-color: yellow; -fx-border-width: 2px;");
+        question.getParent().getParent().setStyle("-fx-border-color: yellow; -fx-border-width: 0 0 0 10px;");
     }
 
     /**

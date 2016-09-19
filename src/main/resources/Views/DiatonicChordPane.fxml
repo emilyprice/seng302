@@ -20,10 +20,12 @@
             <children>
                 <VBox fx:id="paneInit" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="362.0" spacing="10.0">
                     <children>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="600.0">
+                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="600.0" spacing="5">
                             <children>
-                                <Label alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="120.0" text="Number of Questions: " />
-                                <Label fx:id="questions" contentDisplay="CENTER" prefHeight="30.0" prefWidth="17.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER"
+                                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0"
+                                       text="Number of Questions: "/>
+                                <Label fx:id="questions" contentDisplay="CENTER" prefHeight="30.0">
                                     <font>
                                         <Font name="System Bold" size="13.0" />
                                     </font>
@@ -40,7 +42,10 @@
                         </HBox>
                         <BorderPane>
                             <bottom>
-                                <JFXButton id="btnGo" fx:id="btnGo" buttonType="RAISED" alignment="CENTER" onAction="#goAction" prefHeight="30.0" prefWidth="90.0" ripplerFill="#a4a4a4" style="-fx-background-color: #5683bf;" text="Go" BorderPane.alignment="CENTER">
+                                <JFXButton id="btnGo" fx:id="btnGo" buttonType="RAISED"
+                                           alignment="CENTER" onAction="#goAction" prefHeight="30.0"
+                                           prefWidth="90.0" styleClass="primaryControl" text="Go"
+                                           BorderPane.alignment="CENTER">
                                     <BorderPane.margin>
                                         <Insets bottom="5.0" left="20.0" />
                                     </BorderPane.margin>

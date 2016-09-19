@@ -18,8 +18,11 @@ public class TutorRecord {
 
     /**
      * Adds a question and answer to the record
+
+     * @param questionSet A list of strings containing information about a single question.
+     *                    The third string has one of the following values:
+     *                    2 for skip, 1 for correct, 0 for incorrect
      *
-     * @param questionSet A list of strings containing information about a single question
      */
     public Map<String, String> addQuestionAnswer(String[] questionSet) {
         Map<String, String> question = new HashMap<>();

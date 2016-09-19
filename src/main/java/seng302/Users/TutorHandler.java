@@ -38,6 +38,8 @@ public class TutorHandler {
         add("chordSpellingTutor");
         add("keySignatureTutor");
         add("diatonicChordTutor");
+        add("scaleModesTutor");
+        add("scaleSpellingTutor");
     }};
 
     /**
@@ -72,7 +74,7 @@ public class TutorHandler {
     /**
      * This method will give the total number of correct and incorrect answers for a given tutor.
      *
-     * @param tabId The tabid of the tutor
+     * @param tabId The tab ID of the tutor
      * @return a pair containing two integers. The number of answers correct and the number of
      * incorrect answers.
      */
@@ -137,6 +139,8 @@ public class TutorHandler {
             filename = projectAddress + "/DiatonicChordTutor.json";
         } else if (id.equals("scaleModesTutor")) {
             filename = projectAddress + "/ScaleModesTutor.json";
+        } else if (id.equals("scaleSpellingTutor")) {
+            filename = projectAddress + "/ScaleSpellingTutor.json";
         }
         Gson gson = new Gson();
         ArrayList<TutorRecord> records = new ArrayList<>();
@@ -210,6 +214,7 @@ public class TutorHandler {
                     records.remove(records.size() - 1);
                 }
             } catch (FileNotFoundException e) {
+                System.err.println("file not found exception??");
                 records = new ArrayList<>();
             } catch (JsonSyntaxException e) {
                 System.err.println("File was not of the correct type. Overwriting.");

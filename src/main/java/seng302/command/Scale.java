@@ -1,7 +1,6 @@
 package seng302.command;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -236,13 +235,30 @@ public class Scale implements Command {
         ArrayList<String> scale = new ArrayList<>();
         char currentLetter = Character.toUpperCase(startNote.charAt(0));
         int count = 0;
+        int whichNote = 0;
         for (Note note : scaleNotes) {
             String currentNote;
             if (type != null) {
-                if (type.equals("blues") && Character.toUpperCase(startNote.charAt(0)) == 'B' && note.getNote().charAt(1) == '#') {
-                    currentNote = note.getNote();
-                } else if (type.equals("blues")) {
-                    currentNote = note.getDescendingEnharmonic();
+                if (type.equals("blues")) {
+                    char modifier = ' ';
+                    if (startNote.length() > 1) {
+                        modifier = startNote.charAt(1);
+                    }
+                    if ((startNote.toUpperCase().startsWith("B#") || startNote.toUpperCase().startsWith("E#")) && whichNote == 6) {
+                        // Make these special cases' first and last notes match up
+                        currentNote = note.getEnharmonicWithLetter(startNote.toUpperCase().charAt(0));
+                    } else if (modifier == '#' || (startNote.toUpperCase().charAt(0) == 'B' && modifier != 'b')) {
+                        // Flat blues scales do not use sharps,
+                        // Except for the Bb blues scale for some reason.
+                        currentNote = note.getNote();
+                    } else if (modifier == 'b' && whichNote == 0) {
+                        currentNote = note.getNote();
+                    } else if (modifier == 'b' && whichNote == 6) {
+                        //Makes the final note match the first note
+                        currentNote = note.getEnharmonicWithLetter(startNote.toUpperCase().charAt(0));
+                    } else {
+                        currentNote = note.getDescendingEnharmonic();
+                    }
                 } else {
                     currentNote = note.getEnharmonicWithLetter(currentLetter);
                 }
@@ -301,6 +317,7 @@ public class Scale implements Command {
                     }
                 }
             }
+            whichNote++;
         }
         return scale;
     }

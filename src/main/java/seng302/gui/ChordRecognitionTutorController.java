@@ -56,12 +56,13 @@ public class ChordRecognitionTutorController extends TutorController {
         paneQuestions.setVisible(true);
         manager.resetEverything();
         manager.questions = selectedQuestions;
+        isCompMode = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode();
         qPanes = new ArrayList<>();
 
         questionRows.getChildren().clear();
         for (int i = 0; i < manager.questions; i++) {
             HBox questionRow = setUpQuestion();
-            TitledPane qPane = new TitledPane("Question " + (i + 1), questionRow);
+            TitledPane qPane = new TitledPane((i + 1) + ". What type of chord is this?", questionRow);
             qPane.setPadding(new Insets(2, 2, 2, 2));
             qPanes.add(qPane);
             questionRows.setMargin(questionRow, new Insets(10, 10, 10, 10));
@@ -81,11 +82,23 @@ public class ChordRecognitionTutorController extends TutorController {
         initialiseQuestionSelector();
         rand = new Random();
         playChords.getItems().addAll("Unison", "Arpeggio", "Both");
-        playChords.getSelectionModel().selectFirst();
         octaves.getItems().addAll(1, 2, 3, 4);
-        octaves.getSelectionModel().selectFirst();
         chordTypeBox.getItems().addAll("3 Notes", "4 Notes", "Both");
-        chordTypeBox.getSelectionModel().selectFirst();
+
+        if (currentProject.getIsCompetitiveMode()) {
+            playChords.setValue("Both");
+            playChords.setDisable(true);
+            octaves.setValue(1);
+            octaves.setDisable(true);
+            chordTypeBox.setValue("Both");
+            chordTypeBox.setDisable(true);
+
+        }else{
+
+            playChords.getSelectionModel().selectFirst();
+            octaves.getSelectionModel().selectFirst();
+            chordTypeBox.getSelectionModel().selectFirst();
+        }
     }
 
     /**
@@ -194,7 +207,9 @@ public class ChordRecognitionTutorController extends TutorController {
 
         skip.setOnAction(event -> {
             // Disables only input buttons
+
             disableButtons(questionRow, 1, 3);
+
             formatSkippedQuestion(questionRow);
             manager.add(noteAndChordType, 2);
             String[] question = new String[]{
@@ -209,8 +224,13 @@ public class ChordRecognitionTutorController extends TutorController {
             }
         });
 
+
         questionRow.getChildren().add(0, play);
         questionRow.getChildren().add(1, options);
+        if (isCompMode) {
+            skip.setVisible(false);
+            skip.setManaged(false);
+        }
         questionRow.getChildren().add(2, skip);
         questionRow.getChildren().add(3, correctAnswer);
 

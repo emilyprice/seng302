@@ -6,11 +6,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import seng302.Environment;
 import seng302.managers.TranscriptManager;
 import seng302.utility.musicNotation.RhythmHandler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -48,7 +50,7 @@ public class RhythmTest {
         verify(transcriptManager).setResult("Rhythm set to medium swing timing (2/3 1/3).");
 
         new Rhythm("heavy", false).execute(env);
-        verify(transcriptManager).setResult("Rhythm set to heavy swing timing (3/2 1/4).");
+        verify(transcriptManager).setResult("Rhythm set to heavy swing timing (3/4 1/4).");
 
         new Rhythm("light", false).execute(env);
         verify(transcriptManager).setResult("Rhythm set to light swing timing (5/8 3/8).");

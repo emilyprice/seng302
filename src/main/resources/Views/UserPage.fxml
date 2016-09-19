@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import com.jfoenix.controls.JFXBadge?>
 <?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
@@ -15,7 +9,9 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -24,76 +20,109 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import java.lang.String?>
 
 <AnchorPane id="userPage" fx:id="userPage" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserPageController">
-   <children>
-      <SplitPane id="userSplitPane" fx:id="userView" dividerPositions="0.19598765432098766" layoutX="10.0" prefHeight="430.0" prefWidth="650.0" style="-fx-padding: 0; -fx-border-style: none;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <items>
-            <VBox id="userSideBar" maxWidth="-Infinity" prefHeight="200.0" prefWidth="60.0" style="-fx-border-color: pink; -fx-border-width: 0; -fx-padding: 0; border-style: none;">
-               <children>
-                  <VBox fx:id="profilepic" alignment="CENTER" maxHeight="-Infinity" minWidth="-Infinity" prefHeight="188.0" prefWidth="200.0" style="-fx-border-color: green; -fx-border-width: 0;">
-                     <children>
-                        <StackPane prefHeight="150.0" prefWidth="200.0">
-                           <children>
-      
-                                                       <JFXBadge fx:id="levelBadge" maxWidth="100" position="TOP_RIGHT" styleClass="icons-badge-large" text="1">
-                                        <control>
-                                            <ImageView fx:id="imageDP2" fitHeight="100.0" fitWidth="100.0">
-                                               <image>
-                                                  <Image url="images/testDP.jpg" />
-                                               </image>
-                                            </ImageView>
-            
-                                                          </control>
-            
-                                                       </JFXBadge>
-                              <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0">
-                                 <children>
-                                    <JFXButton fx:id="btnSettings" buttonType="RAISED" ellipsisString="" graphicTextGap="0.0" onMouseClicked="#openSettings" prefHeight="29.0" prefWidth="35.0" style="-fx-background-color: white; -fx-padding: 0; -fx-border-radius: 35; -fx-background-radius: 20;">
-                                       <graphic>
-                                          <ImageView fitHeight="36.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" styleClass="settingsGear">
-                                             <image>
-                                                <Image url="@../images/settings_gear.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                       <HBox.margin>
-                                          <Insets bottom="5.0" right="20.0" />
-                                       </HBox.margin>
-                                    </JFXButton>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </StackPane>
-                        <Label fx:id="txtFullName" styleClass="primaryText" />
+    <children>
+        <SplitPane id="userSplitPane" fx:id="userView" dividerPositions="0.19598765432098766"
+                   layoutX="10.0" prefHeight="430.0" prefWidth="650.0"
+                   style="-fx-padding: 0; -fx-border-style: none;" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                   AnchorPane.topAnchor="0.0">
+            <items>
+                <VBox id="userSideBar" maxWidth="-Infinity" prefHeight="200.0" prefWidth="60.0"
+                      style="-fx-border-color: pink; -fx-border-width: 0; -fx-padding: 0; border-style: none;">
+                    <children>
+                        <VBox fx:id="profilepic" alignment="CENTER" maxHeight="-Infinity"
+                              minWidth="-Infinity" prefHeight="188.0" prefWidth="200.0"
+                              style="-fx-border-color: green; -fx-border-width: 0;">
+                            <children>
+                                <StackPane prefHeight="150.0" prefWidth="200.0">
+                                    <children>
 
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" top="5.0" />
-                     </padding>
-                  </VBox>
-                  <JFXListView fx:id="listView" maxHeight="1.7976931348623157E308" prefHeight="1000.0" style="-fx-border-width: 0;" styleClass="listView" />
-                   <Label text="Time Range:">
-                       <VBox.margin>
-                           <Insets left="10.0" />
-                       </VBox.margin>
-                   </Label>
-                   <Slider fx:id="timeSlider" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="5.0" />
-               </children>
-               <styleClass>
-                  <String fx:value="userPagePrimary" />
-                  <String fx:value="sideMenu" />
-               </styleClass>
-            </VBox>
-             <AnchorPane>
-               <children>
-                   <ScrollPane fx:id="currentPage" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                  </ScrollPane>
-               </children>
-            </AnchorPane>
-         </items>
-      </SplitPane>
-   </children>
+                                        <JFXBadge fx:id="levelBadge" maxWidth="100"
+                                                  position="TOP_RIGHT"
+                                                  styleClass="icons-badge-large" text="1">
+                                            <control>
+                                                <ImageView fx:id="imageDP2" fitHeight="100.0"
+                                                           fitWidth="100.0">
+                                                    <image>
+                                                        <Image url="images/testDP.jpg"/>
+                                                    </image>
+                                                </ImageView>
+
+                                            </control>
+
+                                        </JFXBadge>
+                                        <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0"
+                                              prefWidth="200.0">
+                                            <children>
+                                                <JFXButton fx:id="btnSettings" buttonType="RAISED"
+                                                           ellipsisString="" graphicTextGap="0.0"
+                                                           onMouseClicked="#openSettings"
+                                                           prefHeight="29.0" prefWidth="35.0"
+                                                           style="-fx-background-color: white; -fx-padding: 0; -fx-border-radius: 35; -fx-background-radius: 20;">
+                                                    <graphic>
+                                                        <ImageView fitHeight="36.0" fitWidth="35.0"
+                                                                   pickOnBounds="true"
+                                                                   preserveRatio="true"
+                                                                   styleClass="settingsGear">
+                                                            <image>
+                                                                <Image url="@../images/settings_gear.png"/>
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+                                                    <HBox.margin>
+                                                        <Insets bottom="5.0" right="20.0"/>
+                                                    </HBox.margin>
+                                                </JFXButton>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </StackPane>
+                                <Label fx:id="txtFullName" styleClass="primaryText"/>
+
+                            </children>
+                            <padding>
+                                <Insets bottom="5.0" top="5.0"/>
+                            </padding>
+                        </VBox>
+                        <JFXListView fx:id="listView" maxHeight="1.7976931348623157E308"
+                                     prefHeight="455.0" style="-fx-border-width: 0;"
+                                     styleClass="listView"/>
+                        <Label text="Time Range:" styleClass="primaryText">
+                            <VBox.margin>
+                                <Insets bottom="10.0" left="10.0" top="10.0"/>
+                            </VBox.margin>
+                        </Label>
+                        <Slider fx:id="timeSlider" minHeight="100" blockIncrement="1.0"
+                                majorTickUnit="1.0" max="5.0" minorTickCount="0"
+                                orientation="VERTICAL" showTickLabels="true" showTickMarks="true"
+                                snapToTicks="true" value="5.0" VBox.vgrow="ALWAYS"
+                                styleClass="timeSlider">
+                            <VBox.margin>
+                                <Insets bottom="10.0"/>
+                            </VBox.margin>
+                        </Slider>
+                    </children>
+                    <styleClass>
+                        <String fx:value="userPagePrimary"/>
+                        <String fx:value="sideMenu"/>
+                    </styleClass>
+                </VBox>
+                <AnchorPane>
+                    <children>
+                        <ScrollPane fx:id="currentPage" fitToHeight="true" fitToWidth="true"
+                                    hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0"
+                                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                    AnchorPane.topAnchor="0.0">
+                        </ScrollPane>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
 </AnchorPane>

@@ -20,6 +20,7 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ContextMenu;
 
 import javafx.geometry.*;
 import javafx.geometry.Insets;
@@ -32,6 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ProgressBar;
@@ -42,9 +44,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import javafx.scene.layout.HBox;
@@ -60,6 +64,12 @@ import seng302.managers.BadgeManager;
  * Handles and Creates Users.
  */
 public class UserPageController {
+
+    @FXML
+    AnchorPane contentPane;
+
+    @FXML
+    VBox summaryPage;
 
     @FXML
     SplitPane userView;
@@ -80,6 +90,12 @@ public class UserPageController {
     JFXBadge levelBadge;
     
     @FXML
+    Label latestAttempt;
+
+    @FXML
+    StackPane stageMap;
+
+    @FXML
     ScrollPane currentPage;
 
     @FXML
@@ -88,6 +104,15 @@ public class UserPageController {
     StringConverter convert;
 
     private TutorStatsController statsController;
+
+    @FXML
+    VBox tutors;
+
+    @FXML
+    private ScrollPane scrollPane;
+
+    @FXML
+    AnchorPane summary;
 
     private Environment env;
 
@@ -146,6 +171,7 @@ public class UserPageController {
         options.add("Key Signature Tutor");
         options.add("Diatonic Chord Tutor");
         options.add("Scale Modes Tutor");
+        options.add("Scale Spelling Tutor");
 
         Image lockImg = new Image(getClass().getResourceAsStream("/images/lock.png"), 20, 20, false, false);
 
@@ -280,13 +306,13 @@ public class UserPageController {
 
         MenuItem menuItemLogout = new MenuItem("Logout");
 
-        menuItemLogout.setOnAction(k -> env.getRootController().logOutUser());
+        menuItemLogout.setOnAction(k -> env.getRootController().showCloseWindow("logout"));
 
         menuItemSettings.setOnAction(e2 -> env.getRootController().launchSettings());
         ContextMenu settingsDropDown = new ContextMenu();
         settingsDropDown.getItems().addAll(menuItemSettings,menuItemLogout);
 
-        settingsDropDown.setStyle("-fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;");
+        settingsDropDown.setId("flatDropDown");
 
         btnSettings.setContextMenu(settingsDropDown);
 
@@ -315,6 +341,7 @@ public class UserPageController {
 
             UserSummaryController summaryController = summaryLoader.getController();
             summaryController.create(env);
+            summaryController.loadStageMap();
 
 
         } catch (IOException e) {

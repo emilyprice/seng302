@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import com.jfoenix.controls.JFXButton?>
-<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.BaseSettingsController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="seng302.gui.BaseSettingsController">
     <children>
-        <SplitPane dividerPositions="0.23745819397993312" layoutX="6.0" layoutY="8.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <SplitPane dividerPositions="0.23745819397993312" layoutX="6.0" layoutY="8.0"
+                   maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                   prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                   AnchorPane.topAnchor="0.0">
             <items>
-                <AnchorPane fx:id="settingsMenu" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="398.0" prefWidth="250.0" styleClass="sideMenu">
+                <AnchorPane fx:id="settingsMenu" maxHeight="1.7976931348623157E308"
+                            maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity"
+                            prefHeight="398.0" prefWidth="172.0" styleClass="sideMenu">
                     <children>
-                  <JFXListView fx:id="settingsOptions" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="349.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <JFXListView fx:id="settingsOptions" maxWidth="-Infinity"
+                                     minHeight="-Infinity" minWidth="-Infinity" prefHeight="349.0"
+                                     prefWidth="172.0" AnchorPane.bottomAnchor="0.0"
+                                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                     AnchorPane.topAnchor="0.0" styleClass="listView"/>
                     </children>
                 </AnchorPane>
-                <AnchorPane fx:id="settingsPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="387.0" styleClass="secondary" />
+                <AnchorPane fx:id="settingsPane" maxHeight="1.7976931348623157E308"
+                            maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
+                            prefHeight="398.0" prefWidth="387.0"/>
             </items>
         </SplitPane>
     </children>

@@ -1,11 +1,10 @@
 package seng302.gui;
 
-import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,16 +25,13 @@ public class BaseSettingsController {
     @FXML
     private UISkinnerController themeC;
 
-    private FXMLLoader userSettingsLoader, themeLoader;
+    private ProjectSettingsController projectSettingsController;
+
+    private FXMLLoader userSettingsLoader, themeLoader, projectSettingsLoader;
 
 
     @FXML
     private AnchorPane settingsPane;
-
-    @FXML
-    private JFXButton btnUserSettings;
-    @FXML
-    private JFXButton btnThemeSettings;
 
     @FXML
     JFXListView settingsOptions;
@@ -56,7 +52,9 @@ public class BaseSettingsController {
     }
 
     /**
-     * Used sort of as a constructor to pass through all necessary data to be used by the baseSettings.
+     * Used sort of as a constructor to pass through all necessary data to be used by the
+     * baseSettings.
+     *
      * @param env Program environment.
      */
     public void create(Environment env) {
@@ -65,17 +63,17 @@ public class BaseSettingsController {
         openUserSettings();
 
 
-
     }
 
     /**
      * Populates the side menu with settings options.
      */
-    private void populateListView(){
+    private void populateListView() {
 
         ArrayList<String> options = new ArrayList<>();
         options.add("User Settings");
         options.add("Theme Settings");
+        options.add("Project Settings");
 
         settingsOptions.getItems().addAll(FXCollections.observableArrayList(options));
 
@@ -94,11 +92,12 @@ public class BaseSettingsController {
 
     /**
      * Launches the settings page
-     * @param settings settigns identifier (User Settings/Theme Settings)
+     *
+     * @param settings settings identifier (User Settings/Theme Settings)
      */
-    private void launchSettings(String settings){
+    private void launchSettings(String settings) {
 
-        switch(settings){
+        switch (settings) {
             case "User Settings":
                 openUserSettings();
                 break;
@@ -108,6 +107,9 @@ public class BaseSettingsController {
                 break;
 
 
+            case "Project Settings":
+                openProjectSettings();
+                break;
         }
 
     }
@@ -134,6 +136,28 @@ public class BaseSettingsController {
 
         }
 
+
+    }
+
+    /**
+     * Displays the project settings view where the user will be able to change their instrument,
+     * tempo, rhythm, and mode.
+     */
+    private void openProjectSettings() {
+        try {
+            projectSettingsLoader = new FXMLLoader();
+            projectSettingsLoader.setLocation(getClass().getResource("/Views/ProjectSettings.fxml"));
+            Node loadedPane = (Node) projectSettingsLoader.load();
+            settingsPane.getChildren().setAll(loadedPane);
+            this.setAnchors(loadedPane);
+            projectSettingsController = projectSettingsLoader.getController();
+            projectSettingsController.create(env);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
 
     }
 
@@ -169,20 +193,6 @@ public class BaseSettingsController {
             e.printStackTrace();
         }
     }
-
-    /**
-     *  Loads the project settings view and opens it inside the settings pane.
-     *
-     */
-//    @FXML
-//    void openProjectSettings() {
-//
-//
-//        btnProjectSettings.setStyle(String.format("-fx-background-color: %s", env.getThemeHandler().getPrimaryColour()));
-//        // btnProjectSettings.setStyle("-fx-background-color: #223768");
-//        btnThemeSettings.setStyle("");
-//        btnUserSettings.setStyle("");
-//    }
 
 
 }
