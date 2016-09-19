@@ -28,12 +28,6 @@ import seng302.Environment;
  */
 public class UserRegisterController {
 
-    @FXML
-    HBox recentUsersHbox;
-
-    @FXML
-    TextField usernameInput;
-
 
     @FXML
     private JFXTextField txtUsername;
@@ -121,15 +115,15 @@ public class UserRegisterController {
      * Validates credentials (input lengths + validity.
      * @return True if username/passwords are valid, false otherwise
      */
-    private Boolean validCredentials() {
+    private Boolean validCredentials(DataSnapshot dss) {
 
         Boolean valid = true;
         //Validating username
         if (txtUsername.getText().length() > 0) {
-            if (env.getUserHandler().getUserNames().contains(txtUsername.getText())) {
+            if (dss.child("users/" + txtUsername.getText()).exists()) {
                 //If the User already exists!
                 lblValidator.setText("User already exists!");
-                valid = !checkUserNameExists();
+                //valid = !checkUserNameExists();
             }
         } else { //username needs to be atleast 1 character.
 
@@ -183,24 +177,28 @@ public class UserRegisterController {
     @FXML
     protected void register() {
 
-//        DatabaseReference users = env.getFirebase().child("users/"+usernameInput.getText());
-//
-//
-//
-//        users.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Platform.runLater(() -> authenticate(dataSnapshot));
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//
-//        });
+        DatabaseReference users = env.getFirebase().child("users/"+txtUsername.getText());
 
-        if (validCredentials()) {
+
+
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Platform.runLater(() -> validateCredentials(dataSnapshot));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+
+    }
+
+    private void validateCredentials(DataSnapshot dataSnapShot){
+        if (validCredentials(dataSnapShot)) {
             env.getThemeHandler().setDefaultTheme();
             env.getUserHandler().createUser(txtUsername.getText(), txtPassword.getText());
 
