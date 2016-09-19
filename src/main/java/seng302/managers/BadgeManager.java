@@ -14,6 +14,7 @@ public class BadgeManager {
     private static HashMap<String, ArrayList<Badge>> tutorBadgeMap;
     private static HashMap<String, Boolean> tutor100AllMap;
     static private ArrayList<String> allTutors = new ArrayList<>();
+    private static HashMap<String, String> tutorImages;
     private Environment env;
 
     private Set<Integer> instrumentsPlayed;
@@ -25,6 +26,7 @@ public class BadgeManager {
         instrumentsPlayed = new HashSet<>();
         populateTutorList();
         populate100AllTutorMap();
+        populateImageMap();
         initalizeAllBadges();
     }
 
@@ -49,6 +51,18 @@ public class BadgeManager {
         allTutors.add("Scale Modes Tutor");
     }
 
+    private void populateImageMap() {
+        tutorImages = new HashMap<>();
+        tutorImages.put("Pitch Comparison Tutor", "tuning-fork");
+        tutorImages.put("Interval Recognition Tutor", "rest-note");
+        tutorImages.put("Musical Terms Tutor", "open-book");
+        tutorImages.put("Scale Recognition Tutor", "scale");
+        tutorImages.put("Chord Recognition Tutor", "chord");
+        tutorImages.put("Chord Spelling Tutor", "chord-spelling");
+        tutorImages.put("Diatonic Chord Tutor", "sound-wave");
+        tutorImages.put("Key Signature Tutor", "key-sig");
+        tutorImages.put("Scale Modes Tutor", "sound-level");
+    }
 
     private void populate100AllTutorMap(){
         tutor100AllMap = new HashMap<>();
@@ -81,9 +95,9 @@ public class BadgeManager {
         //intalize tutor badges
         for (String tutor:allTutors){
             ArrayList<Badge> badges = new ArrayList<>();
-            badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, "tuning-fork"));
-            badges.add(new Badge("Completed Sessions", tutor, "Number of tutor sessions completed", sessionBadges, 0, 0, "tuning-fork"));
-            badges.add(new Badge("100% Sessions", tutor, "Number of 100% tutor sessions", sessionBadges, 0, 0, "tuning-fork"));
+            badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 1, tutorImages.get(tutor)));
+            badges.add(new Badge("Completed Sessions", tutor, "Number of tutor sessions completed", sessionBadges, 0, 0, tutorImages.get(tutor)));
+            badges.add(new Badge("100% Sessions", tutor, "Number of 100% tutor sessions", sessionBadges, 0, 0, tutorImages.get(tutor)));
 
             if( tutor.equals("Musical Terms Tutor")){
                 badges.add(new Badge("terms added", tutor, "Number of musical terms added", sessionBadges, 0, 0, "open-book"));
@@ -96,7 +110,7 @@ public class BadgeManager {
         overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", null, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Musician", null, "Number of instruments used", sessionBadges, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Eggs in baskets", null, "Create three projects", null, 0, 0, "gradHat"));
-        overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "speedster"));
         overallBadges.add(new Badge("TwinkleTwinkle", null, "Find hidden secret", null, 0, 0, "twinkle"));
 
         replaceBadges(tutorBadgeMap, overallBadges);
@@ -151,6 +165,12 @@ public class BadgeManager {
     public static HashMap getTutorBadges(){
         return tutorBadgeMap;
     }
+
+//    public ArrayList<Badge> getSpecificTutorBadges(String tutor) {
+//        Object tutorBadges = getTutorBadges().get(tutor);
+//        System.out.println(tutorBadges);
+//        return (ArrayList<Badge>) tutorBadges;
+//    }
 
     public static HashMap get100TutorBadges(){
         return tutor100AllMap;

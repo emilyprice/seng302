@@ -158,7 +158,7 @@
         </LineChart>
         <Label fx:id="badgesLabel" prefHeight="15.0" prefWidth="86.0" text="Achievements"
                textAlignment="CENTER"/>
-        <GridPane fx:id="badgeGrid" hgap="10" vgap="20">
+        <GridPane fx:id="badgeGrid" hgap="10" vgap="20" alignment="CENTER">
             <padding>
                 <Insets top="5" right="20" bottom="5" left="20" />
             </padding>
