@@ -185,7 +185,7 @@ public class UserPageController {
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
                         if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
                             setGraphic(new ImageView(lockImg));
-                            setTextFill(Color.RED);
+                            setTextFill(Color.GRAY);
                             setText(tutor);
                             setDisable(true);
                         }
