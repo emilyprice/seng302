@@ -250,9 +250,13 @@ public class Project {
 
         //Add all settings such as tempo speed to the project here.
 
-        DatabaseReference projectfirebase = env.getFirebase().child("classrooms/"+env.getUserHandler().getClassRoom()+"/users/" +
-                env.getUserHandler().getCurrentUser().getUserName() +"/projects/" + projectName);
 
+        //System.out.println("username in projects: " + env.getUserHandler().getCurrentUser());
+//        DatabaseReference projectfirebase = env.getFirebase().child("classrooms/"+env.getUserHandler().getClassRoom()+"/users/" +
+//                env.getUserHandler().getCurrentUser().getUserName() +"/projects/" + projectName);
+
+
+        DatabaseReference projectfirebase = env.getFirebase().child(projectAddress);
         projectfirebase.setValue(projectSettings);
 
         try {

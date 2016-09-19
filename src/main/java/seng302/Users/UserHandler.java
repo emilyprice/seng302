@@ -35,7 +35,7 @@ public class UserHandler {
     JSONObject UsersInfo = new JSONObject();
     JSONArray recentUsers = new JSONArray();
 
-    final Path userDirectory = Paths.get("UserData"); //Default user path for now, before user compatibility is set up.
+    final Path userDirectory = Paths.get("UserData/classrooms/group5/users/"); //Default user path for now, before user compatibility is set up.
 
 
 
@@ -216,7 +216,7 @@ public class UserHandler {
     }
 
     public Path getCurrentUserPath(){
-        return Paths.get("UserData/"+getCurrentUser().getUserName());
+        return Paths.get("UserData/classrooms/group5/users/"+getCurrentUser().getUserName());
     }
 
 
@@ -254,7 +254,7 @@ public class UserHandler {
         System.gc();
 
         //Step 4. Delete all user folders and files.
-        File userDir = Paths.get("UserData/" + username).toFile();
+        File userDir = Paths.get("UserData/classrooms/group5/users/" + username).toFile();
 
         if (userDir.isDirectory()) {
             Boolean res = FileHandler.deleteDirectory(userDir);

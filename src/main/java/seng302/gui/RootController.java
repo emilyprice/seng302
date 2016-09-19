@@ -645,7 +645,7 @@ public class RootController implements Initializable {
 
 
     public void checkProjectDirectory() {
-        Path path = Paths.get("UserData/Projects/");
+        Path path = Paths.get("UserData/classrooms/group5/users/" + env.getUserHandler().getCurrentUser().getUserName() + "/Projects/");
         if (!Files.isDirectory(path)) {
             try {
                 Files.createDirectories(path);
@@ -743,7 +743,8 @@ public class RootController implements Initializable {
 
                     if (f.getName().endsWith(".json") && f.getName().substring(0, f.getName().length() - 5).equals(folder.getName())) {
 
-                        if (!new File("userData/Projects/" + folder.getName()).isDirectory()) {
+                        if (!new File("userData/classrooms/group5/users/"+
+                                env.getUserHandler().getCurrentUser().getUserName()+"/Projects/" + folder.getName()).isDirectory()) {
 
                             try {
 

@@ -58,7 +58,7 @@ public class User {
      * @param password password to set for the corresponding user.
      */
     public User(String userName, String password, Environment env) {
-        userDirectory = Paths.get("UserData/" + userName);
+        userDirectory = Paths.get("UserData/classrooms/group5/users/" + userName);
         this.userName = userName;
         this.userPassword = password;
         this.env = env;
@@ -91,7 +91,7 @@ public class User {
      * @param user user name
      */
     public User(Environment env, String user) {
-        userDirectory = Paths.get("UserData/" + user);
+        userDirectory = Paths.get("UserData/classrooms/group5/users/" + user);
         this.env = env;
         this.userName = user;
         properties = new JSONObject();
@@ -183,7 +183,7 @@ public class User {
          *
          */
         Gson gson = new Gson();
-        Path userDirectory = Paths.get("UserData/" + userName); //Default user path for now, before user compatibility is set up.
+        Path userDirectory = Paths.get("UserData/classrooms/group5/users/" + userName); //Default user path for now, before user compatibility is set up.
         JSONParser parser = new JSONParser(); //parser for reading project
         try {
             properties = (JSONObject) parser.parse(new FileReader(userDirectory + "/user_properties.json"));

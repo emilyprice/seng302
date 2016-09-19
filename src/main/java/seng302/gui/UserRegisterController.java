@@ -65,6 +65,9 @@ public class UserRegisterController {
 
     public void setEnv(Environment env) {
         this.env = env;
+        //TODO Make a more permenant solution for 'classrooms'
+
+        env.getUserHandler().setClassRoom("group5");
     }
 
 
@@ -120,7 +123,7 @@ public class UserRegisterController {
         Boolean valid = true;
         //Validating username
         if (txtUsername.getText().length() > 0) {
-            if (dss.child("users/" + txtUsername.getText()).exists()) {
+            if (dss.child("classrooms/" + env.getUserHandler().getClassRoom()  + "/users/" + txtUsername.getText()).exists()) {
                 //If the User already exists!
                 lblValidator.setText("User already exists!");
                 //valid = !checkUserNameExists();
@@ -177,7 +180,7 @@ public class UserRegisterController {
     @FXML
     protected void register() {
 
-        DatabaseReference users = env.getFirebase().child("classrooms/"+ "group5" + " users/"+txtUsername.getText());
+        DatabaseReference users = env.getFirebase().child("classrooms/"+ env.getUserHandler().getClassRoom()+ " users/"+txtUsername.getText());
 
 
 
@@ -201,11 +204,10 @@ public class UserRegisterController {
         if (validCredentials(dataSnapShot)) {
             env.getThemeHandler().setDefaultTheme();
             env.getUserHandler().createUser(txtUsername.getText(), txtPassword.getText());
+            System.out.println("current user set!!!");
 
             //Log in user.
             if (env.getUserHandler().userPassExists(txtUsername.getText(), txtPassword.getText())) {
-
-
                 env.getUserHandler().setCurrentUser(txtUsername.getText());
 
                 env.getUserHandler().getCurrentUser().setUserFirstName(txtfname.getText());
