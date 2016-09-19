@@ -181,16 +181,18 @@ public class UserPageController {
                     setGraphic(null);
 
                 } else {
+                    //if in competitive mode, lock the relevant tabs
+                    if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
+                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
+                            setGraphic(new ImageView(lockImg));
+                            setTextFill(Color.RED);
+                            setText(tutor);
+                            setDisable(true);
+                        }
 
-                    if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
 
-                        setGraphic(new ImageView(lockImg));
-                        setTextFill(Color.RED);
-                        setText(tutor);
-
-                        setDisable(true);
-//                        setMouseTransparent(true);
-
+                    } else {
+                        setDisable(false);
                     }
                 }
 

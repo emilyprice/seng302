@@ -210,17 +210,26 @@ public class StageMapController {
 //        Image padlock = new Image(getClass().getResourceAsStream
 //                ("/images/lock.png"), 10, 10, true, true);
 
+        //If in competitive mode, relevant stages should be locked
+        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
+            for (String tutor: unlockStatus.keySet()) {
+                tutorAndButton.get(tutor).setDisable(false);
+                if (unlockStatus.get(tutor) == false) {
+                    tutorAndButton.get(tutor).setDisable(true);
 
-        for (String tutor: unlockStatus.keySet()) {
-            tutorAndButton.get(tutor).setDisable(false);
-            if (unlockStatus.get(tutor) == false) {
-                tutorAndButton.get(tutor).setDisable(true);
-                //tutorAndButton.get(tutor).setGraphic(new ImageView(padlock));
-//            } else {
-//                unlockStatus.get(tutor).put(true);
+                }
             }
+        //else if in practice mode, all of the levels should be unlocked
+        } else {
+            for (String tutor: unlockStatus.keySet()) {
+                tutorAndButton.get(tutor).setDisable(false);
+            }
+
         }
+
     }
+
+
 
     /**
      * Fetches 3 most recent tutor score files for tutor of interest and checks scores
