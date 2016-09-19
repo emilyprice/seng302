@@ -1,8 +1,13 @@
 package seng302.data;
 
+import org.controlsfx.control.Notifications;
+
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jmw280 on 24/08/16.
@@ -36,7 +41,6 @@ public class Badge {
     }
 
     public void updateBadgeProgress(double progress){
-        System.out.println("Updating progress: "+progress+" Current goal: "+badgeLevels.get(currentBadgeType));
         badgeProgress += progress;
         if(badgeLevels == null){
             updateImage();
@@ -46,9 +50,20 @@ public class Badge {
 
         if(badgeProgress >= badgeLevels.get(currentBadgeType)){
             currentBadgeType += 1;
-            System.out.println("Upgrading "+name+": "+currentBadgeType);
-//            badgeProgress = 0;
-//            updateImage();
+            Image unlock = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
+            List<String> badgeTypes = new ArrayList<>();
+            badgeTypes.add("Locked");
+            badgeTypes.add("Bronze");
+            badgeTypes.add("Silver");
+            badgeTypes.add("Gold");
+            badgeTypes.add("Platinum");
+
+            Notifications.create()
+                    .title("New Badge")
+                    .text("Well done! \nYou have unlocked " + tutorName + ": " + name + " (" + badgeTypes.get(currentBadgeType) + ")")
+                    .hideAfter(new Duration(10000))
+                    .graphic(new ImageView(unlock))
+                    .show();
         }
     }
 

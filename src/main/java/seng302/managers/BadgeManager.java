@@ -1,8 +1,16 @@
 package seng302.managers;
 
+import org.controlsfx.control.Notifications;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 import seng302.Environment;
 import seng302.data.Badge;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -95,7 +103,7 @@ public class BadgeManager {
         //intalize tutor badges
         for (String tutor:allTutors){
             ArrayList<Badge> badges = new ArrayList<>();
-            badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 1, tutorImages.get(tutor)));
+            badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, tutorImages.get(tutor)));
             badges.add(new Badge("Completed Sessions", tutor, "Number of tutor sessions completed", sessionBadges, 0, 0, tutorImages.get(tutor)));
             badges.add(new Badge("100% Sessions", tutor, "Number of 100% tutor sessions", sessionBadges, 0, 0, tutorImages.get(tutor)));
 
@@ -166,28 +174,45 @@ public class BadgeManager {
         return tutorBadgeMap;
     }
 
-//    public ArrayList<Badge> getSpecificTutorBadges(String tutor) {
-//        Object tutorBadges = getTutorBadges().get(tutor);
-//        System.out.println(tutorBadges);
-//        return (ArrayList<Badge>) tutorBadges;
-//    }
-
     public static HashMap get100TutorBadges(){
         return tutor100AllMap;
     }
 
     public void unlockBadge(String badgeName) {
+//        env.getRootController().getStage().getScene().setRoot(FXMLLoader.load());
         overallBadges.stream().filter(b -> b.name.equals(badgeName)).forEach(b -> {
-            System.out.println("Unlocked badge woohoo");
             b.currentBadgeType = 1;
             b.badgeProgress = 1;
             updateOverallBadges();
+            notification(badgeName, b.currentBadgeType, b.tutorName);
         });
+        reloadPage();
+    }
+
+    private void notification(String badgeName, int currentBadgeType, String tutorName) {
+        Image unlock = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
+        Notifications.create()
+                .title("Achievement Unlocked")
+                .text("Well done! \nYou have unlocked " + badgeName)
+                .hideAfter(new Duration(10000))
+                .graphic(new ImageView(unlock))
+                .show();
+    }
+
+    private void reloadPage() {
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/newGui.fxml"));
+//        Parent root = null;
+//        try {
+//            root = fxmlLoader.load();
+//        } catch (IOException e) {
+//            System.out.println("Failed to reload page");
+//            e.printStackTrace();
+//        }
+//        env.getRootController().getStage().getScene().
     }
 
     public void updateTutorBadges(String tutorName, int correct, int answered) {
         ArrayList badges = tutorBadgeMap.get(tutorName);
-//        double progress = ((double)correct / (double) answered);
         for (Object badg : badges) {
             Badge b = (Badge) badg;
             if (b.name.equals("Correct Questions")) {
