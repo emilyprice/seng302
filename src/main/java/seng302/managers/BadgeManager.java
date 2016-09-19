@@ -67,12 +67,12 @@ public class BadgeManager {
         ArrayList<Integer> sessionBadges = new ArrayList<>();
 //        sessionBadges.add(0);
         sessionBadges.add(1);
-        sessionBadges.add(8);
+        sessionBadges.add(10);
         sessionBadges.add(25);
         sessionBadges.add(100);
 
         ArrayList<Integer> questionBadges = new ArrayList<>();
-//        questionBadges.add(0);
+        questionBadges.add(1);
         questionBadges.add(10);
         questionBadges.add(50);
         questionBadges.add(120);
@@ -81,12 +81,12 @@ public class BadgeManager {
         //intalize tutor badges
         for (String tutor:allTutors){
             ArrayList<Badge> badges = new ArrayList<>();
-            badges.add(new Badge("Correct Questions", tutor, "number of questions correctly answered", questionBadges, 0, 0, "tuning-fork"));
-            badges.add(new Badge("Completed Sessions", tutor, "number of tutor sessions completed", sessionBadges, 0, 0, "tuning-fork"));
-            badges.add(new Badge("100% Sessions", tutor, "number of 100% tutor sessions", sessionBadges, 0, 0, "tuning-fork"));
+            badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, "tuning-fork"));
+            badges.add(new Badge("Completed Sessions", tutor, "Number of tutor sessions completed", sessionBadges, 0, 0, "tuning-fork"));
+            badges.add(new Badge("100% Sessions", tutor, "Number of 100% tutor sessions", sessionBadges, 0, 0, "tuning-fork"));
 
             if( tutor.equals("Musical Terms Tutor")){
-                badges.add(new Badge("terms added", tutor, "number of musical terms added", sessionBadges, 0, 0, "open-book"));
+                badges.add(new Badge("terms added", tutor, "Number of musical terms added", sessionBadges, 0, 0, "open-book"));
             }
             tutorBadgeMap.put(tutor, badges);
         }

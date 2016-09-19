@@ -45,9 +45,9 @@ public class Badge {
         }
 
         if(badgeProgress >= badgeLevels.get(currentBadgeType)){
-            System.out.println("Upgrading");
             currentBadgeType += 1;
-            badgeProgress = 0;
+            System.out.println("Upgrading "+name+": "+currentBadgeType);
+//            badgeProgress = 0;
 //            updateImage();
         }
     }

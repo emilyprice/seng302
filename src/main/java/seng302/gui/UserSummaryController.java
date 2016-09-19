@@ -232,7 +232,7 @@ public class UserSummaryController {
         Label tutorName = new Label(b.tutorName);
         Label description = new Label(b.description);
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress);
+        progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
         badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
