@@ -167,6 +167,9 @@ public abstract class TutorController {
             int expGained = ExperienceCalculator.calculateExperience(manager.correct, manager.questions);
             env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(expGained);
             env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().updateTutorBadges(tutorName, manager.correct, manager.answered);
+            if (manager.correct == manager.questions) {
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().updateTutorMaster(tutorName);
+            }
         }
 
         userScore = getScore(manager.correct, manager.answered);

@@ -159,6 +159,7 @@ public class MusicalTerm implements Command {
             if (env.getUserHandler().getCurrentUser() != null)
                 env.getUserHandler().getCurrentUser().checkMusicTerms();
             env.getEditManager().addToHistory("1", rawInput);
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Articulate", "Musical Terms Tutor").updateBadgeProgress(1);
         }
         env.getTranscriptManager().setResult(result);
     }

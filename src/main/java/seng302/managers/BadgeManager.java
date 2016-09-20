@@ -23,6 +23,7 @@ public class BadgeManager {
     private static HashMap<String, Boolean> tutor100AllMap;
     static private ArrayList<String> allTutors = new ArrayList<>();
     private static HashMap<String, String> tutorImages;
+    private static HashMap<String, Boolean> masterTutors;
     private Environment env;
 
     private Set<Integer> instrumentsPlayed;
@@ -36,6 +37,7 @@ public class BadgeManager {
         populate100AllTutorMap();
         populateImageMap();
         initalizeAllBadges();
+        populateMasterMap();
     }
 
     public void replaceBadges(HashMap<String, ArrayList<Badge>> tutorBadgeMap, ArrayList<Badge> overallBadges){
@@ -72,6 +74,19 @@ public class BadgeManager {
         tutorImages.put("Scale Modes Tutor", "sound-level");
     }
 
+    private void populateMasterMap() {
+        masterTutors = new HashMap<>();
+        masterTutors.put("Pitch Comparison Tutor", false);
+        masterTutors.put("Interval Recognition Tutor", false);
+        masterTutors.put("Musical Terms Tutor", false);
+        masterTutors.put("Scale Recognition Tutor", false);
+        masterTutors.put("Chord Recognition Tutor", false);
+        masterTutors.put("Chord Spelling Tutor", false);
+        masterTutors.put("Diatonic Chord Tutor", false);
+        masterTutors.put("Key Signature Tutor", false);
+        masterTutors.put("Scale Modes Tutor", false);
+    }
+
     private void populate100AllTutorMap(){
         tutor100AllMap = new HashMap<>();
         for (String tutor : allTutors){
@@ -87,7 +102,6 @@ public class BadgeManager {
 
 
         ArrayList<Integer> sessionBadges = new ArrayList<>();
-//        sessionBadges.add(0);
         sessionBadges.add(1);
         sessionBadges.add(10);
         sessionBadges.add(25);
@@ -101,9 +115,7 @@ public class BadgeManager {
         questionBadges.add(600);
 
         ArrayList<Integer> achievementBadges = new ArrayList<>();
-        achievementBadges.add(1);
-        achievementBadges.add(3);
-        achievementBadges.add(9);
+        achievementBadges.add(10);
 
         //intalize tutor badges
         for (String tutor:allTutors){
@@ -113,14 +125,14 @@ public class BadgeManager {
             badges.add(new Badge("100% Sessions", tutor, "Number of 100% tutor sessions", sessionBadges, 0, 0, tutorImages.get(tutor)));
 
             if( tutor.equals("Musical Terms Tutor")){
-                badges.add(new Badge("terms added", tutor, "Number of musical terms added", sessionBadges, 0, 0, "open-book"));
+                badges.add(new Badge("Articulate", tutor, "Number of musical terms added", sessionBadges, 0, 0, "open-book"));
             }
             tutorBadgeMap.put(tutor, badges);
         }
 
         //initialise overall badges
         overallBadges.add(new Badge("Completist", null, "Unlock all tutors", null, 0, 0, "gradHat"));
-        overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", null, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", achievementBadges, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Musician", null, "Number of instruments used", sessionBadges, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Eggs in baskets", null, "Create three projects", null, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "speedster"));
@@ -229,4 +241,32 @@ public class BadgeManager {
             }
         }
     }
+
+    public void updateTutorMaster(String tutorName) {
+        if (masterTutors.get(tutorName) == false) {
+            masterTutors.put(tutorName, true);
+            overallBadges.get(1).updateBadgeProgress(1);
+        }
+    }
+
+    public Badge getBadge(String badgeName) {
+        for (Badge b : overallBadges) {
+            System.out.println(b.name);
+            if (b.name.equals(badgeName)) {
+                return b;
+            }
+        }
+        return null;
+    }
+
+    public Badge getBadge(String badgeName, String tutorName) {
+        for (Badge b : tutorBadgeMap.get(tutorName)) {
+            System.out.println(b.name);
+            if (b.name.equals(badgeName)) {
+                return b;
+            }
+        }
+        return null;
+    }
+
 }
