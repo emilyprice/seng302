@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.sound.midi.Instrument;
 
@@ -41,7 +42,7 @@ import seng302.utility.OutputTuple;
 
 public class Project {
 
-    JSONObject projectSettings;
+    HashMap<String, Object> projectSettings;
 
     JSONParser parser = new JSONParser(); //parser for reading project
 
@@ -75,7 +76,7 @@ public class Project {
         this.projectName = projectName;
         this.projectDirectory = Paths.get(projectH.projectsDirectory + "/" + projectName);
         this.env = env;
-        projectSettings = new JSONObject();
+        projectSettings = new HashMap<>();
         tutorHandler = new TutorHandler(env);
         projectHandler = projectH;
         isCompetitiveMode = true;
@@ -129,6 +130,11 @@ public class Project {
      * working transcript and rhythm setting.
      */
     private void loadProperties() {
+
+
+        DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/"+projectName);
+        projectSettings = (HashMap<String, Object>) projectSnapshot.getValue();
+
         int tempo;
         Gson gson = new Gson();
 
@@ -232,8 +238,8 @@ public class Project {
      * project dialog.
      */
     public void saveCurrentProject() {
-        if (currentProjectPath != null) {
-            saveProject(currentProjectPath);
+        if (projectName != null) {
+            saveProject(projectName);
         } else {
             projectHandler.createNewProject();
         }

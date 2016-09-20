@@ -159,6 +159,8 @@ public class User {
         } catch (NullPointerException e) {
             themeSecondary = "white";
         }
+        lastSignIn = new Date();
+
 
 
         projectHandler = new ProjectHandler(env, userName);
@@ -196,14 +198,6 @@ public class User {
         properties = (HashMap<String,String>) userSnapshot.child("properties").getValue();
         System.out.println(properties);
         Gson gson = new Gson();
-        Path userDirectory = Paths.get("UserData/classrooms/group5/users/" + userName); //Default user path for now, before user compatibility is set up.
-        JSONParser parser = new JSONParser(); //parser for reading project
-        try {
-            properties = (JSONObject) parser.parse(new FileReader(userDirectory + "/user_properties.json"));
-        } catch (Exception e) {
-
-        }
-
         try {
             Type dateType = new TypeToken<Date>() {
             }.getType();
@@ -225,6 +219,7 @@ public class User {
         } catch (NullPointerException e) {
             themePrimary = "white";
         }
+
 
 
     }
@@ -255,27 +250,9 @@ public class User {
      * Writes JSON properties to disc
      */
     public void saveProperties() {
-//        try {
-            updateProperties();
-             System.out.println(properties);
-            env.getFirebase().getUserRef().child("properties").updateChildren(properties);
-
-
-
-            //DatabaseReference user = env.getFirebase().getFirebase().child("users/" + userName);
-
-            //user.setValue(properties);
-
-//            FileWriter file = new FileWriter(userDirectory + "/user_properties.json");
-//            file.write(properties.toJSONString());
-//            file.flush();
-//            file.close();
-
-//
-//        } catch (IOException e) {
-//
-//            e.printStackTrace();
-//        }
+        updateProperties();
+        System.out.println(properties);
+        env.getFirebase().getUserRef().child("properties").updateChildren(properties);
 
     }
 
