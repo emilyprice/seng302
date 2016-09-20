@@ -309,7 +309,7 @@ public class UserSummaryController {
         badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
-//        System.out.println(b.name + ", " + badgeStack.getChildren());
+
         badgeGrid.add(badgeBox, gridX, gridY);
         if (gridX < 5) {
             gridX++;

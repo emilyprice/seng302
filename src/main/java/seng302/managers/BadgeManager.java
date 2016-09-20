@@ -134,7 +134,7 @@ public class BadgeManager {
         overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", tutorTotal, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Musician", null, "Number of instruments used", sessionBadges, 0, 0, "gradHat"));
-        overallBadges.add(new Badge("Eggs in baskets", null, "Create three projects", null, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Creative", null, "Change your theme", null, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "speedster"));
         overallBadges.add(new Badge("TwinkleTwinkle", null, "Find hidden secret", null, 0, 0, "twinkle"));
 
@@ -196,12 +196,13 @@ public class BadgeManager {
     }
 
     public void unlockBadge(String badgeName) {
-//        env.getRootController().getStage().getScene().setRoot(FXMLLoader.load());
         overallBadges.stream().filter(b -> b.name.equals(badgeName)).forEach(b -> {
-            b.currentBadgeType = 1;
-            b.badgeProgress = 1;
-            updateOverallBadges();
-            notification(badgeName, b.currentBadgeType, b.tutorName);
+            if (b.currentBadgeType == 0) {
+                b.currentBadgeType = 1;
+                b.badgeProgress = 1;
+                updateOverallBadges();
+                notification(badgeName, b.currentBadgeType, b.tutorName);
+            }
         });
         reloadPage();
     }
@@ -251,7 +252,6 @@ public class BadgeManager {
 
     public Badge getBadge(String badgeName) {
         for (Badge b : overallBadges) {
-            System.out.println(b.name);
             if (b.name.equals(badgeName)) {
                 return b;
             }
@@ -261,7 +261,6 @@ public class BadgeManager {
 
     public Badge getBadge(String badgeName, String tutorName) {
         for (Badge b : tutorBadgeMap.get(tutorName)) {
-            System.out.println(b.name);
             if (b.name.equals(badgeName)) {
                 return b;
             }
