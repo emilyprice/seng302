@@ -27,6 +27,8 @@ public class BaseSettingsController {
 
     private ProjectSettingsController projectSettingsController;
 
+    private TermsSettingsController termsSettingsController;
+
     private FXMLLoader userSettingsLoader, themeLoader, projectSettingsLoader;
 
 
@@ -74,6 +76,7 @@ public class BaseSettingsController {
         options.add("User Settings");
         options.add("Theme Settings");
         options.add("Project Settings");
+        options.add("Musical Term Settings");
 
         settingsOptions.getItems().addAll(FXCollections.observableArrayList(options));
 
@@ -109,6 +112,10 @@ public class BaseSettingsController {
 
             case "Project Settings":
                 openProjectSettings();
+                break;
+
+            case "Musical Term Settings":
+                openTermsSettings();
                 break;
         }
 
@@ -153,6 +160,23 @@ public class BaseSettingsController {
             projectSettingsController = projectSettingsLoader.getController();
             projectSettingsController.create(env);
 
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+    private void openTermsSettings() {
+        try {
+            FXMLLoader termsLoader = new FXMLLoader();
+            termsLoader.setLocation(getClass().getResource("/Views/TermsSettings.fxml"));
+            Node loadedPane = (Node) termsLoader.load();
+            settingsPane.getChildren().setAll(loadedPane);
+            this.setAnchors(loadedPane);
+            termsSettingsController = termsLoader.getController();
+            termsSettingsController.create(env);
 
         } catch (IOException e) {
             e.printStackTrace();
