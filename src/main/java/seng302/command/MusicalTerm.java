@@ -62,7 +62,7 @@ public class MusicalTerm implements Command {
      */
     public MusicalTerm(String termToLookUp, String infoToGet) {
         lookupTerm = true;
-        musicalTermName = termToLookUp.toLowerCase();
+        musicalTermName = termToLookUp;
         this.infoToGet = infoToGet.toLowerCase();
     }
 
@@ -70,7 +70,7 @@ public class MusicalTerm implements Command {
     private void addTermBool() {
         boolean resultSet = false;
         for (Term term : terms) {
-            if (term.getMusicalTermName().equals(this.term.getMusicalTermName())) {
+            if (term.getMusicalTermName().equalsIgnoreCase(this.term.getMusicalTermName())) {
                 validAdd = false;
                 this.result = "[ERROR] Term with the name of " + this.term.getMusicalTermName() + " has already been added";
                 resultSet = true;
@@ -108,7 +108,7 @@ public class MusicalTerm implements Command {
     private void lookupTerm() {
         boolean resultSet = false;
         for (Term term : this.terms) {
-            if (term.getMusicalTermName().equals(musicalTermName)) {
+            if (term.getMusicalTermName().equalsIgnoreCase(musicalTermName)) {
                 // Returns the correct information
                 if (infoToGet.equals("meaning")) {
                     this.result = term.getMusicalTermDefinition();
