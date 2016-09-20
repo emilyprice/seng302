@@ -164,7 +164,21 @@ public class UserHandler {
      * @return true/false depending on login result.
      */
     public boolean userPassExists(String userName, String password){
+        System.out.println("user list: "  +userList.size());
+        if(env.getFirebase().getClassroomsSnapshot().child(classroom+"/users/"+userName).exists()){
+            //System.out.println("FIREBASE CONTAINS the Deets");
+            //User tempUser = new User(env,userName);
+            String fbPass = (String) env.getFirebase().getUserSnapshot().child("properties/password").getValue();
+            System.out.println(fbPass);
+
+            if (password.equals(fbPass)){
+                System.out.println("password is equaaal");
+                return true;
+            }
+        }
+
         if(userList.contains(userName)){
+            System.out.println("does contain!");
             User tempUser = new User(env,userName);
             if (password.equals(tempUser.getUserPassword())){
                 return true;
