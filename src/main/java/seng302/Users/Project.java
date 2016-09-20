@@ -19,12 +19,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.lang.reflect.Type;
-import java.nio.file.Files;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -54,7 +51,7 @@ public class Project {
     private Integer level;
 
     Path projectDirectory;
-    public String currentProjectPath, projectName;
+    public String  projectName;
 
     boolean saved = true;
 
@@ -74,7 +71,7 @@ public class Project {
      */
     public Project(Environment env, String projectName, ProjectHandler projectH) {
         this.projectName = projectName;
-        this.projectDirectory = Paths.get(projectH.projectsDirectory + "/" + projectName);
+        //this.projectDirectory = Paths.get(projectH.projectsDirectory + "/" + projectName);
         this.env = env;
         projectSettings = new HashMap<>();
         tutorHandler = new TutorHandler(env);
@@ -118,7 +115,7 @@ public class Project {
         projectSettings.put("experience", this.experience);
 
         projectSettings.put("competitionMode", gson.toJson(isCompetitiveMode.toString()));
-        System.out.println(visualiserOn);
+
 
         projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
 
@@ -133,6 +130,7 @@ public class Project {
 
 
         DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/"+projectName);
+        System.out.println(projectSnapshot.getKey());
         projectSettings = (HashMap<String, Object>) projectSnapshot.getValue();
 
         int tempo;
@@ -151,10 +149,16 @@ public class Project {
         ArrayList<OutputTuple> transcript;
         Type transcriptType = new TypeToken<ArrayList<OutputTuple>>() {
         }.getType();
-        transcript = gson.fromJson((String) projectSettings.get("transcript"), transcriptType);
+        try{
+            transcript = gson.fromJson((String) projectSettings.get("transcript"), transcriptType);
+            env.getTranscriptManager().setTranscriptContent(transcript);
+            env.getRootController().setTranscriptPaneText(env.getTranscriptManager().convertToText());
+        }catch(NullPointerException np){
 
-        env.getTranscriptManager().setTranscriptContent(transcript);
-        env.getRootController().setTranscriptPaneText(env.getTranscriptManager().convertToText());
+        }
+
+
+
 
 
         //Rhythm
@@ -334,13 +338,13 @@ public class Project {
         return saved;
     }
 
-    public Boolean isProject() {
+    /*public Boolean isProject() {
         return currentProjectPath != null;
-    }
+    }*/
 
-    public String getCurrentProjectPath() {
+    /*public String getCurrentProjectPath() {
         return currentProjectPath;
-    }
+    }*/
 
     public boolean getIsCompetitiveMode() {
         return isCompetitiveMode;

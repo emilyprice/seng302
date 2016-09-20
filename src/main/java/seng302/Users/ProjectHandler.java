@@ -32,10 +32,10 @@ public class ProjectHandler {
     private Project currentProject;
     Environment env;
     String lastOpened;
-    public Path projectsDirectory;
+//    public Path projectsDirectory;
     String userName;
 
-    JSONArray projectList;
+    //JSONArray projectList;
 
     JSONObject projectsInfo = new JSONObject();
     JSONParser parser = new JSONParser(); //parser for reading project
@@ -49,10 +49,10 @@ public class ProjectHandler {
      */
     public ProjectHandler(Environment env, String user){
         this.userName = user;
-        projectsDirectory = Paths.get("UserData/classrooms/group5/users/"+user+"/Projects");
+        //projectsDirectory = Paths.get("UserData/classrooms/group5/users/"+user+"/Projects");
         this.env = env;
 
-        loadProjectList();
+        //loadProjectList();
         loadDefaultProject();
 
     }
@@ -82,7 +82,7 @@ public class ProjectHandler {
     public void setCurrentProject(String projName){
 
         this.currentProject = new Project(env, projName, this);
-        updateProjectList(projName);
+        //updateProjectList(projName);
         try {
             env.getRootController().updateLevelBadge();
             env.getUserPageController().updateLevelBadge();
@@ -99,22 +99,23 @@ public class ProjectHandler {
      *
      */
     public void updateProjectList(String projectName) {
-        if (!projectList.contains(projectName)) {
-            projectList.add(projectName);
-        }
-
-        try { //Save list of projects.
-            projectsInfo.put("projects", projectList);
-            projectsInfo.put("lastOpened", projectName);
-            FileWriter projectsJson = new FileWriter(projectsDirectory + "/projects.json");
-            projectsJson.write(projectsInfo.toJSONString());
-            projectsJson.flush();
-            projectsJson.close();
-
-
-        } catch (Exception e2) {
-            e2.printStackTrace();
-        }
+        //TODO: FIX THIS to work with firebase
+//        if (!projectList.contains(projectName)) {
+//            projectList.add(projectName);
+//        }
+//
+//        try { //Save list of projects.
+//            projectsInfo.put("projects", projectList);
+//            projectsInfo.put("lastOpened", projectName);
+//            FileWriter projectsJson = new FileWriter(projectsDirectory + "/projects.json");
+//            projectsJson.write(projectsInfo.toJSONString());
+//            projectsJson.flush();
+//            projectsJson.close();
+//
+//
+//        } catch (Exception e2) {
+//            e2.printStackTrace();
+//        }
     }
 
 
@@ -122,53 +123,54 @@ public class ProjectHandler {
      * Loads the JSON file containing the list of projects.
      */
     private void loadProjectList(){
-        JSONObject projectsInfo = new JSONObject();
-
-        JSONParser parser = new JSONParser(); //parser for reading project
-        try {
-             projectsInfo = (JSONObject) parser.parse(new FileReader(projectsDirectory + "/projects.json"));
-            this.projectList = (JSONArray) projectsInfo.get("projects");
-            this.lastOpened = projectsInfo.get("lastOpened").toString();
-
-        } catch (FileNotFoundException e) {
-            try {
-                System.err.println("projects.json Does not exist! - Creating new one");
-                this.projectList = new JSONArray();
-
-
-                projectsInfo.put("projects", projectList);
-                projectsInfo.put("lastOpened", "default");
-
-
-                if (!Files.isDirectory(projectsDirectory)) {
-
-                    //Create Projects path doesn't exist.
-                    try {
-                        Files.createDirectories(projectsDirectory);
-
-
-                    } catch (IOException eIO3) {
-                        //Failed to create the directory.
-                        System.err.println("Well UserData directory failed to create.. lost cause.");
-                    }
-                }
-
-                FileWriter file = new FileWriter(projectsDirectory + "/projects.json");
-                file.write(projectsInfo.toJSONString());
-                file.flush();
-                file.close();
-
-            } catch (IOException e2) {
-                System.err.println("Failed to create projects.json file.");
-
-            }
-
-
-        } catch (IOException e) {
-            //e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        //TODO: Fix this to work with firebase
+//        JSONObject projectsInfo = new JSONObject();
+//
+//        JSONParser parser = new JSONParser(); //parser for reading project
+//        try {
+//             projectsInfo = (JSONObject) parser.parse(new FileReader(projectsDirectory + "/projects.json"));
+//            this.projectList = (JSONArray) projectsInfo.get("projects");
+//            this.lastOpened = projectsInfo.get("lastOpened").toString();
+//
+//        } catch (FileNotFoundException e) {
+//            try {
+//                System.err.println("projects.json Does not exist! - Creating new one");
+//                this.projectList = new JSONArray();
+//
+//
+//                projectsInfo.put("projects", projectList);
+//                projectsInfo.put("lastOpened", "default");
+//
+//
+//                if (!Files.isDirectory(projectsDirectory)) {
+//
+//                    //Create Projects path doesn't exist.
+//                    try {
+//                        Files.createDirectories(projectsDirectory);
+//
+//
+//                    } catch (IOException eIO3) {
+//                        //Failed to create the directory.
+//                        System.err.println("Well UserData directory failed to create.. lost cause.");
+//                    }
+//                }
+//
+//                FileWriter file = new FileWriter(projectsDirectory + "/projects.json");
+//                file.write(projectsInfo.toJSONString());
+//                file.flush();
+//                file.close();
+//
+//            } catch (IOException e2) {
+//                System.err.println("Failed to create projects.json file.");
+//
+//            }
+//
+//
+//        } catch (IOException e) {
+//            //e.printStackTrace();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
@@ -177,7 +179,7 @@ public class ProjectHandler {
      */
     public void createNewProject() {
 
-
+/*
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("New Project");
         dialog.setHeaderText("New Project");
@@ -216,11 +218,14 @@ public class ProjectHandler {
             }
 
         }
+        */
     }
 
 
     public JSONArray getProjectList() {
-        return this.projectList;
+       // return this.projectList;
+        //TODO: Fix this to work with firebase
+        return null;
     }
 
 

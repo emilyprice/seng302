@@ -6,6 +6,7 @@ import com.google.firebase.database.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by jat157 on 20/09/16.
@@ -40,7 +41,6 @@ public class FirebaseUpdater {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 classroomsSnapshot = dataSnapshot;
-
             }
 
             @Override
@@ -71,17 +71,24 @@ public class FirebaseUpdater {
                 .getInstance()
                 .getReference("");
 
+    }
 
+    public void blockedCreateUserSnapshot(String classroom, String user){
 
     }
 
-    public void createUserSnapshot(String classroom, String user){
+    public void createUserSnapshot(String classroom, String user, Boolean blocking){
+
+        final AtomicBoolean done = new AtomicBoolean(false);
+
         firebase.child("classrooms/"+classroom+"/users/"+user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userSnapshot = dataSnapshot;
                 //env.getUserHandler().getCurrentUser().
                 //TODO: update user properties
+                done.set(true);
+                while (!done.get() && blocking);
 
             }
 

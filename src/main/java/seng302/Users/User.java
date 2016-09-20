@@ -41,7 +41,7 @@ public class User {
 
     private Environment env;
 
-    private HashMap properties;
+    private HashMap properties = new HashMap();
 
     private Date lastSignIn;
 
@@ -72,10 +72,11 @@ public class User {
         this.userName = userName;
         this.userPassword = password;
         this.env = env;
-        properties = new JSONObject();
+        //properties = new JSONObject();
 
-        //createUserFiles();
-        loadBasicProperties();
+        createUserFiles();
+        //loadBasicProperties();
+        loadProperties();
         saveProperties();
 //
 //        Path filePath = Paths.get(this.userDirectory.toString() + "/profilePicture");
@@ -104,8 +105,9 @@ public class User {
         userDirectory = Paths.get("UserData/classrooms/group5/users/" + user);
         this.env = env;
         this.userName = user;
-        properties = new JSONObject();
+        //properties = new JSONObject();
         //loadBasicProperties();
+        loadProperties();
         profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
 
 
@@ -150,6 +152,7 @@ public class User {
             //Theme
             themePrimary = (properties.get("themePrimary")).toString();
         } catch (NullPointerException e) {
+            System.err.println("theme doesn't exist - setting default.");
             themePrimary = "#1E88E5";
         }
 
@@ -165,6 +168,90 @@ public class User {
 
         projectHandler = new ProjectHandler(env, userName);
 
+    }
+
+
+    private void loadProperties(){
+        /**
+         * Current Theme
+         * Musical Terms
+         * Full name
+         * Project Handler
+         * Theme
+         */
+
+        while(userSnapshot.child("properties") == null) continue; //TODO FIX THIS BULLSHIT HACK
+        properties = (HashMap<String,String>) userSnapshot.child("properties").getValue();
+
+
+
+        System.out.println("user properties: " + properties);
+        Gson gson = new Gson();
+        try {
+            Type dateType = new TypeToken<Date>() {
+            }.getType();
+            lastSignIn = gson.fromJson((String) properties.get("signInTime"), dateType);
+
+            if (lastSignIn == null) lastSignIn = new Date();
+        } catch (Exception e) {
+            lastSignIn = new Date();
+
+        }
+
+        //Password
+        //serPassword = (properties.get("password")).toString();
+
+
+        try {
+            //Theme
+            themePrimary = (properties.get("themeColor")).toString();
+        } catch (NullPointerException e) {
+            themePrimary = "white";
+        }
+
+        //Load musical terms property
+       // Gson gson = new Gson();
+        Type termsType = new TypeToken<ArrayList<Term>>() {
+        }.getType();
+        ArrayList<Term> terms = new ArrayList<>();
+        try{
+            terms = gson.fromJson((String) properties.get("musicalTerms"), termsType);
+        }catch(NullPointerException n){
+
+        }
+
+        if (terms != null) {
+            env.getMttDataManager().setTerms(terms);
+        }
+
+        try {
+            userFirstName = (properties.get("firstName")).toString();
+        } catch (NullPointerException e) {
+            userFirstName = "";
+        }
+
+        try {
+            userLastName = (properties.get("lastName")).toString();
+        } catch (NullPointerException e) {
+            userLastName = "";
+        }
+
+        try {
+            //Theme
+            themePrimary = (properties.get("themePrimary")).toString();
+        } catch (NullPointerException e) {
+            themePrimary = "#1E88E5";
+        }
+
+        try {
+            //Theme
+            themeSecondary = (properties.get("themeSecondary")).toString();
+        } catch (NullPointerException e) {
+            themeSecondary = "white";
+        }
+        lastSignIn = new Date();
+
+        projectHandler = new ProjectHandler(env, userName);
     }
 
     /**
@@ -194,8 +281,9 @@ public class User {
          *  Password
          *
          */
+        System.out.println("ss: " + userSnapshot.child("properties"));
 
-        properties = (HashMap<String,String>) userSnapshot.child("properties").getValue();
+        properties = (HashMap<String,Object>) userSnapshot.child("properties").getValue();
         System.out.println(properties);
         Gson gson = new Gson();
         try {
@@ -230,6 +318,7 @@ public class User {
      */
     public void updateProperties() {
         Gson gson = new Gson();
+        System.out.println(properties);
 
         properties.put("userName", userName);
         properties.put("fullName", userFullName);
@@ -263,6 +352,8 @@ public class User {
     private void createUserFiles() {
         //Add all settings to such as tempo speed to the project here.
 
+        env.getFirebase().getUserRef().setValue("properties");
+        /*
         try {
 
             if (!Files.isDirectory(userDirectory)) {
@@ -285,6 +376,7 @@ public class User {
             env.getRootController().errorAlert("Invalid file name - try again.");
 
         }
+        */
 
 
     }

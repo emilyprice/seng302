@@ -526,7 +526,7 @@ public class RootController implements Initializable {
 
         if (file != null) {
             fileDir = file.getParentFile();
-            fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
+            //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
             path = file.getAbsolutePath();
             env.getTranscriptManager().saveCommandsOnly(path);
         }
@@ -560,7 +560,7 @@ public class RootController implements Initializable {
         fileChooser.getExtensionFilters().add(textFilter);
 
         checkProjectDirectory();
-        fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
+        //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
 
         fileChooser.setInitialDirectory(fileDir);
         File file = fileChooser.showSaveDialog(stage);
@@ -581,7 +581,7 @@ public class RootController implements Initializable {
         FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(textFilter);
         checkProjectDirectory();
-        fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
+        //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
 
         fileChooser.setInitialDirectory(fileDir);
 
@@ -646,17 +646,17 @@ public class RootController implements Initializable {
 
     public void checkProjectDirectory() {
         Path path = Paths.get("UserData/classrooms/group5/users/" + env.getUserHandler().getCurrentUser().getUserName() + "/Projects/");
-        if (!Files.isDirectory(path)) {
-            try {
-                Files.createDirectories(path);
-
-            } catch (IOException e) {
-                //Failed to create the directory.
-                e.printStackTrace();
-            }
-
-
-        }
+//        if (!Files.isDirectory(path)) {
+//            try {
+//                Files.createDirectories(path);
+//
+//            } catch (IOException e) {
+//
+//                e.printStackTrace();
+//            }
+//
+//
+//        }
 
     }
 

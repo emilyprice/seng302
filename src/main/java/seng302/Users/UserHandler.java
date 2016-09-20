@@ -30,7 +30,8 @@ public class UserHandler {
     private User currentUser;
 
     Environment env;
-    JSONArray userList;
+    //JSONArray userList;
+    ArrayList<String> userList = new ArrayList<>();
     JSONParser parser = new JSONParser(); //parser for reading project
     JSONObject UsersInfo = new JSONObject();
     JSONArray recentUsers = new JSONArray();
@@ -48,7 +49,7 @@ public class UserHandler {
 
     }
 
-    public JSONArray getUserNames(){
+    public ArrayList<String> getUserNames(){
         return userList;
     }
 
@@ -92,6 +93,23 @@ public class UserHandler {
      *
      */
     private void populateUsers(){
+
+       while(env.getFirebase().getClassroomsSnapshot() == null){
+            continue;
+           //TODO: Fix this hack (And the other similar instance)
+        }
+        System.out.println(classroom);
+
+        for(DataSnapshot user : env.getFirebase().getClassroomsSnapshot().child(classroom + "/users/").getChildren()){
+            System.out.println("populating: " + user);
+            userList.add(user.getKey());
+
+
+
+        }
+
+    /*
+
         try {
             UsersInfo = (JSONObject) parser.parse(new FileReader(userDirectory + "/user_list.json"));
             this.userList = (JSONArray) UsersInfo.get("users");
@@ -134,6 +152,7 @@ public class UserHandler {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        */
 
     }
 
@@ -162,7 +181,7 @@ public class UserHandler {
      */
     public void createUser(String user, String password){
         this.currentUser = new User(user, password, env);
-        updateUserList(user);
+        //updateUserList(user);
 
     }
 
@@ -228,7 +247,7 @@ public class UserHandler {
         this.classroom = classroom;
         this.currentUser = new User(userName, password, env);
         currentUser.loadFullProperties();
-        updateUserList(userName);
+        //updateUserList(userName);
 
         //update User drop down to display user's name
         env.getRootController().updateUserInfo(userName);

@@ -208,7 +208,8 @@ public class UserRegisterController {
 
             //Log in user.
             if (env.getUserHandler().userPassExists(txtUsername.getText(), txtPassword.getText())) {
-               // env.getUserHandler().setCurrentUser(txtUsername.getText()); TODO: fix this
+                //env.getUserHandler().setCurrentUser(txtUsername.getText());
+                System.out.println("register userPassExists");
 
                 env.getUserHandler().getCurrentUser().setUserFirstName(txtfname.getText());
                 env.getUserHandler().getCurrentUser().setUserLastName(txtlname.getText());
