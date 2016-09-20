@@ -62,10 +62,9 @@ public class User {
      */
     public User(String userName, String password, Environment env) {
 
-        env.getFirebase().createUserSnapshot(env.getUserHandler().getClassRoom(), userName);
-        while(env.getFirebase().getUserSnapshot() == null){
-            continue;
-        }
+        env.getFirebase().createUserSnapshot(env.getUserHandler().getClassRoom(), userName, true);
+        System.out.println(env.getFirebase().getUserSnapshot());
+
         userSnapshot = env.getFirebase().getUserSnapshot();
 
         userDirectory = Paths.get("UserData/" + userName);
@@ -107,7 +106,7 @@ public class User {
         this.userName = user;
         //properties = new JSONObject();
         //loadBasicProperties();
-        loadProperties();
+       // loadProperties();
         profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
 
 
@@ -180,8 +179,10 @@ public class User {
          * Theme
          */
 
-        while(userSnapshot.child("properties") == null) continue; //TODO FIX THIS BULLSHIT HACK
+
         properties = (HashMap<String,String>) userSnapshot.child("properties").getValue();
+
+        if(properties == null) properties = new HashMap<String, Object>();
 
 
 
@@ -351,8 +352,8 @@ public class User {
      */
     private void createUserFiles() {
         //Add all settings to such as tempo speed to the project here.
-
-        env.getFirebase().getUserRef().setValue("properties");
+        System.out.println("added properties");
+        env.getFirebase().getUserRef().child("properties");
         /*
         try {
 

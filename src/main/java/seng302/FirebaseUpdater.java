@@ -88,9 +88,10 @@ public class FirebaseUpdater {
                 //env.getUserHandler().getCurrentUser().
                 //TODO: update user properties
                 done.set(true);
-                while (!done.get() && blocking);
+
 
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -98,7 +99,9 @@ public class FirebaseUpdater {
             }
 
         });
+
         userRef = firebase.child("classrooms/" + classroom + "/users/" + user);
+        while (!done.get() && blocking);
     }
 
     public DataSnapshot getUserSnapshot() {
