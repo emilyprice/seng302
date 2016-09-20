@@ -130,6 +130,8 @@ public class User {
         Type termsType = new TypeToken<ArrayList<Term>>() {
         }.getType();
         ArrayList<Term> terms = gson.fromJson((String) properties.get("musicalTerms"), termsType);
+        System.out.println("full properties: ");
+        System.out.println(properties);
 
         if (terms != null) {
             env.getMttDataManager().setTerms(terms);
@@ -202,14 +204,15 @@ public class User {
         //Password
         //serPassword = (properties.get("password")).toString();
 
-
+/*
         try {
             //Theme
             themePrimary = (properties.get("themeColor")).toString();
         } catch (NullPointerException e) {
             themePrimary = "white";
+            System.out.println("theme primary not ");
         }
-
+*/
         //Load musical terms property
        // Gson gson = new Gson();
         Type termsType = new TypeToken<ArrayList<Term>>() {
@@ -240,6 +243,7 @@ public class User {
         try {
             //Theme
             themePrimary = (properties.get("themePrimary")).toString();
+            System.out.println("theme primary: " + themePrimary);
         } catch (NullPointerException e) {
             themePrimary = "#1E88E5";
         }
@@ -250,6 +254,9 @@ public class User {
         } catch (NullPointerException e) {
             themeSecondary = "white";
         }
+        env.getThemeHandler().setTheme(themePrimary, themeSecondary);
+
+
         lastSignIn = new Date();
 
         projectHandler = new ProjectHandler(env, userName);
@@ -319,6 +326,7 @@ public class User {
      */
     public void updateProperties() {
         Gson gson = new Gson();
+        System.out.println("update properties 2");
         System.out.println(properties);
 
         properties.put("userName", userName);
@@ -340,8 +348,9 @@ public class User {
      * Writes JSON properties to disc
      */
     public void saveProperties() {
+
         updateProperties();
-        System.out.println(properties);
+        System.out.println("saveProeprties: " + properties);
         env.getFirebase().getUserRef().child("properties").updateChildren(properties);
 
     }

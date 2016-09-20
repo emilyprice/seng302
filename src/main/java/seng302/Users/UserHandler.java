@@ -260,7 +260,7 @@ public class UserHandler {
     public void setCurrentUser(String userName, String classroom, String password){
         this.classroom = classroom;
         this.currentUser = new User(userName, password, env);
-        currentUser.loadFullProperties();
+        //currentUser.loadFullProperties();
         //updateUserList(userName);
 
         //update User drop down to display user's name

@@ -439,8 +439,10 @@ public class RootController implements Initializable {
      */
     public void logOutUser() {
         try {
+
             stage.close();
             showLoginWindow();
+            env.resetEnvironment();
         } catch (Exception e) {
 
         }
