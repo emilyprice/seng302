@@ -243,8 +243,7 @@ public class StageMapController {
                 //set the tutor status to be unlocked
                 unlockStatus.put(tutorOrder.get((tutorOrder.indexOf(converted.get(tutorId)) + 1)), true);
                 visualiseLockedTutors();
-
-
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Completist").updateBadgeProgress(1);
             }
         }
     }

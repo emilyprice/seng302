@@ -114,8 +114,8 @@ public class BadgeManager {
         questionBadges.add(120);
         questionBadges.add(600);
 
-        ArrayList<Integer> achievementBadges = new ArrayList<>();
-        achievementBadges.add(10);
+        ArrayList<Integer> tutorTotal = new ArrayList<>();
+        tutorTotal.add(10);
 
         //intalize tutor badges
         for (String tutor:allTutors){
@@ -131,8 +131,8 @@ public class BadgeManager {
         }
 
         //initialise overall badges
-        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", null, 0, 0, "gradHat"));
-        overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", achievementBadges, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", tutorTotal, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Musician", null, "Number of instruments used", sessionBadges, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Eggs in baskets", null, "Create three projects", null, 0, 0, "gradHat"));
         overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "speedster"));
