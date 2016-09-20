@@ -67,11 +67,25 @@ public class StageMapController {
     private TutorHandler tutorHandler;
 
 
+    /**
+     * Stores the status of each tutor(if the tutor is unlocked)
+     */
     public HashMap<String, Boolean> unlockStatus;
 
-    private HashMap<String, Button> tutorAndButton; //associates tutor name with its corresponding button
 
+    /**
+     * links the tutor to the equivalent FXMl button
+     */
+    private HashMap<String, Button> tutorAndButton;
+
+    /**
+     * stores the unlock order of the tutors
+     */
     private ArrayList<String> tutorOrder; //the order in which the tutors unlock
+
+    /**
+     * stores the convertion of tutor name to a shortened tutor string that is used for manipulations
+     */
     public HashMap<String, String> converted;
 
 
@@ -101,9 +115,6 @@ public class StageMapController {
 
     }
 
-    public void updateUnlock(){
-        env.getStageMapController().getUnlockStatus();
-    }
 
     public HashMap getUnlockStatus(){
         return this.unlockStatus;
