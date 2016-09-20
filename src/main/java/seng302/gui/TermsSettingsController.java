@@ -2,6 +2,7 @@ package seng302.gui;
 
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,12 @@ public class TermsSettingsController {
     @FXML
     private JFXTextArea selectedDefinition;
 
+    @FXML
+    private JFXTextField selectedCategory;
+
+    @FXML
+    private JFXTextField selectedOrigin;
+
     private Environment env;
 
     public void create(Environment env) {
@@ -38,19 +45,22 @@ public class TermsSettingsController {
 
         termsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             // Display musical term with newvalue
-            selectedName.setText(newValue.toString());
+            selectedName.setText('"' + newValue.toString() + '"');
 
-            Term selectedTerm;
 
             for (Term term : env.getMttDataManager().getTerms()) {
                 if (term.getMusicalTermName().equals(newValue.toString())) {
-                    selectedTerm = term;
-                    selectedDefinition.setText(selectedTerm.getMusicalTermDefinition());
+                    selectedDefinition.setText(term.getMusicalTermDefinition());
+                    selectedCategory.setText(term.getMusicalTermCategory());
+                    selectedOrigin.setText(term.getMusicalTermOrigin());
+                    break;
                 }
             }
 
 
         });
+
+        termsListView.getSelectionModel().selectFirst();
     }
 
 }

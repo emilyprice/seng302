@@ -2,9 +2,11 @@
 
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 <AnchorPane fx:id="termsSettingsAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="450.0" prefWidth="700.0" stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.TermsSettingsController">
     <children>
       <SplitPane dividerPositions="0.333333333333" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -16,8 +18,28 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <Label fx:id="selectedName" alignment="CENTER" layoutX="170.0" layoutY="35.0" text="Musical Term Name" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <JFXTextArea fx:id="selectedDefinition" editable="false" layoutX="5.0" layoutY="69.0" maxWidth="451.0" minWidth="333.0" prefHeight="119.0" prefWidth="451.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <Label fx:id="selectedName" alignment="CENTER" layoutX="170.0" layoutY="35.0" text="&quot;Musical Term Name&quot;" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font></Label>
+                  <JFXTextArea fx:id="selectedDefinition" editable="false" layoutX="10.0" layoutY="101.0" maxWidth="451.0" minWidth="333.0" prefHeight="119.0" prefWidth="451.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <Label layoutX="14.0" layoutY="79.0" text="Definition">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="266.0" text="Category">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="13.0" layoutY="341.0" text="Origin">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <JFXTextField fx:id="selectedCategory" editable="false" layoutX="14.0" layoutY="288.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <JFXTextField fx:id="selectedOrigin" editable="false" layoutX="10.0" layoutY="363.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" />
                </children></AnchorPane>
         </items>
       </SplitPane>
