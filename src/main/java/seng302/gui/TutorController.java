@@ -3,9 +3,6 @@ package seng302.gui;
 import com.jfoenix.controls.JFXSlider;
 
 import java.io.File;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -22,7 +19,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
@@ -167,15 +163,15 @@ public abstract class TutorController {
 
         record.setStats(manager.correct, manager.getTempIncorrectResponses().size(), userScore);
         record.setFinished();
-        record.setDate();
+        record.updateDate();
 
         String tutorName = env.getRootController().getHeader();
         System.out.println("current project: " + currentProject);
         if (currentProject != null) {
             currentProject.saveCurrentProject();
             String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
-            String tutorFileName = currentProject.getCurrentProjectPath() + "/" + tutorNameNoSpaces + ".json";
-            tutorHandler.saveTutorRecordsToFile(tutorFileName, record);
+            //String tutorFileName = currentProject.getCurrentProjectPath() + "/" + tutorNameNoSpaces + ".json";
+            tutorHandler.saveTutorRecordsToFile(tutorNameNoSpaces, record);
         }
 
         questionRows.getChildren().clear();

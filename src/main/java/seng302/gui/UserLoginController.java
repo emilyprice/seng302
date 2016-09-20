@@ -1,9 +1,7 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -12,8 +10,6 @@ import com.jfoenix.validation.RequiredFieldValidator;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -202,8 +198,8 @@ public class UserLoginController {
             if (userfb.exists()) {
                 //User exists
                 env.getUserHandler().setClassRoom(txtClassroom.getText());
-                String pass = userfb.child("password").getValue().toString();
-                System.out.println("oinside authenticate");
+                String pass = userfb.child("/properties/password").getValue().toString();
+                System.out.println("inside authenticate");
                 if (pass.equals(passwordInput.getText())) {
                     System.out.println("CORRECT PASSWORD");
                     env.getUserHandler().setCurrentUser(usernameInput.getText(), txtClassroom.getText(), passwordInput.getText());

@@ -59,8 +59,12 @@ public class TutorRecord {
     }
 
 
-    public void setDate() {
+    public void updateDate() {
         date = new Date();
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public void setFinished() {

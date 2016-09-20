@@ -1,14 +1,8 @@
 package seng302.Users;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -103,11 +97,15 @@ public class TutorHandler {
      */
     public Pair<Integer, Integer> getRecentTutorTotals(String tabId) throws IndexOutOfBoundsException {
         ArrayList<TutorRecord> records = getTutorData(tabId);
-        TutorRecord lastRecord = records.get(records.size() - 1);
-        Map<String, Number> stats = lastRecord.getStats();
-        Integer correct = stats.get("questionsCorrect").intValue();
-        Integer incorrect = stats.get("questionsIncorrect").intValue();
-        return new Pair<>(correct, incorrect);
+        if (records.size() != 0) {
+            TutorRecord lastRecord = records.get(records.size() - 1);
+            Map<String, Number> stats = lastRecord.getStats();
+            Integer correct = stats.get("questionsCorrect").intValue();
+            Integer incorrect = stats.get("questionsIncorrect").intValue();
+            return new Pair<>(correct, incorrect);
+        } else {
+            return new Pair<>(0, 0);
+        }
 
     }
 
@@ -119,42 +117,21 @@ public class TutorHandler {
      * @return A collection of information about past tutoring sessions
      */
     public ArrayList<TutorRecord> getTutorData(String id) {
-        String projectAddress = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().currentProjectPath;
-        String filename = "";
-        if (id.equals("pitchTutor")) {
-            filename = projectAddress + "/PitchComparisonTutor.json";
-        } else if (id.equals("scaleTutor")) {
-            filename = projectAddress + "/ScaleRecognitionTutor.json";
-        } else if (id.equals("intervalTutor")) {
-            filename = projectAddress + "/IntervalRecognitionTutor.json";
-        } else if (id.equals("musicalTermTutor")) {
-            filename = projectAddress + "/MusicalTermsTutor.json";
-        } else if (id.equals("chordTutor")) {
-            filename = projectAddress + "/ChordRecognitionTutor.json";
-        } else if (id.equals("chordSpellingTutor")) {
-            filename = projectAddress + "/ChordSpellingTutor.json";
-        } else if (id.equals("keySignatureTutor")) {
-            filename = projectAddress + "/KeySignatureTutor.json";
-        } else if (id.equals("diatonicChordTutor")) {
-            filename = projectAddress + "/DiatonicChordTutor.json";
-        } else if (id.equals("scaleModesTutor")) {
-            filename = projectAddress + "/ScaleModesTutor.json";
-        } else if (id.equals("scaleSpellingTutor")) {
-            filename = projectAddress + "/ScaleSpellingTutor.json";
+        while (env.getFirebase().getUserSnapshot() == null) {
+            continue;
         }
-        Gson gson = new Gson();
-        ArrayList<TutorRecord> records = new ArrayList<>();
-        try {
-            JsonReader jsonReader = new JsonReader(new FileReader(filename));
-            records = gson.fromJson(jsonReader, new TypeToken<ArrayList<TutorRecord>>() {
-            }.getType());
 
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found.");
-        } catch (JsonSyntaxException e) {
-            System.err.println("File was not of the correct type.");
-        }
-        return records;
+        DataSnapshot tutorSnap = env.getFirebase().getUserSnapshot().child("projects/" +
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + id);
+
+        tutorSnap.getChildren().forEach((key) -> {
+                    TutorRecord record = new TutorRecord();
+                    HashMap<String, Object> recordMap = (HashMap<String, Object>) key.getValue();
+                    record.setDate((Date) recordMap.get("date"));
+                    //record.setFinished();
+                }
+        );
+        return new ArrayList<TutorRecord>();
 
     }
 
@@ -201,42 +178,10 @@ public class TutorHandler {
      * Saves the tutor records to disc.
      */
     public void saveTutorRecordsToFile(String filename, TutorRecord currentRecord) {
-        Gson gson = new Gson();
-        try {
-            ArrayList<TutorRecord> records;
-            try {
-                JsonReader jsonReader = new JsonReader(new FileReader(filename));
-                records = gson.fromJson(jsonReader, new TypeToken<ArrayList<TutorRecord>>() {
-                }.getType());
-
-                TutorRecord latest = records.get(records.size() - 1);
-                if (!latest.isFinished()) {
-                    records.remove(records.size() - 1);
-                }
-            } catch (FileNotFoundException e) {
-                System.err.println("file not found exception??");
-                records = new ArrayList<>();
-            } catch (JsonSyntaxException e) {
-                System.err.println("File was not of the correct type. Overwriting.");
-                records = new ArrayList<>();
-            }
-            currentRecord.setDate();
-            records.add(currentRecord);
-
-            String json = gson.toJson(records);
-            try {
-                FileWriter writer = new FileWriter(filename, false);
-                writer.write(json);
-                writer.flush();
-                writer.close();
-            } catch (IOException ex) {
-                System.err.println("Problem writing to the selected file " + ex.getMessage());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        DatabaseReference ref = env.getFirebase().getUserRef().child("projects/" +
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + filename);
+        currentRecord.updateDate();
+        ref.push().setValue(currentRecord);
     }
 
 

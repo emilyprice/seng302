@@ -1,8 +1,5 @@
 package seng302;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
@@ -17,9 +14,6 @@ import seng302.managers.ThemeHandler;
 import seng302.managers.TranscriptManager;
 import seng302.utility.EditHistory;
 import seng302.utility.MusicalTermsTutorBackEnd;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class Environment {
 
@@ -111,10 +105,6 @@ public class Environment {
     public FirebaseUpdater getFirebase() {
         return firebaseUpdater;
     }
-
-
-
-
 
 
 
