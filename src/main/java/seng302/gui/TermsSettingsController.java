@@ -5,7 +5,9 @@ import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
@@ -42,6 +44,8 @@ public class TermsSettingsController {
 
     private boolean isEditMode = false;
 
+    private Map<String, String> editInfo = new HashMap<>();
+
     ImageView editImage = new ImageView(new Image(getClass().getResourceAsStream("/images/edit_mode_black_36dp.png"), 25, 25, false, false));
 
     ImageView saveImage = new ImageView(new Image(getClass().getResourceAsStream("/images/plus-symbol.png"), 25, 25, false, false));
@@ -63,16 +67,13 @@ public class TermsSettingsController {
             // Display musical term with newvalue
             selectedName.setText(newValue.toString());
 
+            Term selectedTerm = env.getMttDataManager().getTermByName(newValue.toString());
 
-            for (Term term : env.getMttDataManager().getTerms()) {
-                if (term.getMusicalTermName().equals(newValue.toString())) {
-                    selectedDefinition.setText(term.getMusicalTermDefinition());
-                    selectedCategory.setText(term.getMusicalTermCategory());
-                    selectedOrigin.setText(term.getMusicalTermOrigin());
-                    break;
-                }
+            if (selectedTerm != null) {
+                selectedDefinition.setText(selectedTerm.getMusicalTermDefinition());
+                selectedCategory.setText(selectedTerm.getMusicalTermCategory());
+                selectedOrigin.setText(selectedTerm.getMusicalTermOrigin());
             }
-
 
         });
 
@@ -85,10 +86,18 @@ public class TermsSettingsController {
             //Save changes and close edit mode
             isEditMode = false;
             editButton.setGraphic(editImage);
+
+            editInfo.put("name", selectedName.getText());
+            editInfo.put("category", selectedCategory.getText());
+            editInfo.put("origin", selectedOrigin.getText());
+            editInfo.put("definition", selectedDefinition.getText());
+
+            env.getMttDataManager().editTerm(editInfo);
         } else {
             //Enter edit mode
             isEditMode = true;
             editButton.setGraphic(saveImage);
+            editInfo.put("oldName", selectedName.getText());
         }
         toggleInputs();
     }

@@ -1,6 +1,7 @@
 package seng302.utility;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import seng302.data.Term;
 
@@ -34,6 +35,27 @@ public class MusicalTermsTutorBackEnd {
         }
         terms.remove(termToRemove);
 
+    }
 
+    public void editTerm(Map<String, String> termInfo) {
+        Term editedTerm = getTermByName(termInfo.get("oldName"));
+
+        if (editedTerm != null) {
+
+            for (Map.Entry<String, String> entry : termInfo.entrySet()) {
+                editedTerm.updateInfo(entry.getKey(), entry.getValue());
+            }
+
+        }
+
+    }
+
+    public Term getTermByName(String name) {
+        for (Term term : terms) {
+            if (term.getMusicalTermName().equalsIgnoreCase(name)) {
+                return term;
+            }
+        }
+        return null;
     }
 }

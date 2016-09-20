@@ -33,5 +33,22 @@ public class Term {
         return this.musicalTermDefinition;
     }
 
+    public void updateInfo(String editedField, String newValue) {
+        switch (editedField) {
+            case "name":
+                this.musicalTermName = newValue;
+                break;
+            case "category":
+                this.musicalTermCategory = newValue;
+                break;
+            case "origin":
+                this.musicalTermOrigin = newValue;
+                break;
+            case "definition":
+                this.musicalTermDefinition = newValue;
+                break;
+        }
+    }
+
 
 }
