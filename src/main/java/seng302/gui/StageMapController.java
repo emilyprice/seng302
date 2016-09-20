@@ -1,6 +1,7 @@
 package seng302.gui;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -208,15 +209,20 @@ public class StageMapController {
      * Iterates through the nodes on the stage map, and asserts whether they are locked (disabled) or unlocked
      */
     public void visualiseLockedTutors() {
-//        Image padlock = new Image(getClass().getResourceAsStream
-//                ("/images/lock.png"), 10, 10, true, true);
+        Image padlock = new Image(getClass().getResourceAsStream
+                ("/images/lock.png"), 10, 10, true, true);
+
 
         //If in competitive mode, relevant stages should be locked
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             for (String tutor: unlockStatus.keySet()) {
                 tutorAndButton.get(tutor).setDisable(false);
+                tutorAndButton.get(tutor).setGraphic(null);
                 if (unlockStatus.get(tutor) == false) {
                     tutorAndButton.get(tutor).setDisable(true);
+                    ImageView iv1 = new ImageView();
+                    iv1.setImage(padlock);
+                    tutorAndButton.get(tutor).setGraphic(iv1);
 
                 }
             }
@@ -224,6 +230,7 @@ public class StageMapController {
         } else {
             for (String tutor: unlockStatus.keySet()) {
                 tutorAndButton.get(tutor).setDisable(false);
+                tutorAndButton.get(tutor).setGraphic(null);
             }
 
         }
