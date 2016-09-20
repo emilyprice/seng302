@@ -9,6 +9,7 @@ package seng302.Users;
  * Created by Jonty on 12-Apr-16.
  */
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -244,37 +245,14 @@ public class Project {
     /**
      * Handles Saving a .json Project file, for the specified project address
      *
-     * @param projectAddress Project directory address.
+     * @param projectName Project directory address.
      */
-    public void saveProject(String projectAddress) {
+    public void saveProject(String projectName) {
 
-        //Add all settings such as tempo speed to the project here.
+        saveProperties();
+        env.getFirebase().getUserRef().child("projects/" + projectName).updateChildren(projectSettings);
+        env.getRootController().removeUnsavedChangesIndicator();
 
-
-        //System.out.println("username in projects: " + env.getUserHandler().getCurrentUser());
-//        DatabaseReference projectfirebase = env.getFirebase().child("classrooms/"+env.getUserHandler().getClassRoom()+"/users/" +
-//                env.getUserHandler().getCurrentUser().getUserName() +"/projects/" + projectName);
-
-
-        DatabaseReference projectfirebase = env.getFirebase().child(projectAddress);
-        projectfirebase.setValue(projectSettings);
-
-        try {
-            Gson gson = new Gson();
-            saveProperties();
-
-            FileWriter file = new FileWriter(projectAddress + "/" + projectName + ".json");
-            file.write(projectSettings.toJSONString());
-            file.flush();
-            file.close();
-
-            projectSettings.put("tempo", env.getPlayer().getTempo());
-            env.getRootController().removeUnsavedChangesIndicator();
-            currentProjectPath = projectAddress;
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
 
     }
 
@@ -327,58 +305,19 @@ public class Project {
      * @param pName project name string
      */
     public void loadProject(String pName) {
-        try {
+        DataSnapshot project = env.getFirebase().getUserSnapshot().child("projects/" + pName);
+        env.resetProjectEnvironment();
+        if(project.exists()){
 
-            env.resetProjectEnvironment();
-            String path = projectDirectory.toString();
-
-            try {
-
-                projectSettings = (JSONObject) parser.parse(new FileReader(path + "/" + pName + ".json"));
-
-            } catch (FileNotFoundException f) {
-                //Project doesn't exist? Create it.
-                System.err.println("Tried to load project but the path didn't exist");
-
-                if (!Paths.get(path).toFile().isDirectory()) {
-                    //If the Project directory folder doesn't exist.
-                    System.err.println("Project directory missing - Might have been moved, renamed or deleted.\n Will remove the project from the projects json");
-
-                    try {
-                        Files.createDirectories(projectDirectory);
-                        saveProject(path);
-
-                    } catch (IOException eIO3) {
-                        //Failed to create the directory.
-                        System.err.println("Well UserData directory failed to create.. lost cause.");
-                    }
-
-                    return;
-                } else {
-                    //.json project files are corrupt.
-                    saveProject(path);
-                }
-
-            }
-
-            this.projectName = pName;
-            loadProperties();
-            currentProjectPath = path;
-            env.getRootController().setWindowTitle("Allegro - " + pName);
-            //ignore
-
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found, printing exception..");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("IOException when trying to parse project .json");
-            e.printStackTrace();
-        } catch (ParseException e) {
-            System.err.println("Parse exception. Project json is corrupt, cannot open.");
-            env.getRootController().errorAlert("Project Corrupt - Cannot open.");
-
+        } else {
+            System.err.println("Tried to load project but it didn't exist");
+            saveProject(pName);
 
         }
+        this.projectName = pName;
+        loadProperties();
+        env.getRootController().setWindowTitle("Allegro - " + pName);
+
     }
 
 

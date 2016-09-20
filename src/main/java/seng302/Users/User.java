@@ -1,6 +1,6 @@
 package seng302.Users;
 
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -9,7 +9,6 @@ import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -19,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javafx.scene.image.Image;
 import seng302.Environment;
@@ -41,7 +41,7 @@ public class User {
 
     private Environment env;
 
-    private JSONObject properties;
+    private HashMap properties;
 
     private Date lastSignIn;
 
@@ -51,6 +51,9 @@ public class User {
 
     private String userLastName;
 
+    private DataSnapshot userSnapshot;
+
+
     /**
      * User constructor used for generating new users.
      *
@@ -58,26 +61,33 @@ public class User {
      * @param password password to set for the corresponding user.
      */
     public User(String userName, String password, Environment env) {
-        userDirectory = Paths.get("UserData/classrooms/group5/users/" + userName);
+
+        env.getFirebase().createUserSnapshot(env.getUserHandler().getClassRoom(), userName);
+        while(env.getFirebase().getUserSnapshot() == null){
+            continue;
+        }
+        userSnapshot = env.getFirebase().getUserSnapshot();
+
+        userDirectory = Paths.get("UserData/" + userName);
         this.userName = userName;
         this.userPassword = password;
         this.env = env;
         properties = new JSONObject();
 
-        createUserFiles();
+        //createUserFiles();
         loadBasicProperties();
         saveProperties();
-
-        Path filePath = Paths.get(this.userDirectory.toString() + "/profilePicture");
-        try {
-            URI defaultPath = getClass().getResource("/images/testDP.jpg").toURI();
-            FileHandler.copyFolder(new File(defaultPath), filePath.toFile());
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-
-        profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
+//
+//        Path filePath = Paths.get(this.userDirectory.toString() + "/profilePicture");
+//        try {
+//            URI defaultPath = getClass().getResource("/images/testDP.jpg").toURI();
+//            FileHandler.copyFolder(new File(defaultPath), filePath.toFile());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//
+//        }
+//
+//        profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
 
         projectHandler = new ProjectHandler(env, userName);
 
@@ -95,7 +105,7 @@ public class User {
         this.env = env;
         this.userName = user;
         properties = new JSONObject();
-        loadBasicProperties();
+        //loadBasicProperties();
         profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
 
 
@@ -182,6 +192,9 @@ public class User {
          *  Password
          *
          */
+
+        properties = (HashMap<String,String>) userSnapshot.child("properties").getValue();
+        System.out.println(properties);
         Gson gson = new Gson();
         Path userDirectory = Paths.get("UserData/classrooms/group5/users/" + userName); //Default user path for now, before user compatibility is set up.
         JSONParser parser = new JSONParser(); //parser for reading project
@@ -222,6 +235,7 @@ public class User {
      */
     public void updateProperties() {
         Gson gson = new Gson();
+
         properties.put("userName", userName);
         properties.put("fullName", userFullName);
         properties.put("password", this.userPassword);
@@ -241,26 +255,27 @@ public class User {
      * Writes JSON properties to disc
      */
     public void saveProperties() {
-        try {
+//        try {
             updateProperties();
-
-            DatabaseReference firebase = env.getFirebase();
-
-            DatabaseReference user = firebase.child("classrooms/"+ env.getUserHandler().getClassRoom() +"/users/" + userName);
+             System.out.println(properties);
+            env.getFirebase().getUserRef().child("properties").updateChildren(properties);
 
 
-            user.setValue(properties);
 
-            FileWriter file = new FileWriter(userDirectory + "/user_properties.json");
-            file.write(properties.toJSONString());
-            file.flush();
-            file.close();
+            //DatabaseReference user = env.getFirebase().getFirebase().child("users/" + userName);
 
+            //user.setValue(properties);
 
-        } catch (IOException e) {
+//            FileWriter file = new FileWriter(userDirectory + "/user_properties.json");
+//            file.write(properties.toJSONString());
+//            file.flush();
+//            file.close();
 
-            e.printStackTrace();
-        }
+//
+//        } catch (IOException e) {
+//
+//            e.printStackTrace();
+//        }
 
     }
 

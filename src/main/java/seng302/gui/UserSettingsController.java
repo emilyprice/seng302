@@ -63,7 +63,7 @@ public class UserSettingsController {
 
     public void create(Environment env) {
         this.env = env;
-        this.imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
+        //this.imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         env.getRootController().setHeader("User Settings");
         userHandler = env.getUserHandler();
 
@@ -115,8 +115,8 @@ public class UserSettingsController {
         try {
             FileHandler.copyFolder(file, filePath.toFile());
             userHandler.getCurrentUser().setUserPicture(filePath);
-            imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
-            env.getRootController().updateImage();
+            //imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
+            //env.getRootController().updateImage();
         } catch (Exception e) {
             e.printStackTrace();
 

@@ -76,7 +76,7 @@ public class Environment {
     private UserPageController userPageController;
 
 
-    private DatabaseReference firebase;
+    private FirebaseUpdater firebaseUpdater;
 
 
     public StageMapController stageMapController;
@@ -98,51 +98,18 @@ public class Environment {
         transcriptManager = new TranscriptManager();
         mttDataManager = new MusicalTermsTutorBackEnd();
         shiftPressed = new SimpleBooleanProperty(false);
+        firebaseUpdater = new FirebaseUpdater(this);
         userHandler = new UserHandler(this);
         themeHandler = new ThemeHandler();
 
-        initializeFirebase();
-    }
-
-    private void initializeFirebase(){
-
-        try{
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setServiceAccount(new FileInputStream("Allegro-e09e379e137e.json")) //Allegro-e09e379e137e.json
-                    .setDatabaseUrl("https://allegro-8ce55.firebaseio.com/")
-                    .build();
-            FirebaseApp.initializeApp(options);
-        }catch(FileNotFoundException fe){
-
-        }
-        for(FirebaseApp a : FirebaseApp.getApps()){
-            System.out.println(a);
-        }
-
-        // As an admin, the app has access to read and write all data, regardless of Security Rules
-        firebase = FirebaseDatabase
-                .getInstance()
-                .getReference("");
-        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object document = dataSnapshot.getValue();
-                System.out.println(document);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
-
 
     }
 
 
-    public DatabaseReference getFirebase() {
-        return firebase;
+
+
+    public FirebaseUpdater getFirebase() {
+        return firebaseUpdater;
     }
 
 

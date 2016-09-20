@@ -210,7 +210,7 @@ public class RootController implements Initializable {
             applyTheme();
             stage.show();
             resizeSplitPane(1.0);
-            updateImage();
+            //updateImage();
             menuTranscript.setSelected(false);
             toggleTranscript();
             try {
@@ -422,7 +422,7 @@ public class RootController implements Initializable {
         loginStage.show();
         UserLoginController userLoginController = loginLoader.getController();
         userLoginController.setEnv(env);
-        userLoginController.displayRecentUsers();
+        //userLoginController.displayRecentUsers();
 
     }
 

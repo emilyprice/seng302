@@ -186,30 +186,12 @@ public class UserLoginController {
     }
 
 
+    DataSnapshot ss;
+
     @FXML
     protected void logIn() {
 
-
-        //if(env.getFirebase().child(txtClassroom.)
-
-
-        DatabaseReference classRoom = env.getFirebase().child("classrooms/" + txtClassroom.getText());
-
-
-
-        classRoom.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Platform.runLater(() -> authenticate(dataSnapshot));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
-
+        authenticate(env.getFirebase().getClassroomsSnapshot().child("group5"));
 
     }
 
@@ -224,7 +206,7 @@ public class UserLoginController {
                 System.out.println("oinside authenticate");
                 if (pass.equals(passwordInput.getText())) {
                     System.out.println("CORRECT PASSWORD");
-                    env.getUserHandler().setCurrentUser(usernameInput.getText());
+                    env.getUserHandler().setCurrentUser(usernameInput.getText(), txtClassroom.getText(), passwordInput.getText());
                     Stage stage = (Stage) btnLogin.getScene().getWindow();
                     stage.close();
                     env.getRootController().showWindow(true);

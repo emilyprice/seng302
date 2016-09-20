@@ -180,7 +180,7 @@ public class UserRegisterController {
     @FXML
     protected void register() {
 
-        DatabaseReference users = env.getFirebase().child("classrooms/"+ env.getUserHandler().getClassRoom()+ " users/"+txtUsername.getText());
+        DatabaseReference users = env.getFirebase().getFirebase().child("classrooms/"+ env.getUserHandler().getClassRoom()+ " users/"+txtUsername.getText());
 
 
 
@@ -208,7 +208,7 @@ public class UserRegisterController {
 
             //Log in user.
             if (env.getUserHandler().userPassExists(txtUsername.getText(), txtPassword.getText())) {
-                env.getUserHandler().setCurrentUser(txtUsername.getText());
+               // env.getUserHandler().setCurrentUser(txtUsername.getText()); TODO: fix this
 
                 env.getUserHandler().getCurrentUser().setUserFirstName(txtfname.getText());
                 env.getUserHandler().getCurrentUser().setUserLastName(txtlname.getText());

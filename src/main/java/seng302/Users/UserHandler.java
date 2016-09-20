@@ -39,7 +39,7 @@ public class UserHandler {
 
 
 
-    private String classRoom;
+    private String classroom;
 
     public UserHandler(Environment env){
         this.env = env;
@@ -224,8 +224,9 @@ public class UserHandler {
      * Sets the current user and loads user related properties.
      * @param userName
      */
-    public void setCurrentUser(String userName){
-        this.currentUser = new User(env, userName);
+    public void setCurrentUser(String userName, String classroom, String password){
+        this.classroom = classroom;
+        this.currentUser = new User(userName, password, env);
         currentUser.loadFullProperties();
         updateUserList(userName);
 
@@ -273,11 +274,11 @@ public class UserHandler {
     }
 
     public String getClassRoom() {
-        return classRoom;
+        return classroom;
     }
 
     public void setClassRoom(String classRoom) {
-        this.classRoom = classRoom;
+        this.classroom = classRoom;
     }
 
 }
