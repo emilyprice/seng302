@@ -12,6 +12,7 @@ import java.util.List;
 
 import seng302.Environment;
 import seng302.data.Term;
+import seng302.utility.MusicalTermsTutorBackEnd;
 
 public class MusicalTerm implements Command {
     private String result;
@@ -29,6 +30,8 @@ public class MusicalTerm implements Command {
     private boolean error = false;
 
     private ArrayList<String> rawInput;
+
+    private MusicalTermsTutorBackEnd termManager;
 
     private String type;
 
@@ -106,37 +109,24 @@ public class MusicalTerm implements Command {
     }
 
     private void lookupTerm() {
-        boolean resultSet = false;
-        for (Term term : this.terms) {
-            if (term.getMusicalTermName().equalsIgnoreCase(musicalTermName)) {
-                // Returns the correct information
-                if (infoToGet.equals("meaning")) {
-                    this.result = term.getMusicalTermDefinition();
-                    resultSet = true;
-                } else if (infoToGet.equals("origin")) {
-                    this.result = term.getMusicalTermOrigin();
-                    resultSet = true;
-                } else if (infoToGet.equals("category")) {
-                    this.result = term.getMusicalTermCategory();
-                    resultSet = true;
-                } else {
-                    // What the user is looking for is invalid.
-                    // This may never be reachable by the DSL, but is good to have regardless.
-                    this.result = String.format("[ERROR] %s is not recognised as part of a musical term.",
-                            infoToGet);
-                    resultSet = true;
-                    error = true;
-                }
+        Term foundTerm = termManager.getTermByName(musicalTermName);
 
-                //if a given term is not in the hash map it will return an error to the user
-            } else if (!resultSet) {
-                this.result = String.format("[ERROR] %s is not recognised as an existing musical term.",
-                        musicalTermName);
+        if (foundTerm != null) {
+            // Returns the correct information
+            if (infoToGet.equals("meaning")) {
+                this.result = foundTerm.getMusicalTermDefinition();
+            } else if (infoToGet.equals("origin")) {
+                this.result = foundTerm.getMusicalTermOrigin();
+            } else if (infoToGet.equals("category")) {
+                this.result = foundTerm.getMusicalTermCategory();
+            } else {
+                // What the user is looking for is invalid.
+                // This may never be reachable by the DSL, but is good to have regardless.
+                this.result = String.format("[ERROR] %s is not recognised as part of a musical term.",
+                        infoToGet);
                 error = true;
             }
-
-        }
-        if (!resultSet) {
+        } else {
             this.result = String.format("[ERROR] %s is not recognised as an existing musical term.",
                     musicalTermName);
             error = true;
@@ -148,6 +138,7 @@ public class MusicalTerm implements Command {
      * term exists in the transcript manager
      */
     public void execute(Environment env) {
+        this.termManager = env.getMttDataManager();
         this.terms = env.getMttDataManager().getTerms();
         if (lookupTerm) {
             lookupTerm();
@@ -160,6 +151,7 @@ public class MusicalTerm implements Command {
                 env.getUserHandler().getCurrentUser().checkMusicTerms();
             env.getEditManager().addToHistory("1", rawInput);
         }
+        System.out.println("setting result: " + result);
         env.getTranscriptManager().setResult(result);
     }
 
