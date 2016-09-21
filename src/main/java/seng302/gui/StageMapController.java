@@ -313,7 +313,7 @@ public class StageMapController {
     }
 
     @FXML
-    private void launchChordRecognitionAdvancedTutor() {
+    private void launchChordRecognitionTutor() {
 
         env.getRootController().getTutorFactory().openTutor("Chord Recognition Tutor");
     }

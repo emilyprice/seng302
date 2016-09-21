@@ -94,7 +94,11 @@ public class ChordRecognitionTutorController extends TutorController {
             playChords.setDisable(true);
             octaves.setValue(1);
             octaves.setDisable(true);
-            chordTypeBox.setValue("Both");
+            if(fullTutor == true) {
+                chordTypeBox.setValue("Both");
+            }else{
+                chordTypeBox.setValue("3 Notes");
+            }
             chordTypeBox.setDisable(true);
 
         }else{
