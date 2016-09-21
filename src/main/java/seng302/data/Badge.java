@@ -48,7 +48,7 @@ public class Badge {
             return;
         }
 
-        if(badgeProgress >= badgeLevels.get(currentBadgeType)){
+        while (badgeProgress >= badgeLevels.get(currentBadgeType)){
             currentBadgeType += 1;
             Image unlock = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
             List<String> badgeTypes = new ArrayList<>();
