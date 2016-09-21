@@ -51,6 +51,12 @@ public class Project {
 
     private Boolean visualiserOn;
 
+    public Boolean isUserMapData = true;
+
+
+
+
+
     /**
      * Constructor for creating a new project.
      *
@@ -106,6 +112,13 @@ public class Project {
 
 
         projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
+
+
+        try {
+            projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
+        }catch(Exception e){
+            System.err.println("cant save unlock map");
+        }
 
     }
 
@@ -214,10 +227,28 @@ public class Project {
             visualiserOn = false;
         }
 
+    }
 
-        env.getTranscriptManager().unsavedChanges = false;
 
 
+    /**
+     * Loads in the data for the stage map in regards to which tutors are locked and unlocked.
+     *
+     */
+    public void loadStageMapData() {
+        try {
+            Gson gson = new Gson();
+            HashMap<String, Boolean> unlockMap;
+            Type mapType = new TypeToken<HashMap<String, Boolean>>() {
+            }.getType();
+            unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
+            System.out.println(unlockMap);
+            if(unlockMap != null) {
+                env.getStageMapController().unlockStatus = unlockMap;
+            }
+        }catch(Exception e){
+            System.out.println("failed to load stageMap");
+        }
     }
 
 
@@ -271,6 +302,9 @@ public class Project {
                 break;
             case "visualiserOn":
                 currentValue = this.visualiserOn;
+                break;
+            case "unlockMap":
+                currentValue = env.getStageMapController().getUnlockStatus();
                 break;
         }
 

@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -23,8 +24,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import seng302.Environment;
+
+import javax.swing.*;
 
 /**
  * Handles and Creates Users.
@@ -85,6 +91,8 @@ public class UserPageController {
     AnchorPane summary;
 
     private Environment env;
+
+
 
 
     public void setEnvironment(Environment env) {
@@ -173,12 +181,22 @@ public class UserPageController {
                     setText(null);
                     setGraphic(null);
 
-//                } else if (!tutor.equals("Summary") && modeManager.tutorNumUnlocksMap.get(tutor) > modeManager.currentUnlocks) {
-//                    setDisable(true);
-//                    setMouseTransparent(true);
-//
-//                }
+                } else {
+                    //if in competitive mode, lock the relevant tabs
+                    if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
+                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
+                            setGraphic(new ImageView(lockImg));
+                            setTextFill(Color.GRAY);
+                            setText(tutor);
+                            setDisable(true);
+                        }
+
+
+                    } else {
+                        setDisable(false);
+                    }
                 }
+
             }
         });
 
