@@ -71,36 +71,26 @@ public class MusicalTerm implements Command {
 
 
     private void addTermBool() {
-        boolean resultSet = false;
-        for (Term term : terms) {
-            if (term.getMusicalTermName().equalsIgnoreCase(this.term.getMusicalTermName())) {
-                validAdd = false;
-                this.result = "[ERROR] Term with the name of " + this.term.getMusicalTermName() + " has already been added";
-                resultSet = true;
-            } else if (term.getMusicalTermDefinition().length() > 100) {
-                validAdd = false;
-                this.result = "[ERROR] Your musical term definition exceeds 100 characters. Please give a shorter definition.";
-                resultSet = true;
-            } else if (term.getMusicalTermCategory().length() > 100) {
-                validAdd = false;
-                this.result = "[ERROR] Your musical term category exceeds 100 characters. Please give a shorter category.";
-                resultSet = true;
-            } else if (term.getMusicalTermOrigin().length() > 100) {
-                validAdd = false;
-                this.result = "[ERROR] Your musical term origin exceeds 100 characters. Please give a shorter origin.";
-                resultSet = true;
-            } else if (term.getMusicalTermName().length() > 100) {
-                validAdd = false;
-                this.result = "[ERROR] Your musical term name exceeds 100 characters. Please give a shorter name.";
-                resultSet = true;
-            } else if (!resultSet) {
-                this.result = "Added term: " + this.term.getMusicalTermName() +
-                        "\nOrigin: " + this.term.getMusicalTermOrigin() + " \nCategory: " +
-                        this.term.getMusicalTermCategory() + "\nDefinition: "
-                        + this.term.getMusicalTermDefinition();
-            }
+        if (termManager.getTermByName(musicalTermName) != null) {
+            // If it exists, we cannot add it again
+            validAdd = false;
+            this.result = "[ERROR] Term with the name of " + this.term.getMusicalTermName() + " has already been added";
+        } else if (term.getMusicalTermDefinition().length() > 100) {
+            validAdd = false;
+            this.result = "[ERROR] Your musical term definition exceeds 100 characters. Please give a shorter definition.";
+        } else if (term.getMusicalTermCategory().length() > 100) {
+            validAdd = false;
+            this.result = "[ERROR] Your musical term category exceeds 100 characters. Please give a shorter category.";
+        } else if (term.getMusicalTermOrigin().length() > 100) {
+            validAdd = false;
+            this.result = "[ERROR] Your musical term origin exceeds 100 characters. Please give a shorter origin.";
+        } else if (term.getMusicalTermName().length() > 100) {
+            validAdd = false;
+            this.result = "[ERROR] Your musical term name exceeds 100 characters. Please give a shorter name.";
         }
-        if (!resultSet) {
+
+        // If there were no errors, go ahead and add the term
+        if (validAdd) {
             this.result = "Added term: " + this.term.getMusicalTermName() +
                     "\nOrigin: " + this.term.getMusicalTermOrigin() + " \nCategory: " +
                     this.term.getMusicalTermCategory() + "\nDefinition: "

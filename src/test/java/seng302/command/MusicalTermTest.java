@@ -8,11 +8,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+
 import seng302.Environment;
 import seng302.data.Term;
-import seng302.utility.MusicalTermsTutorBackEnd;
 import seng302.managers.TranscriptManager;
-import java.util.ArrayList;
+import seng302.utility.MusicalTermsTutorBackEnd;
+
 import static org.mockito.Mockito.verify;
 
 
@@ -25,7 +28,12 @@ public class MusicalTermTest extends TestCase {
     private TranscriptManager transcriptManager;
 
     private MusicalTermsTutorBackEnd tutorDataManger = new MusicalTermsTutorBackEnd();
-    private Term term = new Term("name","category","origin","description");
+    private Term term = new Term("name", "category", "origin", "description");
+
+    // Used for testing the character limit of terms
+    private String veryLongString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+            "aaaaaaaa";
 
     @Before
     public void setUp() throws Exception {
@@ -120,7 +128,7 @@ public class MusicalTermTest extends TestCase {
     }
 
     @Test
-    public void testOriginSpaceInName() throws Exception{
+    public void testOriginSpaceInName() throws Exception {
         //add new term
         executeInputWithSpaceInName();
         // get the meaning of
@@ -150,7 +158,7 @@ public class MusicalTermTest extends TestCase {
     }
 
     @Test
-    public void testCategorySpaceInName() throws Exception{
+    public void testCategorySpaceInName() throws Exception {
         //add new term
         executeInputWithSpaceInName();
         // get the meaning of
@@ -186,5 +194,58 @@ public class MusicalTermTest extends TestCase {
         musicalTermArray.add("definition");
         MusicalTerm termCommand = new MusicalTerm(musicalTermArray);
         termCommand.execute(env);
+    }
+
+    public void testDisallowLongName() {
+        ArrayList<String> musicalTermArray = new ArrayList<String>();
+
+        musicalTermArray.add(veryLongString);
+        musicalTermArray.add("category");
+        musicalTermArray.add("origin");
+        musicalTermArray.add("definition");
+        new MusicalTerm(musicalTermArray).execute(env);
+
+        verify(transcriptManager).setResult("[ERROR] Your musical term name exceeds " +
+                "100 characters. Please give a shorter name.");
+    }
+
+    public void testDisallowLongCategory() {
+        ArrayList<String> musicalTermArray = new ArrayList<String>();
+
+        musicalTermArray.add("name");
+        musicalTermArray.add(veryLongString);
+        musicalTermArray.add("origin");
+        musicalTermArray.add("definition");
+        new MusicalTerm(musicalTermArray).execute(env);
+
+        verify(transcriptManager).setResult("[ERROR] Your musical term category exceeds " +
+                "100 characters. Please give a shorter category.");
+    }
+
+    public void testDisallowLongOrigin() {
+        ArrayList<String> musicalTermArray = new ArrayList<String>();
+
+        musicalTermArray.add("name");
+        musicalTermArray.add("category");
+        musicalTermArray.add(veryLongString);
+        musicalTermArray.add("definition");
+        new MusicalTerm(musicalTermArray).execute(env);
+
+        verify(transcriptManager).setResult("[ERROR] Your musical term origin exceeds " +
+                "100 characters. Please give a shorter origin.");
+    }
+
+    public void testDisallowLongDefinition() {
+        ArrayList<String> musicalTermArray = new ArrayList<String>();
+
+        musicalTermArray.add("name");
+        musicalTermArray.add("category");
+        musicalTermArray.add("origin");
+        musicalTermArray.add(veryLongString);
+        new MusicalTerm(musicalTermArray).execute(env);
+
+        verify(transcriptManager).setResult("[ERROR] Your musical term definition exceeds " +
+                "100 characters. Please give a shorter definition.");
+
     }
 }
