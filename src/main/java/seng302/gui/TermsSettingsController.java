@@ -6,10 +6,12 @@ import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -50,34 +52,38 @@ public class TermsSettingsController {
 
     ImageView saveImage = new ImageView(new Image(getClass().getResourceAsStream("/images/plus-symbol.png"), 25, 25, false, false));
 
+    private ObservableList<String> termNames = FXCollections.observableArrayList();
+
     public void create(Environment env) {
         this.env = env;
         env.getRootController().setHeader("Musical Term Settings");
 
         editButton.setGraphic(editImage);
 
+        termNames.addListener((ListChangeListener<String>) c -> {
+            termsListView.getItems().setAll(termNames);
+        });
 
-        List<String> termNames = this.env.getMttDataManager().getTerms().stream().map(Term::getMusicalTermName).collect(Collectors.toList());
-
-        termsListView.getItems().setAll(termNames);
+        termNames.addAll(env.getMttDataManager().getTerms().stream().map(Term::getMusicalTermName).collect(Collectors.toList()));
 
         termsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            isEditMode = false;
-            toggleInputs();
-            // Display musical term with newvalue
-            selectedName.setText(newValue.toString());
+            if (newValue != null) {
+                isEditMode = false;
+                toggleInputs();
+                // Display musical term with newvalue
+                selectedName.setText(newValue.toString());
 
-            Term selectedTerm = env.getMttDataManager().getTermByName(newValue.toString());
+                Term selectedTerm = env.getMttDataManager().getTermByName(newValue.toString());
 
-            if (selectedTerm != null) {
-                selectedDefinition.setText(selectedTerm.getMusicalTermDefinition());
-                selectedCategory.setText(selectedTerm.getMusicalTermCategory());
-                selectedOrigin.setText(selectedTerm.getMusicalTermOrigin());
+                if (selectedTerm != null) {
+                    selectedDefinition.setText(selectedTerm.getMusicalTermDefinition());
+                    selectedCategory.setText(selectedTerm.getMusicalTermCategory());
+                    selectedOrigin.setText(selectedTerm.getMusicalTermOrigin());
+                }
             }
 
         });
 
-        termsListView.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -94,6 +100,16 @@ public class TermsSettingsController {
 
             env.getMttDataManager().editTerm(editInfo);
             env.getUserHandler().getCurrentUser().checkMusicTerms();
+
+            // If the name has changed, update the list
+            if (!editInfo.get("oldName").equals(editInfo.get("name"))) {
+                int index = termsListView.getSelectionModel().getSelectedIndex();
+                termNames.set(index, editInfo.get("name"));
+                termsListView.getSelectionModel().selectIndices(index);
+            }
+
+
+
         } else {
             //Enter edit mode
             isEditMode = true;
