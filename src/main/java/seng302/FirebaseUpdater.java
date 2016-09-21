@@ -93,6 +93,14 @@ public class FirebaseUpdater {
 
     }
 
+    private void updateUserProperties(){
+        System.out.println("update user properties called");
+        if(env.getUserHandler().getCurrentUser() != null){
+            System.out.println("current user is not null!");
+            env.getUserHandler().getCurrentUser().loadProperties();
+        }
+    }
+
     public void createUserSnapshot(String classroom, String user, Boolean blocking){
 
         final AtomicBoolean done = new AtomicBoolean(false);
@@ -101,7 +109,9 @@ public class FirebaseUpdater {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userSnapshot = dataSnapshot;
+                //updateUserProperties();
                 //env.getUserHandler().getCurrentUser().
+
                 //TODO: update user properties
                 done.set(true);
 

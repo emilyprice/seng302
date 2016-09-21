@@ -86,67 +86,10 @@ public class User {
 
     }
 
-    /**
-     * loads extensive user properties (after user login) This should load all properties which
-     * aren't neccessary before the user logs in.
-     */
-    public void loadFullProperties() {
-        /**
-         * Current Theme
-         * Musical Terms
-         * Full name
-         * Project Handler
-         * Theme
-         */
-
-        //Load musical terms property
-        Gson gson = new Gson();
-        Type termsType = new TypeToken<ArrayList<Term>>() {
-        }.getType();
-        ArrayList<Term> terms = gson.fromJson((String) properties.get("musicalTerms"), termsType);
-        System.out.println("full properties: ");
-        System.out.println(properties);
-
-        if (terms != null) {
-            env.getMttDataManager().setTerms(terms);
-        }
-
-        try {
-            userFirstName = (properties.get("firstName")).toString();
-        } catch (NullPointerException e) {
-            userFirstName = "";
-        }
-
-        try {
-            userLastName = (properties.get("lastName")).toString();
-        } catch (NullPointerException e) {
-            userLastName = "";
-        }
-
-        try {
-            //Theme
-            themePrimary = (properties.get("themePrimary")).toString();
-        } catch (NullPointerException e) {
-            System.err.println("theme doesn't exist - setting default.");
-            themePrimary = "#1E88E5";
-        }
-
-        try {
-            //Theme
-            themeSecondary = (properties.get("themeSecondary")).toString();
-        } catch (NullPointerException e) {
-            themeSecondary = "white";
-        }
-        lastSignIn = new Date();
 
 
 
-        projectHandler = new ProjectHandler(env, userName);
-
-    }
-
-
-    private void loadProperties(){
+    public void loadProperties(){
         /**
          * Current Theme
          * Musical Terms
@@ -174,18 +117,6 @@ public class User {
 
         }
 
-        //Password
-        //serPassword = (properties.get("password")).toString();
-
-/*
-        try {
-            //Theme
-            themePrimary = (properties.get("themeColor")).toString();
-        } catch (NullPointerException e) {
-            themePrimary = "white";
-            System.out.println("theme primary not ");
-        }
-*/
         //Load musical terms property
        // Gson gson = new Gson();
         Type termsType = new TypeToken<ArrayList<Term>>() {
