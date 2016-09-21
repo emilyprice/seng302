@@ -34,19 +34,21 @@ public class Term {
     }
 
     public void updateInfo(String editedField, String newValue) {
-        switch (editedField) {
-            case "name":
-                this.musicalTermName = newValue;
-                break;
-            case "category":
-                this.musicalTermCategory = newValue;
-                break;
-            case "origin":
-                this.musicalTermOrigin = newValue;
-                break;
-            case "definition":
-                this.musicalTermDefinition = newValue;
-                break;
+        if (newValue.length() <= 100) {
+            switch (editedField) {
+                case "name":
+                    this.musicalTermName = newValue;
+                    break;
+                case "category":
+                    this.musicalTermCategory = newValue;
+                    break;
+                case "origin":
+                    this.musicalTermOrigin = newValue;
+                    break;
+                case "definition":
+                    this.musicalTermDefinition = newValue;
+                    break;
+            }
         }
     }
 

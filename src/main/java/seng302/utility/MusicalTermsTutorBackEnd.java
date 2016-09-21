@@ -43,7 +43,13 @@ public class MusicalTermsTutorBackEnd {
         if (editedTerm != null) {
 
             for (Map.Entry<String, String> entry : termInfo.entrySet()) {
-                editedTerm.updateInfo(entry.getKey(), entry.getValue());
+
+                // If a term exists with the new name, we cannot apply that change
+                if (getTermByName(entry.getValue()) == null) {
+                    editedTerm.updateInfo(entry.getKey(), entry.getValue());
+                } else {
+                    //TODO: tell the user in a nice way that this name is invalid
+                }
             }
 
         }
