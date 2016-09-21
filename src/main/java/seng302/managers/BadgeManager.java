@@ -114,6 +114,11 @@ public class BadgeManager {
         questionBadges.add(120);
         questionBadges.add(600);
 
+        ArrayList<Integer> musicianBadges = new ArrayList<>();
+        musicianBadges.add(1);
+        musicianBadges.add(3);
+        musicianBadges.add(10);
+
         ArrayList<Integer> tutorTotal = new ArrayList<>();
         tutorTotal.add(10);
 
@@ -131,10 +136,10 @@ public class BadgeManager {
         }
 
         //initialise overall badges
-        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 0, 0, "completist"));
         overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", tutorTotal, 0, 0, "gradHat"));
-        overallBadges.add(new Badge("Musician", null, "Number of instruments used", sessionBadges, 0, 0, "gradHat"));
-        overallBadges.add(new Badge("Creative", null, "Change your theme", null, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Instrument master", null, "Use different instruments", musicianBadges, 0, 0, "gradHat"));
+        overallBadges.add(new Badge("Creative", null, "Change your theme", null, 0, 0, "paint-brush"));
         overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "speedster"));
         overallBadges.add(new Badge("TwinkleTwinkle", null, "Find hidden secret", null, 0, 0, "twinkle"));
 

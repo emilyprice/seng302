@@ -99,6 +99,7 @@ public class ProjectSettingsController {
         instrumentSelector.valueProperty().addListener((observable, oldValue, newValue) -> {
             env.getPlayer().setInstrument(InstrumentUtility.getInstrumentByName((String) newValue, env));
             projectHandler.getCurrentProject().checkChanges("instrument");
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Instrument master").updateBadgeProgress(1);
         });
     }
 
