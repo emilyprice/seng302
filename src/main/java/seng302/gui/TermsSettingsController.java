@@ -2,9 +2,11 @@ package seng302.gui;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,9 +15,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import seng302.Environment;
 import seng302.data.Term;
 
@@ -117,7 +122,6 @@ public class TermsSettingsController {
             }
 
 
-
         } else {
             //Enter edit mode
             isEditMode = true;
@@ -136,18 +140,44 @@ public class TermsSettingsController {
 
     @FXML
     private void deleteTerm() {
-        env.getMttDataManager().removeTerm(selectedName.getText());
-        env.getUserHandler().getCurrentUser().checkMusicTerms();
-        termNames.remove(selectedName.getText());
-        if (termNames.size() == 0) {
-            // show prompt text
-            selectedName.clear();
-            selectedCategory.clear();
-            selectedDefinition.clear();
-            selectedOrigin.clear();
-        }
 
-        termsListView.getSelectionModel().selectFirst();
+        FXMLLoader popupLoader = new FXMLLoader(getClass().getResource("/Views/PopUpModal.fxml"));
+        try {
+            BorderPane modal = popupLoader.load();
+            JFXPopup popup = new JFXPopup();
+            popup.setContent(modal);
+
+            popup.setPopupContainer(env.getRootController().paneMain);
+            popup.setSource(deleteButton);
+            popup.show(JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT);
+            Label header = (Label) modal.lookup("#lblHeader");
+
+            JFXButton btnCancel = (JFXButton) modal.lookup("#btnCancel");
+            btnCancel.setOnAction((e) -> popup.close());
+
+            ((JFXButton) modal.lookup("#btnDelete")).
+                    setOnAction((event) -> {
+                        env.getMttDataManager().removeTerm(selectedName.getText());
+                        env.getUserHandler().getCurrentUser().checkMusicTerms();
+                        termNames.remove(selectedName.getText());
+                        if (termNames.size() == 0) {
+                            // show prompt text
+                            selectedName.clear();
+                            selectedCategory.clear();
+                            selectedDefinition.clear();
+                            selectedOrigin.clear();
+                        }
+
+                        termsListView.getSelectionModel().selectFirst();
+
+                        popup.close();
+                    });
+
+
+            header.setText("Are you sure you wish to delete term: " + selectedName.getText());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
