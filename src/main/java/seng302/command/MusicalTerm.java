@@ -151,7 +151,6 @@ public class MusicalTerm implements Command {
                 env.getUserHandler().getCurrentUser().checkMusicTerms();
             env.getEditManager().addToHistory("1", rawInput);
         }
-        System.out.println("setting result: " + result);
         env.getTranscriptManager().setResult(result);
     }
 
