@@ -124,14 +124,21 @@ public class TutorHandler {
         DataSnapshot tutorSnap = env.getFirebase().getUserSnapshot().child("projects/" +
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + id);
 
+        ArrayList<TutorRecord> records = new ArrayList<>();
+
         tutorSnap.getChildren().forEach((key) -> {
                     TutorRecord record = new TutorRecord();
                     HashMap<String, Object> recordMap = (HashMap<String, Object>) key.getValue();
-                    record.setDate((Date) recordMap.get("date"));
-                    //record.setFinished();
+            HashMap<String, Object> dateMap = (HashMap<String, Object>) recordMap.get("date");
+            Date theDate = new Date((Long) dateMap.get("time"));
+            record.setDate(theDate);
+            record.setStats((Map<String, Number>) recordMap.get("stats"));
+            record.setQuestions((List<Map<String, String>>) recordMap.get("questions"));
+            record.setFinished();
+            records.add(record);
                 }
         );
-        return new ArrayList<TutorRecord>();
+        return records;
 
     }
 

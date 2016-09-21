@@ -33,6 +33,10 @@ public class TutorRecord {
         return question;
     }
 
+    public void setQuestions(List<Map<String, String>> questions) {
+        this.questions = questions;
+    }
+
     public List getQuestions() {
         return questions;
     }
@@ -43,6 +47,10 @@ public class TutorRecord {
 
     public Date getDate() {
         return date;
+    }
+
+    public void setStats(Map<String, Number> stats) {
+        this.stats = stats;
     }
 
     /**

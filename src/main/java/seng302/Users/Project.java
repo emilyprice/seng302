@@ -10,20 +10,14 @@ package seng302.Users;
  */
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.controlsfx.control.Notifications;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 
 import java.lang.reflect.Type;
-
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,7 +45,7 @@ public class Project {
     private Integer level;
 
     Path projectDirectory;
-    public String  projectName;
+    public String projectName;
 
     boolean saved = true;
 
@@ -99,7 +93,6 @@ public class Project {
     private void saveProperties() {
 
 
-
         Gson gson = new Gson();
         projectSettings.put("tempo", env.getPlayer().getTempo());
         String transcriptString = gson.toJson(env.getTranscriptManager().getTranscriptTuples());
@@ -129,7 +122,7 @@ public class Project {
     private void loadProperties() {
 
 
-        DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/"+projectName);
+        DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/" + projectName);
         System.out.println(projectSnapshot.getKey());
         projectSettings = (HashMap<String, Object>) projectSnapshot.getValue();
 
@@ -149,17 +142,13 @@ public class Project {
         ArrayList<OutputTuple> transcript;
         Type transcriptType = new TypeToken<ArrayList<OutputTuple>>() {
         }.getType();
-        try{
+        try {
             transcript = gson.fromJson((String) projectSettings.get("transcript"), transcriptType);
             env.getTranscriptManager().setTranscriptContent(transcript);
             env.getRootController().setTranscriptPaneText(env.getTranscriptManager().convertToText());
-        }catch(NullPointerException np){
+        } catch (NullPointerException np) {
 
         }
-
-
-
-
 
         //Rhythm
         int[] rhythms;
@@ -258,12 +247,9 @@ public class Project {
      * @param projectName Project directory address.
      */
     public void saveProject(String projectName) {
-
         saveProperties();
         env.getFirebase().getUserRef().child("projects/" + projectName).updateChildren(projectSettings);
         env.getRootController().removeUnsavedChangesIndicator();
-
-
     }
 
 
@@ -317,7 +303,7 @@ public class Project {
     public void loadProject(String pName) {
         DataSnapshot project = env.getFirebase().getUserSnapshot().child("projects/" + pName);
         env.resetProjectEnvironment();
-        if(project.exists()){
+        if (project.exists()) {
 
         } else {
             System.err.println("Tried to load project but it didn't exist");
