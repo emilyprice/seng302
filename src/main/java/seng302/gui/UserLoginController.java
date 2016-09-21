@@ -143,7 +143,7 @@ public class UserLoginController {
 
             String dpUrl = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() +"/users/"
             +user+"/properties/profilePicUrl").getValue().toString();
-            System.out.println(dpUrl);
+
             Image img = new Image(dpUrl);
             recentUsersHbox.getChildren().add(generateRecentUser(user, img));
         }

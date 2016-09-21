@@ -55,42 +55,6 @@ public class UserHandler {
         return userList;
     }
 
-    /**
-     * Returns a Collection of User Objects, which containing basic information about users.
-     * To be used before logging into a user.
-     *
-     * @return
-
-    public HashMap<String, User> getUsers(){
-        ArrayList<String> names = (ArrayList<String>) userList;
-        HashMap<String, User> users = new HashMap<>();
-
-        for(String un : names){
-            users.put(un, new User(env, un));
-        }
-        return users;
-    }
-     */
-
-
-    /**
-     * Returns a collection of recent users to be displayed on the login screen.
-     * @return
-
-    public ArrayList<User> getRecentUsers(){
-        ArrayList<User> recentUsersTemp = new ArrayList<User>();
-
-        for (Object user: recentUsers) {
-            User tempUser = new User(env, user.toString());
-            recentUsersTemp.add(tempUser);
-        }
-
-        return  recentUsersTemp;
-
-
-    }
-     */
-
     public ArrayList<String> getRecentUserNames(){
         return recentUsers;
     }
@@ -167,52 +131,6 @@ public class UserHandler {
 
         }
 
-    /*
-
-        try {
-            UsersInfo = (JSONObject) parser.parse(new FileReader(userDirectory + "/user_list.json"));
-            this.userList = (JSONArray) UsersInfo.get("users");
-
-            this.recentUsers = (JSONArray) UsersInfo.get("recentUsers");
-
-        } catch (FileNotFoundException e) {
-            try {
-                System.err.println("users.json Does not exist! - Creating new one");
-                userList = new JSONArray();
-
-
-                UsersInfo.put("users", userList);
-                UsersInfo.put("recentUsers", recentUsers);
-
-                if (!Files.isDirectory(userDirectory)) {
-                    //Create Projects path doesn't exist.
-                    try {
-                        Files.createDirectories(userDirectory);
-
-
-                    } catch (IOException eIO3) {
-                        //Failed to create the directory.
-                        System.err.println("Well UserData directory failed to create.. lost cause.");
-                    }
-                }
-
-                FileWriter file = new FileWriter(userDirectory + "/user_list.json");
-                file.write(UsersInfo.toJSONString());
-                file.flush();
-                file.close();
-
-            } catch (IOException e2) {
-                System.err.println("Failed to create users.json file.");
-
-
-            }
-        }catch (IOException e) {
-                //e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        */
-
     }
 
 
@@ -268,25 +186,6 @@ public class UserHandler {
         saveLocalData();
     }
 
-    /**
-     * Updates the json list of user names, used to fill the quick load list.
-     *
-
-    public void updateUserList(String username) {
-        if (!userList.contains(username)) {
-            userList.add(username);
-        }
-        if(!recentUsers.contains(username)){
-            if(recentUsers.size() == 4){
-                recentUsers.remove(0);
-            }
-            recentUsers.add(username);
-        }
-        saveUserList();
-
-
-    }
-     */
 
     /**
      * Writes the currently saved user settings to disc.
@@ -351,17 +250,17 @@ public class UserHandler {
 
         //Step 3. Close the main window, which helps remove any file locks and request garbage collection.
         env.getRootController().getStage().close();
-        System.gc();
+        /*System.gc();*/
 
         //Step 4. Delete all user folders and files.
-        File userDir = Paths.get("UserData/classrooms/group5/users/" + username).toFile();
+        /*File userDir = Paths.get("UserData/classrooms/group5/users/" + username).toFile();
 
         if (userDir.isDirectory()) {
             Boolean res = FileHandler.deleteDirectory(userDir);
             if (!res) env.getRootController().errorAlert("Failed to fully remove the deleted user directory.");
         } else {
             System.err.println("Could not delete the user directory");
-        }
+        }*/
 
 
         //Step 5. Open the User login window.
