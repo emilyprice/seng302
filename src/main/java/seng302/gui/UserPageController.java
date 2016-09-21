@@ -104,7 +104,7 @@ public class UserPageController {
         populateUserOptions();
 
 
-        //imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
+        imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         updateLevelBadge();
 
         try {

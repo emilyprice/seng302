@@ -2,7 +2,14 @@ package seng302;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,6 +31,12 @@ public class FirebaseUpdater {
     DataSnapshot userSnapshot;
 
     DataSnapshot classroomsSnapshot;
+
+    public Cloudinary getImageCloud() {
+        return imageCloud;
+    }
+
+    Cloudinary imageCloud;
     private Environment env;
 
 
@@ -49,6 +62,11 @@ public class FirebaseUpdater {
             }
 
         });
+
+        imageCloud = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "allegro123",
+                "api_key", "732823974447246",
+                "api_secret", "nGNnDUmFxWEG_lPZoJQCKyfz7hw"));
     }
 
     private void initializeFirebase(){

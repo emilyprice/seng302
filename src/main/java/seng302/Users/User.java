@@ -4,16 +4,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -23,7 +14,6 @@ import java.util.HashMap;
 import javafx.scene.image.Image;
 import seng302.Environment;
 import seng302.data.Term;
-import seng302.utility.FileHandler;
 
 /**
  * Handles functionality for representing and manipulating a user's information. Also handles saving
@@ -34,8 +24,6 @@ public class User {
     private String userFullName, userPassword, themePrimary, themeSecondary;
 
     private String userName;
-
-    private Path profilePicPath;
 
     private ProjectHandler projectHandler;
 
@@ -52,6 +40,8 @@ public class User {
     private String userLastName;
 
     private DataSnapshot userSnapshot;
+
+    private String profilePicUrl;
 
 
     /**
@@ -77,18 +67,6 @@ public class User {
         //loadBasicProperties();
         loadProperties();
         saveProperties();
-//
-//        Path filePath = Paths.get(this.userDirectory.toString() + "/profilePicture");
-//        try {
-//            URI defaultPath = getClass().getResource("/images/testDP.jpg").toURI();
-//            FileHandler.copyFolder(new File(defaultPath), filePath.toFile());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//
-//        }
-//
-//        profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
-
         projectHandler = new ProjectHandler(env, userName);
 
     }
@@ -107,8 +85,6 @@ public class User {
         //properties = new JSONObject();
         //loadBasicProperties();
        // loadProperties();
-        profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
-
 
     }
 
@@ -254,6 +230,13 @@ public class User {
         } catch (NullPointerException e) {
             themeSecondary = "white";
         }
+
+        try {
+            //profile pic
+            profilePicUrl = (properties.get("profilePicUrl")).toString();
+        } catch (NullPointerException e) {
+            profilePicUrl = "http://res.cloudinary.com/allegro123/image/upload/v1474434800/testDP_qmwncc.jpg";
+        }
         env.getThemeHandler().setTheme(themePrimary, themeSecondary);
 
 
@@ -340,6 +323,7 @@ public class User {
         properties.put("musicalTerms", musicalTermsJSON);
         String lastSignInJSON = gson.toJson(lastSignIn);
         properties.put("signInTime", lastSignInJSON);
+        properties.put("profilePicUrl", profilePicUrl);
 
 
     }
@@ -350,7 +334,7 @@ public class User {
     public void saveProperties() {
 
         updateProperties();
-        System.out.println("saveProeprties: " + properties);
+        System.out.println("saveProperties: " + properties);
         env.getFirebase().getUserRef().child("properties").updateChildren(properties);
 
     }
@@ -432,12 +416,12 @@ public class User {
         return userName;
     }
 
-    public void setUserPicture(Path imagePath) {
-        this.profilePicPath = imagePath;
+    public void setUserPicture(String imageUrl) {
+        this.profilePicUrl = imageUrl;
     }
 
     public Image getUserPicture() {
-        return new Image(profilePicPath.toUri().toString());
+        return new Image(this.profilePicUrl);
     }
 
     public void setUserFirstName(String name) {
