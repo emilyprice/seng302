@@ -5,7 +5,6 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -24,13 +23,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.*;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import seng302.Environment;
-
-import javax.swing.*;
 
 /**
  * Handles and Creates Users.
