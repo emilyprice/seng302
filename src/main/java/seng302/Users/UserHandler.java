@@ -199,9 +199,6 @@ public class UserHandler {
 
     }
 
-    public void logOut() {
-
-    }
 
 
     /**

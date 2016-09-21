@@ -2,7 +2,9 @@ package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
 
+import com.google.firebase.database.core.SnapshotHolder;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
@@ -43,10 +45,13 @@ public class UserLoginController {
     JFXButton btnRegister;
 
     @FXML
-    Label labelError;
+    HBox hbClassroom;
+
 
     @FXML
-    JFXTextField txtClassroom;
+    private JFXComboBox ddClassroom;
+
+
 
     @FXML
     JFXButton btnLogin;
@@ -78,6 +83,11 @@ public class UserLoginController {
 
     public void setEnv(Environment env) {
         this.env = env;
+
+        for(DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()){
+            ddClassroom.getItems().add(classroom.getKey());
+        }
+
     }
 
 
@@ -143,34 +153,57 @@ public class UserLoginController {
     @FXML
     protected void register() {
 
-        FXMLLoader loader1 = new FXMLLoader();
-        loader1.setLocation(getClass().getResource("/Views/UserRegistration.fxml"));
+        if(classroomSelected()){
+            FXMLLoader loader1 = new FXMLLoader();
+            loader1.setLocation(getClass().getResource("/Views/UserRegistration.fxml"));
 
-        Parent root1 = null;
-        try {
-            root1 = loader1.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+            Parent root1 = null;
+            try {
+                root1 = loader1.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Scene scene1 = new Scene(root1);
+            Stage registerStage = (Stage) btnLogin.getScene().getWindow();
+
+            registerStage.setTitle("Register new user for: " + ddClassroom.getValue().toString());
+            registerStage.setScene(scene1);
+
+            registerStage.setOnCloseRequest(event -> {
+                System.exit(0);
+                event.consume();
+            });
+
+            registerStage.setMinWidth(600);
+            Double initialHeight = registerStage.getHeight();
+            registerStage.setMinHeight(initialHeight);
+
+            registerStage.show();
+            UserRegisterController userRegisterController = loader1.getController();
+            userRegisterController.setEnv(env);
         }
-        Scene scene1 = new Scene(root1);
-        Stage registerStage = (Stage) btnLogin.getScene().getWindow();
 
-        registerStage.setTitle("Register new user");
-        registerStage.setScene(scene1);
 
-        registerStage.setOnCloseRequest(event -> {
-            System.exit(0);
-            event.consume();
-        });
 
-        registerStage.setMinWidth(600);
-        Double initialHeight = registerStage.getHeight();
-        registerStage.setMinHeight(initialHeight);
+    }
+    @FXML
+    void onClassroomChange() {
+        classroomSelected();
+    }
 
-        registerStage.show();
-        UserRegisterController userRegisterController = loader1.getController();
-        userRegisterController.setEnv(env);
+    private Boolean classroomSelected(){
+        if(ddClassroom.getValue() != null){
+            hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: white;");
+            return true;
+        }
+        hbClassroom.setStyle("-fx-border-style: solid;-fx-border-color: red;-fx-background-color: white;");
 
+        return false;
+    }
+
+    private void  populateClassrooms(ArrayList<String> items){
+
+            ddClassroom.getItems().addAll(items);
 
     }
 
@@ -187,7 +220,14 @@ public class UserLoginController {
     @FXML
     protected void logIn() {
 
-        authenticate(env.getFirebase().getClassroomsSnapshot().child("group5"));
+        if(classroomSelected()){
+            //Classroom dropdown value selected.
+            authenticate(env.getFirebase().getClassroomsSnapshot().child(ddClassroom.getValue().toString()));
+        }
+        else{
+            //TODO: Handle having not have selected a classroom.
+        }
+
 
     }
 
@@ -197,12 +237,11 @@ public class UserLoginController {
 
             if (userfb.exists()) {
                 //User exists
-                env.getUserHandler().setClassRoom(txtClassroom.getText());
+                env.getUserHandler().setClassRoom(ddClassroom.getValue().toString());
                 String pass = userfb.child("/properties/password").getValue().toString();
-                System.out.println("inside authenticate");
+
                 if (pass.equals(passwordInput.getText())) {
-                    System.out.println("CORRECT PASSWORD");
-                    env.getUserHandler().setCurrentUser(usernameInput.getText(), txtClassroom.getText(), passwordInput.getText());
+                    env.getUserHandler().setCurrentUser(usernameInput.getText(), ddClassroom.getValue().toString(), passwordInput.getText());
                     Stage stage = (Stage) btnLogin.getScene().getWindow();
                     stage.close();
                     env.getRootController().showWindow(true);
@@ -225,9 +264,9 @@ public class UserLoginController {
             System.out.println("classroom doesn't exist");
             //Handle classroom doesn't exist
             passwordValidator.setMessage("Classroom doesn't exist.");
-            txtClassroom.clear();
-            txtClassroom.validate();
-            txtClassroom.requestFocus();
+//            txtClassroom.clear();
+//            txtClassroom.validate();
+//            txtClassroom.requestFocus();
         }
 
 
