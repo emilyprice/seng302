@@ -84,6 +84,8 @@ public class TermsSettingsController {
 
         });
 
+        termsListView.getSelectionModel().selectFirst();
+
     }
 
     @FXML
