@@ -136,6 +136,18 @@ public class TermsSettingsController {
 
     @FXML
     private void deleteTerm() {
+        env.getMttDataManager().removeTerm(selectedName.getText());
+        env.getUserHandler().getCurrentUser().checkMusicTerms();
+        termNames.remove(selectedName.getText());
+        if (termNames.size() == 0) {
+            // show prompt text
+            selectedName.clear();
+            selectedCategory.clear();
+            selectedDefinition.clear();
+            selectedOrigin.clear();
+        }
+
+        termsListView.getSelectionModel().selectFirst();
 
     }
 
