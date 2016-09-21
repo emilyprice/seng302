@@ -3,13 +3,11 @@ package seng302.gui;
 
 import com.jfoenix.controls.JFXBadge;
 
-import javafx.stage.StageStyle;
 import org.json.simple.JSONArray;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -30,12 +28,10 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -689,11 +685,6 @@ public class RootController implements Initializable {
         selectItem.setOnAction(event -> {
             if (saveChangesDialog()) selectProjectDirectory();
         });
-        SeparatorMenuItem divider = new SeparatorMenuItem();
-        divider.setText("Recent Projects..");
-        selectItem.acceleratorProperty().setValue(KeyCombination.keyCombination("Shortcut+O"));
-        menuOpenProjects.getItems().add(selectItem);
-        menuOpenProjects.getItems().add(divider);
 
         for (int i = projects.size() - 1; i >= 0; i--) {
             final String projectName = projects.get(i).toString();
