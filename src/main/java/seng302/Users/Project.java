@@ -119,7 +119,6 @@ public class Project {
         projectSettings.put("experience", this.experience);
 
         projectSettings.put("competitionMode", gson.toJson(isCompetitiveMode.toString()));
-        System.out.println(visualiserOn);
         projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
         
         projectSettings.put("overallBadges", gson.toJson(badgeManager.getOverallBadges()));
@@ -230,7 +229,6 @@ public class Project {
             visualiserOn = false;
         }
 
-    }
 
         //badges
         //overallBadges
@@ -256,6 +254,7 @@ public class Project {
         badgeManager.replaceTutor100AllMap(tutor100Map);
 
         env.getTranscriptManager().unsavedChanges = false;
+    }
 
 
     /**
@@ -269,7 +268,6 @@ public class Project {
             Type mapType = new TypeToken<HashMap<String, Boolean>>() {
             }.getType();
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
-            System.out.println(unlockMap);
             if(unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
             }
