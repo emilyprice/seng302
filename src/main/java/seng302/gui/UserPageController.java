@@ -16,14 +16,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import seng302.Environment;
@@ -362,6 +360,10 @@ public class UserPageController {
      */
     public String getTimePeriod() {
         return convert.toString(timeSlider.getValue());
+    }
+
+    public TutorStatsController getStatsController() {
+        return statsController;
     }
 
 }
