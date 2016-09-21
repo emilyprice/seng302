@@ -26,6 +26,11 @@ public class MusicalTermsTutorBackEnd {
         this.terms = t;
     }
 
+    /**
+     * Provided with the name of a term, deletes that term from the manager
+     *
+     * @param termName The name of the term to be deleted.
+     */
     public void removeTerm(String termName) {
         int termToRemove = 0;
         for (Term term : this.terms) {
@@ -37,6 +42,13 @@ public class MusicalTermsTutorBackEnd {
 
     }
 
+    /**
+     * Alters any field or any number of fields of any musical term.
+     *
+     * @param termInfo A map containing the name (to find the term object by) and any altered
+     *                 fields. May contain the following keys: oldName, name, category, origin,
+     *                 description.
+     */
     public void editTerm(Map<String, String> termInfo) {
         Term editedTerm = getTermByName(termInfo.get("oldName"));
 
@@ -56,6 +68,12 @@ public class MusicalTermsTutorBackEnd {
 
     }
 
+    /**
+     * Given a string, attempts to find a musical term by the name of that string.
+     *
+     * @param name A string representing a musical term to be found
+     * @return The term with the given name if applicable, else null.
+     */
     public Term getTermByName(String name) {
         for (Term term : terms) {
             if (term.getMusicalTermName().equalsIgnoreCase(name)) {
