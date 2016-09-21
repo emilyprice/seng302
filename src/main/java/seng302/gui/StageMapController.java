@@ -37,7 +37,7 @@ public class StageMapController {
     private Button diatonicChordsTutorButton;
 
     @FXML
-    private Button scaleRecognitionAdvancedTutorButton;
+    private Button basicScaleRecognitionTutorButton;
 
     @FXML
     private Button majorModesTutorButton;
@@ -58,7 +58,7 @@ public class StageMapController {
     private Button scaleSpellingTutorButton;
 
     @FXML
-    private Button chordRecognitionAdvancedTutorButton;
+    private Button basicChordRecognitionTutorButton;
 
     @FXML
     private Button intervalRecognitionButton;
@@ -132,11 +132,11 @@ public class StageMapController {
     private void generateConverted(){
         converted.put("Musical Terms Tutor", "musicalTermsTutor");
         converted.put("Pitch Comparison Tutor", "pitchTutor" );
-        converted.put("Scale Recognition Tutor","scaleTutor");
-        converted.put("Chord Recognition Tutor", "chordTutor");
+        converted.put("Scale Recognition Tutor (Basic)","basicScaleTutor");
+        converted.put("Chord Recognition Tutor (Basic)", "basicChordTutor");
         converted.put("Interval Recognition Tutor", "intervalTutor");
-        converted.put("Scale Recognition TutorA", "scaleTutorAdvanced");
-        converted.put("Chord Recognition Tutor", "chordTutorAdvanced");
+        converted.put("Scale Recognition Tutor", "scaleTutor");
+        converted.put("Chord Recognition Tutor", "chordTutor");
         converted.put("Chord Spelling Tutor", "chordSpellingTutor");
         converted.put("Scale Spelling Tutor", "scaleSpellingTutor");
         converted.put("Key Signature Tutor", "keySignatureTutor");
@@ -152,11 +152,11 @@ public class StageMapController {
         //pitch tutor and musical terms tutor are unlocked by default
         tutorOrder.add("musicalTermsTutor");
         tutorOrder.add("pitchTutor");
+        tutorOrder.add("basicScaleTutor");
+        tutorOrder.add("basicChordTutor");
+        tutorOrder.add("intervalTutor");
         tutorOrder.add("scaleTutor");
         tutorOrder.add("chordTutor");
-        tutorOrder.add("intervalTutor");
-        tutorOrder.add("scaleTutorAdvanced");
-        tutorOrder.add("chordTutorAdvanced");
         tutorOrder.add("chordSpellingTutor");
         tutorOrder.add("scaleSpellingTutor");
         tutorOrder.add("keySignatureTutor");
@@ -171,11 +171,11 @@ public class StageMapController {
     private void generateTutorAndButtonNames() {
         tutorAndButton.put("musicalTermsTutor", musicalTermsTutorButton);
         tutorAndButton.put("pitchTutor", pitchTutorButton);
+        tutorAndButton.put("basicScaleTutor", basicScaleRecognitionTutorButton);
+        tutorAndButton.put("basicChordTutor", basicChordRecognitionTutorButton);
+        tutorAndButton.put("intervalTutor", intervalRecognitionButton);
         tutorAndButton.put("scaleTutor", scaleRecognitionTutorButton);
         tutorAndButton.put("chordTutor", chordRecognitionTutorButton);
-        tutorAndButton.put("intervalTutor", intervalRecognitionButton);
-        tutorAndButton.put("scaleTutorAdvanced", scaleRecognitionAdvancedTutorButton);
-        tutorAndButton.put("chordTutorAdvanced", chordRecognitionAdvancedTutorButton);
         tutorAndButton.put("chordSpellingTutor", chordSpellingTutorButton);
         tutorAndButton.put("scaleSpellingTutor", scaleSpellingTutorButton);
         tutorAndButton.put("keySignatureTutor",keySignaturesTutorButton);
@@ -191,11 +191,11 @@ public class StageMapController {
         //pitch tutor and musical terms tutor are unlocked by default
         unlockStatus.put("musicalTermsTutor", true);
         unlockStatus.put("pitchTutor", true);
+        unlockStatus.put("basicScaleTutor", false);
+        unlockStatus.put("basicChordTutor", false);
+        unlockStatus.put("intervalTutor", false);
         unlockStatus.put("scaleTutor", false);
         unlockStatus.put("chordTutor", false);
-        unlockStatus.put("intervalTutor", false);
-        unlockStatus.put("scaleTutorAdvanced", false);
-        unlockStatus.put("chordTutorAdvanced", false);
         unlockStatus.put("chordSpellingTutor", false);
         unlockStatus.put("scaleSpellingTutor", false);
         unlockStatus.put("keySignatureTutor", false);
@@ -265,13 +265,13 @@ public class StageMapController {
     }
 
     @FXML
-    private void launchScaleRecognitionTutor() {
-        env.getRootController().getTutorFactory().openTutor("Scale Recognition Tutor");
+    private void launchBasicScaleRecognitionTutor() {
+        env.getRootController().getTutorFactory().openTutor("Scale Recognition Tutor (Basic)");
     }
 
     @FXML
-    private void launchChordRecognitionTutor() {
-        env.getRootController().getTutorFactory().openTutor("Chord Recognition Tutor");
+    private void launchBasicChordRecognitionTutor() {
+        env.getRootController().getTutorFactory().openTutor("Chord Recognition Tutor (Basic)");
     }
 
     @FXML
@@ -280,15 +280,13 @@ public class StageMapController {
     }
 
     @FXML
-    private void launchScaleRecognitionAdvancedTutor() {
-        System.out.println("Advanced scale tutor");
+    private void launchScaleRecognitionTutor() {
         env.getRootController().getTutorFactory().openTutor("Scale Recognition Tutor");
     }
 
     @FXML
     private void launchChordRecognitionAdvancedTutor() {
 
-        System.out.println("Chord Recognition Advanced Tutor");
         env.getRootController().getTutorFactory().openTutor("Chord Recognition Tutor");
     }
 
