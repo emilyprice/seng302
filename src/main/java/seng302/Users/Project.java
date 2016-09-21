@@ -37,6 +37,7 @@ import seng302.Environment;
 import seng302.utility.InstrumentUtility;
 import seng302.utility.LevelCalculator;
 import seng302.utility.OutputTuple;
+import seng302.utility.TutorRecord;
 
 public class Project {
 
@@ -65,6 +66,8 @@ public class Project {
 
     public Boolean isUserMapData = true;
 
+    public HashMap<String, TutorRecord> recentPracticeTutorRecordMap;
+
 
 
 
@@ -87,6 +90,7 @@ public class Project {
         this.experience = 0;
         this.level = 1;
         this.visualiserOn = false;
+        recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
         loadProject(projectName);
         loadProperties();
 
@@ -121,6 +125,8 @@ public class Project {
         projectSettings.put("competitionMode", gson.toJson(isCompetitiveMode.toString()));
 
         projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
+
+        projectSettings.put("tutorPracticeMap", gson.toJson(recentPracticeTutorRecordMap));
 
 
         try {
@@ -227,6 +233,26 @@ public class Project {
             // Off by default
             visualiserOn = false;
         }
+
+
+        try {
+            HashMap<String, TutorRecord> practiceMap;
+            Type mapType = new TypeToken<HashMap<String, TutorRecord>>() {
+            }.getType();
+            practiceMap = gson.fromJson((String) projectSettings.get("tutorPracticeMap"), mapType);
+            System.out.println("hello");
+            System.out.println(practiceMap);
+            if(practiceMap != null) {
+                recentPracticeTutorRecordMap = practiceMap;
+
+            }
+
+        }catch(Exception e) {
+            System.err.println("failed to load tutorPracticeMap");
+
+        }
+
+
 
     }
 
@@ -485,8 +511,15 @@ public class Project {
         checkChanges("visualiserOn");
     }
 
+    public void setRecentPracticeTutorRecordMap(String tutor, TutorRecord record){
+        recentPracticeTutorRecordMap.put(tutor, record);
+    }
     public boolean getVisualiserOn() {
         return visualiserOn;
+    }
+
+    public HashMap<String, TutorRecord> getRecentPracticeTutorRecordMap(){
+        return recentPracticeTutorRecordMap;
     }
 
 }

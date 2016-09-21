@@ -106,6 +106,8 @@ public abstract class TutorController {
 
         } else {
             selectedQuestions = (int) numQuestions.getValue();
+            numQuestions.setValue(selectedQuestions);
+            questions.setText(Integer.toString(selectedQuestions));
 
         }
         questions.setText(Integer.toString(selectedQuestions));
@@ -171,11 +173,17 @@ public abstract class TutorController {
 
         String tutorName = env.getRootController().getHeader();
         System.out.println("current project: " + currentProject);
-        if (currentProject != null && isCompMode) {
+        if (currentProject != null) {
+
+            if(isCompMode){
+                String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
+                String tutorFileName = currentProject.getCurrentProjectPath() + "/" + tutorNameNoSpaces + ".json";
+                tutorHandler.saveTutorRecordsToFile(tutorFileName, record);
+            }else{
+                currentProject.setRecentPracticeTutorRecordMap(tutorName, record);
+            }
             currentProject.saveCurrentProject();
-            String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
-            String tutorFileName = currentProject.getCurrentProjectPath() + "/" + tutorNameNoSpaces + ".json";
-            tutorHandler.saveTutorRecordsToFile(tutorFileName, record);
+
         }
 
         questionRows.getChildren().clear();

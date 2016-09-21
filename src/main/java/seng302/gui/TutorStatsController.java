@@ -135,7 +135,15 @@ public class TutorStatsController {
         try {
             switch (tutor) {
                 case "Pitch Comparison Tutor":
-                    correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("pitchTutor");
+                    if(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false){
+
+                        if(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().recentPracticeTutorRecordMap.get(tutor) != null) {
+                            correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect"),
+                                    env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect"));
+                        }
+                    }else {
+                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("pitchTutor");
+                    }
                     correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("pitchTutor", timePeriod);
                     dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("pitchTutor", timePeriod);
                     break;
@@ -192,8 +200,10 @@ public class TutorStatsController {
             overallStats.setVisible(true);
 
             // Set up most recent graph and labels.
+            System.out.println(correctIncorrectRecent.getKey());
+            System.out.println(correctIncorrectRecent.getValue());
 
-            double total = correctIncorrectRecent.getKey() + correctIncorrectRecent.getValue();
+            double total = (correctIncorrectRecent.getKey()).intValue() + correctIncorrectRecent.getValue().intValue();
             double widthCorrect = 500 * (correctIncorrectRecent.getKey() / total);
             Timeline correctAnim = new Timeline(
                     new KeyFrame(Duration.millis(800), new KeyValue(correct.widthProperty(), widthCorrect, Interpolator.EASE_OUT)));
