@@ -93,6 +93,7 @@ public class TermsSettingsController {
             editInfo.put("definition", selectedDefinition.getText());
 
             env.getMttDataManager().editTerm(editInfo);
+            env.getUserHandler().getCurrentUser().checkMusicTerms();
         } else {
             //Enter edit mode
             isEditMode = true;
