@@ -209,7 +209,7 @@ public class BadgeManager {
                 notification(badgeName, b.currentBadgeType, b.tutorName);
             }
         });
-        reloadPage();
+        reloadSummaryPage();
     }
 
     private void notification(String badgeName, int currentBadgeType, String tutorName) {
@@ -222,16 +222,8 @@ public class BadgeManager {
                 .show();
     }
 
-    private void reloadPage() {
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/newGui.fxml"));
-//        Parent root = null;
-//        try {
-//            root = fxmlLoader.load();
-//        } catch (IOException e) {
-//            System.out.println("Failed to reload page");
-//            e.printStackTrace();
-//        }
-//        env.getRootController().getStage().getScene().
+    private void reloadSummaryPage() {
+        env.getUserPageController().showSummaryPage();
     }
 
     public void updateTutorBadges(String tutorName, int correct, int answered) {

@@ -161,6 +161,8 @@ public class MusicalTerm implements Command {
             env.getEditManager().addToHistory("1", rawInput);
             try {
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Articulate", "Musical Terms Tutor").updateBadgeProgress(1);
+                env.getUserPageController().showSummaryPage(); //For updating the musical terms badge
+
             } catch (NullPointerException e) {
                 // For tests that don't have badges
             }
