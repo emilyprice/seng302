@@ -53,8 +53,6 @@ public class User {
     public User(String userName, String password, Environment env) {
 
         env.getFirebase().createUserSnapshot(env.getUserHandler().getClassRoom(), userName, true);
-        System.out.println(env.getFirebase().getUserSnapshot());
-
         userSnapshot = env.getFirebase().getUserSnapshot();
 
         userDirectory = Paths.get("UserData/" + userName);
@@ -164,7 +162,6 @@ public class User {
 
 
 
-        System.out.println("user properties: " + properties);
         Gson gson = new Gson();
         try {
             Type dateType = new TypeToken<Date>() {
@@ -219,7 +216,7 @@ public class User {
         try {
             //Theme
             themePrimary = (properties.get("themePrimary")).toString();
-            System.out.println("theme primary: " + themePrimary);
+
         } catch (NullPointerException e) {
             themePrimary = "#1E88E5";
         }
@@ -309,9 +306,6 @@ public class User {
      */
     public void updateProperties() {
         Gson gson = new Gson();
-        System.out.println("update properties 2");
-        System.out.println(properties);
-
         properties.put("userName", userName);
         properties.put("fullName", userFullName);
         properties.put("password", this.userPassword);
@@ -334,7 +328,7 @@ public class User {
     public void saveProperties() {
 
         updateProperties();
-        System.out.println("saveProperties: " + properties);
+
         env.getFirebase().getUserRef().child("properties").updateChildren(properties);
 
     }

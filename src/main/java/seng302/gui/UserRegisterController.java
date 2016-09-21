@@ -102,7 +102,7 @@ public class UserRegisterController {
      */
     private Boolean checkUserNameExists() {
 
-        System.out.println(env.getUserHandler().getUserNames());
+
         if (env.getUserHandler().getUserNames().contains(txtUsername.getText())) {
 
             System.out.println("user handle contains txtUsername!!" );
@@ -127,7 +127,7 @@ public class UserRegisterController {
     private Boolean validCredentials(DataSnapshot dss) {
 
         Boolean valid = true;
-        System.out.println("inside validate" + this.classroom + " and aa" + dss);
+
         //Validating username
         if (txtUsername.getText().length() > 0) {
             if (dss.child("classrooms/" + this.classroom  + "/users/" + txtUsername.getText()).exists()) {
@@ -201,7 +201,7 @@ public class UserRegisterController {
         if (validCredentials(dataSnapShot)) {
             env.getThemeHandler().setDefaultTheme();
             env.getUserHandler().createUser(txtUsername.getText(), txtPassword.getText());
-            System.out.println("current user set!!!");
+
 
             //Log in user.
             if (env.getUserHandler().userPassExists(txtUsername.getText(), txtPassword.getText())) {

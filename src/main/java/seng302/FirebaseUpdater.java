@@ -80,9 +80,7 @@ public class FirebaseUpdater {
         }catch(FileNotFoundException fe){
 
         }
-        for(FirebaseApp a : FirebaseApp.getApps()){
-            System.out.println(a);
-        }
+
 
         // As an admin, the app has access to read and write all data, regardless of Security Rules
         firebase = FirebaseDatabase

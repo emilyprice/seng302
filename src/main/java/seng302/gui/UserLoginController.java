@@ -136,13 +136,15 @@ public class UserLoginController {
      */
     public void displayRecentUsers() {
         String name;
-
-        for (User user : env.getUserHandler().getRecentUsers()) {
-            name = user.getUserName();
-
-            Image image = user.getUserPicture();
-            recentUsersHbox.getChildren().add(generateRecentUser(name, image));
+        recentUsersHbox.getChildren().clear();
+        for (String user : env.getUserHandler().getRecentUserNames()) {
+            //name = user.getUserName();
+            //Image image = user.getUserPicture();
+            Image img = new Image("images/arrow.png");
+            recentUsersHbox.getChildren().add(generateRecentUser(user, img));
         }
+
+
 
     }
 
@@ -189,6 +191,10 @@ public class UserLoginController {
     @FXML
     void onClassroomChange() {
         classroomSelected();
+        System.out.println("in onClassroomChange" + ddClassroom.getValue().toString());
+        env.getUserHandler().loadRecentUsers();
+        displayRecentUsers();
+
     }
 
     private Boolean classroomSelected(){
@@ -204,11 +210,7 @@ public class UserLoginController {
         return false;
     }
 
-    private void  populateClassrooms(ArrayList<String> items){
 
-            ddClassroom.getItems().addAll(items);
-
-    }
 
     @FXML
     public void handleKeyPressed(KeyEvent event) {
@@ -245,6 +247,7 @@ public class UserLoginController {
 
                 if (pass.equals(passwordInput.getText())) {
                     env.getUserHandler().setCurrentUser(usernameInput.getText(), ddClassroom.getValue().toString(), passwordInput.getText());
+
                     Stage stage = (Stage) btnLogin.getScene().getWindow();
                     stage.close();
                     env.getRootController().showWindow(true);
