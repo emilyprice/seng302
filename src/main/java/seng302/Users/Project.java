@@ -66,6 +66,9 @@ public class Project {
 
     private Boolean visualiserOn;
 
+    public Boolean isUserMapData = true;
+
+
     /**
      * Constructor for creating a new project.
      *
@@ -107,7 +110,6 @@ public class Project {
 
         projectSettings.put("transcript", transcriptString);
 
-
         projectSettings.put("rhythm", gson.toJson(env.getPlayer().getRhythmHandler().getRhythmTimings()));
 
         projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
@@ -123,7 +125,12 @@ public class Project {
         projectSettings.put("overallBadges", gson.toJson(badgeManager.getOverallBadges()));
         projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
         projectSettings.put("tutor100Map", gson.toJson(badgeManager.get100TutorBadges()));
-        
+
+        try {
+            projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
+        }catch(Exception e){
+            System.err.println("cant save unlock map");
+        }
     }
 
 
@@ -223,6 +230,7 @@ public class Project {
             visualiserOn = false;
         }
 
+    }
 
         //badges
         //overallBadges
@@ -250,6 +258,24 @@ public class Project {
         env.getTranscriptManager().unsavedChanges = false;
 
 
+    /**
+     * Loads in the data for the stage map in regards to which tutors are locked and unlocked.
+     *
+     */
+    public void loadStageMapData() {
+        try {
+            Gson gson = new Gson();
+            HashMap<String, Boolean> unlockMap;
+            Type mapType = new TypeToken<HashMap<String, Boolean>>() {
+            }.getType();
+            unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
+            System.out.println(unlockMap);
+            if(unlockMap != null) {
+                env.getStageMapController().unlockStatus = unlockMap;
+            }
+        }catch(Exception e){
+            System.out.println("failed to load stageMap");
+        }
     }
 
 
@@ -319,6 +345,9 @@ public class Project {
                 break;
             case "visualiserOn":
                 currentValue = this.visualiserOn;
+                break;
+            case "unlockMap":
+                currentValue = env.getStageMapController().getUnlockStatus();
                 break;
         }
 

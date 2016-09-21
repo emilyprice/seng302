@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
+import java.awt.*;
 import java.io.IOException;
 import java.awt.*;
 import java.awt.image.FilteredImageSource;
@@ -50,6 +51,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -60,10 +63,13 @@ import seng302.Environment;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 
+import javax.swing.*;
+
 /**
  * Handles and Creates Users.
  */
 public class UserPageController {
+
 
     @FXML
     AnchorPane contentPane;
@@ -88,7 +94,7 @@ public class UserPageController {
 
     @FXML
     JFXBadge levelBadge;
-    
+
     @FXML
     Label latestAttempt;
 
@@ -203,6 +209,20 @@ public class UserPageController {
                     setText(null);
                     setGraphic(null);
 
+                } else {
+                    //if in competitive mode, lock the relevant tabs
+                    if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
+                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
+                            setGraphic(new ImageView(lockImg));
+                            setTextFill(Color.GRAY);
+                            setText(tutor);
+                            setDisable(true);
+                        }
+
+
+                    } else {
+                        setDisable(false);
+                    }
                 }
             }
         });

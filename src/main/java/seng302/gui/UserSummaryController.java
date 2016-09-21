@@ -171,14 +171,19 @@ public class UserSummaryController {
             env.setStagePane(noteMap);
             env.getStageMapController().setEnvironment(env);
             env.getStageMapController().create();
-        }else{
+
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().loadStageMapData();
+
+            env.getStageMapController().visualiseLockedTutors();
+
+        } else {
 
             try {
                 stageMap.getChildren().add(env.getStagePane());
                 env.getStageMapController().visualiseLockedTutors();
 
             } catch (Exception e) {
-                System.err.println("Failed to load stage map21");
+                System.err.println("Failed to load stage map");
                 System.out.println(e.getStackTrace());
                 e.printStackTrace();
             }
