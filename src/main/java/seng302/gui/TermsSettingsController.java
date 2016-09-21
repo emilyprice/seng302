@@ -42,6 +42,9 @@ public class TermsSettingsController {
     @FXML
     private JFXButton editButton;
 
+    @FXML
+    private JFXButton deleteButton;
+
     private Environment env;
 
     private boolean isEditMode = false;
@@ -52,6 +55,8 @@ public class TermsSettingsController {
 
     ImageView saveImage = new ImageView(new Image(getClass().getResourceAsStream("/images/plus-symbol.png"), 25, 25, false, false));
 
+    private ImageView deleteImage = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png"), 25, 25, false, false));
+
     private ObservableList<String> termNames = FXCollections.observableArrayList();
 
     public void create(Environment env) {
@@ -59,6 +64,7 @@ public class TermsSettingsController {
         env.getRootController().setHeader("Musical Term Settings");
 
         editButton.setGraphic(editImage);
+        deleteButton.setGraphic(deleteImage);
 
         termNames.addListener((ListChangeListener<String>) c -> {
             termsListView.getItems().setAll(termNames);
@@ -126,6 +132,11 @@ public class TermsSettingsController {
         selectedOrigin.setEditable(isEditMode);
         selectedCategory.setEditable(isEditMode);
         selectedName.setEditable(isEditMode);
+    }
+
+    @FXML
+    private void deleteTerm() {
+
     }
 
 }

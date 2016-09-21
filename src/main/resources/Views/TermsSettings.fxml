@@ -8,6 +8,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.HBox?>
 <AnchorPane fx:id="termsSettingsAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="450.0" prefWidth="700.0" stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.TermsSettingsController">
     <children>
       <SplitPane dividerPositions="0.333333333333" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -19,11 +20,6 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                   <JFXButton fx:id="editButton" buttonType="RAISED" contentDisplay="CENTER"
-                              ellipsisString="" graphicTextGap="0.0" maxHeight="25.0"
-                              maxWidth="43.0" onAction="#toggleEditMode" prefHeight="25.0"
-                              prefWidth="43.0" ripplerFill="#2fe1ae" styleClass="primaryControl"
-                              AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0"/>
                    <JFXTextField fx:id="selectedName" editable="false" layoutX="14.0" layoutY="24.0"
                                  promptText="Musical Term Name" AnchorPane.leftAnchor="10.0"
                                  AnchorPane.topAnchor="24.0">
@@ -51,6 +47,19 @@
                   </Label>
                   <JFXTextField fx:id="selectedCategory" editable="false" layoutX="14.0" layoutY="288.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                   <JFXTextField fx:id="selectedOrigin" editable="false" layoutX="10.0" layoutY="363.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" />
+                   <HBox AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" spacing="20.0">
+                       <JFXButton fx:id="deleteButton" buttonType="RAISED" contentDisplay="CENTER"
+                                  ellipsisString="" graphicTextGap="0.0" maxHeight="25.0"
+                                  maxWidth="43.0" prefWidth="43.0"
+                                  onAction="#deleteTerm" prefHeight="25.0"
+                                  styleClass="primary"/>
+
+
+                       <JFXButton fx:id="editButton" buttonType="RAISED" contentDisplay="CENTER"
+                                  ellipsisString="" graphicTextGap="0.0" maxHeight="25.0"
+                                  maxWidth="43.0" onAction="#toggleEditMode" prefHeight="25.0"
+                                  prefWidth="43.0" styleClass="primary"/>
+                   </HBox>
                </children></AnchorPane>
         </items>
       </SplitPane>
