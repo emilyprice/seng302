@@ -180,7 +180,7 @@ public class UserLoginController {
 
             registerStage.show();
             UserRegisterController userRegisterController = loader1.getController();
-            userRegisterController.setEnv(env);
+            userRegisterController.create(env, ddClassroom.getValue().toString());
         }
 
 
@@ -194,6 +194,9 @@ public class UserLoginController {
     private Boolean classroomSelected(){
         if(ddClassroom.getValue() != null){
             hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: white;");
+
+            env.getUserHandler().setClassRoom(ddClassroom.getValue().toString());
+            env.getUserHandler().populateUsers();
             return true;
         }
         hbClassroom.setStyle("-fx-border-style: solid;-fx-border-color: red;-fx-background-color: white;");

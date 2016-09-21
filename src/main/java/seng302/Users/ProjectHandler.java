@@ -40,7 +40,7 @@ public class ProjectHandler {
      */
     public ProjectHandler(Environment env, String user){
         this.userName = user;
-        //projectsDirectory = Paths.get("UserData/classrooms/group5/users/"+user+"/Projects");
+
         this.env = env;
 
         //loadProjectList();

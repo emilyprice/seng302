@@ -92,14 +92,14 @@ public class UserHandler {
      * Populates the list of users from the users json file.
      *
      */
-    private void populateUsers(){
+    public void populateUsers(){
 
        while(env.getFirebase().getClassroomsSnapshot() == null){
             continue;
            //TODO: Fix this hack (And the other similar instance)
         }
-        System.out.println(classroom);
 
+        userList.clear();
         for(DataSnapshot user : env.getFirebase().getClassroomsSnapshot().child(classroom + "/users/").getChildren()){
             System.out.println("populating: " + user);
             userList.add(user.getKey());

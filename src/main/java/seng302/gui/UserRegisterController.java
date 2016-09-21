@@ -57,17 +57,18 @@ public class UserRegisterController {
 
 
 
-    Environment env;
+    private Environment env;
+    private String classroom;
 
     public UserRegisterController() {
 
     }
 
-    public void setEnv(Environment env) {
+    public void create(Environment env, String classroom) {
         this.env = env;
-        //TODO Make a more permenant solution for 'classrooms'
+        this.classroom = classroom;
 
-        env.getUserHandler().setClassRoom("group5");
+
     }
 
 
@@ -100,7 +101,12 @@ public class UserRegisterController {
      * @return
      */
     private Boolean checkUserNameExists() {
+
+        System.out.println(env.getUserHandler().getUserNames());
         if (env.getUserHandler().getUserNames().contains(txtUsername.getText())) {
+
+            System.out.println("user handle contains txtUsername!!" );
+
             //If the User already exists!
 
             txtUsername.setFocusColor(javafx.scene.paint.Color.RED);
@@ -121,9 +127,10 @@ public class UserRegisterController {
     private Boolean validCredentials(DataSnapshot dss) {
 
         Boolean valid = true;
+        System.out.println("inside validate" + this.classroom + " and aa" + dss);
         //Validating username
         if (txtUsername.getText().length() > 0) {
-            if (dss.child("classrooms/" + env.getUserHandler().getClassRoom()  + "/users/" + txtUsername.getText()).exists()) {
+            if (dss.child("classrooms/" + this.classroom  + "/users/" + txtUsername.getText()).exists()) {
                 //If the User already exists!
                 lblValidator.setText("User already exists!");
                 //valid = !checkUserNameExists();
@@ -180,22 +187,12 @@ public class UserRegisterController {
     @FXML
     protected void register() {
 
-        DatabaseReference users = env.getFirebase().getFirebase().child("classrooms/"+ env.getUserHandler().getClassRoom()+ " users/"+txtUsername.getText());
+        //DatabaseReference users = env.getFirebase().getFirebase().child("classrooms/"+ this.classroom+ "/users/"+txtUsername.getText());
 
 
+        validateCredentials(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/"+txtUsername.getText()));
 
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Platform.runLater(() -> validateCredentials(dataSnapshot));
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
 
 
     }
@@ -209,7 +206,7 @@ public class UserRegisterController {
             //Log in user.
             if (env.getUserHandler().userPassExists(txtUsername.getText(), txtPassword.getText())) {
                 //env.getUserHandler().setCurrentUser(txtUsername.getText());
-                System.out.println("register userPassExists");
+
 
                 env.getUserHandler().getCurrentUser().setUserFirstName(txtfname.getText());
                 env.getUserHandler().getCurrentUser().setUserLastName(txtlname.getText());
