@@ -171,7 +171,7 @@ public abstract class TutorController {
 
         String tutorName = env.getRootController().getHeader();
         System.out.println("current project: " + currentProject);
-        if (currentProject != null) {
+        if (currentProject != null && isCompMode) {
             currentProject.saveCurrentProject();
             String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
             String tutorFileName = currentProject.getCurrentProjectPath() + "/" + tutorNameNoSpaces + ".json";
