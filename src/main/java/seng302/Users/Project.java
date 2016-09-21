@@ -14,10 +14,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.controlsfx.control.Notifications;
-import org.json.simple.parser.JSONParser;
 
 import java.lang.reflect.Type;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,8 +33,6 @@ public class Project {
 
     HashMap<String, Object> projectSettings;
 
-    JSONParser parser = new JSONParser(); //parser for reading project
-
     ProjectHandler projectHandler;
 
     // Levels variables, will be updated as the user gains experience
@@ -44,7 +40,6 @@ public class Project {
     private Integer experience;
     private Integer level;
 
-    Path projectDirectory;
     public String projectName;
 
     boolean saved = true;

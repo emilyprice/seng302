@@ -13,6 +13,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.util.Optional;
+
+import javafx.scene.control.TextInputDialog;
 import seng302.Environment;
 
 public class ProjectHandler {
@@ -74,6 +77,8 @@ public class ProjectHandler {
         try {
             env.getRootController().updateLevelBadge();
             env.getUserPageController().updateLevelBadge();
+            env.getUserPageController().updateGraphs();
+            env.getUserPageController().getSummaryController().updateProgressBar();
         }
         catch (Exception e) {
             System.err.println("Root controller not initialised");
@@ -167,7 +172,7 @@ public class ProjectHandler {
      */
     public void createNewProject() {
 
-/*
+
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("New Project");
         dialog.setHeaderText("New Project");
@@ -176,37 +181,18 @@ public class ProjectHandler {
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
-            String resultString = result.get().toString();
-            Path path;
-            try {
-                path = Paths.get(projectsDirectory+"/" + resultString);
-
-                if (!Files.isDirectory(path)) {
-                    try {
-
-                        Files.createDirectories(path);
-                        setCurrentProject(resultString);
-
-                        getCurrentProject().saveProject(path.toString().replace("\\", "/"));
-
-                    } catch (IOException e) {
-                        //Failed to create the directory.
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    env.getRootController().errorAlert("The project: " + resultString + " already exists.");
-                    createNewProject();
-                }
-
-            } catch (InvalidPathException invPath) {
-                //invalid path (Poor project naming)
-                env.getRootController().errorAlert("Invalid file name - try again.");
+            String newProject = result.get();
+            JSONArray projects = getProjectList();
+            if (!projects.contains(newProject)) {
+                new Project(env, newProject, this);
+                setCurrentProject(newProject);
+            } else {
+                env.getRootController().errorAlert("The project: " + newProject + " already exists.");
                 createNewProject();
             }
 
         }
-        */
+
     }
 
 

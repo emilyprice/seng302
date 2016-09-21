@@ -8,8 +8,6 @@ import org.json.simple.JSONArray;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -23,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
@@ -36,12 +35,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.Environment;
 import seng302.managers.TranscriptManager;
-import seng302.utility.FileHandler;
 import seng302.utility.OutputTuple;
 
 
@@ -470,7 +467,6 @@ public class RootController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == btnSaveProject) {
-                checkProjectDirectory();
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
 
             } else if (result.get() == btnCancel) {
@@ -557,7 +553,6 @@ public class RootController implements Initializable {
         FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(textFilter);
 
-        checkProjectDirectory();
         //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
 
         fileChooser.setInitialDirectory(fileDir);
@@ -578,7 +573,6 @@ public class RootController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(textFilter);
-        checkProjectDirectory();
         //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
 
         fileChooser.setInitialDirectory(fileDir);
@@ -642,22 +636,6 @@ public class RootController implements Initializable {
     }
 
 
-    public void checkProjectDirectory() {
-        Path path = Paths.get("UserData/classrooms/group5/users/" + env.getUserHandler().getCurrentUser().getUserName() + "/Projects/");
-//        if (!Files.isDirectory(path)) {
-//            try {
-//                Files.createDirectories(path);
-//
-//            } catch (IOException e) {
-//
-//                e.printStackTrace();
-//            }
-//
-//
-//        }
-
-    }
-
     /**
      * Displays a dialog for the user to create a new project
      */
@@ -681,23 +659,23 @@ public class RootController implements Initializable {
 
         JSONArray projects = env.getUserHandler().getCurrentUser().getProjectHandler().getProjectList();
         menuOpenProjects.getItems().clear();
-        MenuItem selectItem = new MenuItem("Select Project");
-        selectItem.setOnAction(event -> {
-            if (saveChangesDialog()) selectProjectDirectory();
-        });
 
         for (int i = projects.size() - 1; i >= 0; i--) {
             final String projectName = projects.get(i).toString();
 
-            MenuItem projectItem = new MenuItem(projectName);
+            CheckMenuItem projectItem = new CheckMenuItem(projectName);
             projectItem.setOnAction(event -> {
+                projectItem.setSelected(true);
                 if (saveChangesDialog())
                     env.getUserHandler().getCurrentUser().getProjectHandler().setCurrentProject(projectName);
             });
+            if (projectName.equals(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName)) {
+                projectItem.setSelected(true);
+            } else {
+                projectItem.setSelected(false);
+            }
 
             menuOpenProjects.getItems().add(projectItem); //Add to Open projects menu
-            if ((projects.size() - 1) - i >= 5) break; //Only show the 5 latest projects.
-
         }
 
     }
@@ -713,57 +691,6 @@ public class RootController implements Initializable {
         alert.setContentText(errorMessage);
         alert.showAndWait();
 
-    }
-
-
-    /**
-     * Open Project browser.
-     */
-    private void selectProjectDirectory() {
-        DirectoryChooser dirChooser = new DirectoryChooser();
-
-        dirChooser.setTitle("Select a project directory");
-        Path path = Paths.get(env.getUserHandler().getCurrentUserPath().toString() + "/Projects/");
-        checkProjectDirectory();
-        dirChooser.setInitialDirectory(path.toFile());
-
-
-        File folder = dirChooser.showDialog(stage);
-
-        if (folder != null) {
-            if (folder.isDirectory() && folder.getParent().equals(env.getUserHandler().getCurrentUser().getUserName())) {
-                for (File f : folder.listFiles()) {
-
-                    if (f.getName().endsWith(".json") && f.getName().substring(0, f.getName().length() - 5).equals(folder.getName())) {
-
-                        if (!new File("userData/classrooms/group5/users/"+
-                                env.getUserHandler().getCurrentUser().getUserName()+"/Projects/" + folder.getName()).isDirectory()) {
-
-                            try {
-
-                                //Copy all files from inside the projects folder.
-                                FileHandler.copyFolder(folder, Paths.get(path.toString() + "/" + folder.getName()).toFile());
-                            } catch (Exception ce) {
-                                ce.printStackTrace();
-                                errorAlert("Could not Import the project! Maybe it already exists in the Projects folder?");
-                            }
-                            //project with said name does not exist in the projects directory.. import it.
-                            env.getUserHandler().getCurrentUser().getProjectHandler().setCurrentProject(folder.getName());
-
-                        }
-
-                        env.getUserHandler().getCurrentUser().getProjectHandler().setCurrentProject(folder.getName());
-                        return;
-                    }
-                }
-                errorAlert("Not a valid Project folder - Try again!");
-                selectProjectDirectory();
-                return;
-            } else {
-
-                errorAlert("Project must be contained in the current user's Projects folder.");
-            }
-        }
     }
 
 

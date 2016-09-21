@@ -73,6 +73,8 @@ public class UserPageController {
 
     private TutorStatsController statsController;
 
+    private UserSummaryController summaryController;
+
     @FXML
     VBox tutors;
 
@@ -233,22 +235,20 @@ public class UserPageController {
         timeSlider.valueProperty().addListener(((observable1, oldValue1, newValue1) -> {
             String result = convert.toString(timeSlider.getValue());
             if (result != null) {
-                updateGraphs(result);
+                updateGraphs();
             }
         }));
 
         timeSlider.setOnMouseReleased(e -> {
-            updateGraphs(convert.toString(timeSlider.getValue()));
+            updateGraphs();
         });
     }
 
     /**
      * Updates the data in the summary stats graphs
-     *
-     * @param timePeriod The time period to display data from in the summary stats graphs
      */
-    private void updateGraphs(String timePeriod) {
-        statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
+    public void updateGraphs() {
+        statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), convert.toString(timeSlider.getValue()));
     }
 
     /**
@@ -313,7 +313,7 @@ public class UserPageController {
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
             AnchorPane.setRightAnchor(summaryPage, 0.0);
 
-            UserSummaryController summaryController = summaryLoader.getController();
+            summaryController = summaryLoader.getController();
             summaryController.create(env);
             summaryController.loadStageMap();
 
@@ -364,6 +364,10 @@ public class UserPageController {
 
     public TutorStatsController getStatsController() {
         return statsController;
+    }
+
+    public UserSummaryController getSummaryController() {
+        return summaryController;
     }
 
 }
