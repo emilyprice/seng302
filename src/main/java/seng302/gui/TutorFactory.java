@@ -76,6 +76,8 @@ public class TutorFactory {
             case "Scale Spelling Tutor":
                 openScaleSpellingTutor();
                 break;
+
+
         }
     }
 
@@ -140,6 +142,8 @@ public class TutorFactory {
 
 
     }
+
+
 
     /**
      * opens the musical terms tutor when the musical term tutor menu option is pressed If there is

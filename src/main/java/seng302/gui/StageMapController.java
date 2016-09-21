@@ -330,16 +330,16 @@ public class StageMapController {
 
     @FXML
     private void launchKeySignaturesTutor() {
-        env.getRootController().getTutorFactory().openTutor("Key Signatures Tutor");
+        env.getRootController().getTutorFactory().openTutor("Key Signature Tutor");
     }
     @FXML
     private void launchDiatonicChordsTutor() {
-        env.getRootController().getTutorFactory().openTutor("Diatonic Chords Tutor");
+        env.getRootController().getTutorFactory().openTutor("Diatonic Chord Tutor");
 
     }
     @FXML
     private void launchMajorModesTutor() {
-        env.getRootController().getTutorFactory().openTutor("Major Modes Tutor");
+        env.getRootController().getTutorFactory().openTutor("Scale Modes Tutor");
     }
 
 
