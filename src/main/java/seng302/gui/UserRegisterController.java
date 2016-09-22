@@ -130,8 +130,11 @@ public class UserRegisterController {
 
     @FXML
     void classroomSelected() {
+
         if(cbClassroom.getValue() != null){
             this.classroom = cbClassroom.getValue().toString();
+            env.getUserHandler().setClassRoom(this.classroom);
+            env.getUserHandler().populateUsers();
         }
 
     }
@@ -237,6 +240,7 @@ public class UserRegisterController {
         if(selectedType != null){
             if(selectedType.equals("Student")){
                 if(cbClassroom.getValue() != null){
+                    env.getUserHandler().setClassRoom(this.classroom);
                     validateCredentials(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/"+txtUsername.getText()));
                 }
                 else{
