@@ -125,12 +125,16 @@ public class TutorHandler {
             filename = projectAddress + "/PitchComparisonTutor.json";
         } else if (id.equals("scaleTutor")) {
             filename = projectAddress + "/ScaleRecognitionTutor.json";
+        } else if (id.equals("basicScaleTutor")) {
+            filename = projectAddress + "/ScaleRecognitionTutor(Basic).json";
         } else if (id.equals("intervalTutor")) {
             filename = projectAddress + "/IntervalRecognitionTutor.json";
         } else if (id.equals("musicalTermTutor")) {
             filename = projectAddress + "/MusicalTermsTutor.json";
         } else if (id.equals("chordTutor")) {
             filename = projectAddress + "/ChordRecognitionTutor.json";
+        } else if (id.equals("basicChordTutor")) {
+            filename = projectAddress + "/ChordRecognitionTutor(Basic).json";
         } else if (id.equals("chordSpellingTutor")) {
             filename = projectAddress + "/ChordSpellingTutor.json";
         } else if (id.equals("keySignatureTutor")) {

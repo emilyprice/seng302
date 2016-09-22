@@ -80,6 +80,8 @@ public class UserPageController {
 
     private TutorStatsController statsController;
 
+    private TutorStatsController basicStatsController;
+
     @FXML
     VBox tutors;
 
@@ -274,6 +276,7 @@ public class UserPageController {
      */
     private void updateGraphs(String timePeriod) {
         statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
+        basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", timePeriod);
     }
 
     /**
@@ -357,10 +360,12 @@ public class UserPageController {
 
         env.getRootController().setHeader(tutor);
         FXMLLoader tutorStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
+        VBox all = new VBox();
 
         try {
             VBox stats = tutorStatsLoader.load();
-            currentPage.setContent(stats);
+            all.getChildren().add(stats);
+            currentPage.setContent(all);
             AnchorPane.setLeftAnchor(stats, 0.0);
             AnchorPane.setTopAnchor(stats, 0.0);
             AnchorPane.setBottomAnchor(stats, 0.0);
@@ -370,11 +375,39 @@ public class UserPageController {
             statsController.create(env);
             statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
 
-            listView.getSelectionModel().select(tutor);
+            if(tutor.equals("Scale Recognition Tutor (Basic)")) {
+                listView.getSelectionModel().select("Scale Recognition Tutor");
+            }else{
+                listView.getSelectionModel().select(tutor);
+
+            }
 
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+            FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
+            try {
+                VBox stats = tutorbasicStatsLoader.load();
+                all.getChildren().add(stats);
+                currentPage.setContent(all);
+                AnchorPane.setLeftAnchor(stats, 0.0);
+                AnchorPane.setTopAnchor(stats, 0.0);
+                AnchorPane.setBottomAnchor(stats, 0.0);
+                AnchorPane.setRightAnchor(stats, 0.0);
+                basicStatsController = tutorbasicStatsLoader.getController();
+
+                basicStatsController.create(env);
+                basicStatsController.displayGraphs( tutor + " (Basic)", convert.toString(timeSlider.getValue()));
+
+                listView.getSelectionModel().select(tutor);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
