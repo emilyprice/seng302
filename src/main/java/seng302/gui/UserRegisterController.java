@@ -4,9 +4,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 
 import java.io.IOException;
 
@@ -14,6 +12,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -52,6 +51,15 @@ public class UserRegisterController {
 
     @FXML
     private Label lblValidator;
+
+    @FXML
+    private ToggleGroup accountType;
+
+    @FXML
+    private HBox hbClassroom;
+
+    @FXML
+    private JFXComboBox cbClassroom;
 
 
 
@@ -92,8 +100,43 @@ public class UserRegisterController {
 
         btnReturn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/back_32dp.png"))));
 
+        hbClassroom.setVisible(false);
+        hbClassroom.managedProperty().bind(hbClassroom.visibleProperty());
+
+        accountType.selectedToggleProperty().addListener((ov, oldVal, newVal) -> {
+            if(accountType.getSelectedToggle() != null){
+                System.out.println(((JFXRadioButton)accountType.getSelectedToggle()).textProperty());
+                String radioButtonText = ((JFXRadioButton)accountType.getSelectedToggle()).getText();
+                if(radioButtonText.equals("Student")){
+                    hbClassroom.setVisible(true);
+                    cbClassroom.getItems().clear();
+                    for(DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()){
+                        cbClassroom.getItems().add(classroom.getKey());
+                    }
+
+
+                }
+                else{
+                    hbClassroom.setVisible(false);
+                }
+                hbClassroom.managedProperty().bind(hbClassroom.visibleProperty());
+            }
+        });
+
+
+
 
     }
+
+    @FXML
+    void classroomSelected() {
+        if(cbClassroom.getValue() != null){
+            this.classroom = cbClassroom.getValue().toString();
+        }
+
+    }
+
+
 
     /**
      * Checks if the user for the given text input already exists
@@ -189,8 +232,23 @@ public class UserRegisterController {
 
         //DatabaseReference users = env.getFirebase().getFirebase().child("classrooms/"+ this.classroom+ "/users/"+txtUsername.getText());
 
+        String selectedType = ((JFXRadioButton)accountType.getSelectedToggle()).getText();
 
-        validateCredentials(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/"+txtUsername.getText()));
+        if(selectedType != null){
+            if(selectedType.equals("Student")){
+                if(cbClassroom.getValue() != null){
+                    validateCredentials(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/"+txtUsername.getText()));
+                }
+                else{
+                    //TODO: Classroom not selected.
+                }
+            }
+            else if(selectedType.equals("Teacher")){
+                env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText()).setValue("test");
+            }
+        }
+
+
 
 
 
