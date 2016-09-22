@@ -43,7 +43,8 @@ public class MicInputTestController implements PitchDetectionHandler {
     private Mixer mixer;
     private AudioDispatcher dispatcher;
     private TargetDataLine line;
-    private ArrayList<Double> noteFrequencies = new ArrayList<>();
+    private ArrayList<Double> midiFrequencies = new ArrayList<>();
+    private ArrayList<Double> detectedFrequencies = new ArrayList<>();
 
     public void create() {
         recordButton.setOnAction(event -> {
@@ -62,23 +63,23 @@ public class MicInputTestController implements PitchDetectionHandler {
     }
 
     private void resetNoteFrequencies() {
-        noteFrequencies.clear();
+        midiFrequencies.clear();
         int a = 440; // a is 440 hz...
         for (int x = 0; x < 127; ++x) {
-            noteFrequencies.add(x, (a / (double) 32) * (Math.pow((double) 2, ((x - (double) 9) / (double) 12))));
+            midiFrequencies.add(x, (a / (double) 32) * (Math.pow((double) 2, ((x - (double) 9) / (double) 12))));
         }
     }
 
     private String findNote(Double freq) {
         String note;
-        noteFrequencies.add(freq);
-        Collections.sort(noteFrequencies);
-        int foundIndex = noteFrequencies.indexOf(freq);
+        midiFrequencies.add(freq);
+        Collections.sort(midiFrequencies);
+        int foundIndex = midiFrequencies.indexOf(freq);
         System.out.println(foundIndex);
-        if (foundIndex <= noteFrequencies.size() - 2) {
+        if (foundIndex <= midiFrequencies.size() - 2) {
             int closestIndex;
-            Double higher = Math.abs(noteFrequencies.get(foundIndex + 1) - freq);
-            Double lower = Math.abs(noteFrequencies.get(foundIndex - 1) - freq);
+            Double higher = Math.abs(midiFrequencies.get(foundIndex + 1) - freq);
+            Double lower = Math.abs(midiFrequencies.get(foundIndex - 1) - freq);
             if (higher < lower) {
                 closestIndex = foundIndex;
             } else {
@@ -125,7 +126,24 @@ public class MicInputTestController implements PitchDetectionHandler {
 
     private void stopRecording() {
         dispatcher.stop();
+        Collections.sort(detectedFrequencies);
+        double range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
+        while (range > 10) {
+            detectedFrequencies.remove(0);
+            detectedFrequencies.remove(detectedFrequencies.size() - 1);
+            range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
+        }
+        double total = 0; // For mean calculations
+        double mean;
+        for (double freq : detectedFrequencies) {
+            total += freq;
+        }
+        mean = total / detectedFrequencies.size();
+        String note = findNote(mean);
+        textArea.setText(textArea.getText() + "\n" + note);
+        detectedFrequencies.clear();
     }
+
 
 
     @Override
@@ -135,10 +153,13 @@ public class MicInputTestController implements PitchDetectionHandler {
             float pitch = pitchDetectionResult.getPitch();
             float probability = pitchDetectionResult.getProbability();
             double rms = audioEvent.getRMS() * 100;
-            String estimatedNote = findNote((double) pitch);
-            String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f, Approximated Note: %s )\n", timeStamp, pitch, probability, rms, estimatedNote);
-            textArea.setText(textArea.getText() + message);
-            textArea.positionCaret(textArea.getLength());
+//            String estimatedNote = findNote((double) pitch);
+//            String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f, Approximated Note: %s )\n", timeStamp, pitch, probability, rms, estimatedNote);
+//            textArea.setText(textArea.getText() + message);
+//            textArea.positionCaret(textArea.getLength());
+            if (probability > 0.8) {
+                detectedFrequencies.add((double) pitch);
+            }
         }
     }
 
