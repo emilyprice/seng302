@@ -533,3 +533,4 @@
 .jfx-toggle-button .jfx-rippler{
     -fx-rippler-fill: {0};
 }
+

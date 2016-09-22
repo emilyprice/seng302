@@ -400,7 +400,10 @@ public class RootController implements Initializable {
 
 
         loginStage.setTitle("Allegro");
+
         loginStage.setScene(loginScene);
+        System.out.println(loginScene.toString());
+        loginScene.getStylesheets().addAll(this.getClass().getResource("/css/style.css").toExternalForm());
 
 
         loginStage.setOnCloseRequest(event -> {

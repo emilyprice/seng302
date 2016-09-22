@@ -16,6 +16,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -201,9 +203,15 @@ public class UserLoginController {
 
     }
 
+
+
     private Boolean classroomSelected(){
         if(ddClassroom.getValue() != null){
-            hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: white;");
+
+
+
+            hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: rgba(255, 255, 255, 0.2)");
+
 
             env.getUserHandler().setClassRoom(ddClassroom.getValue().toString());
             env.getUserHandler().populateUsers();

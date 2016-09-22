@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
@@ -11,14 +12,14 @@
 <?import com.jfoenix.validation.*?>
 <?import com.jfoenix.controls.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="458.0" minWidth="500.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="458.0" prefWidth="500.0" style="-fx-background-color: #EEEEEE;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserLoginController">
+<StackPane id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="458.0" minWidth="500.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="464.0" prefWidth="500.0" style="-fx-background-color: #EEEEEE;" styleClass="loginPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserLoginController">
    <children>
       <HBox alignment="CENTER" layoutY="221.0" prefHeight="114.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
       <VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="497.0" StackPane.alignment="CENTER">
          <children>
-            <HBox alignment="TOP_CENTER" prefHeight="46.0" prefWidth="600.0">
+            <HBox alignment="TOP_CENTER" minHeight="80.0" prefHeight="80.0" prefWidth="600.0">
                <children>
-                  <Label text="Allegro" textAlignment="CENTER" textFill="#fb8c00">
+                  <Label textAlignment="CENTER" textFill="#fb8c00">
                      <font>
                         <Font name="Arial Bold" size="32.0" />
                      </font>
@@ -28,7 +29,7 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </HBox>
-            <HBox fx:id="hbClassroom" alignment="CENTER" prefHeight="41.0" prefWidth="460.0" style="-fx-background-color: white;">
+            <HBox fx:id="hbClassroom" alignment="CENTER" prefHeight="41.0" prefWidth="460.0" style="-fx-background-color: rgba(255, 255, 255, 0.2);">
                <children>
                   <JFXComboBox fx:id="ddClassroom" onAction="#onClassroomChange" prefHeight="25.0" prefWidth="283.0" />
                </children>
@@ -39,15 +40,18 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
                <effect>
-                  <DropShadow height="10.0" radius="4.5" width="10.0" />
+                  <DropShadow />
                </effect>
             </HBox>
-            <VBox alignment="CENTER" prefHeight="321.0" prefWidth="500.0" style="-fx-background-color: white;">
+            <VBox alignment="CENTER" prefHeight="321.0" prefWidth="500.0" style="-fx-background-color: rgba(255, 255, 255, 0.2);">
                <children>
-                  <HBox fx:id="recentUsersHbox" alignment="CENTER" maxHeight="191.0" maxWidth="460.0" minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="460.0" style="-fx-background-color: white;">
+                  <HBox fx:id="recentUsersHbox" alignment="CENTER" maxHeight="191.0" maxWidth="460.0" minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="460.0">
                      <VBox.margin>
                         <Insets bottom="30.0" />
                      </VBox.margin>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
                   </HBox>
                   <JFXTextField fx:id="usernameInput" focusColor="#d98921" labelFloat="true" maxWidth="300.0" promptText="Username">
                      <font>
@@ -93,7 +97,7 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" />
                </VBox.margin>
                <effect>
-                  <DropShadow height="10.0" radius="4.5" width="10.0" />
+                  <DropShadow />
                </effect>
             </VBox>
          </children>
