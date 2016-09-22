@@ -1,6 +1,7 @@
 package seng302.utility;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import seng302.data.Term;
@@ -81,5 +82,24 @@ public class MusicalTermsTutorBackEnd {
             }
         }
         return null;
+    }
+
+    public List<Term> search(String searchSequence) {
+        List<Term> searchResults = new ArrayList<>();
+
+
+        for (Term term : terms) {
+            // Uppercases everything so that case does not matter when searching for terms
+            if (term.getMusicalTermName().toUpperCase().contains(searchSequence.toUpperCase())) {
+                searchResults.add(term);
+            } else if (term.getMusicalTermCategory().toUpperCase().contains(searchSequence.toUpperCase())) {
+                searchResults.add(term);
+            } else if (term.getMusicalTermDefinition().toUpperCase().contains(searchSequence.toUpperCase())) {
+                searchResults.add(term);
+            } else if (term.getMusicalTermOrigin().toUpperCase().contains(searchSequence.toUpperCase())) {
+                searchResults.add(term);
+            }
+        }
+        return searchResults;
     }
 }

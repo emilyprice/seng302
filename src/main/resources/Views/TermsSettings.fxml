@@ -28,11 +28,14 @@
                             <children>
                                 <BorderPane prefWidth="200.0">
                                     <bottom>
-                                        <JFXTextField fx:id="searchbar" promptText="Search"
+                                        <JFXTextField fx:id="searchbar"
+                                                      onKeyReleased="#executeSearch"
+                                                      promptText="Search"
                                                       BorderPane.alignment="CENTER"/>
                                     </bottom>
                                 </BorderPane>
-                                <JFXListView fx:id="termsListView"/>
+                                <JFXListView fx:id="termsListView" prefHeight="585.0"
+                                             prefWidth="229.0" VBox.vgrow="ALWAYS"/>
                             </children>
                         </VBox>
                     </children>

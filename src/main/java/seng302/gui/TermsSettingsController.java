@@ -8,6 +8,7 @@ import com.jfoenix.controls.JFXTextField;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import seng302.Environment;
@@ -43,6 +45,9 @@ public class TermsSettingsController {
 
     @FXML
     private JFXTextField selectedOrigin;
+
+    @FXML
+    private JFXTextField searchbar;
 
     @FXML
     private JFXButton editButton;
@@ -161,11 +166,7 @@ public class TermsSettingsController {
                         env.getUserHandler().getCurrentUser().checkMusicTerms();
                         termNames.remove(selectedName.getText());
                         if (termNames.size() == 0) {
-                            // show prompt text
-                            selectedName.clear();
-                            selectedCategory.clear();
-                            selectedDefinition.clear();
-                            selectedOrigin.clear();
+                            showPromptText();
                         }
 
                         termsListView.getSelectionModel().selectFirst();
@@ -178,6 +179,26 @@ public class TermsSettingsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @FXML
+    private void executeSearch(KeyEvent keyEvent) {
+        List<Term> results = env.getMttDataManager().search(searchbar.getText());
+        termNames.setAll(results.stream().map(Term::getMusicalTermName).collect(Collectors.toList()));
+        if (termNames.size() > 0) {
+            termsListView.getSelectionModel().selectFirst();
+        } else {
+            showPromptText();
+        }
+
+    }
+
+    private void showPromptText() {
+        selectedName.clear();
+        selectedCategory.clear();
+        selectedDefinition.clear();
+        selectedOrigin.clear();
 
     }
 
