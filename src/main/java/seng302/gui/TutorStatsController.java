@@ -129,7 +129,7 @@ public class TutorStatsController {
 
 
     /**
-     * creates the most recent tutor record graph and the overall tutor record graph
+     * Creates the most recent tutor record graph and the overall tutor record graph
      *
      * @param tutor the specific tutor that the graphs will getting data from
      */
@@ -356,6 +356,9 @@ public class TutorStatsController {
         }
     }
 
+    /**
+     * Used to create the badgeGrid and display the badges in stackpanes with the correct effect
+     */
     public void updateBadgesDisplay() {
         ArrayList<Badge> tutorBadges = new ArrayList();
 
@@ -378,6 +381,9 @@ public class TutorStatsController {
         tutorBadges.forEach(this::addTutorBadgeToGrid);
     }
 
+    /**
+     * Helper function used to order badges for the badgeGrid
+     */
     public static class badgeComparator implements Comparator<Badge> {
         @Override
         public int compare(Badge b1, Badge b2) {
@@ -385,6 +391,10 @@ public class TutorStatsController {
         }
     }
 
+    /**
+     * Used to add a tutor badge to the badgeGrid
+     * @param b the Badge to be added
+     */
     public void addTutorBadgeToGrid(Badge b) {
         Image ribbonImage = new Image("/images/ribbonAward.png");
         ImageView rView = new ImageView(ribbonImage);
