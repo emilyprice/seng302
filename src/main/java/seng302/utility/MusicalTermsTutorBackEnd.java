@@ -15,7 +15,9 @@ public class MusicalTermsTutorBackEnd {
 
 
     public void addTerm(Term term) throws Exception {
-        if (getTermByName(term.getMusicalTermName()) != null) {
+        if (term.getMusicalTermName().length() == 0) {
+            throw new Exception("Term name must not be empty.");
+        } else if (getTermByName(term.getMusicalTermName()) != null) {
             throw new Exception("Term with the name of " + term.getMusicalTermName() + " has already been added");
         } else if (term.getMusicalTermCategory().length() > 100) {
             throw new Exception("Your musical term category exceeds 100 characters. Please give a shorter category.");
@@ -76,6 +78,8 @@ public class MusicalTermsTutorBackEnd {
                     // Throws an exception if the name was changed to the name of a different,
                     // existing term.
                     throw new Exception("Term with the name of " + entry.getValue() + " has already been added");
+                } else if (entry.getKey().equals("name") && entry.getValue().length() == 0) {
+                    throw new Exception("Term name must not be empty.");
                 } else {
                     if (entry.getValue().length() > 100) {
                         throw new Exception(String.format("Your musical term" +
