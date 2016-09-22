@@ -151,7 +151,7 @@ public class TermsSettingsController {
             editButton.setGraphic(editImage);
             deleteButton.setVisible(true);
 
-            env.getMttDataManager().addTerm(new Term(selectedName.getText(), selectedCategory.getText(), selectedOrigin.getText(), selectedDefinition.getText()));
+            //env.getMttDataManager().addTerm(new Term(selectedName.getText(), selectedCategory.getText(), selectedOrigin.getText(), selectedDefinition.getText()));
             env.getUserHandler().getCurrentUser().checkMusicTerms();
             executeSearch();
 
