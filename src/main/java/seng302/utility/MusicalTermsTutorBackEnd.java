@@ -14,8 +14,20 @@ public class MusicalTermsTutorBackEnd {
     private ArrayList<Term> terms = new ArrayList<Term>();
 
 
-    public void addTerm(Term term) {
-        terms.add(term);
+    public void addTerm(Term term) throws Exception {
+        if (getTermByName(term.getMusicalTermName()) != null) {
+            throw new Exception("Term with the name of " + term.getMusicalTermName() + " has already been added");
+        } else if (term.getMusicalTermCategory().length() > 100) {
+            throw new Exception("Your musical term category exceeds 100 characters. Please give a shorter category.");
+        } else if (term.getMusicalTermName().length() > 100) {
+            throw new Exception("Your musical term name exceeds 100 characters. Please give a shorter name.");
+        } else if (term.getMusicalTermOrigin().length() > 100) {
+            throw new Exception("Your musical term origin exceeds 100 characters. Please give a shorter origin.");
+        } else if (term.getMusicalTermDefinition().length() > 100) {
+            throw new Exception("Your musical term definition exceeds 100 characters. Please give a shorter definition.");
+        } else {
+            terms.add(term);
+        }
     }
 
     public ArrayList<Term> getTerms() {

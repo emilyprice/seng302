@@ -16,11 +16,7 @@ import seng302.utility.MusicalTermsTutorBackEnd;
 
 public class MusicalTerm implements Command {
     private String result;
-    private String input;
-    //protected static HashMap<String, Term> MusicalTermsMap = new HashMap<String, Term>();
 
-    private boolean termAdded = false;
-    private boolean validAdd = true;
     public Term term = null;
 
 
@@ -32,8 +28,6 @@ public class MusicalTerm implements Command {
     private ArrayList<String> rawInput;
 
     private MusicalTermsTutorBackEnd termManager;
-
-    private String type;
 
     public ArrayList<Term> terms;
 
@@ -51,7 +45,7 @@ public class MusicalTerm implements Command {
     public MusicalTerm(ArrayList<String> musicalTermArray) {
         infoToGet = "add";
         rawInput = musicalTermArray;
-        termAdded = true;
+        lookupTerm = false;
         term = new Term(musicalTermArray.get(0), musicalTermArray.get(2), musicalTermArray.get(1), musicalTermArray.get(3));
 
     }
@@ -69,34 +63,6 @@ public class MusicalTerm implements Command {
         this.infoToGet = infoToGet.toLowerCase();
     }
 
-
-    private void addTermBool() {
-        if (termManager.getTermByName(musicalTermName) != null) {
-            // If it exists, we cannot add it again
-            validAdd = false;
-            this.result = "[ERROR] Term with the name of " + this.term.getMusicalTermName() + " has already been added";
-        } else if (term.getMusicalTermDefinition().length() > 100) {
-            validAdd = false;
-            this.result = "[ERROR] Your musical term definition exceeds 100 characters. Please give a shorter definition.";
-        } else if (term.getMusicalTermCategory().length() > 100) {
-            validAdd = false;
-            this.result = "[ERROR] Your musical term category exceeds 100 characters. Please give a shorter category.";
-        } else if (term.getMusicalTermOrigin().length() > 100) {
-            validAdd = false;
-            this.result = "[ERROR] Your musical term origin exceeds 100 characters. Please give a shorter origin.";
-        } else if (term.getMusicalTermName().length() > 100) {
-            validAdd = false;
-            this.result = "[ERROR] Your musical term name exceeds 100 characters. Please give a shorter name.";
-        }
-
-        // If there were no errors, go ahead and add the term
-        if (validAdd) {
-            this.result = "Added term: " + this.term.getMusicalTermName() +
-                    "\nOrigin: " + this.term.getMusicalTermOrigin() + " \nCategory: " +
-                    this.term.getMusicalTermCategory() + "\nDefinition: "
-                    + this.term.getMusicalTermDefinition();
-        }
-    }
 
     private void lookupTerm() {
         Term foundTerm = termManager.getTermByName(musicalTermName);
@@ -132,16 +98,24 @@ public class MusicalTerm implements Command {
         this.terms = env.getMttDataManager().getTerms();
         if (lookupTerm) {
             lookupTerm();
+            env.getTranscriptManager().setResult(result);
         } else {
-            addTermBool();
+            try {
+                env.getMttDataManager().addTerm(term);
+                if (env.getUserHandler().getCurrentUser() != null)
+                    env.getUserHandler().getCurrentUser().checkMusicTerms();
+                env.getEditManager().addToHistory("1", rawInput);
+
+                this.result = "Added term: " + term.getMusicalTermName() +
+                        "\nOrigin: " + term.getMusicalTermOrigin() + " \nCategory: " +
+                        term.getMusicalTermCategory() + "\nDefinition: "
+                        + term.getMusicalTermDefinition();
+
+                env.getTranscriptManager().setResult(result);
+            } catch (Exception e) {
+                env.error(e.getMessage());
+            }
         }
-        if (termAdded == true && validAdd == true) {
-            env.getMttDataManager().addTerm(term);
-            if (env.getUserHandler().getCurrentUser() != null)
-                env.getUserHandler().getCurrentUser().checkMusicTerms();
-            env.getEditManager().addToHistory("1", rawInput);
-        }
-        env.getTranscriptManager().setResult(result);
     }
 
     public String getHelp() {
