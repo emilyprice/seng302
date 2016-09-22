@@ -55,7 +55,7 @@
                 <Font size="17.0"/>
             </font>
         </Label>
-        <StackPane fx:id="rectangleStack" alignment="CENTER_LEFT" maxHeight="40.0" maxWidth="400.0"
+        <StackPane fx:id="rectangleStack" alignment="CENTER_LEFT" maxHeight="40.0" maxWidth="500.0"
                    prefHeight="150.0" prefWidth="500.0">
             <children>
                 <HBox fx:id="rectangleHBox" alignment="CENTER" maxHeight="70.0" prefHeight="70.0"
@@ -100,7 +100,7 @@
             </VBox.margin>
         </Label>
         <StackPane fx:id="overallRectangleStack" alignment="CENTER_LEFT" maxHeight="40.0"
-                   maxWidth="400.0" prefHeight="150.0" prefWidth="500.0">
+                   maxWidth="500.0" prefHeight="150.0" prefWidth="500.0">
             <children>
                 <HBox fx:id="OverallRectangleHBox" alignment="CENTER" maxHeight="70.0"
                       prefHeight="70.0" prefWidth="200.0">

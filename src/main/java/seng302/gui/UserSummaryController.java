@@ -1,31 +1,26 @@
 package seng302.gui;
 
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.ArrayList;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
-import javafx.scene.control.ScrollPane;
-
-import javafx.scene.layout.*;
-
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
 import javafx.util.Pair;
 import seng302.Environment;
 import seng302.utility.LevelCalculator;
@@ -68,6 +63,12 @@ public class UserSummaryController {
 
     AnchorPane noteMap;
 
+    @FXML
+    private Label summaryAverageLabel;
+
+    @FXML
+    private Label summaryAverageNumber;
+
 
     @FXML
     StackPane stageMap;
@@ -104,7 +105,9 @@ public class UserSummaryController {
         overallIncorrect.setFill(Color.GRAY);
         overallCorrectLabel.setText(correctIncorrectOverall.getKey() + " \ncorrect");
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
-        classAverage.setVisible(false);
+
+
+        displayClassAverage(env.getUserPageController().getTimePeriod());
 
            // TutorStatsController statsController = statsLoader.getController();
 
@@ -175,6 +178,35 @@ public class UserSummaryController {
 
 
 
+
+
+    }
+
+
+    private void displayClassAverage(String timePeriod) {
+        DataSnapshot users = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom()).child("users");
+        ArrayList<Pair<Integer, Integer>> data = new ArrayList<>();
+        users.getChildren().forEach(user -> {
+            user.child("projects").getChildren().forEach(project -> {
+                Pair<Integer, Integer> totals = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getTutorHandler().getTotalsForAllTutorsInProject(project, timePeriod);
+                data.add(totals);
+            });
+        });
+
+        Integer classTotalIncorrect = 0;
+        Integer classTotalCorrect = 0;
+        for (Pair<Integer, Integer> score : data) {
+            classTotalCorrect += score.getKey();
+            classTotalIncorrect += score.getValue();
+        }
+
+        float averageClassScore = 0;
+        if (classTotalCorrect + classTotalIncorrect != 0) {
+            averageClassScore = classTotalCorrect.floatValue() / (classTotalCorrect + classTotalIncorrect);
+        }
+        StackPane.setMargin(classAverage, new Insets(0, 0, 0, 500 * averageClassScore - 30));
+        HBox.setMargin(summaryAverageLabel, new Insets(0, 0, 0, 500 * averageClassScore - 50));
+        summaryAverageNumber.setText(String.format("%.2f", averageClassScore));
 
 
     }

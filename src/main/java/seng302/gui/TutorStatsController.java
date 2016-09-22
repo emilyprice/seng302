@@ -214,11 +214,7 @@ public class TutorStatsController {
             projects.getChildren().forEach(project -> {
                 ArrayList<TutorRecord> records = handler.getTutorDataFromProject(project, tutorNameNoSpaces);
                 Pair<Integer, Integer> correctIncorrect = handler.getTutorTotals(records, timePeriod);
-                if (correctIncorrect.getKey() != 0 || correctIncorrect.getValue() != 0) {
-                    classTotals.add(correctIncorrect);
-                }
-
-
+                classTotals.add(correctIncorrect);
             });
 
         });

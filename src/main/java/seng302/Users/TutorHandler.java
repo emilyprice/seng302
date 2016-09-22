@@ -170,10 +170,17 @@ public class TutorHandler {
      * @return Pair consisting of total correct and total incorrect.
      */
     public Pair<Integer, Integer> getTotalsForAllTutors(String timePeriod) {
+        String project = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName;
+        DataSnapshot projectSnap = env.getFirebase().getUserSnapshot().child("projects").child(project);
+        return getTotalsForAllTutorsInProject(projectSnap, timePeriod);
+
+    }
+
+    public Pair<Integer, Integer> getTotalsForAllTutorsInProject(DataSnapshot project, String timePeriod) {
         Integer totalCorrect = 0;
         Integer totalIncorrect = 0;
         for (String tutor : tutorIds) {
-            Pair<Integer, Integer> total = getTutorTotals(getTutorData(tutor), timePeriod);
+            Pair<Integer, Integer> total = getTutorTotals(getTutorDataFromProject(project, tutor), timePeriod);
             totalCorrect += total.getKey();
             totalIncorrect += total.getValue();
         }
@@ -181,12 +188,13 @@ public class TutorHandler {
     }
 
 
+
     /**
      * Saves the tutor records to disc.
      */
-    public void saveTutorRecordsToFile(String filename, TutorRecord currentRecord) {
+    public void saveTutorRecordsToFile(String tutorName, TutorRecord currentRecord) {
         DatabaseReference ref = env.getFirebase().getUserRef().child("projects/" +
-                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + filename);
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + tutorName);
         currentRecord.updateDate();
         ref.push().setValue(currentRecord);
     }
