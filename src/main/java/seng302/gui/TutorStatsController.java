@@ -1,5 +1,7 @@
 package seng302.gui;
 
+import com.google.firebase.database.DataSnapshot;
+
 import com.jfoenix.controls.JFXButton;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -32,6 +35,8 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 import seng302.Environment;
+import seng302.Users.TutorHandler;
+import seng302.utility.TutorRecord;
 
 /**
  * Controller for the tutor stats pane,  used in the user page for all tutors.
@@ -108,6 +113,12 @@ public class TutorStatsController {
     @FXML
     private AnchorPane badgesAnchor;
 
+    @FXML
+    private Label classAverageLabel;
+
+    @FXML
+    private Label classAverageNumber;
+
     String currentTutor;
 
     public void create(Environment env) {
@@ -128,14 +139,16 @@ public class TutorStatsController {
 
 
         tutorName.setText(tutor);
-        Pair<Integer, Integer> correctIncorrectRecent = new Pair<>(0, 0);
-        Pair<Integer, Integer> correctIncorrectOverall = new Pair<>(0, 0);
+        Pair<Integer, Integer> correctIncorrectRecent;
+        Pair<Integer, Integer> correctIncorrectOverall;
         List<Pair<Date, Float>> dateAndTime = new ArrayList<>();
         dateAndTime.add(new Pair<>(new Date(0), 0f));
 
-        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals(tutorNameNoSpaces);
-        correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals(tutorNameNoSpaces, timePeriod);
-        dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores(tutorNameNoSpaces, timePeriod);
+        TutorHandler handler = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler;
+
+        correctIncorrectRecent = handler.getRecentTutorTotals(tutorNameNoSpaces);
+        correctIncorrectOverall = handler.getTutorTotals(handler.getTutorData(tutorNameNoSpaces), timePeriod);
+        dateAndTime = handler.getTimeAndScores(tutorNameNoSpaces, timePeriod);
 
 
         latestAttempt.setVisible(true);
@@ -177,14 +190,52 @@ public class TutorStatsController {
         overallCorrectLabel.setText(correctIncorrectOverall.getKey() + " \ncorrect");
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
 
-        // Currently the class average is disabled, as this has been deferred
-        double averageClassScore = 0.6;
-        StackPane.setMargin(classAverage, new Insets(0, 0, 0, 500 * averageClassScore - 30));
-        classAverage.setVisible(false);
-
+        // Figure out class average
+        displayClassAverage(handler, tutorNameNoSpaces, timePeriod);
         makeLineGraph(dateAndTime, timePeriod);
 
 
+    }
+
+    /**
+     * Calculates the average score for the class for a certain tutor and time period and displays
+     * the line in the correct place on the graph.
+     *
+     * @param handler           The current tutorHandler.
+     * @param tutorNameNoSpaces The current tutorName.
+     * @param timePeriod        the time period of data to display.
+     */
+    private void displayClassAverage(TutorHandler handler, String tutorNameNoSpaces, String timePeriod) {
+        DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
+        ArrayList<Pair<Integer, Integer>> classTotals = new ArrayList<>();
+
+        classroomData.getChildren().forEach(user -> {
+            DataSnapshot projects = user.child("projects");
+            projects.getChildren().forEach(project -> {
+                ArrayList<TutorRecord> records = handler.getTutorDataFromProject(project, tutorNameNoSpaces);
+                Pair<Integer, Integer> correctIncorrect = handler.getTutorTotals(records, timePeriod);
+                if (correctIncorrect.getKey() != 0 || correctIncorrect.getValue() != 0) {
+                    classTotals.add(correctIncorrect);
+                }
+
+
+            });
+
+        });
+        Integer classTotalIncorrect = 0;
+        Integer classTotalCorrect = 0;
+        for (Pair<Integer, Integer> score : classTotals) {
+            classTotalCorrect += score.getKey();
+            classTotalIncorrect += score.getValue();
+        }
+
+        float averageClassScore = 0;
+        if (classTotalCorrect + classTotalIncorrect != 0) {
+            averageClassScore = classTotalCorrect.floatValue() / (classTotalCorrect + classTotalIncorrect);
+        }
+        StackPane.setMargin(classAverage, new Insets(0, 0, 0, 500 * averageClassScore - 30));
+        HBox.setMargin(classAverageLabel, new Insets(0, 0, 0, 500 * averageClassScore - 50));
+        classAverageNumber.setText(String.format("%.2f", averageClassScore));
     }
 
 

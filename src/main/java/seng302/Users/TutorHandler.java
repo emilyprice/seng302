@@ -68,15 +68,13 @@ public class TutorHandler {
     /**
      * This method will give the total number of correct and incorrect answers for a given tutor.
      *
-     * @param tabId The tab ID of the tutor
      * @return a pair containing two integers. The number of answers correct and the number of
      * incorrect answers.
      */
-    public Pair<Integer, Integer> getTutorTotals(String tabId, String timePeriod) {
-        ArrayList<TutorRecord> records = getTutorData(tabId);
+    public Pair<Integer, Integer> getTutorTotals(ArrayList<TutorRecord> currentTutorRecords, String timePeriod) {
         Integer correct = 0;
         Integer incorrect = 0;
-        for (TutorRecord record : records) {
+        for (TutorRecord record : currentTutorRecords) {
             Date date = record.getDate();
             Date compare = dates.get(timePeriod);
             if (date.after(compare)) {
@@ -122,11 +120,14 @@ public class TutorHandler {
         }
 
         DataSnapshot tutorSnap = env.getFirebase().getUserSnapshot().child("projects/" +
-                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + id);
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName);
+        return getTutorDataFromProject(tutorSnap, id);
+    }
 
+    public ArrayList<TutorRecord> getTutorDataFromProject(DataSnapshot project, String tutorId) {
         ArrayList<TutorRecord> records = new ArrayList<>();
 
-        tutorSnap.getChildren().forEach((key) -> {
+        project.child(tutorId).getChildren().forEach((key) -> {
                     TutorRecord record = new TutorRecord();
                     HashMap<String, Object> recordMap = (HashMap<String, Object>) key.getValue();
             HashMap<String, Object> dateMap = (HashMap<String, Object>) recordMap.get("date");
@@ -139,7 +140,6 @@ public class TutorHandler {
                 }
         );
         return records;
-
     }
 
     /**
@@ -173,7 +173,7 @@ public class TutorHandler {
         Integer totalCorrect = 0;
         Integer totalIncorrect = 0;
         for (String tutor : tutorIds) {
-            Pair<Integer, Integer> total = getTutorTotals(tutor, timePeriod);
+            Pair<Integer, Integer> total = getTutorTotals(getTutorData(tutor), timePeriod);
             totalCorrect += total.getKey();
             totalIncorrect += total.getValue();
         }
