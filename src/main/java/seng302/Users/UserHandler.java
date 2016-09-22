@@ -27,7 +27,8 @@ public class UserHandler {
 
 
 
-    private User currentUser;
+    private Student currentUser;
+    private Teacher currentTeacher;
 
     Environment env;
     //JSONArray userList;
@@ -152,13 +153,16 @@ public class UserHandler {
             }
         }
 
+        /* 23sept
         if(userList.contains(userName)){
+
 
             User tempUser = new User(env,userName);
             if (password.equals(tempUser.getUserPassword())){
                 return true;
             }
         }
+         */
         return false;
     }
 
@@ -169,9 +173,13 @@ public class UserHandler {
      * @param password
      */
     public void createUser(String user, String password){
-        this.currentUser = new User(user, password, env);
+        this.currentUser = new Student(user, password, env);
         //updateUserList(user);
 
+    }
+
+    public void createTeacher(String user, String password){
+        this.currentTeacher = new Teacher(user, password, env);
     }
 
 
@@ -208,7 +216,7 @@ public class UserHandler {
 
 
 
-    public User getCurrentUser(){
+    public Student getCurrentUser(){
 
         return currentUser;
     }
@@ -224,7 +232,7 @@ public class UserHandler {
      */
     public void setCurrentUser(String userName, String classroom, String password){
         this.classroom = classroom;
-        this.currentUser = new User(userName, password, env);
+        this.currentUser = new Student(userName, password, env);
         //currentUser.loadFullProperties();
         //updateUserList(userName);
         updateRecentUsers(userName);
@@ -241,7 +249,7 @@ public class UserHandler {
     public void deleteUser(String username) {
 
         //Step 1.For some reason this needs to be called? (all it does is delete the project handler
-        this.getCurrentUser().delete();
+        //this.getCurrentUser().delete(); //23sept temp deleted
 
         //Step 2. Delete from list of users/recent users.
         this.userList.remove(username);

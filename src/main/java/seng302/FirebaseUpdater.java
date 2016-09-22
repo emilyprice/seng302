@@ -89,9 +89,6 @@ public class FirebaseUpdater {
 
     }
 
-    public void blockedCreateUserSnapshot(String classroom, String user){
-
-    }
 
     private void updateUserProperties(){
         System.out.println("update user properties called");
@@ -101,7 +98,7 @@ public class FirebaseUpdater {
         }
     }
 
-    public void createUserSnapshot(String classroom, String user, Boolean blocking){
+    private void createUserSnapshot(String classroom, String user, Boolean blocking){
 
         final AtomicBoolean done = new AtomicBoolean(false);
 
@@ -111,13 +108,10 @@ public class FirebaseUpdater {
                 userSnapshot = dataSnapshot;
                 //updateUserProperties();
                 //env.getUserHandler().getCurrentUser().
-
                 //TODO: update user properties
                 done.set(true);
 
-
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -128,6 +122,38 @@ public class FirebaseUpdater {
 
         userRef = firebase.child("classrooms/" + classroom + "/users/" + user);
         while (!done.get() && blocking);
+    }
+
+    private void createUserSnapshot(String address, Boolean blocking){
+        final AtomicBoolean done = new AtomicBoolean(false);
+
+        firebase.child(address).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userSnapshot = dataSnapshot;
+
+                done.set(true);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+
+        });
+        userRef = firebase.child(address);
+        while (!done.get() && blocking);
+    }
+
+    public void createStudentSnapshot(String classroom, String user, Boolean blocking){
+        String address = "classrooms/"+classroom+"/users/"+user;
+        createUserSnapshot(address, blocking);
+
+    }
+
+    public void createTeacherSnapshot(String user, Boolean blocking){
+        String address = "teachers/"+user;
+        createUserSnapshot(address, blocking);
     }
 
     public DataSnapshot getUserSnapshot() {

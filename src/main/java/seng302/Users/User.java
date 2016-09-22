@@ -52,7 +52,7 @@ public class User {
      */
     public User(String userName, String password, Environment env) {
 
-        env.getFirebase().createUserSnapshot(env.getUserHandler().getClassRoom(), userName, true);
+        env.getFirebase().createStudentSnapshot(env.getUserHandler().getClassRoom(), userName, true);
         userSnapshot = env.getFirebase().getUserSnapshot();
 
         userDirectory = Paths.get("UserData/" + userName);
@@ -68,6 +68,8 @@ public class User {
         projectHandler = new ProjectHandler(env, userName);
 
     }
+
+
 
     /**
      * Loads basic user properties (Picture, Name, Password etc.) Used when loading a collection of
@@ -102,8 +104,6 @@ public class User {
         properties = (HashMap<String,String>) userSnapshot.child("properties").getValue();
 
         if(properties == null) properties = new HashMap<String, Object>();
-
-
 
         Gson gson = new Gson();
         try {

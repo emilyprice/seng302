@@ -252,7 +252,8 @@ public class UserRegisterController {
                 }
             }
             else if(selectedType.equals("Teacher")){
-                env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText()).setValue("test");
+                //env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText()).setValue("test");
+                env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
                 //TODO: add action for registering and logging in as a teacher.
             }
         }

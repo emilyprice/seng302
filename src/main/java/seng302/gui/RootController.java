@@ -38,6 +38,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.Environment;
+import seng302.Users.Student;
 import seng302.managers.TranscriptManager;
 import seng302.utility.OutputTuple;
 
@@ -246,7 +247,7 @@ public class RootController implements Initializable {
      * @param option close option either 'close' or 'logout'.
      */
     protected void showCloseWindow(String option) {
-        if (env.getUserHandler().getCurrentUser() != null && !env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().isSaved()) {
+        if (env.getUserHandler().getCurrentUser() != null && !((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
 
             String closeText = option.equals("close") ? "Quit" : "Logout";
 
@@ -267,7 +268,7 @@ public class RootController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == btnSaveProject) {
-                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
+                ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
                 if (option.equals("close")) {
                     System.exit(0);
                 } else if (option.equals("logout")) {
@@ -284,7 +285,7 @@ public class RootController implements Initializable {
 
 
         } else if (env.getTranscriptManager().unsavedChanges) {
-            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
+            ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             if (option.equals("close")) System.exit(0);
             else if (option.equals("logout")) logOutUser();
@@ -452,7 +453,7 @@ public class RootController implements Initializable {
      * @return a boolean - true for save, false for cancel
      */
     public Boolean saveChangesDialog() {
-        if (!env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().isSaved()) {
+        if (!((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("Unsaved project changes");
 
@@ -470,7 +471,7 @@ public class RootController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == btnSaveProject) {
-                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
+                ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             } else if (result.get() == btnCancel) {
                 return false;
@@ -479,7 +480,7 @@ public class RootController implements Initializable {
 
         } else if (env.getTranscriptManager().unsavedChanges) {
 
-            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
+            ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
         }
         return true;
     }
