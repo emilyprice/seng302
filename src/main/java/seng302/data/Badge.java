@@ -1,5 +1,7 @@
 package seng302.data;
 
+import com.sun.deploy.Environment;
+
 import org.controlsfx.control.Notifications;
 
 import javafx.scene.image.Image;
@@ -26,11 +28,15 @@ public class Badge {
 
     public ArrayList<Integer> badgeLevels;
 
+    public Integer expWorth;
 
     public String description;
 
+//    seng302.Environment env;
 
-    public Badge(String name, String tutorName, String description, ArrayList<Integer> badgeLevels, double badgeProgress, Integer currentBadgeType, String imageName){
+
+    public Badge(String name, String tutorName, String description, ArrayList<Integer> badgeLevels, double badgeProgress, Integer currentBadgeType, String imageName, Integer expWorth){
+//        this.env = env;
         this.name = name;
         this.tutorName = tutorName;
         this.currentBadgeType = currentBadgeType;
@@ -38,17 +44,14 @@ public class Badge {
         this.badgeProgress = badgeProgress;
         this.badgeLevels = badgeLevels;
         this.imageName = imageName;
+        this.expWorth = expWorth;
     }
 
-    public void updateBadgeProgress(double progress){
+    public void updateBadgeProgress(seng302.Environment env, double progress){
         badgeProgress += progress;
-        if(badgeLevels == null){
-            updateImage();
-            // notify user
-            return;
-        }
 
         while (badgeProgress >= badgeLevels.get(currentBadgeType)){
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(expWorth*currentBadgeType);
             currentBadgeType += 1;
             Image unlock = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
             List<String> badgeTypes = new ArrayList<>();
@@ -66,11 +69,5 @@ public class Badge {
                     .show();
         }
     }
-
-
-    private void updateImage(){
-        //this.image = new image
-    }
-
 
 }

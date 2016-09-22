@@ -125,39 +125,40 @@ public class BadgeManager {
         //intalize tutor badges
         for (String tutor:allTutors){
             ArrayList<Badge> badges = new ArrayList<>();
-            badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, tutorImages.get(tutor)));
-            badges.add(new Badge("Completed Sessions", tutor, "Number of tutor sessions completed", sessionBadges, 0, 0, tutorImages.get(tutor)));
-            badges.add(new Badge("100% Sessions", tutor, "Number of 100% tutor sessions", sessionBadges, 0, 0, tutorImages.get(tutor)));
+            badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, tutorImages.get(tutor), 10));
+            badges.add(new Badge("Completed Sessions", tutor, "Number of tutor sessions completed", sessionBadges, 0, 0, tutorImages.get(tutor), 10));
+            badges.add(new Badge("100% Sessions", tutor, "Number of 100% tutor sessions", sessionBadges, 0, 0, tutorImages.get(tutor), 15));
 
             if( tutor.equals("Musical Terms Tutor")){
-                badges.add(new Badge("Articulate", tutor, "Number of musical terms added", sessionBadges, 0, 0, "open-book"));
+                badges.add(new Badge("Articulate", tutor, "Number of musical terms added", sessionBadges, 0, 0, "open-book", 10));
             }
             tutorBadgeMap.put(tutor, badges);
         }
 
         //initialise overall badges
-        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 0, 0, "completist"));
-        overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", tutorTotal, 0, 0, "gradHat"));
-        overallBadges.add(new Badge("Instrument master", null, "Use different instruments", musicianBadges, 0, 0, "saxophone-man"));
-        overallBadges.add(new Badge("Creative", null, "Change your theme", null, 0, 0, "paint-brush"));
-        overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "speedster"));
-        overallBadges.add(new Badge("TwinkleTwinkle", null, "Find hidden secret", null, 0, 0, "twinkle"));
+        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 0, 0, "completist", 400));
+        overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", tutorTotal, 0, 0, "gradHat", 350));
+        overallBadges.add(new Badge("Instrument master", null, "Use different instruments", musicianBadges, 0, 0, "saxophone-man", 20));
+        overallBadges.add(new Badge("Creative", null, "Change your theme", null, 0, 0, "paint-brush", 20));
+        overallBadges.add(new Badge("Speedster", null, "Force set the tempo", null, 0, 0, "speedster", 20));
+        overallBadges.add(new Badge("TwinkleTwinkle", null, "Find hidden secret", null, 0, 0, "twinkle", 20));
 
         replaceBadges(tutorBadgeMap, overallBadges);
     }
 
 
-    public void updateAllBadges(String tutorType, Integer userScore){
-        //update overall badges
-        //update tutor badges
-        tutorBadgeMap.get(tutorType).get(0).updateBadgeProgress(userScore);
-        tutorBadgeMap.get(tutorType).get(1).updateBadgeProgress(1);
-        if(userScore == 10) {
-            tutor100AllMap.put(tutorType, true);
-            tutorBadgeMap.get(tutorType).get(2).updateBadgeProgress(1);
-        }
-
-    }
+//    public void updateAllBadges(String tutorType, Integer userScore){
+//        System.out.println("updateAllBadges");
+//        //update overall badges
+//        //update tutor badges
+//        tutorBadgeMap.get(tutorType).get(0).updateBadgeProgress(userScore);
+//        tutorBadgeMap.get(tutorType).get(1).updateBadgeProgress(1);
+//        if(userScore == 10) {
+//            tutor100AllMap.put(tutorType, true);
+//            tutorBadgeMap.get(tutorType).get(2).updateBadgeProgress(1);
+//        }
+//
+//    }
 
     /**
      * used once an instrument has been set to update the list of used instruments and if a new instrument has been
@@ -169,7 +170,7 @@ public class BadgeManager {
         instrumentsPlayed.add(id);
         if(instrumentsPlayed.size() > tempSize){
             Badge instrumentBadge = overallBadges.get(2);
-            instrumentBadge.updateBadgeProgress(1);
+            instrumentBadge.updateBadgeProgress(env, 1);
         }
 
     }
@@ -180,7 +181,7 @@ public class BadgeManager {
 //        }
 
         if(!tutor100AllMap.containsValue(false)){
-            overallBadges.get(1).updateBadgeProgress(1);
+            overallBadges.get(1).updateBadgeProgress(env, 1);
         }
 
         //if(env.getMttDataManager().getTerms().size())
@@ -207,6 +208,7 @@ public class BadgeManager {
                 b.badgeProgress = 1;
                 updateOverallBadges();
                 notification(badgeName, b.currentBadgeType, b.tutorName);
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(b.expWorth);
             }
         });
         reloadSummaryPage();
@@ -231,11 +233,11 @@ public class BadgeManager {
         for (Object badg : badges) {
             Badge b = (Badge) badg;
             if (b.name.equals("Correct Questions")) {
-                b.updateBadgeProgress(correct);
+                b.updateBadgeProgress(env, correct);
             } else if (b.name.equals("Completed Sessions")) {
-                b.updateBadgeProgress(1);
+                b.updateBadgeProgress(env, 1);
             } else if (b.name.equals("100% Sessions") && (correct == answered)) {
-                b.updateBadgeProgress(1);
+                b.updateBadgeProgress(env, 1);
             }
         }
     }
@@ -243,7 +245,7 @@ public class BadgeManager {
     public void updateTutorMaster(String tutorName) {
         if (masterTutors.get(tutorName) == false) {
             masterTutors.put(tutorName, true);
-            overallBadges.get(1).updateBadgeProgress(1);
+            overallBadges.get(1).updateBadgeProgress(env, 1);
         }
     }
 
