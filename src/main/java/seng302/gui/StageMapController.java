@@ -267,6 +267,38 @@ public class StageMapController {
                     unlock = false;
                 }
             }
+
+            if(tutorId.equals("intervalTutor")) {
+                ArrayList<TutorRecord> basicRecords = tutorHandler.getTutorData(converted.get("basicScaleTutor"));
+
+                if (basicRecords.size() < 3) {
+                    //if there are less than 3 existing files
+                } else {
+                    for (int i = basicRecords.size() - 3; i < basicRecords.size(); i++) {
+                        TutorRecord record = basicRecords.get(i);
+                        if (!(record.getStats().get("questionsCorrect").intValue() >= 9)) {
+                            unlock = false;
+                        }
+                    }
+
+                }
+            }
+
+            if(tutorId.equals("scaleTutor")) {
+                ArrayList<TutorRecord> basicRecords = tutorHandler.getTutorData(converted.get("basicChordTutor"));
+
+                if (basicRecords.size() < 3) {
+                    //if there are less than 3 existing files
+                } else {
+                    for (int i = basicRecords.size() - 3; i < basicRecords.size(); i++) {
+                        TutorRecord record = basicRecords.get(i);
+                        if (!(record.getStats().get("questionsCorrect").intValue() >= 9)) {
+                            unlock = false;
+                        }
+                    }
+
+                }
+            }
             if (unlock) {
                 //set the tutor status to be unlocked
                 unlockStatus.put(tutorOrder.get((tutorOrder.indexOf(converted.get(tutorId)) + 1)), true);
