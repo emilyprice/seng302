@@ -70,11 +70,11 @@ public class TermsSettingsController {
 
     private ImageView editImage = new ImageView(new Image(getClass().getResourceAsStream("/images/edit_mode_black_36dp.png"), 25, 25, false, false));
 
-    private ImageView saveImage = new ImageView(new Image(getClass().getResourceAsStream("/images/plus-symbol.png"), 25, 25, false, false));
+    private ImageView saveImage = new ImageView(new Image(getClass().getResourceAsStream("/images/save-icon.png"), 25, 25, false, false));
 
     private ImageView addImage = new ImageView(new Image(getClass().getResourceAsStream("/images/plus-symbol.png"), 25, 25, false, false));
 
-    private ImageView deleteImage = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png"), 25, 25, false, false));
+    private ImageView deleteImage = new ImageView(new Image(getClass().getResourceAsStream("/images/garbage.png"), 25, 25, false, false));
 
     private ObservableList<String> termNames = FXCollections.observableArrayList();
 
