@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="seng302.gui.MicInputTestController">
+    <children>
+        <HBox VBox.vgrow="ALWAYS">
+            <children>
+                <ToggleButton fx:id="recordButton" mnemonicParsing="false" text="RECORD">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="MIC"/>
+                    </toggleGroup>
+                </ToggleButton>
+                <ToggleButton fx:id="stopButton" mnemonicParsing="false" selected="true" text="STOP"
+                              toggleGroup="$MIC"/>
+                <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="300.0"/>
+            </children>
+        </HBox>
+    </children>
+</VBox>

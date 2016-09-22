@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import seng302.Environment;
 
 
@@ -28,6 +30,8 @@ public class BaseSettingsController {
     private ProjectSettingsController projectSettingsController;
 
     private FXMLLoader userSettingsLoader, themeLoader, projectSettingsLoader;
+
+    private MicInputTestController micInputTestController;
 
 
     @FXML
@@ -74,6 +78,7 @@ public class BaseSettingsController {
         options.add("User Settings");
         options.add("Theme Settings");
         options.add("Project Settings");
+        options.add("Mic Input");
 
         settingsOptions.getItems().addAll(FXCollections.observableArrayList(options));
 
@@ -109,6 +114,10 @@ public class BaseSettingsController {
 
             case "Project Settings":
                 openProjectSettings();
+                break;
+
+            case "Mic Input":
+                openMicInput();
                 break;
         }
 
@@ -153,6 +162,28 @@ public class BaseSettingsController {
             projectSettingsController = projectSettingsLoader.getController();
             projectSettingsController.create(env);
 
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+
+    /**
+     * Displays the project settings view where the user will be able to change their instrument,
+     * tempo, rhythm, and mode.
+     */
+    private void openMicInput() {
+        try {
+            FXMLLoader micSettingsLoader = new FXMLLoader();
+            micSettingsLoader.setLocation(getClass().getResource("/Views/MicInputTest.fxml"));
+            Node loadedPane = (Node) micSettingsLoader.load();
+            settingsPane.getChildren().setAll(loadedPane);
+            HBox.setHgrow(loadedPane, Priority.ALWAYS);
+            micInputTestController = micSettingsLoader.getController();
+            micInputTestController.create();
 
         } catch (IOException e) {
             e.printStackTrace();
