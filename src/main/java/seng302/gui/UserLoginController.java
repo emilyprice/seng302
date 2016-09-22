@@ -78,6 +78,10 @@ public class UserLoginController {
             }
 
         });
+
+        recentUsersHbox.setVisible(false);
+        recentUsersHbox.managedProperty().bind(recentUsersHbox.visibleProperty());
+
     }
 
     public void setEnv(Environment env) {
@@ -161,36 +165,37 @@ public class UserLoginController {
     @FXML
     protected void register() {
 
-        if(classroomSelected()){
-            FXMLLoader loader1 = new FXMLLoader();
-            loader1.setLocation(getClass().getResource("/Views/UserRegistration.fxml"));
+        //if(classroomSelected()){
+        FXMLLoader loader1 = new FXMLLoader();
+        loader1.setLocation(getClass().getResource("/Views/UserRegistration.fxml"));
 
-            Parent root1 = null;
-            try {
-                root1 = loader1.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Scene scene1 = new Scene(root1);
-            Stage registerStage = (Stage) btnLogin.getScene().getWindow();
-
-            registerStage.setTitle("Register new user for: " + ddClassroom.getValue().toString());
-            registerStage.setScene(scene1);
-
-            registerStage.setOnCloseRequest(event -> {
-                System.exit(0);
-                event.consume();
-            });
-
-            registerStage.setMinWidth(600);
-            Double initialHeight = registerStage.getHeight();
-            registerStage.setMinHeight(initialHeight);
-
-            registerStage.show();
-            UserRegisterController userRegisterController = loader1.getController();
-            userRegisterController.create(env, ddClassroom.getValue().toString());
+        Parent root1 = null;
+        try {
+            root1 = loader1.load();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Scene scene1 = new Scene(root1);
+        scene1.getStylesheets().addAll(this.getClass().getResource("/css/style.css").toExternalForm());
 
+        Stage registerStage = (Stage) btnLogin.getScene().getWindow();
+
+        registerStage.setTitle("Register new user for: " + ddClassroom.getValue().toString());
+        registerStage.setScene(scene1);
+
+        registerStage.setOnCloseRequest(event -> {
+            System.exit(0);
+            event.consume();
+        });
+
+        registerStage.setMinWidth(600);
+        Double initialHeight = registerStage.getHeight();
+        registerStage.setMinHeight(initialHeight);
+
+        registerStage.show();
+        UserRegisterController userRegisterController = loader1.getController();
+        userRegisterController.create(env, ddClassroom.getValue().toString());
+       // }
 
 
     }
@@ -210,15 +215,18 @@ public class UserLoginController {
 
 
 
-            hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: rgba(255, 255, 255, 0.2)");
+            hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: rgba(255, 255, 255, 1)");
 
 
             env.getUserHandler().setClassRoom(ddClassroom.getValue().toString());
             env.getUserHandler().populateUsers();
+            recentUsersHbox.setVisible(true);
+            recentUsersHbox.managedProperty().bind(recentUsersHbox.visibleProperty());
             return true;
         }
+        recentUsersHbox.setVisible(false);
         hbClassroom.setStyle("-fx-border-style: solid;-fx-border-color: red;-fx-background-color: white;");
-
+        recentUsersHbox.managedProperty().bind(recentUsersHbox.visibleProperty());
         return false;
     }
 
