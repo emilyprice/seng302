@@ -2,7 +2,6 @@ package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
 
-import com.google.firebase.database.core.SnapshotHolder;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
@@ -17,14 +16,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.Environment;
-import seng302.Users.User;
 
 /**
  * Controller for the user login screen.
@@ -98,6 +95,7 @@ public class UserLoginController {
     }
 
     protected void onRecentSelect(String username) {
+        usernameInput.setPromptText("");
         usernameInput.setText(username);
         passwordInput.clear();
         passwordInput.requestFocus();
@@ -135,17 +133,19 @@ public class UserLoginController {
      * Displays imageBoxs of recent users.
      */
     public void displayRecentUsers() {
-        String name;
         recentUsersHbox.getChildren().clear();
         for (String user : env.getUserHandler().getRecentUserNames()) {
             //name = user.getUserName();
             //Image image = user.getUserPicture();
+            try {
+                String dpUrl = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + user + "/properties/profilePicUrl").getValue().toString();
+                Image img = new Image(dpUrl);
+                recentUsersHbox.getChildren().add(generateRecentUser(user, img));
+            } catch (NullPointerException e) {
+                System.err.println("The user " + user + " has no profile picture. They may have been deleted from firebase.");
+            }
 
-            String dpUrl = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() +"/users/"
-            +user+"/properties/profilePicUrl").getValue().toString();
 
-            Image img = new Image(dpUrl);
-            recentUsersHbox.getChildren().add(generateRecentUser(user, img));
         }
 
 
@@ -224,7 +224,6 @@ public class UserLoginController {
     }
 
 
-    DataSnapshot ss;
 
     @FXML
     protected void logIn() {
