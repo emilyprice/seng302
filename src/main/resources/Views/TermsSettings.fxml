@@ -27,12 +27,16 @@
                               AnchorPane.topAnchor="0.0">
                             <children>
                                 <BorderPane prefWidth="200.0">
-                                    <bottom>
+                                    <left>
                                         <JFXTextField fx:id="searchbar"
                                                       onKeyReleased="#executeSearch"
                                                       promptText="Search"
                                                       BorderPane.alignment="CENTER"/>
-                                    </bottom>
+                                    </left>
+                                    <right>
+                                        <JFXButton fx:id="addTerm" onAction="#launchAddTerm"
+                                                   BorderPane.alignment="CENTER"/>
+                                    </right>
                                 </BorderPane>
                                 <JFXListView fx:id="termsListView" prefHeight="585.0"
                                              prefWidth="229.0" VBox.vgrow="ALWAYS"/>

@@ -20,7 +20,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import seng302.Environment;
@@ -55,15 +54,22 @@ public class TermsSettingsController {
     @FXML
     private JFXButton deleteButton;
 
+    @FXML
+    private JFXButton addTerm;
+
     private Environment env;
 
     private boolean isEditMode = false;
 
+    private boolean isCreateMode = false;
+
     private Map<String, String> editInfo = new HashMap<>();
 
-    ImageView editImage = new ImageView(new Image(getClass().getResourceAsStream("/images/edit_mode_black_36dp.png"), 25, 25, false, false));
+    private ImageView editImage = new ImageView(new Image(getClass().getResourceAsStream("/images/edit_mode_black_36dp.png"), 25, 25, false, false));
 
-    ImageView saveImage = new ImageView(new Image(getClass().getResourceAsStream("/images/plus-symbol.png"), 25, 25, false, false));
+    private ImageView saveImage = new ImageView(new Image(getClass().getResourceAsStream("/images/plus-symbol.png"), 25, 25, false, false));
+
+    private ImageView addImage = new ImageView(new Image(getClass().getResourceAsStream("/images/plus-symbol.png"), 25, 25, false, false));
 
     private ImageView deleteImage = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png"), 25, 25, false, false));
 
@@ -75,6 +81,8 @@ public class TermsSettingsController {
 
         editButton.setGraphic(editImage);
         deleteButton.setGraphic(deleteImage);
+        addTerm.setGraphic(addImage);
+        toggleInputs();
 
         termNames.addListener((ListChangeListener<String>) c -> {
             termsListView.getItems().setAll(termNames);
@@ -85,7 +93,9 @@ public class TermsSettingsController {
         termsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 isEditMode = false;
-                toggleInputs();
+                isCreateMode = false;
+                deleteButton.setVisible(true);
+                editButton.setGraphic(editImage);
                 // Display musical term with newvalue
                 selectedName.setText(newValue.toString());
 
@@ -126,6 +136,18 @@ public class TermsSettingsController {
                 termsListView.getSelectionModel().selectIndices(index);
             }
 
+            executeSearch();
+
+
+        } else if (isCreateMode) {
+            // Save a new term and close this mode
+            isCreateMode = false;
+            editButton.setGraphic(editImage);
+            deleteButton.setVisible(true);
+
+            env.getMttDataManager().addTerm(new Term(selectedName.getText(), selectedCategory.getText(), selectedOrigin.getText(), selectedDefinition.getText()));
+            env.getUserHandler().getCurrentUser().checkMusicTerms();
+            executeSearch();
 
         } else {
             //Enter edit mode
@@ -137,10 +159,10 @@ public class TermsSettingsController {
     }
 
     private void toggleInputs() {
-        selectedDefinition.setEditable(isEditMode);
-        selectedOrigin.setEditable(isEditMode);
-        selectedCategory.setEditable(isEditMode);
-        selectedName.setEditable(isEditMode);
+        selectedDefinition.setEditable(isEditMode || isCreateMode);
+        selectedOrigin.setEditable(isEditMode || isCreateMode);
+        selectedCategory.setEditable(isEditMode || isCreateMode);
+        selectedName.setEditable(isEditMode || isCreateMode);
     }
 
     @FXML
@@ -183,7 +205,7 @@ public class TermsSettingsController {
     }
 
     @FXML
-    private void executeSearch(KeyEvent keyEvent) {
+    private void executeSearch() {
         List<Term> results = env.getMttDataManager().search(searchbar.getText());
         termNames.setAll(results.stream().map(Term::getMusicalTermName).collect(Collectors.toList()));
         if (termNames.size() > 0) {
@@ -195,11 +217,35 @@ public class TermsSettingsController {
     }
 
     private void showPromptText() {
+
+        if (isCreateMode) {
+            selectedName.setPromptText("New musical term name");
+            selectedCategory.setPromptText("Write the category of your term");
+            selectedOrigin.setPromptText("Write the origin of your term");
+            selectedDefinition.setPromptText("Say a little about the meaning of this term");
+
+        } else {
+            selectedName.setPromptText("Musical Term Name");
+            selectedCategory.setPromptText("");
+            selectedOrigin.setPromptText("");
+            selectedDefinition.setPromptText("");
+        }
+
         selectedName.clear();
         selectedCategory.clear();
         selectedDefinition.clear();
         selectedOrigin.clear();
 
+    }
+
+    @FXML
+    private void launchAddTerm() {
+        isCreateMode = true;
+        showPromptText();
+        isEditMode = false;
+        editButton.setGraphic(saveImage);
+        deleteButton.setVisible(false);
+        toggleInputs();
     }
 
 }
