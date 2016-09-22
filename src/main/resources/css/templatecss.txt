@@ -533,3 +533,18 @@
 .jfx-toggle-button .jfx-rippler{
     -fx-rippler-fill: {0};
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * Musical Terms Page                                                          *
+ *                                                                             *
+ ******************************************************************************/
+
+.termField {
+    -fx-focus-color: {0};
+}
+
+.termField:readonly {
+    -fx-background-color: transparent;
+    -fx-border-width: 0px;
+}

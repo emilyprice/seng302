@@ -227,6 +227,7 @@ public class TermsSettingsController {
                         }
 
                         termsListView.getSelectionModel().selectFirst();
+                        errorMessage.setVisible(false);
 
                         popup.close();
                     });
