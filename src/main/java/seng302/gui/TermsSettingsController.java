@@ -75,6 +75,12 @@ public class TermsSettingsController {
 
     private ObservableList<String> termNames = FXCollections.observableArrayList();
 
+    /**
+     * Sets up the GUI elements of the musical terms page. Creates listeners for the list of terms
+     * and the view of the list of terms. Also sets up buttons with appropriate graphics
+     *
+     * @param env The environment to which this page belongs
+     */
     public void create(Environment env) {
         this.env = env;
         env.getRootController().setHeader("Musical Term Settings");
@@ -158,6 +164,10 @@ public class TermsSettingsController {
         toggleInputs();
     }
 
+    /**
+     * Sets the fields of the displayed musical term to editable if the user is in edit or create
+     * mode.
+     */
     private void toggleInputs() {
         selectedDefinition.setEditable(isEditMode || isCreateMode);
         selectedOrigin.setEditable(isEditMode || isCreateMode);
@@ -216,8 +226,11 @@ public class TermsSettingsController {
 
     }
 
+    /**
+     * Sets and shows appropriate prompt text for the edit/add term screens. The setting of prompt
+     * text is necessary as editing and saving share GUI elements.
+     */
     private void showPromptText() {
-
         if (isCreateMode) {
             selectedName.setPromptText("New musical term name");
             selectedCategory.setPromptText("Write the category of your term");
