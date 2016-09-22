@@ -127,26 +127,32 @@ public class TermsSettingsController {
     @FXML
     private void toggleEditMode() {
         if (isEditMode) {
-            //Save changes and close edit mode
-            isEditMode = false;
-            editButton.setGraphic(editImage);
+            try {
+                //Save changes and close edit mode
+                editInfo.put("name", selectedName.getText());
+                editInfo.put("category", selectedCategory.getText());
+                editInfo.put("origin", selectedOrigin.getText());
+                editInfo.put("definition", selectedDefinition.getText());
 
-            editInfo.put("name", selectedName.getText());
-            editInfo.put("category", selectedCategory.getText());
-            editInfo.put("origin", selectedOrigin.getText());
-            editInfo.put("definition", selectedDefinition.getText());
+                env.getMttDataManager().editTerm(editInfo);
+                env.getUserHandler().getCurrentUser().checkMusicTerms();
 
-            env.getMttDataManager().editTerm(editInfo);
-            env.getUserHandler().getCurrentUser().checkMusicTerms();
+                // If the name has changed, update the list
+                if (!editInfo.get("oldName").equals(editInfo.get("name"))) {
+                    int index = termsListView.getSelectionModel().getSelectedIndex();
+                    termNames.set(index, editInfo.get("name"));
+                    termsListView.getSelectionModel().selectIndices(index);
+                }
 
-            // If the name has changed, update the list
-            if (!editInfo.get("oldName").equals(editInfo.get("name"))) {
-                int index = termsListView.getSelectionModel().getSelectedIndex();
-                termNames.set(index, editInfo.get("name"));
-                termsListView.getSelectionModel().selectIndices(index);
+                isEditMode = false;
+                editButton.setGraphic(editImage);
+                errorMessage.setVisible(false);
+                executeSearch();
+            } catch (Exception e) {
+                errorMessage.setText(e.getMessage());
+                errorMessage.setVisible(true);
+
             }
-
-            executeSearch();
 
 
         } else if (isCreateMode) {
@@ -268,6 +274,7 @@ public class TermsSettingsController {
 
     @FXML
     private void launchAddTerm() {
+        errorMessage.setVisible(false);
         isCreateMode = true;
         showPromptText();
         isEditMode = false;

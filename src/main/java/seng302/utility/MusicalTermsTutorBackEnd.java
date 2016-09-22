@@ -61,19 +61,29 @@ public class MusicalTermsTutorBackEnd {
      * @param termInfo A map containing the name (to find the term object by) and any altered
      *                 fields. May contain the following keys: oldName, name, category, origin,
      *                 description.
+     * @throws Exception if any of the edited content is too long, or a term with the new name
+     *                   already exists.
      */
-    public void editTerm(Map<String, String> termInfo) {
+    public void editTerm(Map<String, String> termInfo) throws Exception {
         Term editedTerm = getTermByName(termInfo.get("oldName"));
 
         if (editedTerm != null) {
+            boolean nameChanged = !termInfo.get("oldName").equalsIgnoreCase(termInfo.get("name"));
 
             for (Map.Entry<String, String> entry : termInfo.entrySet()) {
 
-                // If a term exists with the new name, we cannot apply that change
-                if (getTermByName(entry.getValue()) == null) {
-                    editedTerm.updateInfo(entry.getKey(), entry.getValue());
+                if (entry.getKey().equals("name") && nameChanged && getTermByName(entry.getValue()) != null) {
+                    // Throws an exception if the name was changed to the name of a different,
+                    // existing term.
+                    throw new Exception("Term with the name of " + entry.getValue() + " has already been added");
                 } else {
-                    //TODO: tell the user in a nice way that this name is invalid
+                    if (entry.getValue().length() > 100) {
+                        throw new Exception(String.format("Your musical term" +
+                                        " %s exceeds 100 characters. Please give a shorter %s.",
+                                entry.getKey(), entry.getKey()));
+                    } else {
+                        editedTerm.updateInfo(entry.getKey(), entry.getValue());
+                    }
                 }
             }
 
