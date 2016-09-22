@@ -263,7 +263,7 @@ public class StageMapController {
         } else {
             for (int i = records.size() - 3; i < records.size(); i++) {
                 TutorRecord record = records.get(i);
-                if (!(record.getStats().get("questionsCorrect").toString()).equals("10")) {
+                if (!(record.getStats().get("questionsCorrect").intValue() >= 7)) {
                     unlock = false;
                 }
             }

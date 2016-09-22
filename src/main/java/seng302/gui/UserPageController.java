@@ -191,11 +191,24 @@ public class UserPageController {
                 } else {
                     //if in competitive mode, lock the relevant tabs
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
-                            setGraphic(new ImageView(lockImg));
-                            setTextFill(Color.GRAY);
-                            setText(tutor);
-                            setDisable(true);
+                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false ) {
+
+                            if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+                                if(env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")) == true){
+
+                                }else {
+                                    setGraphic(new ImageView(lockImg));
+                                    setTextFill(Color.GRAY);
+                                    setText(tutor);
+                                    setDisable(true);
+                                }
+                            }else {
+
+                                setGraphic(new ImageView(lockImg));
+                                setTextFill(Color.GRAY);
+                                setText(tutor);
+                                setDisable(true);
+                            }
                         }
 
 
