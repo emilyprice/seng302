@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="seng302.gui.MicInputTestController">
-    <children>
-        <HBox VBox.vgrow="ALWAYS">
-            <children>
-                <ToggleButton fx:id="recordButton" mnemonicParsing="false" text="RECORD">
-                    <toggleGroup>
-                        <ToggleGroup fx:id="MIC"/>
-                    </toggleGroup>
-                </ToggleButton>
-                <ToggleButton fx:id="stopButton" mnemonicParsing="false" selected="true" text="STOP"
-                              toggleGroup="$MIC"/>
-                <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="300.0"/>
-            </children>
-        </HBox>
-    </children>
-</VBox>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.MicInputTestController">
+   <children>
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <children>
+            <VBox VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="Input Device">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <VBox fx:id="inputDevices" />
+               </children>
+            </VBox>
+              <HBox VBox.vgrow="ALWAYS">
+                  <children>
+                      <ToggleButton fx:id="recordButton" mnemonicParsing="false" text="RECORD" HBox.hgrow="ALWAYS">
+                          <toggleGroup>
+                              <ToggleGroup fx:id="MIC" />
+                          </toggleGroup>
+                      </ToggleButton>
+                      <ToggleButton fx:id="stopButton" mnemonicParsing="false" selected="true" text="STOP" toggleGroup="$MIC" HBox.hgrow="ALWAYS" />
+                      <TextArea fx:id="textArea" maxHeight="100.0" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  </children>
+              </HBox>
+          </children>
+      </VBox>
+   </children>
+</AnchorPane>

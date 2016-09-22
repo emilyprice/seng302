@@ -181,9 +181,9 @@ public class BaseSettingsController {
             micSettingsLoader.setLocation(getClass().getResource("/Views/MicInputTest.fxml"));
             Node loadedPane = (Node) micSettingsLoader.load();
             settingsPane.getChildren().setAll(loadedPane);
-            HBox.setHgrow(loadedPane, Priority.ALWAYS);
+            this.setAnchors(loadedPane);
             micInputTestController = micSettingsLoader.getController();
-            micInputTestController.create();
+            micInputTestController.create(env);
 
         } catch (IOException e) {
             e.printStackTrace();

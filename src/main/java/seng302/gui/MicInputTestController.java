@@ -1,5 +1,7 @@
 package seng302.gui;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
@@ -19,10 +21,16 @@ import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.VBox;
+import seng302.Environment;
 import seng302.data.Note;
 
 public class MicInputTestController implements PitchDetectionHandler {
@@ -39,14 +47,20 @@ public class MicInputTestController implements PitchDetectionHandler {
     @FXML
     private TextArea textArea;
 
+    @FXML
+    private VBox inputDevices;
+
     private PitchProcessor.PitchEstimationAlgorithm algo;
     private Mixer mixer;
     private AudioDispatcher dispatcher;
     private TargetDataLine line;
     private ArrayList<Double> midiFrequencies = new ArrayList<>();
     private ArrayList<Double> detectedFrequencies = new ArrayList<>();
+    private ToggleGroup inputToggleGroup = new ToggleGroup();
 
-    public void create() {
+    private Environment env;
+
+    public void create(Environment env) {
         recordButton.setOnAction(event -> {
             try {
                 startRecording();
@@ -60,6 +74,26 @@ public class MicInputTestController implements PitchDetectionHandler {
         algo = PitchProcessor.PitchEstimationAlgorithm.YIN;
         mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
         resetNoteFrequencies();
+
+        this.env = env;
+
+        // Populate input fields
+        for (Mixer.Info info : getMixerInfo(false, true)) {
+            RadioButton radio = new RadioButton(toLocalString(info));
+            radio.setToggleGroup(inputToggleGroup);
+            radio.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    try {
+                        mixer = AudioSystem.getMixer(info);
+                    } catch (Exception e) {
+                        System.err.println("Input device not supported.");
+                    }
+                }
+            });
+            radio.setPadding(new Insets(5, 0, 5, 15));
+            inputDevices.getChildren().add(radio);
+        }
     }
 
     private void resetNoteFrequencies() {
@@ -179,5 +213,17 @@ public class MicInputTestController implements PitchDetectionHandler {
             }
         }
         return infos;
+    }
+
+    private static String toLocalString(Mixer.Info info) {
+        if (!System.getProperty("os.name").startsWith("Windows")) {
+            return info.getDescription();
+        }
+        String defaultEncoding = Charset.defaultCharset().toString();
+        try {
+            return new String(info.getDescription().getBytes("windows-1252"), defaultEncoding);
+        } catch (UnsupportedEncodingException e) {
+            return info.getDescription();
+        }
     }
 }
