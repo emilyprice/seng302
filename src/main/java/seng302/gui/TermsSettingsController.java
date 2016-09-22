@@ -137,17 +137,21 @@ public class TermsSettingsController {
                 env.getMttDataManager().editTerm(editInfo);
                 env.getUserHandler().getCurrentUser().checkMusicTerms();
 
+                executeSearch();
+
                 // If the name has changed, update the list
                 if (!editInfo.get("oldName").equals(editInfo.get("name"))) {
-                    int index = termsListView.getSelectionModel().getSelectedIndex();
-                    termNames.set(index, editInfo.get("name"));
-                    termsListView.getSelectionModel().selectIndices(index);
+                    for (int i = 0; i < termNames.size(); i++) {
+                        if (termNames.get(i).equalsIgnoreCase(editInfo.get("name"))) {
+                            termNames.set(i, editInfo.get("name"));
+                            termsListView.getSelectionModel().selectIndices(i);
+                        }
+                    }
                 }
 
                 isEditMode = false;
                 editButton.setGraphic(editImage);
                 errorMessage.setVisible(false);
-                executeSearch();
             } catch (Exception e) {
                 errorMessage.setText(e.getMessage());
                 errorMessage.setVisible(true);
@@ -239,11 +243,6 @@ public class TermsSettingsController {
     private void executeSearch() {
         List<Term> results = env.getMttDataManager().search(searchbar.getText());
         termNames.setAll(results.stream().map(Term::getMusicalTermName).collect(Collectors.toList()));
-        if (termNames.size() > 0) {
-            termsListView.getSelectionModel().selectFirst();
-        } else {
-            showPromptText();
-        }
 
     }
 
