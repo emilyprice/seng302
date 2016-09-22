@@ -161,7 +161,13 @@ public class UserPageController {
 
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            showPage((String) newValue);
+            if (((String) newValue).equals("Scale Recognition Tutor (Basic)")) {
+                showPage("Scale Recognition Tutor");
+            }else if(((String) newValue).equals("Chord Recognition Tutor (Basic)")){
+                showPage("Chord Recognition Tutor");
+            }else {
+                showPage((String) newValue);
+            }
         });
 
         // Set after the listener so it loads user summary correctly
