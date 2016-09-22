@@ -6,7 +6,7 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -131,15 +131,37 @@
                         <Insets left="220.0"/>
                     </StackPane.margin>
                     <effect>
-                        <DropShadow blurType="GAUSSIAN" height="72.61" radius="22.965"
-                                    width="21.25"/>
+                        <Glow level="0.12"/>
                     </effect>
                 </Line>
             </children>
             <VBox.margin>
-                <Insets bottom="20.0" left="10.0" right="10.0" top="20.0"/>
+                <Insets left="10.0" right="10.0" top="20.0"/>
             </VBox.margin>
         </StackPane>
+        <HBox maxHeight="40.0" maxWidth="500.0" prefHeight="20.0" prefWidth="500.0">
+            <children>
+                <Label fx:id="classAverageLabel" alignment="TOP_LEFT" text="Class Average: ">
+                    <font>
+                        <Font size="9.0"/>
+                    </font>
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Label>
+                <Label fx:id="classAverageNumber" text="0.5">
+                    <font>
+                        <Font size="9.0"/>
+                    </font>
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Label>
+            </children>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0"/>
+            </VBox.margin>
+        </HBox>
         <LineChart fx:id="lineChart" horizontalZeroLineVisible="false" legendVisible="false"
                    minHeight="200.0" prefHeight="228.0" prefWidth="379.0" title="Past Results">
             <xAxis>

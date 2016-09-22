@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -112,6 +113,12 @@ public class TutorStatsController {
     @FXML
     private AnchorPane badgesAnchor;
 
+    @FXML
+    private Label classAverageLabel;
+
+    @FXML
+    private Label classAverageNumber;
+
     String currentTutor;
 
     public void create(Environment env) {
@@ -184,6 +191,21 @@ public class TutorStatsController {
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
 
         // Figure out class average
+        displayClassAverage(handler, tutorNameNoSpaces, timePeriod);
+        makeLineGraph(dateAndTime, timePeriod);
+
+
+    }
+
+    /**
+     * Calculates the average score for the class for a certain tutor and time period and displays
+     * the line in the correct place on the graph.
+     *
+     * @param handler           The current tutorHandler.
+     * @param tutorNameNoSpaces The current tutorName.
+     * @param timePeriod        the time period of data to display.
+     */
+    private void displayClassAverage(TutorHandler handler, String tutorNameNoSpaces, String timePeriod) {
         DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
         ArrayList<Pair<Integer, Integer>> classTotals = new ArrayList<>();
 
@@ -200,7 +222,6 @@ public class TutorStatsController {
             });
 
         });
-        System.out.println(classTotals);
         Integer classTotalIncorrect = 0;
         Integer classTotalCorrect = 0;
         for (Pair<Integer, Integer> score : classTotals) {
@@ -212,13 +233,9 @@ public class TutorStatsController {
         if (classTotalCorrect + classTotalIncorrect != 0) {
             averageClassScore = classTotalCorrect.floatValue() / (classTotalCorrect + classTotalIncorrect);
         }
-        System.out.println(averageClassScore);
-
         StackPane.setMargin(classAverage, new Insets(0, 0, 0, 500 * averageClassScore - 30));
-
-        makeLineGraph(dateAndTime, timePeriod);
-
-
+        HBox.setMargin(classAverageLabel, new Insets(0, 0, 0, 500 * averageClassScore - 50));
+        classAverageNumber.setText(String.format("%.2f", averageClassScore));
     }
 
 
