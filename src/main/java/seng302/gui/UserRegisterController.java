@@ -128,6 +128,9 @@ public class UserRegisterController {
 
     }
 
+    /**
+     * cbClassroom onAction function.
+     */
     @FXML
     void classroomSelected() {
 
@@ -249,6 +252,7 @@ public class UserRegisterController {
             }
             else if(selectedType.equals("Teacher")){
                 env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText()).setValue("test");
+                //TODO: add action for registering and logging in as a teacher.
             }
         }
 
