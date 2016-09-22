@@ -72,9 +72,9 @@ public class UserRegisterController {
 
     }
 
-    public void create(Environment env, String classroom) {
+    public void create(Environment env) {
         this.env = env;
-        this.classroom = classroom;
+
 
 
     }
@@ -113,7 +113,6 @@ public class UserRegisterController {
                     for(DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()){
                         cbClassroom.getItems().add(classroom.getKey());
                     }
-
 
                 }
                 else{
@@ -239,7 +238,7 @@ public class UserRegisterController {
         //DatabaseReference users = env.getFirebase().getFirebase().child("classrooms/"+ this.classroom+ "/users/"+txtUsername.getText());
 
         String selectedType = ((JFXRadioButton)accountType.getSelectedToggle()).getText();
-
+        hbClassroom.setStyle("-fx-border-color: none;");
         if(selectedType != null){
             if(selectedType.equals("Student")){
                 if(cbClassroom.getValue() != null){
@@ -248,6 +247,8 @@ public class UserRegisterController {
                 }
                 else{
                     //TODO: Classroom not selected.
+                    hbClassroom.setStyle("-fx-border-color: red;");
+
                 }
             }
             else if(selectedType.equals("Teacher")){
