@@ -57,6 +57,9 @@ public class TermsSettingsController {
     @FXML
     private JFXButton addTerm;
 
+    @FXML
+    private Label errorMessage;
+
     private Environment env;
 
     private boolean isEditMode = false;
@@ -98,6 +101,7 @@ public class TermsSettingsController {
 
         termsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                errorMessage.setVisible(false);
                 isEditMode = false;
                 isCreateMode = false;
                 deleteButton.setVisible(true);
@@ -146,14 +150,25 @@ public class TermsSettingsController {
 
 
         } else if (isCreateMode) {
-            // Save a new term and close this mode
-            isCreateMode = false;
-            editButton.setGraphic(editImage);
-            deleteButton.setVisible(true);
 
-            //env.getMttDataManager().addTerm(new Term(selectedName.getText(), selectedCategory.getText(), selectedOrigin.getText(), selectedDefinition.getText()));
-            env.getUserHandler().getCurrentUser().checkMusicTerms();
-            executeSearch();
+            try {
+                // Save a new term and close this mode
+
+                env.getMttDataManager().addTerm(new Term(selectedName.getText(),
+                        selectedCategory.getText(), selectedOrigin.getText(),
+                        selectedDefinition.getText()));
+
+                isCreateMode = false;
+                editButton.setGraphic(editImage);
+                deleteButton.setVisible(true);
+
+                env.getUserHandler().getCurrentUser().checkMusicTerms();
+                executeSearch();
+                errorMessage.setVisible(false);
+            } catch (Exception e) {
+                errorMessage.setText(e.getMessage());
+                errorMessage.setVisible(true);
+            }
 
         } else {
             //Enter edit mode

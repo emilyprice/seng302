@@ -81,6 +81,8 @@
                         <JFXTextField fx:id="selectedOrigin" editable="false" layoutX="10.0"
                                       layoutY="363.0" AnchorPane.leftAnchor="10.0"
                                       AnchorPane.rightAnchor="9.0"/>
+                        <Label fx:id="errorMessage" layoutX="10.0" layoutY="416.0" text="Label"
+                               visible="false" AnchorPane.leftAnchor="10.0"/>
                         <HBox spacing="20.0" AnchorPane.bottomAnchor="10.0"
                               AnchorPane.rightAnchor="10.0">
                             <children>
