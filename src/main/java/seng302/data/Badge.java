@@ -50,7 +50,9 @@ public class Badge {
         badgeProgress += progress;
 
         while (badgeProgress >= badgeLevels.get(currentBadgeType)){
-            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(expWorth*currentBadgeType);
+            try {
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(expWorth * currentBadgeType);
+            } catch (NullPointerException e) {}
             currentBadgeType += 1;
             Image unlock = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
             List<String> badgeTypes = new ArrayList<>();

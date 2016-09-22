@@ -136,7 +136,7 @@ public class BadgeManager {
         }
 
         //initialise overall badges
-        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 0, 0, "completist", 400));
+        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 2, 0, "completist", 400));
         overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", tutorTotal, 0, 0, "gradHat", 350));
         overallBadges.add(new Badge("Instrument master", null, "Use different instruments", musicianBadges, 0, 0, "saxophone-man", 20));
         overallBadges.add(new Badge("Creative", null, "Change your theme", null, 0, 0, "paint-brush", 20));
