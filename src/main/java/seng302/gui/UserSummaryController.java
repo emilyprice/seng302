@@ -12,12 +12,10 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Effect;
-import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -28,8 +26,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.scene.control.ScrollPane;
-
-import javafx.scene.layout.*;
 
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -193,6 +189,9 @@ public class UserSummaryController {
         
     }
 
+    /**
+     * Used to create the badgeGrid and display the badges in stackpanes with the correct effect
+     */
     private void updateBadgesDisplay() {
 
         ArrayList<Badge> tutorBadges = new ArrayList();
@@ -221,6 +220,9 @@ public class UserSummaryController {
         tutorBadges.forEach(this::addTutorBadgeToGrid);
     }
 
+    /**
+     * Helper function used to order badges for the badgeGrid
+     */
     public static class badgeComparator implements Comparator<Badge> {
         @Override
         public int compare(Badge b1, Badge b2) {
@@ -228,6 +230,10 @@ public class UserSummaryController {
         }
     }
 
+    /**
+     * Used to add a non-tutor badge to the badgeGrid
+     * @param b the Badge to be added
+     */
     public void addBadgeToGrid(Badge b) {
         Image bImage = new Image("/images/"+b.imageName+".png");
         ImageView bView = new ImageView(bImage);
@@ -270,6 +276,10 @@ public class UserSummaryController {
         }
     }
 
+    /**
+     * Used to add a tutor badge to the badgeGrid
+     * @param b the Badge to be added
+     */
     public void addTutorBadgeToGrid(Badge b) {
         Image ribbonImage = new Image("/images/ribbonAward.png");
         ImageView rView = new ImageView(ribbonImage);
@@ -323,5 +333,6 @@ public class UserSummaryController {
         } else {
             gridX = 0;
             gridY++;
-        }    }
+        }
+    }
 }

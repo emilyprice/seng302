@@ -2,11 +2,9 @@ package seng302.data;
 
 
 import org.controlsfx.control.Notifications;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +29,8 @@ public class Badge {
 
     public String description;
 
-//    seng302.Environment env;
-
 
     public Badge(String name, String tutorName, String description, ArrayList<Integer> badgeLevels, double badgeProgress, Integer currentBadgeType, String imageName, Integer expWorth){
-//        this.env = env;
         this.name = name;
         this.tutorName = tutorName;
         this.currentBadgeType = currentBadgeType;
@@ -46,6 +41,12 @@ public class Badge {
         this.expWorth = expWorth;
     }
 
+    /**
+     * Used to update a badge's progress either after a tutor session or once the badges criteria
+     * has been met.
+     * @param env the Environment
+     * @param progress the amount of progress the badge as increased in
+     */
     public void updateBadgeProgress(seng302.Environment env, double progress){
         badgeProgress += progress;
 
@@ -70,5 +71,4 @@ public class Badge {
                     .show();
         }
     }
-
 }

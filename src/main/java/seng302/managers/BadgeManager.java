@@ -2,15 +2,11 @@ package seng302.managers;
 
 import org.controlsfx.control.Notifications;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import seng302.Environment;
 import seng302.data.Badge;
-
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -40,15 +36,27 @@ public class BadgeManager {
         populateMasterMap();
     }
 
+    /**
+     *  Used for updating all badges after changes to their states have been made
+     * @param tutorBadgeMap hashmap containing all tutor related badges
+     * @param overallBadges hashmap containing all other badges
+     */
     public void replaceBadges(HashMap<String, ArrayList<Badge>> tutorBadgeMap, ArrayList<Badge> overallBadges){
         this.tutorBadgeMap = tutorBadgeMap;
         this.overallBadges = overallBadges;
     }
 
+    /**
+     *  Used for updating 100% tutor session badges
+     * @param map the hashmap of 100% tutor session badges
+     */
     public void replaceTutor100AllMap(HashMap<String, Boolean> map){
         tutor100AllMap = map;
     }
 
+    /**
+     * Used to populate the list of tutors used to create all badges
+     */
     private void populateTutorList(){
         allTutors.add("Pitch Comparison Tutor");
         allTutors.add("Interval Recognition Tutor");
@@ -61,6 +69,9 @@ public class BadgeManager {
         allTutors.add("Scale Modes Tutor");
     }
 
+    /**
+     * Used to populate the list of images for individual tutor badges
+     */
     private void populateImageMap() {
         tutorImages = new HashMap<>();
         tutorImages.put("Pitch Comparison Tutor", "tuning-fork");
@@ -74,6 +85,10 @@ public class BadgeManager {
         tutorImages.put("Scale Modes Tutor", "sound-level");
     }
 
+    /**
+     * Used to initialise the hashmap that stores whether tutor have been "mastered" (for the
+     *  Tutor Master badge)
+     */
     private void populateMasterMap() {
         masterTutors = new HashMap<>();
         masterTutors.put("Pitch Comparison Tutor", false);
@@ -87,6 +102,9 @@ public class BadgeManager {
         masterTutors.put("Scale Modes Tutor", false);
     }
 
+    /**
+     * Used to populate the hashmap that stores the whether each tutor has been achieved with 100%
+     */
     private void populate100AllTutorMap(){
         tutor100AllMap = new HashMap<>();
         for (String tutor : allTutors){
@@ -95,11 +113,12 @@ public class BadgeManager {
     }
 
 
-
+    /**
+     * Used to initialise all badges
+     */
     private void initalizeAllBadges(){
         overallBadges = new ArrayList<>();
         tutorBadgeMap = new HashMap<>();
-
 
         ArrayList<Integer> sessionBadges = new ArrayList<>();
         sessionBadges.add(1);
@@ -147,21 +166,8 @@ public class BadgeManager {
     }
 
 
-//    public void updateAllBadges(String tutorType, Integer userScore){
-//        System.out.println("updateAllBadges");
-//        //update overall badges
-//        //update tutor badges
-//        tutorBadgeMap.get(tutorType).get(0).updateBadgeProgress(userScore);
-//        tutorBadgeMap.get(tutorType).get(1).updateBadgeProgress(1);
-//        if(userScore == 10) {
-//            tutor100AllMap.put(tutorType, true);
-//            tutorBadgeMap.get(tutorType).get(2).updateBadgeProgress(1);
-//        }
-//
-//    }
-
     /**
-     * used once an instrument has been set to update the list of used instruments and if a new instrument has been
+     * Used once an instrument has been set to update the list of used instruments and if a new instrument has been
      * played then it updates the " musician badge
      * @param id instrument id
      */
@@ -175,46 +181,38 @@ public class BadgeManager {
 
     }
 
+    /**
+     * Used to update the states of the non-tutor badges
+     */
     public void updateOverallBadges(){
-//        if(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getModeManager().currentUnlocks == 11) {
-//            overallBadges.get(0).updateBadgeProgress(1);
-//        }
-
         if(!tutor100AllMap.containsValue(false)){
             overallBadges.get(1).updateBadgeProgress(env, 1);
         }
 
-        //if(env.getMttDataManager().getTerms().size())
-
     }
 
-
-    public static ArrayList<Badge> getOverallBadges(){
-        return overallBadges;
-    }
-
-    public static HashMap getTutorBadges(){
-        return tutorBadgeMap;
-    }
-
-    public static HashMap get100TutorBadges(){
-        return tutor100AllMap;
-    }
-
+    /**
+     * Used to update the state of a badge once its unlock criteria has been met
+     * @param badgeName the name of the badge to be unlocked
+     */
     public void unlockBadge(String badgeName) {
         overallBadges.stream().filter(b -> b.name.equals(badgeName)).forEach(b -> {
             if (b.currentBadgeType == 0) {
                 b.currentBadgeType = 1;
                 b.badgeProgress = 1;
                 updateOverallBadges();
-                notification(badgeName, b.currentBadgeType, b.tutorName);
+                notification(badgeName);
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(b.expWorth);
             }
         });
         reloadSummaryPage();
     }
 
-    private void notification(String badgeName, int currentBadgeType, String tutorName) {
+    /**
+     * Used to create a notification when a non-tutor badge has been unlocked or levelled up
+     * @param badgeName the name of the badge to be updated
+     */
+    private void notification(String badgeName) {
         Image unlock = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
         Notifications.create()
                 .title("Achievement Unlocked")
@@ -224,10 +222,19 @@ public class BadgeManager {
                 .show();
     }
 
+    /**
+     * Reloads the summary page after a badge has been unlocked
+     */
     private void reloadSummaryPage() {
         env.getUserPageController().showSummaryPage();
     }
 
+    /**
+     * Updates the badges that belong to a specific tutor
+     * @param tutorName the tutor that badges belong to
+     * @param correct the number of questions answered correctly
+     * @param answered the number of questions answered
+     */
     public void updateTutorBadges(String tutorName, int correct, int answered) {
         ArrayList badges = tutorBadgeMap.get(tutorName);
         for (Object badg : badges) {
@@ -242,6 +249,10 @@ public class BadgeManager {
         }
     }
 
+    /**
+     * Used to update the Tutor Master badge after a tutor session is completed with 100%
+     * @param tutorName
+     */
     public void updateTutorMaster(String tutorName) {
         if (masterTutors.get(tutorName) == false) {
             masterTutors.put(tutorName, true);
@@ -267,4 +278,15 @@ public class BadgeManager {
         return null;
     }
 
+    public static ArrayList<Badge> getOverallBadges(){
+        return overallBadges;
+    }
+
+    public static HashMap getTutorBadges(){
+        return tutorBadgeMap;
+    }
+
+    public static HashMap get100TutorBadges(){
+        return tutor100AllMap;
+    }
 }
