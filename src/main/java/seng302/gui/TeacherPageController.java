@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import seng302.Environment;
+import seng302.Users.Student;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class TeacherPageController {
 
         classroomData.getChildren().forEach(user -> {
             //TODO: filter out teachers
+            //System.out.println(user.child("/properties/isTeacher"));
             options.add(user.getKey());
 
         });
@@ -136,6 +138,9 @@ public class TeacherPageController {
     public void showUserPage(String userName) {
         env.getRootController().setHeader("Student - " + userName);
 
+       String password = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + userName + "/properties/password").toString();
+
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
 
         try {
@@ -149,7 +154,7 @@ public class TeacherPageController {
             //statsController = tutorStatsLoader.getController();
 
             //change to be the user that was clicked on
-            userSummaryController.create(env, env.getUserHandler().getCurrentUser());
+            userSummaryController.create(env, new Student(userName, password, env));
 
         } catch (IOException e) {
             e.printStackTrace();
