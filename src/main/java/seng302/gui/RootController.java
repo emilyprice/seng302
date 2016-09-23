@@ -2,16 +2,6 @@ package seng302.gui;
 
 
 import com.jfoenix.controls.JFXBadge;
-
-import org.json.simple.JSONArray;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,15 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -37,10 +19,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
 import seng302.Environment;
 import seng302.Users.Student;
 import seng302.managers.TranscriptManager;
 import seng302.utility.OutputTuple;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 
 public class RootController implements Initializable {
@@ -345,25 +335,51 @@ public class RootController implements Initializable {
      * Opens the user page.
      */
     public void showUserPage() throws IOException {
-        showUserBar(false);
-        setHeader("Summary");
 
-        FXMLLoader userPageLoader = new FXMLLoader();
-        userPageLoader.setLocation(getClass().getResource("/Views/UserPage.fxml"));
+        boolean isTeacher = true;
+
+        if (isTeacher) {
+            showUserBar(false);
+            setHeader("Summary");
+
+            FXMLLoader teacherLoader = new FXMLLoader();
+            teacherLoader.setLocation(getClass().getResource("/Views/TeacherPage.fxml"));
 
 
-        AnchorPane userPage = userPageLoader.load();
+            AnchorPane teacherPage = teacherLoader.load();
 
-        centerPane.getChildren().add(userPage);
+            centerPane.getChildren().add(teacherPage);
 
-        AnchorPane.setRightAnchor(userPage, 0.0);
-        AnchorPane.setLeftAnchor(userPage, 0.0);
-        AnchorPane.setBottomAnchor(userPage, 0.0);
-        AnchorPane.setTopAnchor(userPage, 0.0);
+            AnchorPane.setRightAnchor(teacherPage, 0.0);
+            AnchorPane.setLeftAnchor(teacherPage, 0.0);
+            AnchorPane.setBottomAnchor(teacherPage, 0.0);
+            AnchorPane.setTopAnchor(teacherPage, 0.0);
 
-        UserPageController userPageController = userPageLoader.getController();
-        userPageController.setEnvironment(env);
-        userPageController.load();
+            TeacherPageController teacherPageController = teacherLoader.getController();
+            teacherPageController.setEnvironment(env);
+            teacherPageController.load();
+
+        } else {
+            showUserBar(false);
+            setHeader("Summary");
+
+            FXMLLoader userPageLoader = new FXMLLoader();
+            userPageLoader.setLocation(getClass().getResource("/Views/UserPage.fxml"));
+
+
+            AnchorPane userPage = userPageLoader.load();
+
+            centerPane.getChildren().add(userPage);
+
+            AnchorPane.setRightAnchor(userPage, 0.0);
+            AnchorPane.setLeftAnchor(userPage, 0.0);
+            AnchorPane.setBottomAnchor(userPage, 0.0);
+            AnchorPane.setTopAnchor(userPage, 0.0);
+
+            UserPageController userPageController = userPageLoader.getController();
+            userPageController.setEnvironment(env);
+            userPageController.load();
+        }
 
     }
 

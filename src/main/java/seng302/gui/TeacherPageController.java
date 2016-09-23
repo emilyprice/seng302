@@ -10,6 +10,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import seng302.Environment;
 
 public class TeacherPageController {
 
@@ -37,9 +38,21 @@ public class TeacherPageController {
     @FXML
     private SplitPane userView;
 
+
+    private Environment env;
+
+
     @FXML
     void openSettings(ActionEvent event) {
 
     }
 
+    public void setEnvironment(Environment env) {
+        this.env = env;
+        this.env.setTeacherPageController(this);
+    }
+
+    public void load() {
+        imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
+    }
 }
