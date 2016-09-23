@@ -1,19 +1,4 @@
-package seng302.gui;
-
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Vector;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.TargetDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
+package seng302;
 
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.AudioEvent;
@@ -21,80 +6,33 @@ import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.VBox;
-import seng302.Environment;
 import seng302.data.Note;
 
-public class MicInputTestController implements PitchDetectionHandler {
+import javax.sound.sampled.*;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Vector;
 
-    @FXML
-    private ToggleButton recordButton;
+/**
+ * Created by djj36 on 23/09/16.
+ */
+public class MicrophoneInput implements PitchDetectionHandler {
 
-    @FXML
-    private ToggleGroup MIC;
-
-    @FXML
-    private ToggleButton stopButton;
-
-    @FXML
-    private TextArea textArea;
-
-    @FXML
-    private VBox inputDevices;
-
-    private PitchProcessor.PitchEstimationAlgorithm algo;
+    private PitchProcessor.PitchEstimationAlgorithm algo = PitchProcessor.PitchEstimationAlgorithm.YIN;
     private Mixer mixer;
     private AudioDispatcher dispatcher;
     private TargetDataLine line;
     private ArrayList<Double> midiFrequencies = new ArrayList<>();
     private ArrayList<Double> detectedFrequencies = new ArrayList<>();
-    private ToggleGroup inputToggleGroup = new ToggleGroup();
+    private ArrayList<String> latestDetectedNotes = new ArrayList<>();
 
-    private Environment env;
-
-    public void create(Environment env) {
-        recordButton.setOnAction(event -> {
-            try {
-                startRecording();
-            } catch (LineUnavailableException e) {
-                e.printStackTrace();
-            } catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            }
-        });
-        stopButton.setOnAction(event -> stopRecording());
-        algo = PitchProcessor.PitchEstimationAlgorithm.YIN;
-        mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
+    public MicrophoneInput() {
+        this.mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
         resetNoteFrequencies();
-
-        this.env = env;
-
-        // Populate input fields
-        for (Mixer.Info info : getMixerInfo(false, true)) {
-            RadioButton radio = new RadioButton(toLocalString(info));
-            radio.setToggleGroup(inputToggleGroup);
-            radio.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    try {
-                        mixer = AudioSystem.getMixer(info);
-                    } catch (Exception e) {
-                        System.err.println("Input device not supported.");
-                    }
-                }
-            });
-            radio.setPadding(new Insets(5, 0, 5, 15));
-            inputDevices.getChildren().add(radio);
-        }
     }
+
 
     private void resetNoteFrequencies() {
         midiFrequencies.clear();
@@ -129,8 +67,7 @@ public class MicInputTestController implements PitchDetectionHandler {
         return note;
     }
 
-    private void startRecording() throws LineUnavailableException, UnsupportedAudioFileException {
-//        currentMixer = mixer;
+    public void startRecording() throws LineUnavailableException, UnsupportedAudioFileException {
 
         float sampleRate = 44100;
         int bufferSize = 1024;
@@ -158,24 +95,28 @@ public class MicInputTestController implements PitchDetectionHandler {
         new Thread(dispatcher, "Audio dispatching").start();
     }
 
-    private void stopRecording() {
+    public void stopRecording() {
         dispatcher.stop();
-        Collections.sort(detectedFrequencies);
-        double range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
-        while (range > 10) {
-            detectedFrequencies.remove(0);
-            detectedFrequencies.remove(detectedFrequencies.size() - 1);
-            range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
+        try {
+            Collections.sort(detectedFrequencies);
+            double range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
+            while (range > 10) {
+                detectedFrequencies.remove(0);
+                detectedFrequencies.remove(detectedFrequencies.size() - 1);
+                range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
+            }
+            double total = 0; // For mean calculations
+            double mean;
+            for (double freq : detectedFrequencies) {
+                total += freq;
+            }
+            mean = total / detectedFrequencies.size();
+            String note = findNote(mean);
+            latestDetectedNotes.add(note);
+            detectedFrequencies.clear();
+        } catch (Exception e) {
+            System.err.println("No sounds recorded.");
         }
-        double total = 0; // For mean calculations
-        double mean;
-        for (double freq : detectedFrequencies) {
-            total += freq;
-        }
-        mean = total / detectedFrequencies.size();
-        String note = findNote(mean);
-        textArea.setText(textArea.getText() + "\n" + note);
-        detectedFrequencies.clear();
     }
 
 
@@ -197,7 +138,7 @@ public class MicInputTestController implements PitchDetectionHandler {
         }
     }
 
-    private static Vector<Mixer.Info> getMixerInfo(
+    public static Vector<Mixer.Info> getMixerInfo(
             final boolean supportsPlayback, final boolean supportsRecording) {
         final Vector<Mixer.Info> infos = new Vector<Mixer.Info>();
         final Mixer.Info[] mixers = AudioSystem.getMixerInfo();
@@ -215,7 +156,7 @@ public class MicInputTestController implements PitchDetectionHandler {
         return infos;
     }
 
-    private static String toLocalString(Mixer.Info info) {
+    public static String toLocalString(Mixer.Info info) {
         if (!System.getProperty("os.name").startsWith("Windows")) {
             return info.getDescription();
         }
@@ -226,4 +167,14 @@ public class MicInputTestController implements PitchDetectionHandler {
             return info.getDescription();
         }
     }
+
+    public Mixer getMixer() {
+        return mixer;
+    }
+
+    public void setMixer(Mixer mixer) {
+        this.mixer = mixer;
+    }
+
+
 }

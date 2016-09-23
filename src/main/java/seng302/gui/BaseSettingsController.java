@@ -10,8 +10,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import seng302.Environment;
 
 
@@ -31,7 +29,7 @@ public class BaseSettingsController {
 
     private FXMLLoader userSettingsLoader, themeLoader, projectSettingsLoader;
 
-    private MicInputTestController micInputTestController;
+    private MicInputSettingsController micInputSettingsController;
 
 
     @FXML
@@ -178,12 +176,12 @@ public class BaseSettingsController {
     private void openMicInput() {
         try {
             FXMLLoader micSettingsLoader = new FXMLLoader();
-            micSettingsLoader.setLocation(getClass().getResource("/Views/MicInputTest.fxml"));
+            micSettingsLoader.setLocation(getClass().getResource("/Views/MicInputSettings.fxml"));
             Node loadedPane = (Node) micSettingsLoader.load();
             settingsPane.getChildren().setAll(loadedPane);
             this.setAnchors(loadedPane);
-            micInputTestController = micSettingsLoader.getController();
-            micInputTestController.create(env);
+            micInputSettingsController = micSettingsLoader.getController();
+            micInputSettingsController.create(env);
 
         } catch (IOException e) {
             e.printStackTrace();
