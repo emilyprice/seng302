@@ -196,7 +196,9 @@ public class TutorHandler {
         DatabaseReference ref = env.getFirebase().getUserRef().child("projects/" +
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + tutorName);
         currentRecord.updateDate();
-        ref.push().setValue(currentRecord);
+
+
+        ref.getRef().child(String.valueOf(currentRecord.getDate().getTime())).setValue(currentRecord);
     }
 
 
