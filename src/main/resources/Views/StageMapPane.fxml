@@ -50,7 +50,7 @@
             </AnchorPane>
             <VBox fx:id="descriptionVbox" prefHeight="152.0" prefWidth="640.0">
                <children>
-                  <Label text="To unlock the next tutor:">
+                  <Label fx:id="unlockHeader" text="To unlock the next tutor:">
                      <font>
                         <Font name="System Bold" size="19.0" />
                      </font>

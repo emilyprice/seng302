@@ -37,7 +37,7 @@ public class StageMapController {
     private VBox descriptionVbox;
 
     @FXML
-    private Label unlockDescription;
+    private Label unlockHeader;
 
     @FXML
     private Button keySignaturesTutorButton;
@@ -130,12 +130,39 @@ public class StageMapController {
 
     }
 
-    public void setDescription(){
 
+    private void setNextLockedStage(){
+        for(String tutor : tutorOrder){
+            if(unlockStatus.get(tutor) == false){
+                nextUnlockTutor = tutor;
+                break;
+            }
+        }
+    }
+
+    public void setDescription(){
+        setNextLockedStage();
+        String nextTutorName = null;
+        for (String t : converted.keySet()) {
+            if (converted.get(t).equals(nextUnlockTutor)) {
+                nextTutorName = t;
+            }
+        }
+        unlockHeader.setText("To unlock the " + nextTutorName + ":");
+        if(descriptionVbox.getChildren().size()>1){
+            descriptionVbox.getChildren().remove(1, descriptionVbox.getChildren().size());
+
+        }
 
         for(String key: unlockDescriptions.get(nextUnlockTutor).keySet()){
             HBox description = new HBox();
-            description.getChildren().add(new Label(key));
+            System.out.println(key);
+            if(key.equals("basicScaleTutor")||key.equals("basicChordTutor")){
+                description.getChildren().add(new Label("Get 3 consecutive scores of 9 or higher in the "+key));
+            }else{
+
+                description.getChildren().add(new Label("Get 3 consecutive scores of 7 or higher in the "+key));
+            }
             ImageView image = new ImageView();
 
             if(unlockDescriptions.get(nextUnlockTutor).get(key)){
@@ -199,9 +226,9 @@ public class StageMapController {
         unlockDescriptions = new HashMap<>();
         for (String tutor : tutorOrder.subList(2,tutorOrder.size())){
             HashMap<String, Boolean> temp = new HashMap<>();
-            temp.put("To unlock: the last 3 tutor records of "+ tutorOrder.get(tutorOrder.indexOf(tutor) - 1) + " need to be >=7", false);
+            temp.put(tutorOrder.get(tutorOrder.indexOf(tutor) - 1), false);
             if(tutor.equals("scaleTutor")||tutor.equals("chordTutor")){
-                temp.put("To unlock: the last 3 tutor records of "+ tutor  + " (Basic) need to be >=9", false);
+                temp.put("basic"+ tutor.substring(0, 1).toUpperCase() + tutor.substring(1), false);
             }
             unlockDescriptions.put(tutor, temp);
 
@@ -308,104 +335,58 @@ public class StageMapController {
      * Fetches 3 most recent tutor score files for tutor of interest and checks scores
      */
     public void fetchTutorFile(String tutorId) {
-        boolean unlock = true;
 
 
-        if(tutorId.equals("basicScaleTutor")) {
-            ArrayList<TutorRecord> basicRecords = tutorHandler.getTutorData(converted.get("intervalTutor"));
+        for(String tutor: unlockDescriptions.get(nextUnlockTutor).keySet()) {
+            ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
+            boolean unlock = true;
 
-            if (basicRecords.size() < 3) {
+            int requiredScore = 7;
+            if(nextUnlockTutor.equals("scaleTutor")||nextUnlockTutor.equals("chordTutor")){
+                if(tutor.equals("basicScaleTutor")|| tutor.equals("basicChordTutor")){
+                    requiredScore = 9;
+                }
+            }
+
+            if (records.size() < 3) {
                 //if there are less than 3 existing files
             } else {
-                for (int i = basicRecords.size() - 3; i < basicRecords.size(); i++) {
-                    TutorRecord record = basicRecords.get(i);
-                    if (!(record.getStats().get("questionsCorrect").intValue() >= 7)) {
+                for (int i = records.size() - 3; i < records.size(); i++) {
+                    TutorRecord record = records.get(i);
+                    if (!(record.getStats().get("questionsCorrect").intValue() >= requiredScore)) {
                         unlock = false;
                     }
                 }
-
             }
+
+            if(unlock){
+                unlockDescriptions.get(nextUnlockTutor).put(tutor, true);
+            }
+
+
         }
-        ArrayList<TutorRecord> records = tutorHandler.getTutorData(converted.get(tutorId));
 
-        if (records.size() < 3) {
-            //if there are less than 3 existing files
-        } else {
-            for (int i = records.size() - 3; i < records.size(); i++) {
-                TutorRecord record = records.get(i);
-                if (!(record.getStats().get("questionsCorrect").intValue() >= 7)) {
-                    unlock = false;
-                }
-            }
-
-            if(tutorId.equals("intervalTutor")) {
-                ArrayList<TutorRecord> basicRecords = tutorHandler.getTutorData(converted.get("basicScaleTutor"));
-
-                if (basicRecords.size() < 3) {
-                    //if there are less than 3 existing files
-                } else {
-                    for (int i = basicRecords.size() - 3; i < basicRecords.size(); i++) {
-                        TutorRecord record = basicRecords.get(i);
-                        if (!(record.getStats().get("questionsCorrect").intValue() >= 9)) {
-                            unlock = false;
+        if(!(unlockDescriptions.get(nextUnlockTutor).values().contains(false))){
+            System.out.println("unlocking next tutor");
+            unlockStatus.put(tutorOrder.get(tutorOrder.indexOf(nextUnlockTutor)), true);
+            visualiseLockedTutors();
+            String nextTutorName = null;
+            for (String t : converted.keySet()) {
+                        if (converted.get(t).equals(nextUnlockTutor)) {
+                            nextTutorName = t;
                         }
                     }
+            Image unlockImage = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
+                    Notifications.create()
+                            .title("Tutor Unlocked")
+                            .text("Well done! \nYou have unlocked the " + nextTutorName)
+                            .hideAfter(new Duration(10000))
+                            .graphic(new ImageView(unlockImage))
+                            .show();
 
-                }
-            }
-
-            if(tutorId.equals("scaleTutor")) {
-                ArrayList<TutorRecord> basicRecords = tutorHandler.getTutorData(converted.get("basicChordTutor"));
-
-                if (basicRecords.size() < 3) {
-                    //if there are less than 3 existing files
-                } else {
-                    for (int i = basicRecords.size() - 3; i < basicRecords.size(); i++) {
-                        TutorRecord record = basicRecords.get(i);
-                        if (!(record.getStats().get("questionsCorrect").intValue() >= 9)) {
-                            unlock = false;
-                        }
-                    }
-
-                }
-            }
-
-            if(tutorId.equals("basicScaleTutor")) {
-                ArrayList<TutorRecord> basicRecords = tutorHandler.getTutorData(converted.get("intervalTutor"));
-
-                if (basicRecords.size() < 3) {
-                    //if there are less than 3 existing files
-                } else {
-                    for (int i = basicRecords.size() - 3; i < basicRecords.size(); i++) {
-                        TutorRecord record = basicRecords.get(i);
-                        if (!(record.getStats().get("questionsCorrect").intValue() >= 7)) {
-                            unlock = false;
-                        }
-                    }
-
-                }
-            }
-
-            if (unlock) {
-                //set the tutor status to be unlocked
-                unlockStatus.put(tutorOrder.get((tutorOrder.indexOf(converted.get(tutorId)) + 1)), true);
-                visualiseLockedTutors();
-
-                String nextTutorName = null;
-                for (String t : converted.keySet()) {
-                    if (converted.get(t).equals(tutorOrder.get((tutorOrder.indexOf(tutorId) + 3)))) {
-                        nextTutorName = t;
-                    }
-                }
-                Image unlockImage = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
-                Notifications.create()
-                        .title("Tutor Unlocked")
-                        .text("Well done! \nYou have unlocked " + nextTutorName)
-                        .hideAfter(new Duration(10000))
-                        .graphic(new ImageView(unlockImage))
-                        .show();
-            }
         }
+
+        setDescription();
     }
 
 
