@@ -1,9 +1,6 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-
-import java.util.ArrayList;
-
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -23,7 +20,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import seng302.Environment;
+import seng302.Users.Student;
 import seng302.utility.LevelCalculator;
+
+import java.util.ArrayList;
 
 /**
  * Controller for the GUI page which displays a user's summary information.
@@ -59,6 +59,8 @@ public class UserSummaryController {
 
     private Environment env;
 
+    private Student user;
+
     FXMLLoader loader = new FXMLLoader();
 
     AnchorPane noteMap;
@@ -81,12 +83,13 @@ public class UserSummaryController {
      *
      * @param env The environment in which the controller is being created
      */
-    public void create(Environment env) {
+    public void create(Environment env, Student user) {
         this.env = env;
+        this.user = user;
 
         updateProgressBar();
 
-        Pair<Integer, Integer> correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTotalsForAllTutors(env.getUserPageController().getTimePeriod());
+        Pair<Integer, Integer> correctIncorrectOverall = user.getProjectHandler().getCurrentProject().tutorHandler.getTotalsForAllTutors(env.getUserPageController().getTimePeriod());
 
         // Set up Overall graph and labels.
 
@@ -118,8 +121,8 @@ public class UserSummaryController {
      * to obtain the next level
      */
     public void updateProgressBar() {
-        int userXp = env.getUserHandler().getCurrentUser().getUserExperience();
-        int userLevel = env.getUserHandler().getCurrentUser().getUserLevel();
+        int userXp = user.getUserExperience();
+        int userLevel = user.getUserLevel();
         int minXp = LevelCalculator.getRequiredExp(userLevel);
         int maxXp = LevelCalculator.getRequiredExp(userLevel + 1);
 
@@ -157,7 +160,7 @@ public class UserSummaryController {
             env.getStageMapController().setEnvironment(env);
             env.getStageMapController().create();
 
-            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().loadStageMapData();
+            user.getProjectHandler().getCurrentProject().loadStageMapData();
 
             env.getStageMapController().visualiseLockedTutors();
 

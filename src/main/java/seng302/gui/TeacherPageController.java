@@ -128,5 +128,24 @@ public class TeacherPageController {
     public void showUserPage(String userName) {
         env.getRootController().setHeader("Student - " + userName);
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
+
+        try {
+            VBox summary = loader.load();
+            currentPage.setContent(summary);
+            AnchorPane.setLeftAnchor(summary, 0.0);
+            AnchorPane.setTopAnchor(summary, 0.0);
+            AnchorPane.setBottomAnchor(summary, 0.0);
+            AnchorPane.setRightAnchor(summary, 0.0);
+            UserSummaryController userSummaryController = loader.getController();
+            //statsController = tutorStatsLoader.getController();
+
+            //change to be the user that was clicked on
+            userSummaryController.create(env, env.getUserHandler().getCurrentUser());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
