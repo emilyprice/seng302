@@ -131,6 +131,9 @@ public class StageMapController {
     }
 
 
+    /**
+     * Finds the next tutor on the stagemap that is still locked
+     */
     private void setNextLockedStage(){
         for(String tutor : tutorOrder){
             if(unlockStatus.get(tutor) == false){
@@ -140,6 +143,10 @@ public class StageMapController {
         }
     }
 
+
+    /**
+     * sets the description of what the user needs to do to unlock the next tutor
+     */
     public void setDescription(){
         setNextLockedStage();
         String nextTutorName = null;
@@ -178,6 +185,10 @@ public class StageMapController {
     }
 
 
+    /**
+     * gets the HashMap that stores what tutors are unlocked
+     * @return
+     */
     public HashMap getUnlockStatus(){
         return this.unlockStatus;
     }
@@ -221,6 +232,10 @@ public class StageMapController {
     }
 
 
+    /**
+     * Generates the unlockDescriptions HashMap which stores the requirments to unlock each tutor and weather or not
+     * they have been completed.
+     */
     private void generateDescriptions(){
 
         unlockDescriptions = new HashMap<>();
