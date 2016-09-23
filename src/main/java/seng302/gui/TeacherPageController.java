@@ -8,10 +8,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import seng302.Environment;
 import seng302.Users.Student;
 
@@ -44,8 +46,15 @@ public class TeacherPageController {
     @FXML
     private SplitPane userView;
 
+    @FXML
+    private Slider timeSlider;
+
 
     private Environment env;
+
+    private UserSummaryController userSummaryController;
+
+    private StringConverter convert;
 
 
     @FXML
@@ -102,7 +111,7 @@ public class TeacherPageController {
 
     public void showPage(String pageName) {
 
-//        setupTimeSlider();
+        setupTimeSlider();
         if (pageName.equals("Summary")) {
             showSummaryPage();
         } else {
@@ -150,15 +159,65 @@ public class TeacherPageController {
             AnchorPane.setTopAnchor(summary, 0.0);
             AnchorPane.setBottomAnchor(summary, 0.0);
             AnchorPane.setRightAnchor(summary, 0.0);
-            UserSummaryController userSummaryController = loader.getController();
+            userSummaryController = loader.getController();
             //statsController = tutorStatsLoader.getController();
 
             //change to be the user that was clicked on
-            userSummaryController.create(env, new Student(userName, password, env));
+            userSummaryController.create(env, new Student(userName, password, env), getTimePeriod());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void setupTimeSlider() {
+        timeSlider.setMaxWidth(200);
+
+        convert = new StringConverter<Double>() {
+            @Override
+            public String toString(Double object) {
+                if (object == 0) {
+                    return "Last 24 Hours";
+                } else if (object == 1) {
+                    return "Last Week";
+                } else if (object == 2) {
+                    return "Last Month";
+                } else if (object == 3) {
+                    return "Last Six Months";
+                } else if (object == 4) {
+                    return "Last Year";
+                } else if (object == 5) {
+                    return "All Time";
+                }
+                return null;
+
+            }
+
+            @Override
+            public Double fromString(String string) {
+                if (string.equals("Last 24 Hours")) {
+                    return 0d;
+                } else if (string.equals("Last Week")) {
+                    return 1d;
+                } else if (string.equals("Last Month")) {
+                    return 2d;
+                } else if (string.equals("Last Six Months")) {
+                    return 3d;
+                } else if (string.equals("Last Year")) {
+                    return 4d;
+                } else if (string.equals("All Time")) {
+                    return 5d;
+                }
+                return null;
+            }
+        };
+
+        timeSlider.setLabelFormatter(convert);
+
+    }
+
+    public String getTimePeriod() {
+        return convert.toString(timeSlider.getValue());
     }
 }

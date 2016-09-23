@@ -321,7 +321,7 @@ public class UserPageController {
             AnchorPane.setRightAnchor(summaryPage, 0.0);
 
             summaryController = summaryLoader.getController();
-            summaryController.create(env, env.getUserHandler().getCurrentUser());
+            summaryController.create(env, env.getUserHandler().getCurrentUser(), getTimePeriod());
             summaryController.loadStageMap();
 
 

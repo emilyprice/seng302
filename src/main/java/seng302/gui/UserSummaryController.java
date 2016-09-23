@@ -83,13 +83,13 @@ public class UserSummaryController {
      *
      * @param env The environment in which the controller is being created
      */
-    public void create(Environment env, Student user) {
+    public void create(Environment env, Student user, String timePeriod) {
         this.env = env;
         this.user = user;
 
         updateProgressBar();
 
-        Pair<Integer, Integer> correctIncorrectOverall = user.getProjectHandler().getCurrentProject().tutorHandler.getTotalsForAllTutors(env.getUserPageController().getTimePeriod());
+        Pair<Integer, Integer> correctIncorrectOverall = user.getProjectHandler().getCurrentProject().tutorHandler.getTotalsForAllTutors(timePeriod);
 
         // Set up Overall graph and labels.
 
@@ -110,7 +110,7 @@ public class UserSummaryController {
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
 
 
-        displayClassAverage(env.getUserPageController().getTimePeriod());
+        displayClassAverage(timePeriod);
 
            // TutorStatsController statsController = statsLoader.getController();
 
