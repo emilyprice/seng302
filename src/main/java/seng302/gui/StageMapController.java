@@ -1,10 +1,13 @@
 package seng302.gui;
 
+import org.controlsfx.control.Notifications;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import jdk.nashorn.internal.parser.JSONParser;
@@ -305,12 +308,6 @@ public class StageMapController {
      * Fetches 3 most recent tutor score files for tutor of interest and checks scores
      */
     public void fetchTutorFile(String tutorId) {
-//        boolean enoughEntries = false; //must be at least 3 entries for their to be a valid entry
-
-
-
-
-
         boolean unlock = true;
 
 
@@ -394,7 +391,19 @@ public class StageMapController {
                 unlockStatus.put(tutorOrder.get((tutorOrder.indexOf(converted.get(tutorId)) + 1)), true);
                 visualiseLockedTutors();
 
-
+                String nextTutorName = null;
+                for (String t : converted.keySet()) {
+                    if (converted.get(t).equals(tutorOrder.get((tutorOrder.indexOf(tutorId) + 3)))) {
+                        nextTutorName = t;
+                    }
+                }
+                Image unlockImage = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
+                Notifications.create()
+                        .title("Tutor Unlocked")
+                        .text("Well done! \nYou have unlocked " + nextTutorName)
+                        .hideAfter(new Duration(10000))
+                        .graphic(new ImageView(unlockImage))
+                        .show();
             }
         }
     }
