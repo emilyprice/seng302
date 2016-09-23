@@ -27,6 +27,7 @@ public class MicrophoneInput implements PitchDetectionHandler {
     private ArrayList<Double> midiFrequencies = new ArrayList<>();
     private ArrayList<Double> detectedFrequencies = new ArrayList<>();
     private ArrayList<String> latestDetectedNotes = new ArrayList<>();
+    private double threshold;
 
     public MicrophoneInput() {
         this.mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
@@ -174,6 +175,10 @@ public class MicrophoneInput implements PitchDetectionHandler {
 
     public void setMixer(Mixer mixer) {
         this.mixer = mixer;
+    }
+
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
     }
 
 

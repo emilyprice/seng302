@@ -25,11 +25,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import seng302.Environment;
 import seng302.MicrophoneInput;
 import seng302.data.Note;
@@ -50,6 +49,12 @@ public class MicInputSettingsController {
 
     @FXML
     private VBox inputDevices;
+
+    @FXML
+    private Slider thresholdSlider;
+
+    @FXML
+    private Text thresholdText;
 
     private MicrophoneInput microphoneInput;
 
@@ -88,5 +93,12 @@ public class MicInputSettingsController {
             radio.setPadding(new Insets(5, 0, 5, 15));
             inputDevices.getChildren().add(radio);
         }
+        thresholdSlider.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                thresholdText.setText(String.valueOf(thresholdSlider.getValue()));
+                microphoneInput.setThreshold(thresholdSlider.getValue());
+            }
+        });
     }
 }
