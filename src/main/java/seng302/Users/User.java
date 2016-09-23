@@ -5,12 +5,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import seng302.App;
-import seng302.Environment;
-import seng302.data.Term;
-import seng302.managers.BadgeManager;
-import seng302.utility.FileHandler;
-import seng302.utility.OutputTuple;
 
 import java.io.File;
 import java.io.FileReader;
@@ -22,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 

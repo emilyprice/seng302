@@ -35,8 +35,9 @@ public class Term {
 
     /**
      * Updates any field of a musical term with a new value
+     *
      * @param editedField The field to be updated - name, category, origin, description
-     * @param newValue The new value to put in that field
+     * @param newValue    The new value to put in that field
      */
     public void updateInfo(String editedField, String newValue) {
         switch (editedField) {

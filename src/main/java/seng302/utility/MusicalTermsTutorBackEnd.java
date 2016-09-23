@@ -1,10 +1,10 @@
 package seng302.utility;
 
-import seng302.data.Term;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import seng302.data.Term;
 
 /**
  * Used to store all the terms that have been added
@@ -16,6 +16,7 @@ public class MusicalTermsTutorBackEnd {
 
     /**
      * Adds a new term if it is valid
+     *
      * @param term The Term object to be added
      * @throws Exception when one or more fields are invalid (ie too long)
      */
@@ -82,7 +83,7 @@ public class MusicalTermsTutorBackEnd {
             if (nameChanged && getTermByName(termInfo.get("name")) != null) {
                 // Throws an exception if the name was changed to the name of a different,
                 // existing term.
-                errors.add("Term with the name of " +termInfo.get("name") + " has already been added");
+                errors.add("Term with the name of " + termInfo.get("name") + " has already been added");
             } else {
                 errors.addAll(generateErrors(dummyTerm));
             }
@@ -116,6 +117,7 @@ public class MusicalTermsTutorBackEnd {
 
     /**
      * Looks for a given substring inside the name, category, origin, and description of all terms
+     *
      * @param searchSequence The substring to be found
      * @return A list of terms whose fields contain searchSequence, in some capacity.
      */
@@ -139,9 +141,9 @@ public class MusicalTermsTutorBackEnd {
     }
 
     /**
-     * Checks that each field of a new term is valid. That is, that the term name is at least one character,
-     * and that all fields are 100 characters or less.
-     * @param term
+     * Checks that each field of a new term is valid. That is, that the term name is at least one
+     * character, and that all fields are 100 characters or less.
+     *
      * @return An arraylist containing textual representations of invalid fields of the given term
      */
     private List<String> generateErrors(Term term) {

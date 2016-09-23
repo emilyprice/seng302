@@ -7,12 +7,12 @@ package seng302.command;
  * Sarah on 3/04/2016.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import seng302.Environment;
 import seng302.data.Term;
 import seng302.utility.MusicalTermsTutorBackEnd;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MusicalTerm implements Command {
     private String result;
@@ -65,8 +65,8 @@ public class MusicalTerm implements Command {
 
 
     /**
-     * This function is used when any of the meaning/origin/category of commands are called.
-     * Fetches the appropriate term based on the given name
+     * This function is used when any of the meaning/origin/category of commands are called. Fetches
+     * the appropriate term based on the given name
      */
     private void lookupTerm() {
         Term foundTerm = termManager.getTermByName(musicalTermName);

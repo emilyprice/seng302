@@ -1,6 +1,17 @@
 package seng302.gui;
 
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -13,12 +24,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import seng302.Environment;
 import seng302.data.Term;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TermsSettingsController {
 
@@ -183,6 +188,7 @@ public class TermsSettingsController {
 
     /**
      * GUI display of errors in input fields
+     *
      * @param e The exception caused by an error in an input, contains information about the error
      */
     private void showInputErrors(Exception e) {
@@ -204,7 +210,7 @@ public class TermsSettingsController {
         }
         if (e.getMessage().contains("category")) {
             selectedCategory.getStyleClass().add("errorField");
-        }  else {
+        } else {
             selectedCategory.getStyleClass().removeAll("errorField");
         }
         errorMessage.setVisible(true);
