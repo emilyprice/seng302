@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
@@ -12,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import seng302.Environment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class TeacherPageController {
@@ -102,6 +104,23 @@ public class TeacherPageController {
 
     public void showSummaryPage() {
         env.getRootController().setHeader("Summary");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ClassSummary.fxml"));
+
+        try {
+            VBox summary = loader.load();
+            currentPage.setContent(summary);
+            AnchorPane.setLeftAnchor(summary, 0.0);
+            AnchorPane.setTopAnchor(summary, 0.0);
+            AnchorPane.setBottomAnchor(summary, 0.0);
+            AnchorPane.setRightAnchor(summary, 0.0);
+            ClassSummaryController classSummaryController = loader.getController();
+            //statsController = tutorStatsLoader.getController();
+
+            classSummaryController.create(env);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
