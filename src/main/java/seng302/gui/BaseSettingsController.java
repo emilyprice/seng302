@@ -76,7 +76,7 @@ public class BaseSettingsController {
         options.add("User Settings");
         options.add("Theme Settings");
         options.add("Project Settings");
-        options.add("Musical Term Settings");
+        options.add("Musical Terms");
 
         settingsOptions.getItems().addAll(FXCollections.observableArrayList(options));
 
@@ -114,7 +114,7 @@ public class BaseSettingsController {
                 openProjectSettings();
                 break;
 
-            case "Musical Term Settings":
+            case "Musical Terms":
                 openTermsSettings();
                 break;
         }

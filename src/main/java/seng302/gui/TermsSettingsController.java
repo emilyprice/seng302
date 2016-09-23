@@ -87,7 +87,7 @@ public class TermsSettingsController {
      */
     public void create(Environment env) {
         this.env = env;
-        env.getRootController().setHeader("Musical Term Settings");
+        env.getRootController().setHeader("Musical Terms");
 
         editButton.setGraphic(editImage);
         deleteButton.setGraphic(deleteImage);
