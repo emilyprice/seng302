@@ -1,10 +1,9 @@
 package seng302.command;
 
 import seng302.Environment;
-import seng302.data.Term;
 
 /**
- * Created by erp35 on 21/09/16.
+ * Simple command to delete a musical term from the transcript.
  */
 public class DeleteTermCommand implements Command {
 

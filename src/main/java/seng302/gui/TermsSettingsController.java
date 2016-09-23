@@ -1,17 +1,6 @@
 package seng302.gui;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXPopup;
-import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.controls.JFXTextField;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -22,9 +11,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Paint;
 import seng302.Environment;
 import seng302.data.Term;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TermsSettingsController {
 
@@ -187,6 +181,10 @@ public class TermsSettingsController {
         toggleInputs();
     }
 
+    /**
+     * GUI display of errors in input fields
+     * @param e The exception caused by an error in an input, contains information about the error
+     */
     private void showInputErrors(Exception e) {
         errorMessage.setText(e.getMessage());
         if (e.getMessage().contains("name")) {
@@ -213,6 +211,9 @@ public class TermsSettingsController {
 
     }
 
+    /**
+     * Hides all error messages and resets all inputs to non-error state
+     */
     private void hideInputErrors() {
         errorMessage.setVisible(false);
         selectedName.getStyleClass().remove("errorField");
