@@ -135,6 +135,12 @@ public class Project {
             System.err.println("cant save unlock map");
         }
 
+        try {
+            projectSettings.put("unlockMapDescriptions", gson.toJson(env.getStageMapController().getUnlockDescriptions()));
+        }catch(Exception e){
+            System.err.println("cant save unlock map descriptions");
+        }
+
     }
 
 
@@ -240,8 +246,6 @@ public class Project {
             Type mapType = new TypeToken<HashMap<String, TutorRecord>>() {
             }.getType();
             practiceMap = gson.fromJson((String) projectSettings.get("tutorPracticeMap"), mapType);
-            System.out.println("hello");
-            System.out.println(practiceMap);
             if(practiceMap != null) {
                 recentPracticeTutorRecordMap = practiceMap;
 
@@ -278,6 +282,24 @@ public class Project {
             e.printStackTrace();
             System.out.println("failed to load stageMap");
         }
+
+        try {
+            Gson gson = new Gson();
+            HashMap<String, HashMap<String,Boolean>> unlockMapDescriptions;
+            Type mapType = new TypeToken<HashMap<String, HashMap<String, Boolean>>>() {
+            }.getType();
+            unlockMapDescriptions = gson.fromJson((String) projectSettings.get("unlockMapDescriptions"), mapType);
+            if(unlockMapDescriptions != null) {
+                env.getStageMapController().unlockDescriptions = unlockMapDescriptions;
+                env.getStageMapController().setDescription();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("failed to load stageMapDescriptions");
+        }
+
+
+
     }
 
 
@@ -352,6 +374,8 @@ public class Project {
             case "unlockMap":
                 currentValue = env.getStageMapController().getUnlockStatus();
                 break;
+            case "unlockMapDescriptions":
+                currentValue = env.getStageMapController().getUnlockDescriptions();
         }
 
         try {

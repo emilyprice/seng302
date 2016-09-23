@@ -130,6 +130,9 @@ public class StageMapController {
 
     }
 
+    public HashMap<String, HashMap<String, Boolean>>  getUnlockDescriptions(){
+        return unlockDescriptions;
+    }
 
     /**
      * Finds the next tutor on the stagemap that is still locked
