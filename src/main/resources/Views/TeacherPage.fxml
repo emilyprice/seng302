@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -27,18 +26,18 @@
                                     </ImageView>
                               <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <JFXButton fx:id="btnSettings" buttonType="RAISED" ellipsisString="" graphicTextGap="0.0" onMouseClicked="#openSettings" prefHeight="29.0" prefWidth="35.0" style="-fx-background-color: white; -fx-padding: 0; -fx-border-radius: 35; -fx-background-radius: 20;">
-                                       <graphic>
-                                          <ImageView fitHeight="36.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" styleClass="settingsGear">
-                                             <image>
-                                                <Image url="@../images/settings_gear.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                       <HBox.margin>
-                                          <Insets bottom="5.0" right="20.0" />
-                                       </HBox.margin>
-                                    </JFXButton>
+                                    <!--<JFXButton fx:id="btnSettings" buttonType="RAISED" ellipsisString="" graphicTextGap="0.0" onMouseClicked="#openSettings" prefHeight="29.0" prefWidth="35.0" style="-fx-background-color: white; -fx-padding: 0; -fx-border-radius: 35; -fx-background-radius: 20;">-->
+                                       <!--<graphic>-->
+                                          <!--<ImageView fitHeight="36.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" styleClass="settingsGear">-->
+                                             <!--<image>-->
+                                                <!--<Image url="@../images/settings_gear.png" />-->
+                                             <!--</image>-->
+                                          <!--</ImageView>-->
+                                       <!--</graphic>-->
+                                       <!--<HBox.margin>-->
+                                          <!--<Insets bottom="5.0" right="20.0" />-->
+                                       <!--</HBox.margin>-->
+                                    <!--</JFXButton>-->
                                  </children>
                               </HBox>
                            </children>
