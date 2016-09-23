@@ -1,5 +1,6 @@
 package seng302.gui;
 
+import com.google.firebase.database.DataSnapshot;
 import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -66,7 +67,14 @@ public class TeacherPageController {
 
         ArrayList<String> options = new ArrayList<>();
         options.add("Summary");
-        options.add("Test User");
+
+        DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
+
+        classroomData.getChildren().forEach(user -> {
+            //TODO: filter out teachers
+            options.add(user.getKey());
+
+        });
 
         listView.getItems().addAll(FXCollections.observableArrayList(options));
 
