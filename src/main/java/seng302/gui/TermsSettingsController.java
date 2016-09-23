@@ -22,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Paint;
 import seng302.Environment;
 import seng302.data.Term;
 
@@ -101,7 +102,7 @@ public class TermsSettingsController {
 
         termsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                errorMessage.setVisible(false);
+                hideInputErrors();
                 isEditMode = false;
                 isCreateMode = false;
                 deleteButton.setVisible(true);
@@ -151,11 +152,9 @@ public class TermsSettingsController {
 
                 isEditMode = false;
                 editButton.setGraphic(editImage);
-                errorMessage.setVisible(false);
+                hideInputErrors();
             } catch (Exception e) {
-                errorMessage.setText(e.getMessage());
-                errorMessage.setVisible(true);
-
+                showInputErrors(e);
             }
 
 
@@ -174,10 +173,9 @@ public class TermsSettingsController {
 
                 env.getUserHandler().getCurrentUser().checkMusicTerms();
                 executeSearch();
-                errorMessage.setVisible(false);
+                hideInputErrors();
             } catch (Exception e) {
-                errorMessage.setText(e.getMessage());
-                errorMessage.setVisible(true);
+                showInputErrors(e);
             }
 
         } else {
@@ -187,6 +185,41 @@ public class TermsSettingsController {
             editInfo.put("oldName", selectedName.getText());
         }
         toggleInputs();
+    }
+
+    private void showInputErrors(Exception e) {
+        errorMessage.setText(e.getMessage());
+        if (e.getMessage().contains("name")) {
+            selectedName.getStyleClass().add("errorField");
+        } else {
+            selectedName.getStyleClass().removeAll("errorField");
+        }
+        if (e.getMessage().contains("definition")) {
+            selectedDefinition.getStyleClass().add("errorField");
+        } else {
+            selectedDefinition.getStyleClass().removeAll("errorField");
+        }
+        if (e.getMessage().contains("origin")) {
+            selectedOrigin.getStyleClass().add("errorField");
+        } else {
+            selectedOrigin.getStyleClass().removeAll("errorField");
+        }
+        if (e.getMessage().contains("category")) {
+            selectedCategory.getStyleClass().add("errorField");
+        }  else {
+            selectedCategory.getStyleClass().removeAll("errorField");
+        }
+        errorMessage.setVisible(true);
+
+    }
+
+    private void hideInputErrors() {
+        errorMessage.setVisible(false);
+        selectedName.getStyleClass().remove("errorField");
+        selectedDefinition.getStyleClass().remove("errorField");
+        selectedOrigin.getStyleClass().remove("errorField");
+        selectedCategory.getStyleClass().remove("errorField");
+
     }
 
     /**
@@ -227,7 +260,7 @@ public class TermsSettingsController {
                         }
 
                         termsListView.getSelectionModel().selectFirst();
-                        errorMessage.setVisible(false);
+                        hideInputErrors();
 
                         popup.close();
                     });
@@ -274,7 +307,7 @@ public class TermsSettingsController {
 
     @FXML
     private void launchAddTerm() {
-        errorMessage.setVisible(false);
+        hideInputErrors();
         isCreateMode = true;
         showPromptText();
         isEditMode = false;

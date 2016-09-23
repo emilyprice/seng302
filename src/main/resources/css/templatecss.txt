@@ -548,3 +548,12 @@
     -fx-background-color: transparent;
     -fx-border-width: 0px;
 }
+
+#errorMessage {
+    -fx-text-fill: red;
+}
+
+.errorField {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+}

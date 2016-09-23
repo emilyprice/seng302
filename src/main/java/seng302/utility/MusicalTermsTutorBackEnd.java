@@ -15,21 +15,20 @@ public class MusicalTermsTutorBackEnd {
 
 
     public void addTerm(Term term) throws Exception {
-        if (term.getMusicalTermName().length() == 0) {
-            throw new Exception("Term name must not be empty.");
-        } else if (getTermByName(term.getMusicalTermName()) != null) {
-            throw new Exception("Term with the name of " + term.getMusicalTermName() + " has already been added");
-        } else if (term.getMusicalTermCategory().length() > 100) {
-            throw new Exception("Your musical term category exceeds 100 characters. Please give a shorter category.");
-        } else if (term.getMusicalTermName().length() > 100) {
-            throw new Exception("Your musical term name exceeds 100 characters. Please give a shorter name.");
-        } else if (term.getMusicalTermOrigin().length() > 100) {
-            throw new Exception("Your musical term origin exceeds 100 characters. Please give a shorter origin.");
-        } else if (term.getMusicalTermDefinition().length() > 100) {
-            throw new Exception("Your musical term definition exceeds 100 characters. Please give a shorter definition.");
+        List<String> errors = generateErrors(term);
+
+        if (getTermByName(term.getMusicalTermName()) != null) {
+            errors.add("Term with the name of " + term.getMusicalTermName() + " has already been added");
+        }
+
+        if (errors.size() > 0) {
+            String errorMessage = String.join("\n", errors);
+
+            throw new Exception(errorMessage);
         } else {
             terms.add(term);
         }
+
     }
 
     public ArrayList<Term> getTerms() {
@@ -69,25 +68,25 @@ public class MusicalTermsTutorBackEnd {
     public void editTerm(Map<String, String> termInfo) throws Exception {
         Term editedTerm = getTermByName(termInfo.get("oldName"));
 
+        Term dummyTerm = new Term(termInfo.get("name"), termInfo.get("category"), termInfo.get("origin"), termInfo.get("definition"));
+
         if (editedTerm != null) {
+            List<String> errors = new ArrayList<>();
             boolean nameChanged = !termInfo.get("oldName").equalsIgnoreCase(termInfo.get("name"));
 
-            for (Map.Entry<String, String> entry : termInfo.entrySet()) {
+            if (nameChanged && getTermByName(termInfo.get("name")) != null) {
+                // Throws an exception if the name was changed to the name of a different,
+                // existing term.
+                errors.add("Term with the name of " +termInfo.get("name") + " has already been added");
+            } else {
+                errors.addAll(generateErrors(dummyTerm));
+            }
 
-                if (entry.getKey().equals("name") && nameChanged && getTermByName(entry.getValue()) != null) {
-                    // Throws an exception if the name was changed to the name of a different,
-                    // existing term.
-                    throw new Exception("Term with the name of " + entry.getValue() + " has already been added");
-                } else if (entry.getKey().equals("name") && entry.getValue().length() == 0) {
-                    throw new Exception("Term name must not be empty.");
-                } else {
-                    if (entry.getValue().length() > 100) {
-                        throw new Exception(String.format("Your musical term" +
-                                        " %s exceeds 100 characters. Please give a shorter %s.",
-                                entry.getKey(), entry.getKey()));
-                    } else {
-                        editedTerm.updateInfo(entry.getKey(), entry.getValue());
-                    }
+            if (errors.size() > 0) {
+                throw new Exception(String.join("\n", errors));
+            } else {
+                for (Map.Entry<String, String> entry : termInfo.entrySet()) {
+                    editedTerm.updateInfo(entry.getKey(), entry.getValue());
                 }
             }
 
@@ -127,5 +126,27 @@ public class MusicalTermsTutorBackEnd {
             }
         }
         return searchResults;
+    }
+
+    private List<String> generateErrors(Term term) {
+
+        ArrayList<String> errors = new ArrayList<>();
+        if (term.getMusicalTermName().length() == 0) {
+            errors.add("Term name must not be empty.");
+        }
+        if (term.getMusicalTermCategory().length() > 100) {
+            errors.add("Your musical term category exceeds 100 characters. Please give a shorter category.");
+        }
+        if (term.getMusicalTermName().length() > 100) {
+            errors.add("Your musical term name exceeds 100 characters. Please give a shorter name.");
+        }
+        if (term.getMusicalTermOrigin().length() > 100) {
+            errors.add("Your musical term origin exceeds 100 characters. Please give a shorter origin.");
+        }
+        if (term.getMusicalTermDefinition().length() > 100) {
+            errors.add("Your musical term definition exceeds 100 characters. Please give a shorter definition.");
+        }
+
+        return errors;
     }
 }
