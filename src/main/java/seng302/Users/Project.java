@@ -26,9 +26,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.sound.midi.Instrument;
 
+import seng302.data.Badge;
+import seng302.managers.BadgeManager;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -53,6 +56,7 @@ public class Project {
     Path projectDirectory;
     public String currentProjectPath, projectName;
 
+    private seng302.managers.BadgeManager badgeManager;
     boolean saved = true;
 
     Environment env;
@@ -61,6 +65,9 @@ public class Project {
     private Boolean isCompetitiveMode;
 
     private Boolean visualiserOn;
+
+    public Boolean isUserMapData = true;
+
 
     /**
      * Constructor for creating a new project.
@@ -80,9 +87,9 @@ public class Project {
         this.experience = 0;
         this.level = 1;
         this.visualiserOn = false;
+        badgeManager = new BadgeManager(env);
         loadProject(projectName);
         loadProperties();
-
 
     }
 
@@ -112,10 +119,17 @@ public class Project {
         projectSettings.put("experience", this.experience);
 
         projectSettings.put("competitionMode", gson.toJson(isCompetitiveMode.toString()));
-        System.out.println(visualiserOn);
-
         projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
+        
+        projectSettings.put("overallBadges", gson.toJson(badgeManager.getOverallBadges()));
+        projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
+        projectSettings.put("tutor100Map", gson.toJson(badgeManager.get100TutorBadges()));
 
+        try {
+            projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
+        }catch(Exception e){
+            System.err.println("cant save unlock map");
+        }
     }
 
 
@@ -216,9 +230,50 @@ public class Project {
         }
 
 
+        //badges
+        //overallBadges
+        ArrayList<Badge> overallBadges;
+        Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
+        }.getType();
+        overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
+
+        //tutorBadges
+        HashMap<String, ArrayList<Badge>> tutorBadges;
+        Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
+        }.getType();
+        tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
+
+        badgeManager.replaceBadges(tutorBadges, overallBadges);
+
+        //100tutorMap
+        HashMap<String, Boolean> tutor100Map;
+        Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
+        }.getType();
+        tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+
+        badgeManager.replaceTutor100AllMap(tutor100Map);
+
         env.getTranscriptManager().unsavedChanges = false;
+    }
 
 
+    /**
+     * Loads in the data for the stage map in regards to which tutors are locked and unlocked.
+     *
+     */
+    public void loadStageMapData() {
+        try {
+            Gson gson = new Gson();
+            HashMap<String, Boolean> unlockMap;
+            Type mapType = new TypeToken<HashMap<String, Boolean>>() {
+            }.getType();
+            unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
+            if(unlockMap != null) {
+                env.getStageMapController().unlockStatus = unlockMap;
+            }
+        }catch(Exception e){
+            System.out.println("failed to load stageMap");
+        }
     }
 
 
@@ -239,7 +294,6 @@ public class Project {
 
     /**
      * Handles Saving a .json Project file, for the specified project address
-     *
      * @param projectAddress Project directory address.
      */
     public void saveProject(String projectAddress) {
@@ -289,6 +343,9 @@ public class Project {
                 break;
             case "visualiserOn":
                 currentValue = this.visualiserOn;
+                break;
+            case "unlockMap":
+                currentValue = env.getStageMapController().getUnlockStatus();
                 break;
         }
 
@@ -454,5 +511,7 @@ public class Project {
     public boolean getVisualiserOn() {
         return visualiserOn;
     }
+
+    public BadgeManager getBadgeManager(){return badgeManager;}
 
 }

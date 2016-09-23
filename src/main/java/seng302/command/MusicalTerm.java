@@ -115,6 +115,14 @@ public class MusicalTerm implements Command {
                         term.getMusicalTermCategory() + "\nDefinition: "
                         + term.getMusicalTermDefinition();
 
+                try {
+                    env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Articulate", "Musical Terms Tutor").updateBadgeProgress(env, 1);
+                    env.getUserPageController().showSummaryPage(); //For updating the musical terms badge
+
+                } catch (NullPointerException e) {
+                    // For tests that don't have badges
+                }
+
                 env.getTranscriptManager().setResult(result);
             } catch (Exception e) {
                 env.error(e.getMessage());

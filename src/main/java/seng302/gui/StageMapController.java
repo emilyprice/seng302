@@ -11,7 +11,6 @@ import seng302.Users.Project;
 import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,7 +21,6 @@ import java.util.HashMap;
 public class StageMapController {
 
     public Project currentProject;
-
 
     @FXML
     private Button scaleRecognitionTutorButton;
@@ -66,11 +64,25 @@ public class StageMapController {
     private TutorHandler tutorHandler;
 
 
+    /**
+     * Stores the status of each tutor(if the tutor is unlocked)
+     */
     public HashMap<String, Boolean> unlockStatus;
 
-    private HashMap<String, Button> tutorAndButton; //associates tutor name with its corresponding button
 
+    /**
+     * links the tutor to the equivalent FXMl button
+     */
+    private HashMap<String, Button> tutorAndButton;
+
+    /**
+     * stores the unlock order of the tutors
+     */
     private ArrayList<String> tutorOrder; //the order in which the tutors unlock
+
+    /**
+     * stores the convertion of tutor name to a shortened tutor string that is used for manipulations
+     */
     public HashMap<String, String> converted;
 
 
@@ -100,9 +112,6 @@ public class StageMapController {
 
     }
 
-    public void updateUnlock(){
-        env.getStageMapController().getUnlockStatus();
-    }
 
     public HashMap getUnlockStatus(){
         return this.unlockStatus;
@@ -207,20 +216,35 @@ public class StageMapController {
      * Iterates through the nodes on the stage map, and asserts whether they are locked (disabled) or unlocked
      */
     public void visualiseLockedTutors() {
-//        Image padlock = new Image(getClass().getResourceAsStream
-//                ("/images/lock.png"), 10, 10, true, true);
+        Image padlock = new Image(getClass().getResourceAsStream
+                ("/images/lock.png"), 10, 10, true, true);
 
 
-        for (String tutor: unlockStatus.keySet()) {
-            tutorAndButton.get(tutor).setDisable(false);
-            if (unlockStatus.get(tutor) == false) {
-                tutorAndButton.get(tutor).setDisable(true);
-                //tutorAndButton.get(tutor).setGraphic(new ImageView(padlock));
-//            } else {
-//                unlockStatus.get(tutor).put(true);
+        //If in competitive mode, relevant stages should be locked
+        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
+            for (String tutor: unlockStatus.keySet()) {
+                tutorAndButton.get(tutor).setDisable(false);
+                tutorAndButton.get(tutor).setGraphic(null);
+                if (unlockStatus.get(tutor) == false) {
+                    tutorAndButton.get(tutor).setDisable(true);
+                    ImageView iv1 = new ImageView();
+                    iv1.setImage(padlock);
+                    tutorAndButton.get(tutor).setGraphic(iv1);
+
+                }
             }
+        //else if in practice mode, all of the levels should be unlocked
+        } else {
+            for (String tutor: unlockStatus.keySet()) {
+                tutorAndButton.get(tutor).setDisable(false);
+                tutorAndButton.get(tutor).setGraphic(null);
+            }
+
         }
+
     }
+
+
 
     /**
      * Fetches 3 most recent tutor score files for tutor of interest and checks scores
@@ -243,8 +267,7 @@ public class StageMapController {
                 //set the tutor status to be unlocked
                 unlockStatus.put(tutorOrder.get((tutorOrder.indexOf(converted.get(tutorId)) + 1)), true);
                 visualiseLockedTutors();
-
-
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Completist").updateBadgeProgress(env, 1);
             }
         }
     }
@@ -315,7 +338,6 @@ public class StageMapController {
     private void launchMajorModesTutor() {
         env.getRootController().getTutorFactory().openTutor("Major Modes Tutor");
     }
-
 
 
 }
