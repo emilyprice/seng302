@@ -272,8 +272,10 @@ public class Project {
             System.out.println(unlockMap);
             if(unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
+                env.getStageMapController().setDescription();
             }
         }catch(Exception e){
+            e.printStackTrace();
             System.out.println("failed to load stageMap");
         }
     }

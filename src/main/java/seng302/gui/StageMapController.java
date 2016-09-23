@@ -1,10 +1,12 @@
 package seng302.gui;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import jdk.nashorn.internal.parser.JSONParser;
 import seng302.Environment;
 import javafx.scene.control.Button;
@@ -27,6 +29,12 @@ public class StageMapController {
 
     @FXML
     private Button scaleRecognitionTutorButton;
+
+    @FXML
+    private VBox descriptionVbox;
+
+    @FXML
+    private Label unlockDescription;
 
     @FXML
     private Button keySignaturesTutorButton;
@@ -88,11 +96,15 @@ public class StageMapController {
      */
     public HashMap<String, String> converted;
 
+    public HashMap<String, HashMap<String, Boolean>>  unlockDescriptions;
+
 
 
     UserPageController userPageController; //creates an insance of user page controller so we can access its methods
 
     Environment env; //declare the environment
+
+    private String nextUnlockTutor = "scaleTutor";
 
     private JSONParser parser; //used to parser the tutor records
 
@@ -115,6 +127,26 @@ public class StageMapController {
 
     }
 
+    public void setDescription(){
+
+
+        for(String key: unlockDescriptions.get(nextUnlockTutor).keySet()){
+            HBox description = new HBox();
+            description.getChildren().add(new Label(key));
+            ImageView image = new ImageView();
+
+            if(unlockDescriptions.get(nextUnlockTutor).get(key)){
+                image.setImage(new Image(getClass().getResourceAsStream("/images/tick.png"), 25, 25, false, false));
+            }else{
+                image.setImage(new Image(getClass().getResourceAsStream("/images/redx.png"), 25, 25, false, false));
+            }
+            description.getChildren().add(image);
+
+
+            descriptionVbox.getChildren().add(description);
+        }
+    }
+
 
     public HashMap getUnlockStatus(){
         return this.unlockStatus;
@@ -134,6 +166,7 @@ public class StageMapController {
         generateTutorOrder();
         generateTutorAndButtonNames();
         generateConverted();
+        generateDescriptions();
         visualiseLockedTutors();
         System.out.println(unlockStatus);
     }
@@ -156,6 +189,24 @@ public class StageMapController {
         converted.put("Diatonic Chord Tutor", "diatonicChordTutor");
         converted.put("Scale Modes Tutor", "scaleModesTutor");
     }
+
+
+    private void generateDescriptions(){
+
+        unlockDescriptions = new HashMap<>();
+        for (String tutor : tutorOrder.subList(2,tutorOrder.size())){
+            HashMap<String, Boolean> temp = new HashMap<>();
+            temp.put("To unlock: the last 3 tutor records of "+ tutorOrder.get(tutorOrder.indexOf(tutor) - 1) + " need to be >=7", false);
+            if(tutor.equals("scaleTutor")||tutor.equals("chordTutor")){
+                temp.put("To unlock: the last 3 tutor records of "+ tutor  + " (Basic) need to be >=9", false);
+            }
+            unlockDescriptions.put(tutor, temp);
+
+        }
+        System.out.println(unlockDescriptions);
+
+    }
+
 
     /**
      * generates an array list with the chronological order of the tutors in the stage map.
@@ -255,7 +306,29 @@ public class StageMapController {
      */
     public void fetchTutorFile(String tutorId) {
 //        boolean enoughEntries = false; //must be at least 3 entries for their to be a valid entry
+
+
+
+
+
         boolean unlock = true;
+
+
+        if(tutorId.equals("basicScaleTutor")) {
+            ArrayList<TutorRecord> basicRecords = tutorHandler.getTutorData(converted.get("intervalTutor"));
+
+            if (basicRecords.size() < 3) {
+                //if there are less than 3 existing files
+            } else {
+                for (int i = basicRecords.size() - 3; i < basicRecords.size(); i++) {
+                    TutorRecord record = basicRecords.get(i);
+                    if (!(record.getStats().get("questionsCorrect").intValue() >= 7)) {
+                        unlock = false;
+                    }
+                }
+
+            }
+        }
         ArrayList<TutorRecord> records = tutorHandler.getTutorData(converted.get(tutorId));
 
         if (records.size() < 3) {
@@ -299,6 +372,23 @@ public class StageMapController {
 
                 }
             }
+
+            if(tutorId.equals("basicScaleTutor")) {
+                ArrayList<TutorRecord> basicRecords = tutorHandler.getTutorData(converted.get("intervalTutor"));
+
+                if (basicRecords.size() < 3) {
+                    //if there are less than 3 existing files
+                } else {
+                    for (int i = basicRecords.size() - 3; i < basicRecords.size(); i++) {
+                        TutorRecord record = basicRecords.get(i);
+                        if (!(record.getStats().get("questionsCorrect").intValue() >= 7)) {
+                            unlock = false;
+                        }
+                    }
+
+                }
+            }
+
             if (unlock) {
                 //set the tutor status to be unlocked
                 unlockStatus.put(tutorOrder.get((tutorOrder.indexOf(converted.get(tutorId)) + 1)), true);
