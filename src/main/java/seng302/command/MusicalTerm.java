@@ -12,14 +12,11 @@ import java.util.List;
 
 import seng302.Environment;
 import seng302.data.Term;
+import seng302.utility.MusicalTermsTutorBackEnd;
 
 public class MusicalTerm implements Command {
     private String result;
-    private String input;
-    //protected static HashMap<String, Term> MusicalTermsMap = new HashMap<String, Term>();
 
-    private boolean termAdded = false;
-    private boolean validAdd = true;
     public Term term = null;
 
 
@@ -30,7 +27,7 @@ public class MusicalTerm implements Command {
 
     private ArrayList<String> rawInput;
 
-    private String type;
+    private MusicalTermsTutorBackEnd termManager;
 
     public ArrayList<Term> terms;
 
@@ -48,7 +45,7 @@ public class MusicalTerm implements Command {
     public MusicalTerm(ArrayList<String> musicalTermArray) {
         infoToGet = "add";
         rawInput = musicalTermArray;
-        termAdded = true;
+        lookupTerm = false;
         term = new Term(musicalTermArray.get(0), musicalTermArray.get(2), musicalTermArray.get(1), musicalTermArray.get(3));
 
     }
@@ -62,81 +59,34 @@ public class MusicalTerm implements Command {
      */
     public MusicalTerm(String termToLookUp, String infoToGet) {
         lookupTerm = true;
-        musicalTermName = termToLookUp.toLowerCase();
+        musicalTermName = termToLookUp;
         this.infoToGet = infoToGet.toLowerCase();
     }
 
 
-    private void addTermBool() {
-        boolean resultSet = false;
-        for (Term term : terms) {
-            if (term.getMusicalTermName().equals(this.term.getMusicalTermName())) {
-                validAdd = false;
-                this.result = "[ERROR] Term with the name of " + this.term.getMusicalTermName() + " has already been added";
-                resultSet = true;
-            } else if (term.getMusicalTermDefinition().length() > 100) {
-                validAdd = false;
-                this.result = "[ERROR] Your musical term definition exceeds 100 characters. Please give a shorter definition.";
-                resultSet = true;
-            } else if (term.getMusicalTermCategory().length() > 100) {
-                validAdd = false;
-                this.result = "[ERROR] Your musical term category exceeds 100 characters. Please give a shorter category.";
-                resultSet = true;
-            } else if (term.getMusicalTermOrigin().length() > 100) {
-                validAdd = false;
-                this.result = "[ERROR] Your musical term origin exceeds 100 characters. Please give a shorter origin.";
-                resultSet = true;
-            } else if (term.getMusicalTermName().length() > 100) {
-                validAdd = false;
-                this.result = "[ERROR] Your musical term name exceeds 100 characters. Please give a shorter name.";
-                resultSet = true;
-            } else if (!resultSet) {
-                this.result = "Added term: " + this.term.getMusicalTermName() +
-                        "\nOrigin: " + this.term.getMusicalTermOrigin() + " \nCategory: " +
-                        this.term.getMusicalTermCategory() + "\nDefinition: "
-                        + this.term.getMusicalTermDefinition();
-            }
-        }
-        if (!resultSet) {
-            this.result = "Added term: " + this.term.getMusicalTermName() +
-                    "\nOrigin: " + this.term.getMusicalTermOrigin() + " \nCategory: " +
-                    this.term.getMusicalTermCategory() + "\nDefinition: "
-                    + this.term.getMusicalTermDefinition();
-        }
-    }
-
+    /**
+     * This function is used when any of the meaning/origin/category of commands are called. Fetches
+     * the appropriate term based on the given name
+     */
     private void lookupTerm() {
-        boolean resultSet = false;
-        for (Term term : this.terms) {
-            if (term.getMusicalTermName().equals(musicalTermName)) {
-                // Returns the correct information
-                if (infoToGet.equals("meaning")) {
-                    this.result = term.getMusicalTermDefinition();
-                    resultSet = true;
-                } else if (infoToGet.equals("origin")) {
-                    this.result = term.getMusicalTermOrigin();
-                    resultSet = true;
-                } else if (infoToGet.equals("category")) {
-                    this.result = term.getMusicalTermCategory();
-                    resultSet = true;
-                } else {
-                    // What the user is looking for is invalid.
-                    // This may never be reachable by the DSL, but is good to have regardless.
-                    this.result = String.format("[ERROR] %s is not recognised as part of a musical term.",
-                            infoToGet);
-                    resultSet = true;
-                    error = true;
-                }
+        Term foundTerm = termManager.getTermByName(musicalTermName);
 
-                //if a given term is not in the hash map it will return an error to the user
-            } else if (!resultSet) {
-                this.result = String.format("[ERROR] %s is not recognised as an existing musical term.",
-                        musicalTermName);
+        if (foundTerm != null) {
+            // Returns the correct information
+            if (infoToGet.equals("meaning")) {
+                this.result = foundTerm.getMusicalTermDefinition();
+            } else if (infoToGet.equals("origin")) {
+                this.result = foundTerm.getMusicalTermOrigin();
+            } else if (infoToGet.equals("category")) {
+                this.result = foundTerm.getMusicalTermCategory();
+            } else {
+                // What the user is looking for is invalid.
+                // This may never be reachable by the DSL, but is good to have regardless.
+                this.result = String.format("[ERROR] %s is not recognised as part of a musical term.",
+                        infoToGet);
                 error = true;
             }
-
-        }
-        if (!resultSet) {
+        } else {
             this.result = String.format("[ERROR] %s is not recognised as an existing musical term.",
                     musicalTermName);
             error = true;
@@ -148,28 +98,39 @@ public class MusicalTerm implements Command {
      * term exists in the transcript manager
      */
     public void execute(Environment env) {
-        this.terms = env.getMttDataManager().getTerms();
+        this.termManager = env.getMttDataManager();
+        this.terms = termManager.getTerms();
         if (lookupTerm) {
             lookupTerm();
+            env.getTranscriptManager().setResult(result);
         } else {
-            addTermBool();
-        }
-        if (termAdded == true && validAdd == true) {
-            env.getMttDataManager().addTerm(term);
-            if (env.getUserHandler().getCurrentUser() != null)
-                env.getUserHandler().getCurrentUser().checkMusicTerms();
-            env.getEditManager().addToHistory("1", rawInput);
             try {
-                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Articulate", "Musical Terms Tutor").updateBadgeProgress(env, 1);
-                env.getUserPageController().showSummaryPage(); //For updating the musical terms badge
+                termManager.addTerm(term);
+                if (env.getUserHandler().getCurrentUser() != null)
+                    env.getUserHandler().getCurrentUser().checkMusicTerms();
+                env.getEditManager().addToHistory("1", rawInput);
 
-            } catch (NullPointerException e) {
-                // For tests that don't have badges
+                this.result = "Added term: " + term.getMusicalTermName() +
+                        "\nOrigin: " + term.getMusicalTermOrigin() + " \nCategory: " +
+                        term.getMusicalTermCategory() + "\nDefinition: "
+                        + term.getMusicalTermDefinition();
+
+                try {
+                    env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Articulate", "Musical Terms Tutor").updateBadgeProgress(env, 1);
+                    env.getUserPageController().showSummaryPage(); //For updating the musical terms badge
+
+                } catch (NullPointerException e) {
+                    // For tests that don't have badges
+                }
+
+                env.getTranscriptManager().setResult(result);
+            } catch (Exception e) {
+                env.error(e.getMessage());
             }
         }
-        env.getTranscriptManager().setResult(result);
     }
 
+    @Override
     public String getHelp() {
 
         switch (infoToGet) {
