@@ -16,7 +16,8 @@ import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by jat157 on 20/09/16.
+ *  Handles any communication to the application's Firebase database.
+ *  The database contains information for all classrooms/teachers and users.
  */
 public class FirebaseUpdater {
 
@@ -43,10 +44,6 @@ public class FirebaseUpdater {
         this.env = env;
 
         initializeFirebase();
-
-
-//        DatabaseReference users = firebase.child("users/"+usernameInput.getText());
-
 
         firebase.child("classrooms").addValueEventListener(new ValueEventListener() {
             @Override
@@ -81,7 +78,6 @@ public class FirebaseUpdater {
 
         }
 
-
         // As an admin, the app has access to read and write all data, regardless of Security Rules
         firebase = FirebaseDatabase
                 .getInstance()
@@ -90,40 +86,12 @@ public class FirebaseUpdater {
     }
 
 
-    private void updateUserProperties() {
-        System.out.println("update user properties called");
-        if (env.getUserHandler().getCurrentUser() != null) {
-            System.out.println("current user is not null!");
-            env.getUserHandler().getCurrentUser().loadProperties();
-        }
-    }
-
-    private void createUserSnapshot(String classroom, String user, Boolean blocking) {
-
-        final AtomicBoolean done = new AtomicBoolean(false);
-
-        firebase.child("classrooms/" + classroom + "/users/" + user).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userSnapshot = dataSnapshot;
-                //updateUserProperties();
-                //env.getUserHandler().getCurrentUser().
-                //TODO: update user properties
-                done.set(true);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
-
-        userRef = firebase.child("classrooms/" + classroom + "/users/" + user);
-        while (!done.get() && blocking) ;
-    }
-
+    /**
+     * Creates a snapshot for the given address.
+     * @param address address for the student/teacher firebase location.
+     * @param blocking Whether or not the function is asynchronous or not.
+     *                 If true, the caller is blocked until the snapshot is loaded.
+     */
     private void createUserSnapshot(String address, Boolean blocking) {
         final AtomicBoolean done = new AtomicBoolean(false);
 
@@ -145,16 +113,32 @@ public class FirebaseUpdater {
         while (!done.get() && blocking) ;
     }
 
+    /**
+     * Loads a firebase snapshot of a given user/classroom.
+     * @param classroom the classroom the user belongs too.
+     * @param user The user's username.
+     * @param blocking False for an asynchronous call.
+     */
     public void createStudentSnapshot(String classroom, String user, Boolean blocking) {
         String address = "classrooms/" + classroom + "/users/" + user;
         createUserSnapshot(address, blocking);
 
     }
 
+    /**
+     * Loads a firebase snapshot of the given teacher's account.
+     * @param user The teacher's username.
+     * @param blocking False for an asynchronous call.
+     */
     public void createTeacherSnapshot(String user, Boolean blocking) {
         String address = "teachers/" + user;
         createUserSnapshot(address, blocking);
     }
+
+
+
+
+
 
     public DataSnapshot getUserSnapshot() {
         return userSnapshot;

@@ -156,8 +156,6 @@ public class UserRegisterController {
 
         if (env.getUserHandler().getUserNames().contains(txtUsername.getText())) {
 
-            System.out.println("user handle contains txtUsername!!" );
-
             //If the User already exists!
 
             txtUsername.setFocusColor(javafx.scene.paint.Color.RED);
@@ -246,7 +244,7 @@ public class UserRegisterController {
             if(selectedType.equals("Student")){
                 if(cbClassroom.getValue() != null){
                     env.getUserHandler().setClassRoom(this.classroom);
-                    validateCredentials(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/"+txtUsername.getText()));
+                    registerUser(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/"+txtUsername.getText()));
                 }
                 else{
                     //TODO: Classroom not selected.
@@ -262,13 +260,13 @@ public class UserRegisterController {
         }
 
 
-
-
-
-
     }
 
-    private void validateCredentials(DataSnapshot dataSnapShot){
+    /**
+     * Registers a user, given a firebase snapshot containing the user's classroom and username.
+     * @param dataSnapShot snapshot with the address of the user and their classroom.
+     */
+    private void registerUser(DataSnapshot dataSnapShot){
         if (validCredentials(dataSnapShot)) {
             env.getThemeHandler().setDefaultTheme();
             env.getUserHandler().createUser(txtUsername.getText(), txtPassword.getText());
@@ -277,7 +275,6 @@ public class UserRegisterController {
             //Log in user.
             if (env.getUserHandler().userPassExists(txtUsername.getText(), txtPassword.getText())) {
                 //env.getUserHandler().setCurrentUser(txtUsername.getText());
-
 
                 env.getUserHandler().getCurrentUser().setUserFirstName(txtfname.getText());
                 env.getUserHandler().getCurrentUser().setUserLastName(txtlname.getText());
@@ -302,42 +299,13 @@ public class UserRegisterController {
     protected void Return() {
 
         Stage loginStage = (Stage) btnRegister.getScene().getWindow();
-        FXMLLoader loginLoader = new FXMLLoader();
-        loginLoader.setLocation(getClass().getResource("/Views/userLogin.fxml"));
 
-        Parent loginRoot = null;
         try {
-            loginRoot = loginLoader.load();
+            env.getRootController().showLoginWindow(loginStage);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Scene loginScene = new Scene(loginRoot);
-
-
-        loginStage.setTitle("Allegro");
-
-        loginStage.setScene(loginScene);
-
-        loginStage.setOnCloseRequest(event -> {
-            System.exit(0);
-            event.consume();
-        });
-
-
-        loginStage.show();
-        UserLoginController userLoginController = loginLoader.getController();
-        userLoginController.setEnv(env);
-
-
-
-
-
-//        try {
-//            env.getRootController().showLoginWindow(loginStage);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
 
