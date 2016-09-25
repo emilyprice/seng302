@@ -7,6 +7,7 @@ import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
+import javafx.util.Pair;
 import seng302.data.Note;
 
 import javax.sound.sampled.*;
@@ -26,10 +27,16 @@ public class MicrophoneInput implements PitchDetectionHandler {
     private AudioDispatcher dispatcher;
     private TargetDataLine line;
     private ArrayList<Double> midiFrequencies = new ArrayList<>();
-    private ArrayList<Double> detectedFrequencies = new ArrayList<>();
-    private ArrayList<String> latestDetectedNotes = new ArrayList<>();
+    private ArrayList<String> detectedFrequencies = new ArrayList<>();
     private SilenceDetector silenceDetector;
     private double threshold = -65.0;
+
+    private Integer noteCount;
+    private Integer outlierCount;
+    private String latestNote;
+    private boolean noteFound;
+
+    private ArrayList<String> lastRecorded = new ArrayList<>();
 
     public MicrophoneInput() {
         this.mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
@@ -50,7 +57,6 @@ public class MicrophoneInput implements PitchDetectionHandler {
         midiFrequencies.add(freq);
         Collections.sort(midiFrequencies);
         int foundIndex = midiFrequencies.indexOf(freq);
-        System.out.println(foundIndex);
         if (foundIndex <= midiFrequencies.size() - 2) {
             int closestIndex;
             Double higher = Math.abs(midiFrequencies.get(foundIndex + 1) - freq);
@@ -71,10 +77,16 @@ public class MicrophoneInput implements PitchDetectionHandler {
     }
 
     public void startRecording() throws LineUnavailableException, UnsupportedAudioFileException {
-
+        lastRecorded.clear();
         float sampleRate = 44100;
         int bufferSize = 1024;
         int overlap = 0;
+
+        noteCount = 0;
+        outlierCount = 0;
+        latestNote = null;
+        noteFound = false;
+        detectedFrequencies.clear();
 
         final AudioFormat format = new AudioFormat(sampleRate, 16, 1, true,
                 true);
@@ -101,29 +113,85 @@ public class MicrophoneInput implements PitchDetectionHandler {
         new Thread(dispatcher, "Audio dispatching").start();
     }
 
-    public void stopRecording() {
+//    public void stopRecording() {
+//        dispatcher.stop();
+//        try {
+//            Collections.sort(detectedFrequencies);
+//            double range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
+//            while (range > 10) {
+//                detectedFrequencies.remove(0);
+//                detectedFrequencies.remove(detectedFrequencies.size() - 1);
+//                range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
+//            }
+//            double total = 0; // For mean calculations
+//            double mean;
+//            for (double freq : detectedFrequencies) {
+//                total += freq;
+//            }
+//            mean = total / detectedFrequencies.size();
+//            String note = findNote(mean);
+//            latestDetectedNotes.add(note);
+//            detectedFrequencies.clear();
+//        } catch (Exception e) {
+//            System.err.println("No sounds recorded.");
+//        }
+//    }
+
+    public ArrayList<String> stopRecording() {
         dispatcher.stop();
-        try {
-            Collections.sort(detectedFrequencies);
-            double range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
-            while (range > 10) {
-                detectedFrequencies.remove(0);
-                detectedFrequencies.remove(detectedFrequencies.size() - 1);
-                range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
-            }
-            double total = 0; // For mean calculations
-            double mean;
-            for (double freq : detectedFrequencies) {
-                total += freq;
-            }
-            mean = total / detectedFrequencies.size();
-            String note = findNote(mean);
-            latestDetectedNotes.add(note);
-            detectedFrequencies.clear();
-        } catch (Exception e) {
-            System.err.println("No sounds recorded.");
+        return lastRecorded;
+    }
+
+    private void hasNoteBeenFound() {
+        int arraySize = detectedFrequencies.size();
+        System.out.println("latest note: " + latestNote);
+        System.out.println("found: " + noteFound);
+        System.out.println("note count: " + noteCount);
+        System.out.println(detectedFrequencies);
+        switch (arraySize) {
+            case 1:
+                latestNote = detectedFrequencies.get(0);
+                noteCount += 1;
+                System.out.println("here");
+                break;
+            case 2:
+                if (detectedFrequencies.get(0).equals(detectedFrequencies.get(1))) {
+                    noteCount += 1;
+                    latestNote = detectedFrequencies.get(0);
+                } else {
+                    noteCount = 0;
+                    detectedFrequencies.remove(0);
+                    latestNote = detectedFrequencies.get(0);
+                }
+                break;
+            default:
+                noteCount = 0;
+                for (int x = 0; x < detectedFrequencies.size(); x++) {
+                    if (detectedFrequencies.get(x).equals(latestNote)) {
+                        noteCount += 1;
+                        outlierCount = 0;
+                        if (noteCount >= 5) {
+                            noteFound = true;
+                            lastRecorded.add(latestNote);
+                        }
+                    } else {
+                        outlierCount += 1;
+                        if (outlierCount > 1) {
+                            if (noteFound) {
+                                noteFound = false;
+                            }
+                            for (int i = 0; i < x; i++) {
+                                detectedFrequencies.remove(0);
+                            }
+                            noteCount = 0;
+                            break;
+                        }
+                    }
+                }
         }
     }
+
+
 
 
 
@@ -138,11 +206,10 @@ public class MicrophoneInput implements PitchDetectionHandler {
 //            String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f, Approximated Note: %s )\n", timeStamp, pitch, probability, rms, estimatedNote);
 //            textArea.setText(textArea.getText() + message);
 //            textArea.positionCaret(textArea.getLength());
-            System.out.println(silenceDetector.currentSPL() + " " + pitch);
             if (silenceDetector.currentSPL() > threshold) {
                 if (probability > 0.8) {
-                    System.out.println(silenceDetector.currentSPL() + " " + pitch + " is above");
-                    detectedFrequencies.add((double) pitch);
+                    detectedFrequencies.add(findNote((double) pitch));
+                    hasNoteBeenFound();
                 }
             }
         }

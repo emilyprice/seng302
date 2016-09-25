@@ -75,7 +75,7 @@ public class MicInputSettingsController {
                 e.printStackTrace();
             }
         });
-        stopButton.setOnAction(event -> microphoneInput.stopRecording());
+        stopButton.setOnAction(event -> textArea.appendText(microphoneInput.stopRecording().toString() + "\n"));
         this.env = env;
 
         // Populate input fields
