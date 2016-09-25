@@ -149,14 +149,11 @@ public class UserRegisterController {
     /**
      * Checks if the user for the given text input already exists
      *
-     * @return
+     * @return True if the inputted username already exists, else false.
      */
     private Boolean checkUserNameExists() {
 
-
         if (env.getUserHandler().getUserNames().contains(txtUsername.getText())) {
-
-            //If the User already exists!
 
             txtUsername.setFocusColor(javafx.scene.paint.Color.RED);
             txtUsername.requestFocus();
@@ -182,11 +179,10 @@ public class UserRegisterController {
             if (dss.child("classrooms/" + this.classroom  + "/users/" + txtUsername.getText()).exists()) {
                 //If the User already exists!
                 lblValidator.setText("User already exists!");
-                //valid = !checkUserNameExists();
+
             }
         } else { //username needs to be atleast 1 character.
 
-            // txtUsername.validate();
             txtUsername.setFocusColor(javafx.scene.paint.Color.RED);
             lblValidator.setText("Username must contain at least 1 character.");
             valid = false;
@@ -197,11 +193,9 @@ public class UserRegisterController {
         if (txtPassword.getText().length() > 0 && txtPasswordConfirm.getText().length() > 0) {
             if (!txtPassword.getText().equals(txtPasswordConfirm.getText())) {
                 //Passwords didn't match.
-
                 txtPassword.clear();
                 txtPasswordConfirm.clear();
 
-                //txtPassword.validate();
                 lblValidator.setText("Entered passwords did not match.");
                 valid = false;
             }
@@ -236,8 +230,6 @@ public class UserRegisterController {
     @FXML
     protected void register() {
 
-        //DatabaseReference users = env.getFirebase().getFirebase().child("classrooms/"+ this.classroom+ "/users/"+txtUsername.getText());
-
         String selectedType = ((JFXRadioButton)accountType.getSelectedToggle()).getText();
         hbClassroom.setStyle("-fx-border-color: none;");
         if(selectedType != null){
@@ -253,7 +245,7 @@ public class UserRegisterController {
                 }
             }
             else if(selectedType.equals("Teacher")){
-                //env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText()).setValue("test");
+
                 env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
                 //TODO: add action for registering and logging in as a teacher.
             }
@@ -271,10 +263,8 @@ public class UserRegisterController {
             env.getThemeHandler().setDefaultTheme();
             env.getUserHandler().createUser(txtUsername.getText(), txtPassword.getText());
 
-
             //Log in user.
             if (env.getUserHandler().userPassExists(txtUsername.getText(), txtPassword.getText())) {
-                //env.getUserHandler().setCurrentUser(txtUsername.getText());
 
                 env.getUserHandler().getCurrentUser().setUserFirstName(txtfname.getText());
                 env.getUserHandler().getCurrentUser().setUserLastName(txtlname.getText());
@@ -297,9 +287,7 @@ public class UserRegisterController {
      */
     @FXML
     protected void Return() {
-
         Stage loginStage = (Stage) btnRegister.getScene().getWindow();
-
         try {
             env.getRootController().showLoginWindow(loginStage);
 
