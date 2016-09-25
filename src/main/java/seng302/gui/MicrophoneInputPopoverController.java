@@ -44,10 +44,12 @@ public class MicrophoneInputPopoverController {
         if (recording) {
             recordButton.setText("Start Recording");
             microphoneInput.stopRecording();
+            recording = false;
         } else {
             try {
                 microphoneInput.startRecording();
                 recordButton.setText("Stop Recording");
+                recording = true;
             } catch (LineUnavailableException e) {
                 e.printStackTrace();
             } catch (UnsupportedAudioFileException e) {
@@ -59,11 +61,13 @@ public class MicrophoneInputPopoverController {
     public void update(ArrayList<String> foundNotes, String currentNote) {
         if (currentNote != null) {
             currentNoteText.setText(currentNote);
+            allNotesTextArea.setText("");
             for (String note : foundNotes) {
                 allNotesTextArea.appendText(note + " ");
             }
         } else {
             currentNoteText.setText("");
+            allNotesTextArea.setText("");
             for (String note : foundNotes) {
                 allNotesTextArea.appendText(note + " ");
             }

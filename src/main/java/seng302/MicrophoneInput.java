@@ -36,6 +36,9 @@ public class MicrophoneInput implements PitchDetectionHandler {
     private String latestNote;
     private Boolean noteFound;
     private int currentIndex = 0;
+    private boolean algorithmDone = false;
+
+    private Thread recordingThread = null;
 
     private MicrophoneInputPopoverController microphoneInputPopoverController = null;
 
@@ -114,7 +117,8 @@ public class MicrophoneInput implements PitchDetectionHandler {
         silenceDetector = new SilenceDetector(threshold, false);
         dispatcher.addAudioProcessor(silenceDetector);
 
-        new Thread(dispatcher, "Audio dispatching").start();
+        recordingThread = new Thread(dispatcher, "Audio dispatching");
+        recordingThread.start();
     }
 
     public ArrayList<String> stopRecording() {
@@ -148,12 +152,14 @@ public class MicrophoneInput implements PitchDetectionHandler {
                         if (noteCount >= 5 && !noteFound) {
                             noteFound = true;
                             lastRecorded.add(latestNote);
+                            microphoneInputPopoverController.update(lastRecorded, latestNote);
                         }
                     } else {
                         outlierCount += 1;
                         if (outlierCount > 1) {
                             if (noteFound) {
                                 noteFound = false;
+                                microphoneInputPopoverController.update(lastRecorded, null);
                             }
                             for (int i = 0; i < x; i++) {
                                 detectedFrequencies.remove(0);
@@ -164,6 +170,7 @@ public class MicrophoneInput implements PitchDetectionHandler {
                     }
                 }
         }
+        algorithmDone = true;
     }
 
     public ArrayList<String> getLastRecorded() {
@@ -176,24 +183,40 @@ public class MicrophoneInput implements PitchDetectionHandler {
         if (pitchDetectionResult.getPitch() != -1) {
             double timeStamp = audioEvent.getTimeStamp();
             float pitch = pitchDetectionResult.getPitch();
-            float probability = pitchDetectionResult.getProbability();
+            final float probability = pitchDetectionResult.getProbability();
             double rms = audioEvent.getRMS() * 100;
 //            String estimatedNote = findNote((double) pitch);
-//            String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f, Approximated Note: %s )\n", timeStamp, pitch, probability, rms, estimatedNote);
+//            String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f)\n", timeStamp, pitch, probability, rms);
 //            textArea.setText(textArea.getText() + message);
 //            textArea.positionCaret(textArea.getLength());
-            if (silenceDetector.currentSPL() > threshold) {
-                if (probability > 0.8) {
-                    detectedFrequencies.add(findNote((double) pitch));
-                    try {
-                        hasNoteBeenFound();
-                    } catch (Exception e) {
-                        System.err.println("Notes played too quickly, can't keep up..");
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+
+                    if (silenceDetector.currentSPL() > threshold)
+
+                    {
+                        if (probability > 0.8) {
+                            detectedFrequencies.add(findNote((double) pitch));
+                            try {
+                                hasNoteBeenFound();
+                            } catch (Exception e) {
+                                System.err.println("Notes played too quickly, can't keep up..");
+                            }
+                        }
                     }
                 }
+            };
+            t.start();
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
         }
     }
+
 
     public static Vector<Mixer.Info> getMixerInfo(
             final boolean supportsPlayback, final boolean supportsRecording) {
