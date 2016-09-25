@@ -1,20 +1,14 @@
 package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import org.apache.commons.io.FileDeleteStrategy;
-import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONArray;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import seng302.Environment;
-import seng302.utility.FileHandler;
 
 import java.io.*;
-import java.nio.file.Files;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -38,7 +32,6 @@ public class UserHandler {
     ArrayList<String> recentUsers = new ArrayList<>();
 
     final Path userDirectory = Paths.get("UserData/classrooms/group5/users/"); //Default user path for now, before user compatibility is set up.
-
 
 
     private String classroom;
@@ -65,12 +58,8 @@ public class UserHandler {
             try{
                 recentClassrooms = (HashMap<String, Object>) localData.get("recentUsers");
 
-
-
                 if(recentClassrooms.containsKey(this.classroom)){
                     recentUsers = (ArrayList<String>) recentClassrooms.get(this.classroom);
-
-
 
                 }else{
                     //Classroom doesn't exist inside the classrooms hashmap
@@ -136,8 +125,7 @@ public class UserHandler {
     public boolean userPassExists(String userName, String password){
 
         if(env.getFirebase().getClassroomsSnapshot().child(classroom+"/users/"+userName).exists()){
-            //System.out.println("FIREBASE CONTAINS the Deets");
-            //User tempUser = new User(env,userName);
+
             String fbPass = (String) env.getFirebase().getUserSnapshot().child("properties/password").getValue();
             if (password.equals(fbPass)){
 
@@ -215,8 +203,6 @@ public class UserHandler {
     public void setCurrentUser(String userName, String classroom, String password){
         this.classroom = classroom;
         this.currentUser = new Student(userName, password, env);
-        //currentUser.loadFullProperties();
-        //updateUserList(userName);
         updateRecentUsers(userName);
         //update User drop down to display user's name
         env.getRootController().updateUserInfo(userName);
@@ -228,34 +214,16 @@ public class UserHandler {
      * Full deletes the specified user incl. project files.
      * @param username
      */
-    public void deleteUser(String username) {
+    public void deleteUser(String classroom, String username) {
 
-        //Step 1.For some reason this needs to be called? (all it does is delete the project handler
-        //this.getCurrentUser().delete(); //23sept temp deleted
-
-        //Step 2. Delete from list of users/recent users.
-        this.userList.remove(username);
         this.recentUsers.remove(username);
         saveLocalData();
 
-        //Step 3. Close the main window, which helps remove any file locks and request garbage collection.
         env.getRootController().getStage().close();
-        /*System.gc();*/
-
-        //Step 4. Delete all user folders and files.
-        /*File userDir = Paths.get("UserData/classrooms/group5/users/" + username).toFile();
-
-        if (userDir.isDirectory()) {
-            Boolean res = FileHandler.deleteDirectory(userDir);
-            if (!res) env.getRootController().errorAlert("Failed to fully remove the deleted user directory.");
-        } else {
-            System.err.println("Could not delete the user directory");
-        }*/
-
-
-        //Step 5. Open the User login window.
 
         this.env.getRootController().logOutUser();
+        env.getFirebase().getFirebase().child("classrooms/"+classroom+"/users/"+username).removeValue();
+
 
 
 
