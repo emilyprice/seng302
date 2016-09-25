@@ -10,6 +10,9 @@ import java.io.IOException;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -299,12 +302,42 @@ public class UserRegisterController {
     protected void Return() {
 
         Stage loginStage = (Stage) btnRegister.getScene().getWindow();
+        FXMLLoader loginLoader = new FXMLLoader();
+        loginLoader.setLocation(getClass().getResource("/Views/userLogin.fxml"));
 
+        Parent loginRoot = null;
         try {
-            env.getRootController().showLoginWindow(loginStage);
+            loginRoot = loginLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Scene loginScene = new Scene(loginRoot);
+
+
+        loginStage.setTitle("Allegro");
+
+        loginStage.setScene(loginScene);
+
+        loginStage.setOnCloseRequest(event -> {
+            System.exit(0);
+            event.consume();
+        });
+
+
+        loginStage.show();
+        UserLoginController userLoginController = loginLoader.getController();
+        userLoginController.setEnv(env);
+
+
+
+
+
+//        try {
+//            env.getRootController().showLoginWindow(loginStage);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
 

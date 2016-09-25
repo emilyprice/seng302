@@ -176,25 +176,31 @@ public class UserLoginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //Scene scene1 = new Scene(root1);
         Scene scene1 = new Scene(root1);
-        scene1.getStylesheets().addAll(this.getClass().getResource("/css/style.css").toExternalForm());
+
+        //scene1.getStylesheets().addAll(this.getClass().getResource("/css/style.css").toExternalForm());
 
         Stage registerStage = (Stage) btnLogin.getScene().getWindow();
+        //Stage registerStage = new Stage();
 
         registerStage.setTitle("Register new user");
         registerStage.setScene(scene1);
+
+
 
         registerStage.setOnCloseRequest(event -> {
             System.exit(0);
             event.consume();
         });
 
-        registerStage.setMinWidth(600);
-        Double initialHeight = registerStage.getHeight();
-        registerStage.setMinHeight(initialHeight);
+        //registerStage.setMinWidth(600);
+        //Double initialHeight = registerStage.getHeight();
+        //registerStage.setMinHeight(initialHeight);
 
         registerStage.show();
         UserRegisterController userRegisterController = loader1.getController();
+
         userRegisterController.create(env);
        // }
 

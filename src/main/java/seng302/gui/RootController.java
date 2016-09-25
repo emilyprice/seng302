@@ -391,8 +391,6 @@ public class RootController implements Initializable {
         //Close current window.
         if (stage.isShowing()) stage.close();
 
-        //loginStage.initStyle(StageStyle.UNDECORATED);
-
         FXMLLoader loginLoader = new FXMLLoader();
         loginLoader.setLocation(getClass().getResource("/Views/userLogin.fxml"));
 
@@ -403,9 +401,6 @@ public class RootController implements Initializable {
         loginStage.setTitle("Allegro");
 
         loginStage.setScene(loginScene);
-        System.out.println(loginScene.toString());
-        loginScene.getStylesheets().addAll(this.getClass().getResource("/css/style.css").toExternalForm());
-
 
         loginStage.setOnCloseRequest(event -> {
             System.exit(0);

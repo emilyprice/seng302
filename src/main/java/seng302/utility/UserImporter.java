@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
- * Created by Jonty on 25-Sep-16.
+ * Utility class used to import local user profiles from previous versions of the application before cloud storage.
  */
 public class UserImporter {
 
