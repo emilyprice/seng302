@@ -5,7 +5,6 @@ import com.google.firebase.database.DataSnapshot;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -61,8 +60,8 @@ public class TeacherPageController {
 
 
     @FXML
-    void openSettings(ActionEvent event) {
-
+    void openSettings(MouseEvent event) {
+        env.getRootController().launchTeacherSettings();
     }
 
     public void setEnvironment(Environment env) {
@@ -246,10 +245,5 @@ public class TeacherPageController {
 
     public String getTimePeriod() {
         return convert.toString(timeSlider.getValue());
-    }
-
-    @FXML
-    public void openSettings(MouseEvent e) {
-        System.out.println("opening teacher settings");
     }
 }
