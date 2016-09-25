@@ -66,7 +66,11 @@ public class UserSettingsController {
         //this.imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         env.getRootController().setHeader("User Settings");
         userHandler = env.getUserHandler();
-        imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
+        try {
+            imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
+        } catch (NullPointerException e) {
+            imageDP.setImage(userHandler.getCurrentTeacher().getUserPicture());
+        }
 
 
         try {

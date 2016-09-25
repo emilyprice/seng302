@@ -16,8 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -27,8 +25,8 @@ import seng302.Environment;
 import seng302.utility.UserImporter;
 
 /**
- * Controller for the user login screen.
- * Displays recent users and contains functionality for signing in and registering.
+ * Controller for the user login screen. Displays recent users and contains functionality for
+ * signing in and registering.
  */
 public class UserLoginController {
 
@@ -50,7 +48,6 @@ public class UserLoginController {
 
     @FXML
     private JFXComboBox ddClassroom;
-
 
 
     @FXML
@@ -88,7 +85,7 @@ public class UserLoginController {
     public void setEnv(Environment env) {
         this.env = env;
 
-        for(DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()){
+        for (DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()) {
             ddClassroom.getItems().add(classroom.getKey());
         }
 
@@ -156,7 +153,6 @@ public class UserLoginController {
         }
 
 
-
     }
 
 
@@ -196,10 +192,11 @@ public class UserLoginController {
         registerStage.show();
         UserRegisterController userRegisterController = loader1.getController();
         userRegisterController.create(env);
-       // }
+        // }
 
 
     }
+
     @FXML
     void onClassroomChange() {
         classroomSelected();
@@ -210,9 +207,8 @@ public class UserLoginController {
     }
 
 
-
-    private Boolean classroomSelected(){
-        if(ddClassroom.getValue() != null){
+    private Boolean classroomSelected() {
+        if (ddClassroom.getValue() != null) {
 
 
             hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: rgba(255, 255, 255, 1)");
@@ -230,7 +226,6 @@ public class UserLoginController {
     }
 
 
-
     @FXML
     public void handleKeyPressed(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
@@ -239,15 +234,18 @@ public class UserLoginController {
     }
 
 
-
     @FXML
     protected void logIn() {
 
-        if(classroomSelected()){
+        if (classroomSelected()) {
             //Classroom dropdown value selected.
-            authenticate(env.getFirebase().getClassroomsSnapshot().child(ddClassroom.getValue().toString()));
-        }
-        else{
+            // try to log in as a teacher
+            boolean isTeacher = authenticateTeacher();
+            System.out.println(isTeacher);
+            if (!isTeacher) {
+                authenticate(env.getFirebase().getClassroomsSnapshot().child(ddClassroom.getValue().toString()));
+            }
+        } else {
             //TODO: Handle having not have selected a classroom.
         }
 
@@ -260,6 +258,42 @@ public class UserLoginController {
     }
 
 
+    private boolean authenticateTeacher() {
+        DataSnapshot teacher = env.getFirebase().getTeacherSnapshot().child(usernameInput.getText());
+        if (teacher.exists()) {
+            String pass = teacher.child("/properties/password").getValue().toString();
+
+            if (((ArrayList) teacher.child("/classrooms").getValue()).contains(ddClassroom.getValue())) {
+
+                if (pass.equals(passwordInput.getText())) {
+                    env.getUserHandler().setCurrentTeacher(usernameInput.getText(), ddClassroom.getValue().toString(), passwordInput.getText());
+                    Stage stage = (Stage) btnLogin.getScene().getWindow();
+                    stage.close();
+                    env.getRootController().showWindow(true);
+                    return true;
+
+                } else {
+                    passwordValidator.setMessage("Invalid password.");
+                    passwordInput.clear();
+                    passwordInput.validate();
+                    passwordInput.requestFocus();
+                }
+            } else {
+                passwordValidator.setMessage("Cannot log in to this classroom");
+                ddClassroom.requestFocus();
+            }
+
+        } else {
+            //Teacher doesn't exist
+            passwordValidator.setMessage("Invalid username.");
+            passwordInput.clear();
+            passwordInput.validate();
+            usernameInput.requestFocus();
+        }
+        return false;
+
+    }
+
     private void authenticate(DataSnapshot fbClass) {
         if (fbClass.exists()) {
             DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
@@ -271,7 +305,7 @@ public class UserLoginController {
 
                 if (pass.equals(passwordInput.getText())) {
                     env.getUserHandler().setCurrentUser(usernameInput.getText(), ddClassroom.getValue().toString(), passwordInput.getText());
-
+                    env.getUserHandler().removeCurrentTeacher();
                     Stage stage = (Stage) btnLogin.getScene().getWindow();
                     stage.close();
                     env.getRootController().showWindow(true);
@@ -289,8 +323,7 @@ public class UserLoginController {
                 usernameInput.requestFocus();
             }
 
-        }
-        else{
+        } else {
             System.out.println("classroom doesn't exist");
             //Handle classroom doesn't exist
             passwordValidator.setMessage("Classroom doesn't exist.");
@@ -300,9 +333,7 @@ public class UserLoginController {
         }
 
 
-
     }
-
 
 
 }

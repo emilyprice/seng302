@@ -33,6 +33,8 @@ public class FirebaseUpdater {
 
     DataSnapshot classroomsSnapshot;
 
+    DataSnapshot teacherSnapshot;
+
     public Cloudinary getImageCloud() {
         return imageCloud;
     }
@@ -61,6 +63,18 @@ public class FirebaseUpdater {
 
             }
 
+        });
+
+        firebase.child("teachers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                teacherSnapshot = dataSnapshot;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         });
 
         imageCloud = new Cloudinary(ObjectUtils.asMap(
@@ -198,6 +212,10 @@ public class FirebaseUpdater {
 
     public DatabaseReference getUserRef() {
         return userRef;
+    }
+
+    public DataSnapshot getTeacherSnapshot() {
+        return teacherSnapshot;
     }
 
 

@@ -1,30 +1,26 @@
 package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import org.apache.commons.io.FileDeleteStrategy;
-import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONArray;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import seng302.Environment;
-import seng302.utility.FileHandler;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import seng302.Environment;
+
 /**
  * Created by jmw280 on 22/07/16.
  */
 public class UserHandler {
-
 
 
     private Student currentUser;
@@ -42,46 +38,44 @@ public class UserHandler {
     final Path userDirectory = Paths.get("UserData/classrooms/group5/users/"); //Default user path for now, before user compatibility is set up.
 
 
-
     private String classroom;
 
-    public UserHandler(Environment env){
+    public UserHandler(Environment env) {
         this.env = env;
 
         populateUsers();
 
     }
 
-    public ArrayList<String> getUserNames(){
+    public ArrayList<String> getUserNames() {
         return userList;
     }
 
-    public ArrayList<String> getRecentUserNames(){
+    public ArrayList<String> getRecentUserNames() {
         return recentUsers;
     }
 
-    public void loadRecentUsers(){
+    public void loadRecentUsers() {
         try {
-            localData = (JSONObject) parser.parse(new FileReader( "UserData/local_data.json"));
+            localData = (JSONObject) parser.parse(new FileReader("UserData/local_data.json"));
             recentUsers = new ArrayList<>();
-            try{
+            try {
                 recentClassrooms = (HashMap<String, Object>) localData.get("recentUsers");
 
 
-
-                if(recentClassrooms.containsKey(this.classroom)){
+                if (recentClassrooms.containsKey(this.classroom)) {
                     recentUsers = (ArrayList<String>) recentClassrooms.get(this.classroom);
                     System.out.println("recent users");
                     System.out.println(recentUsers);
 
 
-                }else{
+                } else {
                     //Classroom doesn't exist inside the classrooms hashmap
                     System.out.println("classroom hasn't been added to recent users yet, adding it.");
                     recentUsers = new ArrayList<>();
                     recentClassrooms.put(classroom, recentUsers);
                 }
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 //TODO: Handle having adding a new HashMap of classrooms.
                 //Classroom hashmap doesn't exist inside localData
                 recentClassrooms = new HashMap<>();
@@ -107,7 +101,7 @@ public class UserHandler {
                 System.err.println("Failed to create local_data.json file.");
 
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             //e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -116,17 +110,16 @@ public class UserHandler {
 
     /**
      * Populates the list of users from the users json file.
-     *
      */
-    public void populateUsers(){
+    public void populateUsers() {
 
-       while(env.getFirebase().getClassroomsSnapshot() == null){
+        while (env.getFirebase().getClassroomsSnapshot() == null) {
             continue;
-           //TODO: Fix this hack (And the other similar instance)
+            //TODO: Fix this hack (And the other similar instance)
         }
 
         userList.clear();
-        for(DataSnapshot user : env.getFirebase().getClassroomsSnapshot().child(classroom + "/users/").getChildren()){
+        for (DataSnapshot user : env.getFirebase().getClassroomsSnapshot().child(classroom + "/users/").getChildren()) {
 
             userList.add(user.getKey());
 
@@ -137,17 +130,16 @@ public class UserHandler {
 
     /**
      * Checks if the given login credentials are valid.
-     * @param userName
-     * @param password
+     *
      * @return true/false depending on login result.
      */
-    public boolean userPassExists(String userName, String password){
-        System.out.println("user list: "  +userList.size());
-        if(env.getFirebase().getClassroomsSnapshot().child(classroom+"/users/"+userName).exists()){
+    public boolean userPassExists(String userName, String password) {
+        System.out.println("user list: " + userList.size());
+        if (env.getFirebase().getClassroomsSnapshot().child(classroom + "/users/" + userName).exists()) {
             //System.out.println("FIREBASE CONTAINS the Deets");
             //User tempUser = new User(env,userName);
             String fbPass = (String) env.getFirebase().getUserSnapshot().child("properties/password").getValue();
-            if (password.equals(fbPass)){
+            if (password.equals(fbPass)) {
                 System.out.println("password is equaaal");
                 return true;
             }
@@ -169,24 +161,22 @@ public class UserHandler {
 
     /**
      * Creates a new user for the given username/password.
-     * @param user
-     * @param password
      */
-    public void createUser(String user, String password){
+    public void createUser(String user, String password) {
         this.currentUser = new Student(user, password, env);
         //updateUserList(user);
 
     }
 
-    public void createTeacher(String user, String password){
-        this.currentTeacher = new Teacher(user, password, env);
+    public void createTeacher(String user, String password, String classroom) {
+        this.currentTeacher = new Teacher(user, password, env, classroom);
     }
 
 
-    public void updateRecentUsers(String username){
+    public void updateRecentUsers(String username) {
         if (!recentUsers.contains(username)) {
-            if(recentUsers.size() >= 4){
-                recentUsers.remove(recentUsers.size() -1);
+            if (recentUsers.size() >= 4) {
+                recentUsers.remove(recentUsers.size() - 1);
             }
             recentUsers.add(0, username);
         }
@@ -215,22 +205,24 @@ public class UserHandler {
     }
 
 
-
-    public Student getCurrentUser(){
+    public Student getCurrentUser() {
 
         return currentUser;
     }
 
-    public Path getCurrentUserPath(){
-        return Paths.get("UserData/classrooms/group5/users/"+getCurrentUser().getUserName());
+    public Teacher getCurrentTeacher() {
+        return currentTeacher;
+    }
+
+    public Path getCurrentUserPath() {
+        return Paths.get("UserData/classrooms/group5/users/" + getCurrentUser().getUserName());
     }
 
 
     /**
      * Sets the current user and loads user related properties.
-     * @param userName
      */
-    public void setCurrentUser(String userName, String classroom, String password){
+    public void setCurrentUser(String userName, String classroom, String password) {
         this.classroom = classroom;
         this.currentUser = new Student(userName, password, env);
         //currentUser.loadFullProperties();
@@ -241,10 +233,19 @@ public class UserHandler {
 
     }
 
+    public void setCurrentTeacher(String userName, String classroom, String password) {
+        this.classroom = classroom;
+        this.currentTeacher = new Teacher(userName, password, env, classroom);
+
+    }
+
+    public void removeCurrentTeacher() {
+        this.currentTeacher = null;
+    }
+
 
     /**
      * Full deletes the specified user incl. project files.
-     * @param username
      */
     public void deleteUser(String username) {
 
@@ -274,7 +275,6 @@ public class UserHandler {
         //Step 5. Open the User login window.
 
         this.env.getRootController().logOutUser();
-
 
 
     }

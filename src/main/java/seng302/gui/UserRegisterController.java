@@ -262,7 +262,7 @@ public class UserRegisterController {
             }
             else if(selectedType.equals("Teacher")){
                 //env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText()).setValue("test");
-                env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
+                env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText(), txtClassRoomName.getText());
 //                env.getFirebase().createClassRoomSnapshot(txtClassRoomName.getText(), true);
                 //TODO: add action for registering and logging in as a teacher.
 
@@ -281,6 +281,7 @@ public class UserRegisterController {
         if (validCredentials(dataSnapShot)) {
             env.getThemeHandler().setDefaultTheme();
             env.getUserHandler().createUser(txtUsername.getText(), txtPassword.getText());
+            env.getUserHandler().removeCurrentTeacher();
 
 
             //Log in user.

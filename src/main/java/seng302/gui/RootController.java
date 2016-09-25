@@ -201,16 +201,31 @@ public class RootController implements Initializable {
     public void showWindow(Boolean show) {
         if (show) {
 
-            applyTheme();
-            stage.show();
-            resizeSplitPane(1.0);
-            updateImage();
-            menuTranscript.setSelected(false);
-            toggleTranscript();
-            try {
-                showUserPage();
-            } catch (IOException e) {
-                e.printStackTrace();
+            boolean isTeacher = env.getUserHandler().getCurrentTeacher() != null;
+
+            if (isTeacher) {
+                stage.show();
+                resizeSplitPane(1.0);
+                menuTranscript.setSelected(false);
+                toggleTranscript();
+                try {
+                    showTeacherPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                applyTheme();
+                stage.show();
+                resizeSplitPane(1.0);
+                updateImage();
+                menuTranscript.setSelected(false);
+                toggleTranscript();
+                try {
+                    showUserPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 
@@ -247,7 +262,7 @@ public class RootController implements Initializable {
      * @param option close option either 'close' or 'logout'.
      */
     protected void showCloseWindow(String option) {
-        if (env.getUserHandler().getCurrentUser() != null && !((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
+        if (env.getUserHandler().getCurrentUser() != null && !((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
 
             String closeText = option.equals("close") ? "Quit" : "Logout";
 
@@ -268,7 +283,7 @@ public class RootController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == btnSaveProject) {
-                ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+                ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
                 if (option.equals("close")) {
                     System.exit(0);
                 } else if (option.equals("logout")) {
@@ -285,7 +300,7 @@ public class RootController implements Initializable {
 
 
         } else if (env.getTranscriptManager().unsavedChanges) {
-            ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+            ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             if (option.equals("close")) System.exit(0);
             else if (option.equals("logout")) logOutUser();
@@ -346,50 +361,50 @@ public class RootController implements Initializable {
      */
     public void showUserPage() throws IOException {
 
-        boolean isTeacher = true;
 
-        if (isTeacher) {
-            showUserBar(false);
-            setHeader("Summary");
+        showUserBar(false);
+        setHeader("Summary");
 
-            FXMLLoader teacherLoader = new FXMLLoader();
-            teacherLoader.setLocation(getClass().getResource("/Views/TeacherPage.fxml"));
+        FXMLLoader userPageLoader = new FXMLLoader();
+        userPageLoader.setLocation(getClass().getResource("/Views/UserPage.fxml"));
 
 
-            AnchorPane teacherPage = teacherLoader.load();
+        AnchorPane userPage = userPageLoader.load();
 
-            centerPane.getChildren().add(teacherPage);
+        centerPane.getChildren().add(userPage);
 
-            AnchorPane.setRightAnchor(teacherPage, 0.0);
-            AnchorPane.setLeftAnchor(teacherPage, 0.0);
-            AnchorPane.setBottomAnchor(teacherPage, 0.0);
-            AnchorPane.setTopAnchor(teacherPage, 0.0);
+        AnchorPane.setRightAnchor(userPage, 0.0);
+        AnchorPane.setLeftAnchor(userPage, 0.0);
+        AnchorPane.setBottomAnchor(userPage, 0.0);
+        AnchorPane.setTopAnchor(userPage, 0.0);
 
-            TeacherPageController teacherPageController = teacherLoader.getController();
-            teacherPageController.setEnvironment(env);
-            teacherPageController.load();
-
-        } else {
-            showUserBar(false);
-            setHeader("Summary");
-
-            FXMLLoader userPageLoader = new FXMLLoader();
-            userPageLoader.setLocation(getClass().getResource("/Views/UserPage.fxml"));
+        UserPageController userPageController = userPageLoader.getController();
+        userPageController.setEnvironment(env);
+        userPageController.load();
 
 
-            AnchorPane userPage = userPageLoader.load();
+    }
 
-            centerPane.getChildren().add(userPage);
+    public void showTeacherPage() throws IOException {
+        showUserBar(false);
+        setHeader("Summary");
 
-            AnchorPane.setRightAnchor(userPage, 0.0);
-            AnchorPane.setLeftAnchor(userPage, 0.0);
-            AnchorPane.setBottomAnchor(userPage, 0.0);
-            AnchorPane.setTopAnchor(userPage, 0.0);
+        FXMLLoader teacherLoader = new FXMLLoader();
+        teacherLoader.setLocation(getClass().getResource("/Views/TeacherPage.fxml"));
 
-            UserPageController userPageController = userPageLoader.getController();
-            userPageController.setEnvironment(env);
-            userPageController.load();
-        }
+
+        AnchorPane teacherPage = teacherLoader.load();
+
+        centerPane.getChildren().add(teacherPage);
+
+        AnchorPane.setRightAnchor(teacherPage, 0.0);
+        AnchorPane.setLeftAnchor(teacherPage, 0.0);
+        AnchorPane.setBottomAnchor(teacherPage, 0.0);
+        AnchorPane.setTopAnchor(teacherPage, 0.0);
+
+        TeacherPageController teacherPageController = teacherLoader.getController();
+        teacherPageController.setEnvironment(env);
+        teacherPageController.load();
 
     }
 
@@ -479,7 +494,7 @@ public class RootController implements Initializable {
      * @return a boolean - true for save, false for cancel
      */
     public Boolean saveChangesDialog() {
-        if (!((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
+        if (!((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("Unsaved project changes");
 
@@ -497,7 +512,7 @@ public class RootController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == btnSaveProject) {
-                ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+                ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             } else if (result.get() == btnCancel) {
                 return false;
@@ -506,7 +521,7 @@ public class RootController implements Initializable {
 
         } else if (env.getTranscriptManager().unsavedChanges) {
 
-            ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+            ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
         }
         return true;
     }

@@ -4,11 +4,12 @@ package seng302.Users;
 
 import com.google.gson.Gson;
 
-import seng302.Environment;
-
-
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import seng302.Environment;
 
 /**
  * Created by Jonty on 23-Sep-16.
@@ -17,22 +18,33 @@ import java.util.HashMap;
 
 public class Teacher extends User2 {
 
+    private List<String> classrooms;
 
-    public Teacher(String userName, String password, Environment env) {
+
+    public Teacher(String userName, String password, Environment env, String classroom) {
 
         env.getFirebase().createTeacherSnapshot(userName, true);
+
+        Map classroomInfo = new HashMap<>();
+        classroomInfo.put("users", "none");
+        env.getFirebase().getFirebase().child("classrooms/" + classroom).updateChildren(classroomInfo);
         userSnapshot = env.getFirebase().getUserSnapshot();
 
         //userDirectory = Paths.get("UserData/" + userName);
         this.userName = userName;
         this.userPassword = password;
         this.env = env;
+
+        classrooms = new ArrayList<>();
+        classrooms.add(classroom);
         //properties = new JSONObject();
 
         createUserFiles();
         //loadBasicProperties();
         loadProperties();
         saveProperties();
+
+        env.getFirebase().getUserRef().child("classrooms").setValue(classrooms);
 
     }
 
@@ -89,6 +101,7 @@ public class Teacher extends User2 {
             profilePicUrl = "http://res.cloudinary.com/allegro123/image/upload/v1474434800/testDP_qmwncc.jpg";
         }
         env.getThemeHandler().setTheme(themePrimary, themeSecondary);
+
 
     }
 

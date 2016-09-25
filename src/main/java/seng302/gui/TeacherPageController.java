@@ -70,7 +70,7 @@ public class TeacherPageController {
     }
 
     public void load() {
-        imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
+        imageDP2.setImage(env.getUserHandler().getCurrentTeacher().getUserPicture());
         populateUserOptions();
     }
 
