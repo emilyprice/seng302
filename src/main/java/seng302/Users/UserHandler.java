@@ -21,20 +21,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by jmw280 on 22/07/16.
+ * Handles Users.
  */
 public class UserHandler {
-
-
 
     private Student currentUser;
     private Teacher currentTeacher;
 
     Environment env;
-    //JSONArray userList;
+
     ArrayList<String> userList = new ArrayList<>();
     JSONParser parser = new JSONParser(); //parser for reading project
-    //JSONObject UsersInfo = new JSONObject();
+
     JSONObject localData = new JSONObject();
     HashMap<String, Object> recentClassrooms = new HashMap<>();
     ArrayList<String> recentUsers = new ArrayList<>();
@@ -118,11 +116,6 @@ public class UserHandler {
      *
      */
     public void populateUsers(){
-
-       while(env.getFirebase().getClassroomsSnapshot() == null){
-            continue;
-           //TODO: Fix this hack (And the other similar instance)
-        }
 
         userList.clear();
         for(DataSnapshot user : env.getFirebase().getClassroomsSnapshot().child(classroom + "/users/").getChildren()){

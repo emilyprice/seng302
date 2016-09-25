@@ -41,11 +41,24 @@ public class FirebaseUpdater {
         this.env = env;
 
         initializeFirebase();
+        createClassroomSnapshot(true);
 
+
+
+        imageCloud = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "allegro123",
+                "api_key", "732823974447246",
+                "api_secret", "nGNnDUmFxWEG_lPZoJQCKyfz7hw"));
+    }
+
+    public void createClassroomSnapshot(Boolean blocking){
+
+        final AtomicBoolean done = new AtomicBoolean(false);
         firebase.child("classrooms").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 classroomsSnapshot = dataSnapshot;
+                done.set(true);
             }
 
             @Override
@@ -54,11 +67,7 @@ public class FirebaseUpdater {
             }
 
         });
-
-        imageCloud = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "allegro123",
-                "api_key", "732823974447246",
-                "api_secret", "nGNnDUmFxWEG_lPZoJQCKyfz7hw"));
+        while (!done.get() && blocking) ;
     }
 
     private void initializeFirebase() {
