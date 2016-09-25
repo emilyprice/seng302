@@ -60,11 +60,21 @@
 
 .noDivider {
     -fx-border-width: 0;
+
 }
 
 .noDivider .split-pane *.split-pane-divider{
     -fx-padding: 0 1 0 1;
-    fx-box-border: transparent;
+    -fx-box-border: transparent;
+
+}
+
+.keyboardSplitpane .split-pane *.split-pane-divider{
+    -fx-border-color: derive({0}, 90%);
+    -fx-border-width: 10px 0px 0px 0px;
+    -fx-padding: 0 0 0 0;
+    -fx-box-border: none;
+
 
 }
 
@@ -275,7 +285,7 @@
 
 
 #userSplitPane *.split-pane-divider {
-    -fx-padding: 0 1 0 1;
+    -fx-padding: 0 0 0 0;
 }
 
 .primaryText {
@@ -401,22 +411,36 @@
 	-fx-background-insets: 0.0;
 }
 
-.scroll-bar:vertical>.thumb, .scroll-bar:horizontal>.thumb {
-	-fx-background-color: {0};
+.scroll-bar:vertical>.thumb , .scroll-bar:horizontal>.thumb {
+	-fx-background-color: derive({0}, 95%);
 	-fx-background-insets: 0.0;
 	-fx-background-radius: 2.0;
+	-fx-pref-width: 0;
+
+}
+
+.scroll-bar:vertical>.track , .scroll-bar:horizontal>.track {
+	-fx-background-color: {1};
+	-fx-padding: 0px;
+	-fx-pref-width: 0;
 }
 
 .scroll-bar>.increment-button, .scroll-bar>.decrement-button,
 	.scroll-bar:hover>.increment-button, .scroll-bar:hover>.decrement-button
 	{
 	-fx-background-color: transparent;
+	-fx-padding: 0px;
 }
 
 .scroll-bar>.increment-button>.increment-arrow, .scroll-bar>.decrement-button>.decrement-arrow
 	{
 	-fx-background-color: {0};
 }
+
+.listView>.virtual-flow>.scroll-bar:vertical>.thumb {
+    -fx-pref-width: 0;
+}
+
 
 .scroll-bar>.track-background {
 	-fx-background-color: transparent;
