@@ -18,14 +18,12 @@ import java.util.HashMap;
  */
 public abstract class User {
 
-    String userFullName, userPassword, themePrimary, themeSecondary, userFirstName, userLastName,  profilePicUrl, userName;
+    String  userPassword, themePrimary, themeSecondary, userFirstName, userLastName,  profilePicUrl, userName;
 
 
     Environment env;
 
     HashMap properties = new HashMap();
-
-    private Date lastSignIn;
 
     Path userDirectory;
 

@@ -309,7 +309,7 @@ public class StageMapController {
 
     @FXML
     private void launchScaleRecognitionAdvancedTutor() {
-        System.out.println("Advanced scale tutor");
+
         env.getRootController().getTutorFactory().openTutor("Scale Recognition Tutor");
     }
 

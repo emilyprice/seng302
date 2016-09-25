@@ -141,27 +141,17 @@ public class UserHandler {
      * @return true/false depending on login result.
      */
     public boolean userPassExists(String userName, String password){
-        System.out.println("user list: "  +userList.size());
+
         if(env.getFirebase().getClassroomsSnapshot().child(classroom+"/users/"+userName).exists()){
             //System.out.println("FIREBASE CONTAINS the Deets");
             //User tempUser = new User(env,userName);
             String fbPass = (String) env.getFirebase().getUserSnapshot().child("properties/password").getValue();
             if (password.equals(fbPass)){
-                System.out.println("password is equaaal");
+
                 return true;
             }
         }
 
-        /* 23sept
-        if(userList.contains(userName)){
-
-
-            User tempUser = new User(env,userName);
-            if (password.equals(tempUser.getUserPassword())){
-                return true;
-            }
-        }
-         */
         return false;
     }
 
@@ -200,7 +190,7 @@ public class UserHandler {
     private void saveLocalData() {
         try { //Save list of projects.
             recentClassrooms.put(classroom, recentUsers);
-            System.out.println(recentClassrooms);
+
             localData.put("recentUsers", recentClassrooms); // -> RecentUsers -> Classroom -> User
             FileWriter projectsJson = new FileWriter("UserData/local_data.json");
             projectsJson.write(localData.toJSONString());

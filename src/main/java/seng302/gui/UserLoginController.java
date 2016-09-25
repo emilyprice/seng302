@@ -51,8 +51,6 @@ public class UserLoginController {
     @FXML
     private JFXComboBox ddClassroom;
 
-
-
     @FXML
     JFXButton btnLogin;
 
@@ -142,8 +140,7 @@ public class UserLoginController {
     public void displayRecentUsers() {
         recentUsersHbox.getChildren().clear();
         for (String user : env.getUserHandler().getRecentUserNames()) {
-            //name = user.getUserName();
-            //Image image = user.getUserPicture();
+
             try {
                 String dpUrl = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + user + "/properties/profilePicUrl").getValue().toString();
                 Image img = new Image(dpUrl);
@@ -156,7 +153,6 @@ public class UserLoginController {
         }
 
 
-
     }
 
 
@@ -166,7 +162,6 @@ public class UserLoginController {
     @FXML
     protected void register() {
 
-        //if(classroomSelected()){
         FXMLLoader loader1 = new FXMLLoader();
         loader1.setLocation(getClass().getResource("/Views/UserRegistration.fxml"));
 
@@ -176,13 +171,10 @@ public class UserLoginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //Scene scene1 = new Scene(root1);
+
         Scene scene1 = new Scene(root1);
 
-        //scene1.getStylesheets().addAll(this.getClass().getResource("/css/style.css").toExternalForm());
-
         Stage registerStage = (Stage) btnLogin.getScene().getWindow();
-        //Stage registerStage = new Stage();
 
         registerStage.setTitle("Register new user");
         registerStage.setScene(scene1);
@@ -194,18 +186,18 @@ public class UserLoginController {
             event.consume();
         });
 
-        //registerStage.setMinWidth(600);
-        //Double initialHeight = registerStage.getHeight();
-        //registerStage.setMinHeight(initialHeight);
-
         registerStage.show();
         UserRegisterController userRegisterController = loader1.getController();
 
         userRegisterController.create(env);
-       // }
+
 
 
     }
+
+    /**
+     * OnAction handler for the classroom dropdown.
+     */
     @FXML
     void onClassroomChange() {
         classroomSelected();
@@ -215,10 +207,12 @@ public class UserLoginController {
     }
 
 
-
+    /**
+     *  Checks if a classroom is selected, and modifies the styling of the classroom hBox to alert the user.
+     * @return classroom selected.
+     */
     private Boolean classroomSelected(){
         if(ddClassroom.getValue() != null){
-
 
             hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: rgba(255, 255, 255, 1)");
 
@@ -249,16 +243,16 @@ public class UserLoginController {
     protected void logIn() {
 
         if(classroomSelected()){
-            //Classroom dropdown value selected.
             authenticate(env.getFirebase().getClassroomsSnapshot().child(ddClassroom.getValue().toString()));
         }
-        else{
-            //TODO: Handle having not have selected a classroom.
-        }
+
 
 
     }
 
+    /**
+     *  Imports a user from local files, to allow compatibility with previous versions.
+     */
     @FXML
     void importUser() {
         if(classroomSelected()) {
@@ -268,6 +262,10 @@ public class UserLoginController {
     }
 
 
+    /**
+     * Authenticates a user against the login screen username/password inputs.
+     * @param fbClass fireBase classrooms snapshot.
+     */
     private void authenticate(DataSnapshot fbClass) {
         if (fbClass.exists()) {
             DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
