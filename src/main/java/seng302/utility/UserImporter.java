@@ -46,18 +46,25 @@ public class UserImporter {
         File folder = dirChooser.showDialog(stage);
 
         if(validUserFolder(folder)){
+            if(!env.getUserHandler().getUserNames().contains(folder.getName())){
+                uploadUserProperties(env, classroom, folder);
+                uploadUserProjects(env, new File(folder.getPath()+"/Projects"));
+            }
+            else{
+                System.err.println("Classroom already contains a user of the selected username");
+                env.getRootController().errorAlert("Could not import the given user." +
+                        "\nA user with the given username already exists!");
+            }
 
-            uploadUserProperties(env, classroom, folder);
-            uploadUserProjects(env, new File(folder.getPath()+"/Projects"));
         }
 
     }
 
 
     /**
-     * Loads
-     * @param env
-     * @param path
+     * Uploads the specified user's data to firebase.
+     * @param env Environment
+     * @param path User folder path.
      */
     public static void uploadUserProperties(Environment env, String classroom,  File path) {
 
@@ -82,6 +89,11 @@ public class UserImporter {
     }
 
 
+    /**
+     * Uploads a user's project data, given the user's project directory.
+     * @param env Environment
+     * @param f User project directory. (User -> Projects -> Project)
+     */
     private static void uploadProjectData(Environment env, File f){
 
         HashMap<String, Object> tutorData = new HashMap<>();
@@ -146,22 +158,19 @@ public class UserImporter {
 
     /**
      * Determines whether a given folder is a valid User folder or not.
-     * @param folder
-     * @return
+     * @param folder User folder.
+     * @return True if the given folder contains a projects folder, and user_properties.json.
      */
     private static Boolean validUserFolder(File folder){
 
         if (folder != null) {
             if (folder.isDirectory()) {
-
                 boolean user_properties = true, projectsFolder = false;
-
 
                 for (File f : folder.listFiles()) {
 
                     if (f.getName().endsWith(".json") && f.getName().substring(0, f.getName().length() - 5).equals("user_properties")) {
                         user_properties = true;
-
 
                     }
                     else if(f.isDirectory() && f.getName().equals("Projects")){
@@ -173,7 +182,6 @@ public class UserImporter {
                 if(user_properties && projectsFolder ){
                     return true;
                 }
-
 
             }
 
