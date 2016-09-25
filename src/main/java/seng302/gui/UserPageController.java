@@ -378,6 +378,9 @@ public class UserPageController {
         tempoInput.setPrefColumnCount(4); //setting col size (user can input 4 characters)
         changeTempo.getChildren().add(setTempoLabel);
         changeTempo.getChildren().add(tempoInput);
+        changeTempo.setSpacing(10);
+        changeTempo.setPadding(new Insets(10));
+
 
         //HBox to contain buttons (Start, Pause, Resume, Stop)
         HBox metronomeButtons = new HBox();
