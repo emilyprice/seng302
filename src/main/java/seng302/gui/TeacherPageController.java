@@ -1,15 +1,11 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-import com.jfoenix.controls.JFXListView;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -25,7 +21,7 @@ public class TeacherPageController {
     private VBox profilepic;
 
     @FXML
-    private JFXListView listView;
+    private VBox studentInfo;
 
 //    @FXML
 //    private JFXButton btnSettings;
@@ -79,32 +75,56 @@ public class TeacherPageController {
 
         DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
 
+        TreeItem<String> root = new TreeItem<>("Root");
+        root.getChildren().add(new TreeItem<>("Summary"));
+        root.setExpanded(true);
+
         classroomData.getChildren().forEach(user -> {
-            //TODO: filter out teachers
-            //System.out.println(user.child("/properties/isTeacher"));
+
             options.add(user.getKey());
+            TreeItem<String> thisStudent = new TreeItem<>(user.getKey());
 
+            DataSnapshot userProjects = user.child("projects");
+
+            for (DataSnapshot data: userProjects.getChildren()) {
+                thisStudent.getChildren().add(new TreeItem<>(user.getKey() + "/" + data.getKey()));
+            }
+            thisStudent.setExpanded(false);
+            root.getChildren().add(thisStudent);
         });
 
-        listView.getItems().addAll(FXCollections.observableArrayList(options));
+        TreeView studentTree = new TreeView<>(root);
+        studentTree.setShowRoot(false);
+        studentTree.setCellFactory(thing -> new TreeCell<String>() {
 
-        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            showPage((String) newValue);
+            @Override
+            public void updateItem(String text, boolean empty) {
+
+                super.updateItem(text, empty);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+
+                } else {
+                    setText(null);
+                    AnchorPane view = new AnchorPane();
+                    Label label = new Label();
+                    view.getChildren().addAll(label);
+                    view.setStyle("-fx-fill-color: gray");
+                    view.setPadding(new Insets(5));
+                    AnchorPane.setLeftAnchor(label, 15.0);
+                    label.setText(text.substring(text.lastIndexOf('/') + 1));
+                    setGraphic(view);
+                    view.setOnMouseClicked(event -> {
+                        if (text.contains("/") || text.equalsIgnoreCase("summary")) {
+                            showPage(text);
+                        }
+                    });
+                }
+
+            }
         });
-
-
-        listView.setMaxWidth(200);
-        listView.setMinWidth(200);
-        listView.setDepthProperty(1);
-
-
-//        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//            showPage((String) newValue);
-//        });
-
-        // Set after the listener so it loads user summary correctly
-        listView.getSelectionModel().selectFirst();
-
+        studentInfo.getChildren().add(studentTree);
 
     }
 
@@ -143,10 +163,10 @@ public class TeacherPageController {
 
     }
 
-    public void showUserPage(String userName) {
-        env.getRootController().setHeader("Student - " + userName);
+    public void showUserPage(String userInfo) {
 
-       String password = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + userName + "/properties/password").toString();
+        String project = userInfo.substring(userInfo.lastIndexOf('/') + 1);
+        String userName = userInfo.substring(0, userInfo.lastIndexOf('/'));
 
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
@@ -162,7 +182,7 @@ public class TeacherPageController {
             //statsController = tutorStatsLoader.getController();
 
             //change to be the user that was clicked on
-            userSummaryController.createStudent(env, userName, getTimePeriod());
+            userSummaryController.createStudent(env, userName, getTimePeriod(), project);
 
         } catch (IOException e) {
             e.printStackTrace();
