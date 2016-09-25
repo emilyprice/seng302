@@ -22,21 +22,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class FirebaseUpdater {
 
 
-    DatabaseReference firebase;
+    private  DatabaseReference firebase;
+    private DatabaseReference userRef;
 
+    private DataSnapshot userSnapshot;
 
-    DatabaseReference userRef;
-
-
-    DataSnapshot userSnapshot;
-
-    DataSnapshot classroomsSnapshot;
+    private  DataSnapshot classroomsSnapshot;
 
     public Cloudinary getImageCloud() {
         return imageCloud;
     }
 
-    Cloudinary imageCloud;
+    private Cloudinary imageCloud;
     private Environment env;
 
 
