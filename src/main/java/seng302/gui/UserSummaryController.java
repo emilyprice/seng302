@@ -116,13 +116,13 @@ public class UserSummaryController {
 
     }
 
-    public void createStudent(Environment env, String userName, String timePeriod) {
+    public void createStudent(Environment env, String userName, String timePeriod, String project) {
 
         this.env = env;
 
-        updateProgressBarStudent(userName, "default");
+        updateProgressBarStudent(userName, project);
 
-        Pair<Integer, Integer> correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTotalsForStudent(userName, "default", timePeriod);
+        Pair<Integer, Integer> correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTotalsForStudent(userName, project, timePeriod);
 
         // Set up Overall graph and labels.
 
