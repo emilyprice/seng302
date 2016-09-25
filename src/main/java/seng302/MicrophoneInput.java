@@ -7,8 +7,8 @@ import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
-import javafx.util.Pair;
 import seng302.data.Note;
+import seng302.gui.MicrophoneInputPopoverController;
 
 import javax.sound.sampled.*;
 import java.io.UnsupportedEncodingException;
@@ -34,7 +34,11 @@ public class MicrophoneInput implements PitchDetectionHandler {
     private Integer noteCount;
     private Integer outlierCount;
     private String latestNote;
-    private boolean noteFound;
+    private Boolean noteFound;
+    private int currentIndex = 0;
+
+    private MicrophoneInputPopoverController microphoneInputPopoverController = null;
+
 
     private ArrayList<String> lastRecorded = new ArrayList<>();
 
@@ -113,30 +117,6 @@ public class MicrophoneInput implements PitchDetectionHandler {
         new Thread(dispatcher, "Audio dispatching").start();
     }
 
-//    public void stopRecording() {
-//        dispatcher.stop();
-//        try {
-//            Collections.sort(detectedFrequencies);
-//            double range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
-//            while (range > 10) {
-//                detectedFrequencies.remove(0);
-//                detectedFrequencies.remove(detectedFrequencies.size() - 1);
-//                range = detectedFrequencies.get(detectedFrequencies.size() - 1) - detectedFrequencies.get(0);
-//            }
-//            double total = 0; // For mean calculations
-//            double mean;
-//            for (double freq : detectedFrequencies) {
-//                total += freq;
-//            }
-//            mean = total / detectedFrequencies.size();
-//            String note = findNote(mean);
-//            latestDetectedNotes.add(note);
-//            detectedFrequencies.clear();
-//        } catch (Exception e) {
-//            System.err.println("No sounds recorded.");
-//        }
-//    }
-
     public ArrayList<String> stopRecording() {
         dispatcher.stop();
         return lastRecorded;
@@ -144,15 +124,10 @@ public class MicrophoneInput implements PitchDetectionHandler {
 
     private void hasNoteBeenFound() {
         int arraySize = detectedFrequencies.size();
-        System.out.println("latest note: " + latestNote);
-        System.out.println("found: " + noteFound);
-        System.out.println("note count: " + noteCount);
-        System.out.println(detectedFrequencies);
         switch (arraySize) {
             case 1:
                 latestNote = detectedFrequencies.get(0);
                 noteCount += 1;
-                System.out.println("here");
                 break;
             case 2:
                 if (detectedFrequencies.get(0).equals(detectedFrequencies.get(1))) {
@@ -170,7 +145,7 @@ public class MicrophoneInput implements PitchDetectionHandler {
                     if (detectedFrequencies.get(x).equals(latestNote)) {
                         noteCount += 1;
                         outlierCount = 0;
-                        if (noteCount >= 5) {
+                        if (noteCount >= 5 && !noteFound) {
                             noteFound = true;
                             lastRecorded.add(latestNote);
                         }
@@ -191,8 +166,9 @@ public class MicrophoneInput implements PitchDetectionHandler {
         }
     }
 
-
-
+    public ArrayList<String> getLastRecorded() {
+        return lastRecorded;
+    }
 
 
     @Override
@@ -209,7 +185,11 @@ public class MicrophoneInput implements PitchDetectionHandler {
             if (silenceDetector.currentSPL() > threshold) {
                 if (probability > 0.8) {
                     detectedFrequencies.add(findNote((double) pitch));
-                    hasNoteBeenFound();
+                    try {
+                        hasNoteBeenFound();
+                    } catch (Exception e) {
+                        System.err.println("Notes played too quickly, can't keep up..");
+                    }
                 }
             }
         }
@@ -257,5 +237,8 @@ public class MicrophoneInput implements PitchDetectionHandler {
         this.threshold = threshold;
     }
 
+    public void addPopover(MicrophoneInputPopoverController m) {
+        this.microphoneInputPopoverController = m;
+    }
 
 }

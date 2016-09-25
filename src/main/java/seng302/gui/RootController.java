@@ -3,6 +3,7 @@ package seng302.gui;
 
 import com.jfoenix.controls.JFXBadge;
 
+import org.controlsfx.control.PopOver;
 import org.json.simple.JSONArray;
 
 import java.io.File;
@@ -16,9 +17,13 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -42,7 +47,9 @@ import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import seng302.Environment;
+import seng302.gui.MicrophoneInputPopoverController;
 import seng302.managers.TranscriptManager;
 import seng302.utility.FileHandler;
 import seng302.utility.OutputTuple;
@@ -891,6 +898,34 @@ public class RootController implements Initializable {
 
     public void allowTranscript() {
         menuTranscript.setDisable(false);
+    }
+
+    @FXML
+    private void openMicrophonePopover() {
+        PopOver microphonePopover = new PopOver();
+        microphonePopover.setDetachable(true);
+        microphonePopover.setArrowLocation(PopOver.ArrowLocation.TOP_LEFT);
+
+        try {
+            FXMLLoader micInputPopLoader = new FXMLLoader();
+            micInputPopLoader.setLocation(getClass().getResource("/Views/MicrophoneInputPopover.fxml"));
+            Node loadedPane = (Node) micInputPopLoader.load();
+            MicrophoneInputPopoverController micInputPopController = micInputPopLoader.getController();
+            micInputPopController.create(env);
+            microphonePopover.setContentNode(loadedPane);
+            microphonePopover.show(paneMain);
+            microphonePopover.setTitle("Microphone Input");
+            microphonePopover.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    env.getMicrophoneInput().addPopover(null);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
     }
 
 }
