@@ -83,13 +83,46 @@ public class UserSummaryController {
      *
      * @param env The environment in which the controller is being created
      */
-    public void create(Environment env, Student user, String timePeriod) {
+    public void create(Environment env) {
         this.env = env;
-        this.user = user;
+        this.user = env.getUserHandler().getCurrentUser();
 
         updateProgressBar();
 
-        Pair<Integer, Integer> correctIncorrectOverall = user.getProjectHandler().getCurrentProject().tutorHandler.getTotalsForAllTutors(timePeriod);
+        Pair<Integer, Integer> correctIncorrectOverall = user.getProjectHandler().getCurrentProject().tutorHandler.getTotalsForAllTutors(env.getUserPageController().getTimePeriod());
+
+        // Set up Overall graph and labels.
+
+        double overallTotal = correctIncorrectOverall.getKey() + correctIncorrectOverall.getValue();
+        double overallWidthCorrect = 500 * (correctIncorrectOverall.getKey() / overallTotal);
+        Timeline overallCorrectAnim = new Timeline(
+                new KeyFrame(Duration.millis(800), new KeyValue(overallCorrect.widthProperty(), overallWidthCorrect, Interpolator.EASE_OUT)));
+        overallCorrectAnim.play();
+        overallCorrect.setWidth(overallWidthCorrect);
+        overallCorrect.setFill(Color.web("00b004"));
+        double overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
+        Timeline overallIncorrectAnim = new Timeline(
+                new KeyFrame(Duration.millis(800), new KeyValue(overallIncorrect.widthProperty(), overallWidthIncorrect, Interpolator.EASE_OUT)));
+        overallIncorrectAnim.play();
+        overallIncorrect.setWidth(overallWidthIncorrect);
+        overallIncorrect.setFill(Color.GRAY);
+        overallCorrectLabel.setText(correctIncorrectOverall.getKey() + " \ncorrect");
+        overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
+
+
+        displayClassAverage(env.getUserPageController().getTimePeriod());
+
+        // TutorStatsController statsController = statsLoader.getController();
+
+    }
+
+    public void createStudent(Environment env, String userName, String timePeriod) {
+
+        this.env = env;
+
+        updateProgressBarStudent(userName, "default");
+
+        Pair<Integer, Integer> correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTotalsForStudent(userName, "default", timePeriod);
 
         // Set up Overall graph and labels.
 
@@ -112,7 +145,7 @@ public class UserSummaryController {
 
         displayClassAverage(timePeriod);
 
-           // TutorStatsController statsController = statsLoader.getController();
+        // TutorStatsController statsController = statsLoader.getController();
 
     }
 
@@ -135,6 +168,26 @@ public class UserSummaryController {
         }
 
         highXp.setText(Integer.toString(maxXp - userXp) + "XP to level " + Integer.toString(userLevel + 1));
+    }
+
+    public void updateProgressBarStudent(String studentName, String studentProject) {
+        DataSnapshot currentProject = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + studentName + "/projects/" + studentProject);
+        int userXp = Integer.parseInt(currentProject.child("experience").getValue().toString());
+        int userLevel = Integer.parseInt(currentProject.child("level").getValue().toString());
+        int minXp = LevelCalculator.getRequiredExp(userLevel);
+        int maxXp = LevelCalculator.getRequiredExp(userLevel + 1);
+
+        float percentage = 100 * (userXp - minXp) / (maxXp - minXp);
+
+        if ((percentage / 100) <= 0) {
+            pbLevel.setProgress(0);
+        } else {
+            pbLevel.setProgress(percentage / 100);
+        }
+
+        highXp.setText(Integer.toString(maxXp - userXp) + "XP to level " + Integer.toString(userLevel + 1));
+
+
     }
 
     /**

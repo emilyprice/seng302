@@ -2,17 +2,11 @@ package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javafx.util.Pair;
 import seng302.Environment;
 import seng302.utility.TutorRecord;
+
+import java.util.*;
 
 /**
  * This class manages information relating to the display of tutor graphs.
@@ -199,6 +193,12 @@ public class TutorHandler {
 
 
         ref.getRef().child(String.valueOf(currentRecord.getDate().getTime())).setValue(currentRecord);
+    }
+
+    public Pair<Integer, Integer> getTotalsForStudent(String userName, String projectName, String timePeriod) {
+        DataSnapshot projectSnap = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + userName + "/projects/" + projectName);
+        return getTotalsForAllTutorsInProject(projectSnap, timePeriod);
+
     }
 
 

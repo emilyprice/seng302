@@ -15,7 +15,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import seng302.Environment;
-import seng302.Users.Student;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -163,7 +162,7 @@ public class TeacherPageController {
             //statsController = tutorStatsLoader.getController();
 
             //change to be the user that was clicked on
-            userSummaryController.create(env, new Student(userName, password, env), getTimePeriod());
+            userSummaryController.createStudent(env, userName, getTimePeriod());
 
         } catch (IOException e) {
             e.printStackTrace();
