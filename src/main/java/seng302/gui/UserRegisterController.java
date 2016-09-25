@@ -32,6 +32,12 @@ public class UserRegisterController {
     private JFXTextField txtUsername;
 
     @FXML
+    private JFXRadioButton studentRadioBtn;
+
+    @FXML
+    private JFXTextField txtClassRoomName;
+
+    @FXML
     private JFXPasswordField txtPasswordConfirm;
 
     @FXML
@@ -100,14 +106,16 @@ public class UserRegisterController {
 
         btnReturn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/back_32dp.png"))));
 
-        hbClassroom.setVisible(false);
-        hbClassroom.managedProperty().bind(hbClassroom.visibleProperty());
+        studentRadioBtn.setSelected(true);
+        txtClassRoomName.setVisible(false);
+
 
         accountType.selectedToggleProperty().addListener((ov, oldVal, newVal) -> {
             if(accountType.getSelectedToggle() != null){
                 System.out.println(((JFXRadioButton)accountType.getSelectedToggle()).textProperty());
                 String radioButtonText = ((JFXRadioButton)accountType.getSelectedToggle()).getText();
                 if(radioButtonText.equals("Student")){
+                    txtClassRoomName.setVisible(false);
                     hbClassroom.setVisible(true);
                     cbClassroom.getItems().clear();
                     for(DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()){
@@ -117,6 +125,7 @@ public class UserRegisterController {
                 }
                 else{
                     hbClassroom.setVisible(false);
+                    txtClassRoomName.setVisible(true);
                 }
                 hbClassroom.managedProperty().bind(hbClassroom.visibleProperty());
             }
@@ -254,7 +263,10 @@ public class UserRegisterController {
             else if(selectedType.equals("Teacher")){
                 //env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText()).setValue("test");
                 env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
+//                env.getFirebase().createClassRoomSnapshot(txtClassRoomName.getText(), true);
                 //TODO: add action for registering and logging in as a teacher.
+
+
             }
         }
 

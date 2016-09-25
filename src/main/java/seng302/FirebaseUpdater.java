@@ -26,6 +26,8 @@ public class FirebaseUpdater {
 
     DatabaseReference userRef;
 
+    DatabaseReference classroomRef;
+
 
 
     DataSnapshot userSnapshot;
@@ -123,6 +125,31 @@ public class FirebaseUpdater {
         userRef = firebase.child("classrooms/" + classroom + "/users/" + user);
         while (!done.get() && blocking);
     }
+
+//    public void createClassRoomSnapshot(String classroomName, Boolean blocking){
+//        System.out.println(classroomName);
+//
+//        final AtomicBoolean done = new AtomicBoolean(false);
+//
+//        firebase.child("classrooms/"+classroomName).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                //classroomSnapshot = dataSnapshot;
+//                done.set(true);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//
+//        });
+//
+//        classroomRef = firebase.child("classrooms/" + classroomName);
+//
+//        while (!done.get() && blocking);
+//    }
 
     private void createUserSnapshot(String address, Boolean blocking){
         final AtomicBoolean done = new AtomicBoolean(false);
