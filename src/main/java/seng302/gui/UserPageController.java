@@ -377,6 +377,7 @@ public class UserPageController {
         //Hbox to contain text box that allows user to change tempo
         HBox changeTempo = new HBox();
         JFXButton setTempo = new JFXButton("Set tempo");
+        setTempo.getStyleClass().add("primary");
 
         tempoInput.setPrefColumnCount(4); //setting col size (user can input 4 characters)
         changeTempo.getChildren().add(tempoInput);
@@ -408,13 +409,21 @@ public class UserPageController {
 
         Integer currentTempo = env.getPlayer().getTempo();
         tempoLabel.setText("The current tempo is set to " + currentTempo + " BPM");
-        tempoInput.setText(currentTempo.toString());
+        tempoInput.setText(((Integer)currentTempo).toString());
         tempoLabelBox.getChildren().add(tempoLabel);
 
         metronomePopOver.getChildren().add(tempoLabelBox);
         metronomePopOver.getChildren().add(metronome);
         metronomePopOver.getChildren().add(changeTempo);
         metronomePopOver.getChildren().add(metronomeButtons);
+
+        setTempo.setOnAction(event->{
+            if (Integer.valueOf(tempoInput.getText()) >= 20 && Integer.valueOf(tempoInput.getText()).intValue() <= 300) {
+                env.getPlayer().setTempo(Integer.valueOf(tempoInput.getText()).intValue());
+                tempoLabel.setText("The current tempo is set to " + tempoInput.getText() + " BPM");
+            }
+
+                });
 
 
 
