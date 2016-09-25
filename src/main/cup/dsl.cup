@@ -97,7 +97,7 @@ COMMAND_REDO, COMMAND_TWINKLE, COMMAND_CHORD, COMMAND_PLAY_CHORD,COMMAND_RHYTHM,
 COMMAND_INTERVAL_ENHARMONIC, COMMAND_SHOW_KEYSIGNATURE,COMMAND_SHOW_KEYSIGNATURE_NUM,
 COMMAND_SCALE_WITH_KEYSIG, COMMAND_FIND_CHORD, COMMAND_FIND_CHORD_ALL, COMMAND_QUALITY_OF,
 COMMAND_CHORD_FUNCTION, COMMAND_FUNCTION_OF, COMMAND_SHOW_CURRENT_INSTRUMENT,
-COMMAND_SHOW_ALL_INSTRUMENTS, COMMAND_SET_INSTRUMENT, COMMAND_GET_MODE, COMMAND_PARENT_OF;
+COMMAND_SHOW_ALL_INSTRUMENTS, COMMAND_SET_INSTRUMENT, COMMAND_GET_MODE, COMMAND_PARENT_OF, COMMAND_DELETE_MUSICAL_TERM;
 
 terminal String ATOM, NOTE, SCALE_TYPE, INVERSION_SPECIFIER,  DIRECTION, MIDINOTE, NUMBER, POSNUM,
 INTERVAL, PLAY_STYLE, SHARPSFLATS, RHYTHM_TYPE, CHORD_TYPE, SHARED_CHORD_AND_INTERVAL, ROMAN_NUMERALS;
@@ -176,6 +176,7 @@ command ::= COMMAND_HELP                                {: RESULT = new Help(); 
           | COMMAND_SET_INSTRUMENT instrument:s         {: RESULT = new InstrumentCommand(true, s); :}
           | COMMAND_GET_MODE scale:s NUMBER:i           {: RESULT = new Modes(s, i); :}
           | COMMAND_PARENT_OF scale:s                   {: RESULT = new Modes(s); :}
+          | COMMAND_DELETE_MUSICAL_TERM term:s          {: RESULT = new DeleteTermCommand(s); :}
 
 
 ;
@@ -291,6 +292,7 @@ keyword ::= COMMAND_HELP                                {: RESULT = "help"; :}
           | COMMAND_TWINKLE                             {: RESULT = "twinkle";:}
           | COMMAND_GET_MODE                            {: RESULT = "get mode"; :}
           | COMMAND_PARENT_OF                           {: RESULT = "parent of"; :}
+          | COMMAND_DELETE_MUSICAL_TERM                 {: RESULT = "delete musical term"; :}
 ;
 
 singleTerm ::= keyword:s {: RESULT = s;:}

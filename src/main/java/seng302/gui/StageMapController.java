@@ -17,7 +17,6 @@ import seng302.Users.Project;
 import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,7 +27,6 @@ import java.util.HashMap;
 public class StageMapController {
 
     public Project currentProject;
-
 
     @FXML
     private Button scaleRecognitionTutorButton;
@@ -212,7 +210,6 @@ public class StageMapController {
         generateConverted();
         generateDescriptions();
         visualiseLockedTutors();
-        System.out.println(unlockStatus);
     }
 
     /**
@@ -471,7 +468,6 @@ public class StageMapController {
     private void launchMajorModesTutor() {
         env.getRootController().getTutorFactory().openTutor("Scale Modes Tutor");
     }
-
 
 
 }

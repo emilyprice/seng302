@@ -77,10 +77,9 @@ public class UISkinnerController {
             lighterOrDarker = floatToRGBString(darkerRGB);
         }
 
-
         env.getThemeHandler().setTheme(baseRgb, lighterOrDarker);
         env.getUserHandler().getCurrentUser().saveProperties();
-
+        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
 
     }
 
