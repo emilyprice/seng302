@@ -13,10 +13,7 @@ import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -59,8 +56,10 @@ import javafx.scene.text.*;
 import javafx.util.Pair;
 import org.controlsfx.control.PopOver;
 import seng302.Environment;
+import seng302.MusicPlayer;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
+import seng302.MusicPlayer;
 
 import javax.swing.*;
 
@@ -131,6 +130,10 @@ public class UserPageController {
 
     private Environment env;
 
+    public Label tempoLabel = new Label();
+
+    public javafx.scene.control.TextField tempoInput = new javafx.scene.control.TextField();
+
 
     public void setEnvironment(Environment env) {
         this.env = env;
@@ -145,6 +148,7 @@ public class UserPageController {
     protected void load() {
         populateUserOptions();
         launchMetronomePopOver();
+        //tempoLabel = new Label();
 
 
 
@@ -358,26 +362,25 @@ public class UserPageController {
      *
      */
     @FXML
-    void launchMetronomePopOver() {
+    public void launchMetronomePopOver() {
 
         //Goes inside metronome popover
         VBox metronomePopOver = new VBox();
 
         //Hbox to contain label stating current BPM
         HBox tempoLabelBox = new HBox();
-        Label tempoLabel = new Label("The current tempo is __ BPM");
-        tempoLabelBox.getChildren().add(tempoLabel);
+
 
         //HBox to contain metronome
         HBox metronome = new HBox();
 
         //Hbox to contain text box that allows user to change tempo
         HBox changeTempo = new HBox();
-        Label setTempoLabel = new Label("Set tempo");
-        javafx.scene.control.TextField tempoInput = new javafx.scene.control.TextField();
+        JFXButton setTempo = new JFXButton("Set tempo");
+
         tempoInput.setPrefColumnCount(4); //setting col size (user can input 4 characters)
-        changeTempo.getChildren().add(setTempoLabel);
         changeTempo.getChildren().add(tempoInput);
+        changeTempo.getChildren().add(setTempo);
         changeTempo.setSpacing(10);
         changeTempo.setPadding(new Insets(10));
 
@@ -402,6 +405,11 @@ public class UserPageController {
         metronomeButtons.getChildren().add(stopBtn);
         metronomeButtons.setSpacing(10);
         metronomeButtons.setPadding(new Insets(10));
+
+        Integer currentTempo = env.getPlayer().getTempo();
+        tempoLabel.setText("The current tempo is set to " + currentTempo + " BPM");
+        tempoInput.setText(currentTempo.toString());
+        tempoLabelBox.getChildren().add(tempoLabel);
 
         metronomePopOver.getChildren().add(tempoLabelBox);
         metronomePopOver.getChildren().add(metronome);
