@@ -29,8 +29,6 @@ public abstract class User {
 
     Path userDirectory;
 
-
-
     DataSnapshot userSnapshot;
 
 
@@ -94,7 +92,6 @@ public abstract class User {
 
 
 
-
     /**
      * Updates the properties to be saved to firebase.
      */
@@ -126,7 +123,6 @@ public abstract class User {
     protected void createUserFiles() {
 
         env.getFirebase().getUserRef().child("properties");
-
 
     }
 

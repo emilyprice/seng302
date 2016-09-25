@@ -2,15 +2,13 @@
 
 package seng302.Users;
 
-import com.google.gson.Gson;
 
 import seng302.Environment;
 
 
-import java.util.HashMap;
-
 /**
- * Created by Jonty on 23-Sep-16.
+ * Handles functionality for representing and manipulating a teacher's information. Also handles saving
+ * and loading teachers. Inherits User, which handles the basic information a teacher shares with all users types.
  */
 
 
@@ -22,14 +20,12 @@ public class Teacher extends User {
         env.getFirebase().createTeacherSnapshot(userName, true);
         userSnapshot = env.getFirebase().getUserSnapshot();
 
-        //userDirectory = Paths.get("UserData/" + userName);
         this.userName = userName;
         this.userPassword = password;
         this.env = env;
-        //properties = new JSONObject();
 
         createUserFiles();
-        //loadBasicProperties();
+
         loadProperties();
         saveProperties();
 

@@ -28,9 +28,8 @@ public class Student extends User {
         this.userName = userName;
         this.userPassword = password;
         this.env = env;
-
         createUserFiles();
-        //loadBasicProperties();
+
         loadProperties();
         saveProperties();
         projectHandler = new ProjectHandler(env, userName);
@@ -38,13 +37,12 @@ public class Student extends User {
     }
 
 
-
-
+    /**
+     * Loads user properties, and any properties associated with students only.
+     */
     public void loadProperties() {
 
-
         super.loadProperties();
-
 
         if(properties == null) properties = new HashMap<String, Object>();
 
@@ -80,16 +78,10 @@ public class Student extends User {
         projectHandler = new ProjectHandler(env, userName);
     }
 
-    @Override
+
     public void updateProperties() {
+        super.updateProperties();
         Gson gson = new Gson();
-        properties.put("userName", userName);
-        properties.put("fullName", userFullName);
-        properties.put("password", this.userPassword);
-        properties.put("themePrimary", env.getThemeHandler().getPrimaryColour());
-        properties.put("themeSecondary", env.getThemeHandler().getSecondaryColour());
-        properties.put("firstName", this.userFirstName);
-        properties.put("lastName", this.userLastName);
         String musicalTermsJSON = gson.toJson(env.getMttDataManager().getTerms());
         properties.put("musicalTerms", musicalTermsJSON);
         String lastSignInJSON = gson.toJson(lastSignIn);
