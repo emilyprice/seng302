@@ -30,7 +30,12 @@ import java.util.HashMap;
  */
 public class UserImporter {
 
-    public static void importUser(Environment env, Window stage){
+    /**
+     * Imports locally stored user data, fo
+     * @param env
+     * @param stage
+     */
+    public static void importUser(Environment env, String classroom,  Window stage){
         DirectoryChooser dirChooser = new DirectoryChooser();
 
         dirChooser.setTitle("Select a project directory");
@@ -40,14 +45,11 @@ public class UserImporter {
 
         File folder = dirChooser.showDialog(stage);
 
-        if(validProjectFolder(folder)){
-            System.out.println("valid profile!!");
+        if(validUserFolder(folder)){
 
-            uploadUserProperties(env, folder);
+            uploadUserProperties(env, classroom, folder);
             uploadUserProjects(env, new File(folder.getPath()+"/Projects"));
         }
-
-
 
     }
 
@@ -57,7 +59,7 @@ public class UserImporter {
      * @param env
      * @param path
      */
-    public static void uploadUserProperties(Environment env, File path) {
+    public static void uploadUserProperties(Environment env, String classroom,  File path) {
 
         String userFirstName, userLastName, userName, themePrimary, themeSecondary,  userPassword;
         Date lastSignIn;
@@ -73,11 +75,9 @@ public class UserImporter {
 
         userName = (properties.get("userName")).toString();
 
-        env.getFirebase().createStudentSnapshot("test", userName, true);
+        env.getFirebase().createStudentSnapshot(classroom, userName, true);
         env.getFirebase().getUserRef().child("properties").updateChildren(properties);
-        //env.getFirebase().getUserRef().child("projects").updateChildren();
 
-//        projectHandler = new ProjectHandler(env, userName);
 
     }
 
@@ -89,10 +89,10 @@ public class UserImporter {
         JSONParser parser = new JSONParser();
 
         for(File projectFile : f.listFiles()){
-            System.out.println("Project file: " + projectFile.getName());
+
             if (projectFile.getName().endsWith(".json") && projectFile.getName().substring(0, projectFile.getName().length() - 5).equals(f.getName())) {
                 try{
-                    System.out.println(f.getPath()+"/"+projectFile.getName());
+
                     projectSettings = (JSONObject) parser.parse(new FileReader(f.getPath() + "/" + projectFile.getName()));
 
                 }catch(Exception e){
@@ -134,7 +134,6 @@ public class UserImporter {
 
         for (File f : projectsFolder.listFiles()) {
             if(f.isDirectory()){ //Is a project directory.
-                System.out.println("project directory found for" + f.getName());
                 uploadProjectData(env, f);
 
             }
@@ -145,14 +144,12 @@ public class UserImporter {
 
     }
 
-    private static void uploadProjectTutorData(){
-
-    }
-
-
-
-
-    private static Boolean validProjectFolder(File folder){
+    /**
+     * Determines whether a given folder is a valid User folder or not.
+     * @param folder
+     * @return
+     */
+    private static Boolean validUserFolder(File folder){
 
         if (folder != null) {
             if (folder.isDirectory()) {

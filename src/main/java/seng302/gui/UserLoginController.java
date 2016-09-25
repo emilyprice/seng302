@@ -256,7 +256,10 @@ public class UserLoginController {
 
     @FXML
     void importUser() {
-        UserImporter.importUser(this.env, btnLogin.getScene().getWindow());
+        if(classroomSelected()) {
+            UserImporter.importUser(this.env, ddClassroom.getValue().toString(),  btnLogin.getScene().getWindow());
+        }
+
     }
 
 
