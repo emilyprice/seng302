@@ -373,8 +373,10 @@ public class UserPageController {
 
         //Hbox to contain text box that allows user to change tempo
         HBox changeTempo = new HBox();
+        Label setTempoLabel = new Label("Set tempo");
         javafx.scene.control.TextField tempoInput = new javafx.scene.control.TextField();
         tempoInput.setPrefColumnCount(4); //setting col size (user can input 4 characters)
+        changeTempo.getChildren().add(setTempoLabel);
         changeTempo.getChildren().add(tempoInput);
 
         //HBox to contain buttons (Start, Pause, Resume, Stop)
