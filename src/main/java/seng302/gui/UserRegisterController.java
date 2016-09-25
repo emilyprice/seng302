@@ -282,6 +282,7 @@ public class UserRegisterController {
     }
 
 
+
     /**
      * Replaces the registration window with a log in window.
      */

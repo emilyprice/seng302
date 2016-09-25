@@ -85,7 +85,20 @@
     -fx-accent: derive({0}, 80%);
     -fx-border-style: none;
      -fx-border-width: 0;
+     -fx-background-color: blue;
 }
+
+#menuFileBar{
+    -fx-background-color: {0};
+    -fx-border-color: derive({0}, 90%);
+    -fx-border-width: 0px 0px 1px 0px;
+
+}
+#menuFileBar .label{
+    -fx-text-fill: {2};
+
+}
+
 
 .text-area {
     -fx-border-color: {0};

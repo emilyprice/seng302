@@ -302,13 +302,9 @@ public class Project {
         }
 
         try {
-            if (projectSettings.containsKey(propName) && !(projectSettings.get(propName).equals(currentValue))) {
-                env.getRootController().addUnsavedChangesIndicator();
-                saved = false;
-            } else if (!projectSettings.containsKey(propName)) {
-                env.getRootController().addUnsavedChangesIndicator();
-                saved = false;
-            }
+
+            env.getUserHandler().getCurrentUser().saveAll();
+
         } catch (Exception e) {
             System.err.println("Invalid property being checked for save");
         }

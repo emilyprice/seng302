@@ -89,6 +89,11 @@ public class Student extends User {
         properties.put("profilePicUrl", profilePicUrl);
     }
 
+    public void saveAll(){
+        saveProperties();
+        getProjectHandler().getCurrentProject().saveCurrentProject();
+    }
+
 
 
     /**
@@ -100,12 +105,13 @@ public class Student extends User {
             }.getType();
             if (!properties.get("musicalTerms").equals(new Gson().fromJson((String) properties.get("muscalTerms"), termsType))) {
                 env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + "*");
-                getProjectHandler().getCurrentProject().saved = false;
+               saveAll();
             }
         } else {
             if (env.getRootController() != null) {
                 env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + "*");
-                getProjectHandler().getCurrentProject().saved = false;
+                //getProjectHandler().getCurrentProject().saved = false;
+                saveAll();
             }
 
         }
