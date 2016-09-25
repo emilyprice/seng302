@@ -60,9 +60,14 @@ public class UserSettingsController {
 
     private UserHandler userHandler;
 
+    @FXML
+    private AnchorPane settingsPane;
+
 
     public void create(Environment env) {
         this.env = env;
+        //applyTheme();
+
         this.imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         env.getRootController().setHeader("User Settings");
         userHandler = env.getUserHandler();
@@ -79,7 +84,6 @@ public class UserSettingsController {
     @FXML
     public void initialize() {
         String css = this.getClass().getResource("/css/user_settings.css").toExternalForm();
-
 
         ImageView imgUpload = new ImageView(new Image(getClass().getResourceAsStream("/images/file_upload_white_36dp.png"), 25, 25, false, false));
 
@@ -142,6 +146,13 @@ public class UserSettingsController {
             txtFName.setEditable(false);
             btnEditFName.setText("Edit");
         }
+    }
+
+    private void applyTheme() {
+        //Apply user theme
+        env.getThemeHandler().setBaseNode(settingsPane);
+        String[] themeColours = env.getUserHandler().getCurrentUser().getThemeColours();
+        env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
     /**
