@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by Jonty on 25-Sep-16.
@@ -43,7 +44,7 @@ public class UserImporter {
             System.out.println("valid profile!!");
 
             uploadUserProperties(env, folder);
-            //uploadProjectProperties(env, folder);
+            uploadUserProjects(env, new File(folder.getPath()+"/Projects"));
         }
 
 
@@ -70,58 +71,7 @@ public class UserImporter {
 
         }
 
-        try {
-            Type dateType = new TypeToken<Date>() {
-            }.getType();
-            lastSignIn = gson.fromJson((String) properties.get("signInTime"), dateType);
-
-            if (lastSignIn == null) lastSignIn = new Date();
-        } catch (Exception e) {
-            lastSignIn = new Date();
-
-        }
-
-
-        userPassword = (properties.get("password")).toString();
-
-
-        //Load musical terms property
-
-        Type termsType = new TypeToken<ArrayList<Term>>() {
-        }.getType();
-        ArrayList<Term> terms = gson.fromJson((String) properties.get("musicalTerms"), termsType);
-
-
         userName = (properties.get("userName")).toString();
-
-
-
-        try {
-            userFirstName = (properties.get("firstName")).toString();
-        } catch (NullPointerException e) {
-            userFirstName = "";
-        }
-
-        try {
-            userLastName = (properties.get("lastName")).toString();
-        } catch (NullPointerException e) {
-            userLastName = "";
-        }
-
-        try {
-            //Theme
-            themePrimary = (properties.get("themePrimary")).toString();
-        } catch (NullPointerException e) {
-            themePrimary = "#1E88E5";
-        }
-
-        try {
-            //Theme
-            themeSecondary = (properties.get("themeSecondary")).toString();
-        } catch (NullPointerException e) {
-            themeSecondary = "white";
-        }
-
 
         env.getFirebase().createStudentSnapshot("test", userName, true);
         env.getFirebase().getUserRef().child("properties").updateChildren(properties);
@@ -132,6 +82,72 @@ public class UserImporter {
     }
 
 
+    private static void uploadProjectData(Environment env, File f){
+
+        HashMap<String, Object> tutorData = new HashMap<>();
+        JSONObject projectSettings = new JSONObject();
+        JSONParser parser = new JSONParser();
+
+        for(File projectFile : f.listFiles()){
+            System.out.println("Project file: " + projectFile.getName());
+            if (projectFile.getName().endsWith(".json") && projectFile.getName().substring(0, projectFile.getName().length() - 5).equals(f.getName())) {
+                try{
+                    System.out.println(f.getPath()+"/"+projectFile.getName());
+                    projectSettings = (JSONObject) parser.parse(new FileReader(f.getPath() + "/" + projectFile.getName()));
+
+                }catch(Exception e){
+                    System.err.println("Could not load the project properties for project: " + projectFile.getName());
+                }
+
+            }
+            else if(projectFile.getName().endsWith(".json")){
+                //Handle tutor data upload
+                try{
+                    JSONObject tutorRecords = (JSONObject) parser.parse(new FileReader(f.getPath() + "/" + projectFile.getName()));
+                    tutorData.put(projectFile.getName(), tutorRecords);
+
+                }catch(Exception e){
+                    System.err.println("Could not load the tutor properties for tutor: " + projectFile.getName());
+                }
+
+            }
+        }
+        for(String key : tutorData.keySet()){
+            projectSettings.put(key, tutorData.get(key));
+
+        }
+        env.getFirebase().getUserRef().child("projects/"+f.getName()).updateChildren(projectSettings);
+
+    }
+
+    /**
+     * Uploads the selected user's projects to firebase.
+     * @param env Environment
+     * @param projectsFolder the User -> Projects folder.
+     */
+    private static void uploadUserProjects(Environment env, File projectsFolder){
+
+
+        JSONParser parser = new JSONParser();
+
+        String path = projectsFolder.toString();
+
+        for (File f : projectsFolder.listFiles()) {
+            if(f.isDirectory()){ //Is a project directory.
+                System.out.println("project directory found for" + f.getName());
+                uploadProjectData(env, f);
+
+            }
+
+        }
+
+
+
+    }
+
+    private static void uploadProjectTutorData(){
+
+    }
 
 
 
