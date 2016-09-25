@@ -81,7 +81,8 @@ public class UserRegisterController {
     public void create(Environment env) {
         this.env = env;
 
-
+        studentRadioBtn.setSelected(true);
+        txtClassRoomName.setVisible(false);
 
     }
 
@@ -106,8 +107,7 @@ public class UserRegisterController {
 
         btnReturn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/back_32dp.png"))));
 
-        studentRadioBtn.setSelected(true);
-        txtClassRoomName.setVisible(false);
+
 
 
         accountType.selectedToggleProperty().addListener((ov, oldVal, newVal) -> {
@@ -263,7 +263,8 @@ public class UserRegisterController {
             else if(selectedType.equals("Teacher")){
                 //env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText()).setValue("test");
                 env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText(), txtClassRoomName.getText());
-//                env.getFirebase().createClassRoomSnapshot(txtClassRoomName.getText(), true);
+                env.getFirebase().getFirebase().child("classrooms/" + txtClassRoomName.getText()+"/users/").setValue("none");
+                //env.getFirebase().createClassRoomSnapshot(txtClassRoomName.getText(), true);
                 //TODO: add action for registering and logging in as a teacher.
 
 
