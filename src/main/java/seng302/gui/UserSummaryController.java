@@ -245,6 +245,24 @@ public class UserSummaryController {
         lockView.fitHeightProperty().setValue(40);
         lockView.fitWidthProperty().setValue(40);
 
+        VBox badgeBox = new VBox();
+        Label badgeName = new Label(b.name);
+        badgeName.setFont(javafx.scene.text.Font.font(16));
+        Label description = new Label(b.description);
+        ProgressBar progressBar = new ProgressBar();
+
+        try {
+            if (b.badgeLevels != null) {
+                progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
+            } else {
+                progressBar.setProgress(b.badgeProgress);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            progressBar.setProgress(b.badgeProgress);
+            b.currentBadgeType = 0;
+//            System.out.println("Badge "+b.name+" not found. "+b.c);
+        }
+
         ColorAdjust badgeEffect = new ColorAdjust();
         if (b.currentBadgeType == 0) {
             badgeEffect = this.blackout;
@@ -254,16 +272,7 @@ public class UserSummaryController {
         }
         bView.setEffect(badgeEffect);
 
-        VBox badgeBox = new VBox();
-        Label badgeName = new Label(b.name);
-        badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label description = new Label(b.description);
-        ProgressBar progressBar = new ProgressBar();
-        if (b.badgeLevels != null) {
-            progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
-        } else {
-            progressBar.setProgress(b.badgeProgress);
-        }
+
         badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);

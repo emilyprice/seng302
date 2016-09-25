@@ -414,17 +414,17 @@ public class TutorStatsController {
             badgeEffect = this.blackout;
             bView = lockView;
         } else if (b.currentBadgeType == 1) {
-            badgeEffect.setHue(-0.88);
-            badgeEffect.setSaturation(0.94);
-            badgeEffect.setBrightness(-0.25);
+            badgeEffect.setHue(-0.863);
+            badgeEffect.setSaturation(0.8);
+            badgeEffect.setBrightness(0.4);
         } else if (b.currentBadgeType == 2) {
             badgeEffect.setHue(0);
             badgeEffect.setSaturation(-1);
             badgeEffect.setBrightness(0.32);
         } else if ( b.currentBadgeType == 3) {
-            badgeEffect.setHue(-0.888);
+            badgeEffect.setHue(-0.687);
             badgeEffect.setSaturation(1);
-            badgeEffect.setBrightness(0.4);
+            badgeEffect.setBrightness(0.1);
         }
         rView.setEffect(badgeEffect);
         StackPane badgeStack = new StackPane(rView, bView);
