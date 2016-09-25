@@ -71,13 +71,12 @@ public class UserHandler {
 
                 if(recentClassrooms.containsKey(this.classroom)){
                     recentUsers = (ArrayList<String>) recentClassrooms.get(this.classroom);
-                    System.out.println("recent users");
-                    System.out.println(recentUsers);
+
 
 
                 }else{
                     //Classroom doesn't exist inside the classrooms hashmap
-                    System.out.println("classroom hasn't been added to recent users yet, adding it.");
+
                     recentUsers = new ArrayList<>();
                     recentClassrooms.put(classroom, recentUsers);
                 }

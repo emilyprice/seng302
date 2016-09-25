@@ -201,7 +201,7 @@ public class ProjectHandler {
         env.getFirebase().getUserSnapshot().child("projects").getChildren().forEach((k) -> {
             projects.add(k.getKey());
         });
-        System.out.println(projects);
+
 
         return projects;
 
