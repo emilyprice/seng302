@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
 import java.awt.*;
+import java.awt.TextField;
 import java.io.IOException;
 import java.awt.*;
 import java.awt.image.FilteredImageSource;
@@ -21,7 +22,7 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContextMenu;
+import javafx.scene.control.*;
 
 import javafx.geometry.*;
 import javafx.geometry.Insets;
@@ -30,14 +31,11 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.SepiaTone;
@@ -59,6 +57,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.util.Pair;
+import org.controlsfx.control.PopOver;
 import seng302.Environment;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
@@ -76,6 +75,16 @@ public class UserPageController {
 
     @FXML
     VBox summaryPage;
+
+    /*
+    metronome popover
+     */
+
+    private PopOver metronomePop;
+
+    @FXML
+    private Button metronomeBtn;
+
 
     @FXML
     SplitPane userView;
@@ -135,6 +144,8 @@ public class UserPageController {
      */
     protected void load() {
         populateUserOptions();
+        launchMetronomePopOver();
+
 
 
         imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
@@ -340,6 +351,83 @@ public class UserPageController {
 
 
     }
+
+    /**
+     * OnClick action for the UserPage metronome button.
+     * Opens a popover that contains the metronome
+     *
+     */
+    @FXML
+    void launchMetronomePopOver() {
+
+        //Goes inside metronome popover
+        VBox metronomePopOver = new VBox();
+
+        //Hbox to contain label stating current BPM
+        HBox tempoLabelBox = new HBox();
+        Label tempoLabel = new Label("The current tempo is __ BPM");
+        tempoLabelBox.getChildren().add(tempoLabel);
+
+        //HBox to contain metronome
+        HBox metronome = new HBox();
+
+        //Hbox to contain text box that allows user to change tempo
+        HBox changeTempo = new HBox();
+        javafx.scene.control.TextField tempoInput = new javafx.scene.control.TextField();
+        tempoInput.setPrefColumnCount(4); //setting col size (user can input 4 characters)
+        changeTempo.getChildren().add(tempoInput);
+
+        //HBox to contain buttons (Start, Pause, Resume, Stop)
+        HBox metronomeButtons = new HBox();
+
+
+        //Buttons
+        JFXButton startBtn = new JFXButton("Start");
+        startBtn.getStyleClass().add("primary");
+        JFXButton pauseBtn = new JFXButton("Pause");
+        pauseBtn.getStyleClass().add("primary");
+        JFXButton resumeBtn = new JFXButton("Resume");
+        resumeBtn.getStyleClass().add("primary");
+        JFXButton stopBtn = new JFXButton("Stop");
+        stopBtn.getStyleClass().add("primary");
+
+        metronomeButtons.getChildren().add(startBtn);
+        metronomeButtons.getChildren().add(pauseBtn);
+        metronomeButtons.getChildren().add(resumeBtn);
+        metronomeButtons.getChildren().add(stopBtn);
+        metronomeButtons.setSpacing(10);
+        metronomeButtons.setPadding(new Insets(10));
+
+        metronomePopOver.getChildren().add(tempoLabelBox);
+        metronomePopOver.getChildren().add(metronome);
+        metronomePopOver.getChildren().add(changeTempo);
+        metronomePopOver.getChildren().add(metronomeButtons);
+
+
+
+        // used the spacing etc from settings to see if it will come out nicely. Subject to change
+        metronomePopOver.setSpacing(10);
+        metronomePopOver.setPadding(new Insets(10));
+
+        //Declaring the popover
+        metronomePop = new PopOver(metronomePopOver);
+        metronomePop.setTitle("Metronome");
+    }
+
+    /**
+     * Hides and shows the metronome popover when the metronome button is selected
+     */
+    @FXML
+    private void toggleMetronomePopOver() {
+        if (metronomePop.isShowing()) {
+            metronomePop.hide();
+
+        } else {
+            metronomePop.show(metronomeBtn);
+        }
+    }
+
+
 
     /**
      * Displays the page containing summary information about the user's current project

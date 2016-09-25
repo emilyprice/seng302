@@ -518,9 +518,6 @@ public class KeyboardPaneController {
         displayScales.getChildren().add(startNoteKey);
         displayScales.getChildren().add(otherNoteKey);
 
-
-
-
         // used the spacing etc from settings to see if it will come out nicely. Subject to change
         displayScales.setSpacing(10);
         displayScales.setPadding(new Insets(10));
