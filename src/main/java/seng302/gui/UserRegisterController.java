@@ -108,7 +108,7 @@ public class UserRegisterController {
 
         accountType.selectedToggleProperty().addListener((ov, oldVal, newVal) -> {
             if(accountType.getSelectedToggle() != null){
-                System.out.println(((JFXRadioButton)accountType.getSelectedToggle()).textProperty());
+
                 String radioButtonText = ((JFXRadioButton)accountType.getSelectedToggle()).getText();
                 if(radioButtonText.equals("Student")){
                     hbClassroom.setVisible(true);

@@ -209,7 +209,6 @@ public class UserLoginController {
     @FXML
     void onClassroomChange() {
         classroomSelected();
-        System.out.println("in onClassroomChange" + ddClassroom.getValue().toString());
         env.getUserHandler().loadRecentUsers();
         displayRecentUsers();
 
@@ -300,12 +299,10 @@ public class UserLoginController {
 
         }
         else{
-            System.out.println("classroom doesn't exist");
+
             //Handle classroom doesn't exist
             passwordValidator.setMessage("Classroom doesn't exist.");
-//            txtClassroom.clear();
-//            txtClassroom.validate();
-//            txtClassroom.requestFocus();
+
         }
 
 

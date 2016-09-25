@@ -131,7 +131,7 @@ public class Project {
 
 
         DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/" + projectName);
-        System.out.println(projectSnapshot.getKey());
+
         projectSettings = (HashMap<String, Object>) projectSnapshot.getValue();
 
         int tempo;
@@ -242,12 +242,12 @@ public class Project {
             Type mapType = new TypeToken<HashMap<String, Boolean>>() {
             }.getType();
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
-            System.out.println(unlockMap);
+
             if(unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
             }
         }catch(Exception e){
-            System.out.println("failed to load stageMap");
+            System.err.println("failed to load stageMap");
         }
     }
 

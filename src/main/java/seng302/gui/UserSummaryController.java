@@ -146,7 +146,7 @@ public class UserSummaryController {
                 stageMap.getChildren().add(noteMap);
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
-                System.out.println(e.getStackTrace());
+
                 e.printStackTrace();
             }
 
@@ -169,7 +169,7 @@ public class UserSummaryController {
 
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
-                System.out.println(e.getStackTrace());
+
                 e.printStackTrace();
             }
         }
