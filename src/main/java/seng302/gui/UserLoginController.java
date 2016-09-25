@@ -24,6 +24,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.Environment;
+import seng302.utility.UserImporter;
 
 /**
  * Controller for the user login screen.
@@ -252,6 +253,12 @@ public class UserLoginController {
 
 
     }
+
+    @FXML
+    void importUser() {
+        UserImporter.importUser(this.env, btnLogin.getScene().getWindow());
+    }
+
 
     private void authenticate(DataSnapshot fbClass) {
         if (fbClass.exists()) {

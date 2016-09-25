@@ -182,7 +182,6 @@ public class TutorHandler {
     }
 
 
-
     /**
      * Saves the tutor records to disc.
      */
@@ -190,8 +189,6 @@ public class TutorHandler {
         DatabaseReference ref = env.getFirebase().getUserRef().child("projects/" +
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + tutorName);
         currentRecord.updateDate();
-
-
         ref.getRef().child(String.valueOf(currentRecord.getDate().getTime())).setValue(currentRecord);
     }
 

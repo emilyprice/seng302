@@ -29,7 +29,6 @@ public class FirebaseUpdater {
     DatabaseReference classroomRef;
 
 
-
     DataSnapshot userSnapshot;
 
     DataSnapshot classroomsSnapshot;
@@ -42,14 +41,13 @@ public class FirebaseUpdater {
     private Environment env;
 
 
-    public FirebaseUpdater(Environment env){
+    public FirebaseUpdater(Environment env) {
         this.env = env;
 
         initializeFirebase();
 
 
 //        DatabaseReference users = firebase.child("users/"+usernameInput.getText());
-
 
 
         firebase.child("classrooms").addValueEventListener(new ValueEventListener() {
@@ -71,15 +69,17 @@ public class FirebaseUpdater {
                 "api_secret", "nGNnDUmFxWEG_lPZoJQCKyfz7hw"));
     }
 
-    private void initializeFirebase(){
+    private void initializeFirebase() {
 
-        try{
+        try {
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setServiceAccount(new FileInputStream("Allegro-e09e379e137e.json")) //Allegro-e09e379e137e.json
                     .setDatabaseUrl("https://allegro-8ce55.firebaseio.com/")
                     .build();
             FirebaseApp.initializeApp(options);
-        }catch(FileNotFoundException fe){
+        } catch (IllegalStateException fe) {
+
+        } catch (FileNotFoundException e) {
 
         }
 
@@ -92,19 +92,19 @@ public class FirebaseUpdater {
     }
 
 
-    private void updateUserProperties(){
+    private void updateUserProperties() {
         System.out.println("update user properties called");
-        if(env.getUserHandler().getCurrentUser() != null){
+        if (env.getUserHandler().getCurrentUser() != null) {
             System.out.println("current user is not null!");
             env.getUserHandler().getCurrentUser().loadProperties();
         }
     }
 
-    private void createUserSnapshot(String classroom, String user, Boolean blocking){
+    private void createUserSnapshot(String classroom, String user, Boolean blocking) {
 
         final AtomicBoolean done = new AtomicBoolean(false);
 
-        firebase.child("classrooms/"+classroom+"/users/"+user).addValueEventListener(new ValueEventListener() {
+        firebase.child("classrooms/" + classroom + "/users/" + user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userSnapshot = dataSnapshot;
@@ -123,7 +123,7 @@ public class FirebaseUpdater {
         });
 
         userRef = firebase.child("classrooms/" + classroom + "/users/" + user);
-        while (!done.get() && blocking);
+        while (!done.get() && blocking) ;
     }
 
 //    public void createClassRoomSnapshot(String classroomName, Boolean blocking){
@@ -151,7 +151,7 @@ public class FirebaseUpdater {
 //        while (!done.get() && blocking);
 //    }
 
-    private void createUserSnapshot(String address, Boolean blocking){
+    private void createUserSnapshot(String address, Boolean blocking) {
         final AtomicBoolean done = new AtomicBoolean(false);
 
         firebase.child(address).addValueEventListener(new ValueEventListener() {
@@ -169,17 +169,17 @@ public class FirebaseUpdater {
 
         });
         userRef = firebase.child(address);
-        while (!done.get() && blocking);
+        while (!done.get() && blocking) ;
     }
 
-    public void createStudentSnapshot(String classroom, String user, Boolean blocking){
-        String address = "classrooms/"+classroom+"/users/"+user;
+    public void createStudentSnapshot(String classroom, String user, Boolean blocking) {
+        String address = "classrooms/" + classroom + "/users/" + user;
         createUserSnapshot(address, blocking);
 
     }
 
-    public void createTeacherSnapshot(String user, Boolean blocking){
-        String address = "teachers/"+user;
+    public void createTeacherSnapshot(String user, Boolean blocking) {
+        String address = "teachers/" + user;
         createUserSnapshot(address, blocking);
     }
 
