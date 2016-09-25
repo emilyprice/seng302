@@ -407,9 +407,7 @@ public class RootController implements Initializable {
             event.consume();
         });
 
-//        loginStage.setMinWidth(600);
-//        Double initialHeight = loginStage.getHeight();
-//        loginStage.setMinHeight(initialHeight);
+
 
         loginStage.show();
         UserLoginController userLoginController = loginLoader.getController();

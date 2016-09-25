@@ -232,6 +232,7 @@ public class UserLoginController {
 
     @FXML
     public void handleKeyPressed(KeyEvent event) {
+        System.out.println("key pressed handled!");
         if (event.getCode() == KeyCode.ENTER) {
             logIn();
         }
@@ -267,7 +268,18 @@ public class UserLoginController {
      * @param fbClass fireBase classrooms snapshot.
      */
     private void authenticate(DataSnapshot fbClass) {
-        if (fbClass.exists()) {
+
+        if(passwordInput.getLength() <= 0  && usernameInput.getLength() <= 0){
+            passwordValidator.setMessage("Please enter a username and password.");
+            passwordInput.clear();
+            passwordInput.validate();
+            usernameInput.requestFocus();
+
+        }
+        else if (fbClass.exists()) {
+
+
+
             DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
 
             if (userfb.exists()) {
@@ -289,7 +301,7 @@ public class UserLoginController {
                 }
             } else {
                 //User doesn't exist
-                passwordValidator.setMessage("Invalid username.");
+                passwordValidator.setMessage("User doesn't exist");
                 passwordInput.clear();
                 passwordInput.validate();
                 usernameInput.requestFocus();
@@ -300,6 +312,9 @@ public class UserLoginController {
 
             //Handle classroom doesn't exist
             passwordValidator.setMessage("Classroom doesn't exist.");
+            passwordInput.clear();
+            passwordInput.validate();
+            ddClassroom.requestFocus();
 
         }
 

@@ -8,7 +8,6 @@ import org.json.simple.parser.ParseException;
 import seng302.Environment;
 
 import java.io.*;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -223,8 +222,6 @@ public class UserHandler {
 
         this.env.getRootController().logOutUser();
         env.getFirebase().getFirebase().child("classrooms/"+classroom+"/users/"+username).removeValue();
-
-
 
 
     }

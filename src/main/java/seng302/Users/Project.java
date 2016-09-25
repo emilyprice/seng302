@@ -35,23 +35,17 @@ public class Project {
 
     ProjectHandler projectHandler;
 
-    // Levels variables, will be updated as the user gains experience
 
-    private Integer experience;
-    private Integer level;
+    private Integer experience, level;
 
     public String projectName;
 
-    boolean saved = true;
-
-    Environment env;
+    private Environment env;
     public TutorHandler tutorHandler;
 
-    private Boolean isCompetitiveMode;
+    private Boolean isCompetitiveMode, visualiserOn;
+    Boolean saved = true;
 
-    private Boolean visualiserOn;
-
-    public Boolean isUserMapData = true;
 
 
 
@@ -104,7 +98,6 @@ public class Project {
 
         projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
 
-        // User level for current project
         projectSettings.put("level", this.level);
         projectSettings.put("experience", this.experience);
 
@@ -352,14 +345,6 @@ public class Project {
     public boolean isSaved() {
         return saved;
     }
-
-    /*public Boolean isProject() {
-        return currentProjectPath != null;
-    }*/
-
-    /*public String getCurrentProjectPath() {
-        return currentProjectPath;
-    }*/
 
     public boolean getIsCompetitiveMode() {
         return isCompetitiveMode;
