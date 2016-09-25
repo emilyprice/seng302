@@ -41,7 +41,7 @@
                               </Label>
                            </children>
                         </StackPane>
-                              <StackPane fx:id="stageMap" HBox.hgrow="ALWAYS" />
+                              <StackPane fx:id="stageMap" />
                           </children>
                      <padding>
                         <Insets top="10.0" />
