@@ -2,6 +2,7 @@ package seng302;
 
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.AudioEvent;
+import be.tarsos.dsp.SilenceDetector;
 import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
@@ -27,7 +28,8 @@ public class MicrophoneInput implements PitchDetectionHandler {
     private ArrayList<Double> midiFrequencies = new ArrayList<>();
     private ArrayList<Double> detectedFrequencies = new ArrayList<>();
     private ArrayList<String> latestDetectedNotes = new ArrayList<>();
-    private double threshold;
+    private SilenceDetector silenceDetector;
+    private double threshold = -65.0;
 
     public MicrophoneInput() {
         this.mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
@@ -92,6 +94,9 @@ public class MicrophoneInput implements PitchDetectionHandler {
 
         // add a processor
         dispatcher.addAudioProcessor(new PitchProcessor(algo, sampleRate, bufferSize, this));
+        // add a silence detector, to detect the sound level (dB).
+        silenceDetector = new SilenceDetector(threshold, false);
+        dispatcher.addAudioProcessor(silenceDetector);
 
         new Thread(dispatcher, "Audio dispatching").start();
     }
@@ -133,8 +138,12 @@ public class MicrophoneInput implements PitchDetectionHandler {
 //            String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f, Approximated Note: %s )\n", timeStamp, pitch, probability, rms, estimatedNote);
 //            textArea.setText(textArea.getText() + message);
 //            textArea.positionCaret(textArea.getLength());
-            if (probability > 0.8) {
-                detectedFrequencies.add((double) pitch);
+            System.out.println(silenceDetector.currentSPL() + " " + pitch);
+            if (silenceDetector.currentSPL() > threshold) {
+                if (probability > 0.8) {
+                    System.out.println(silenceDetector.currentSPL() + " " + pitch + " is above");
+                    detectedFrequencies.add((double) pitch);
+                }
             }
         }
     }

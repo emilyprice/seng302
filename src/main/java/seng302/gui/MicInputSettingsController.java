@@ -21,6 +21,8 @@ import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -93,9 +95,10 @@ public class MicInputSettingsController {
             radio.setPadding(new Insets(5, 0, 5, 15));
             inputDevices.getChildren().add(radio);
         }
-        thresholdSlider.setOnDragDetected(new EventHandler<MouseEvent>() {
+        thresholdSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
-            public void handle(MouseEvent event) {
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                thresholdSlider.setValue(Math.round(thresholdSlider.getValue()));
                 thresholdText.setText(String.valueOf(thresholdSlider.getValue()));
                 microphoneInput.setThreshold(thresholdSlider.getValue());
             }
