@@ -42,8 +42,10 @@ public class BadgeManager {
      * @param overallBadges hashmap containing all other badges
      */
     public void replaceBadges(HashMap<String, ArrayList<Badge>> tutorBadgeMap, ArrayList<Badge> overallBadges){
-        this.tutorBadgeMap = tutorBadgeMap;
-        this.overallBadges = overallBadges;
+        if(!tutorBadgeMap.equals(null) && !overallBadges.equals(null)) {
+            this.tutorBadgeMap = tutorBadgeMap;
+            this.overallBadges = overallBadges;
+        }
     }
 
     /**
@@ -178,7 +180,6 @@ public class BadgeManager {
             Badge instrumentBadge = overallBadges.get(2);
             instrumentBadge.updateBadgeProgress(env, 1);
         }
-
     }
 
     /**
@@ -188,7 +189,6 @@ public class BadgeManager {
         if(!tutor100AllMap.containsValue(false)){
             overallBadges.get(1).updateBadgeProgress(env, 1);
         }
-
     }
 
     /**

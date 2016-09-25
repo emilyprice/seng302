@@ -208,16 +208,20 @@ public class UserSummaryController {
         lockView.fitWidthProperty().setValue(45);
         this.lockView = lockView;
 
-        for (Object tutor : tutorBadgeMap.keySet()) {
-            for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {
-                tutorBadges.add((Badge) b);
+        try {
+            for (Object tutor : tutorBadgeMap.keySet()) {
+                for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {
+                    tutorBadges.add((Badge) b);
+                }
             }
+            Collections.sort(generalBadges, new badgeComparator());
+            generalBadges.forEach(this::addBadgeToGrid);
+            Collections.sort(tutorBadges, new badgeComparator());
+            tutorBadges.forEach(this::addTutorBadgeToGrid);
+        } catch (NullPointerException e) {
+           // Retrieving badges from json file
         }
 
-        Collections.sort(generalBadges, new badgeComparator());
-        generalBadges.forEach(this::addBadgeToGrid);
-        Collections.sort(tutorBadges, new badgeComparator());
-        tutorBadges.forEach(this::addTutorBadgeToGrid);
     }
 
     /**
@@ -252,15 +256,9 @@ public class UserSummaryController {
         ProgressBar progressBar = new ProgressBar();
 
         try {
-            if (b.badgeLevels != null) {
-                progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
-            } else {
-                progressBar.setProgress(b.badgeProgress);
-            }
-        } catch (IndexOutOfBoundsException e) {
+            progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
+        } catch (NullPointerException n) {
             progressBar.setProgress(b.badgeProgress);
-            b.currentBadgeType = 0;
-//            System.out.println("Badge "+b.name+" not found. "+b.c);
         }
 
         ColorAdjust badgeEffect = new ColorAdjust();
