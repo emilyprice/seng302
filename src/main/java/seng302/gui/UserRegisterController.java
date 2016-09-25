@@ -1,17 +1,17 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.jfoenix.controls.*;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXRadioButton;
+import com.jfoenix.controls.JFXTextField;
 
 import java.io.IOException;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -290,6 +290,7 @@ public class UserRegisterController {
 
                 env.getUserHandler().getCurrentUser().setUserFirstName(txtfname.getText());
                 env.getUserHandler().getCurrentUser().setUserLastName(txtlname.getText());
+                env.getUserHandler().getCurrentUser().saveProperties();
 
                 ((Stage) btnRegister.getScene().getWindow()).close();
                 env.getRootController().showWindow(true);
