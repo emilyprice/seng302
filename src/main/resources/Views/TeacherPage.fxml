@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import java.lang.String?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <AnchorPane id="userPage" fx:id="teacherPage" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.TeacherPageController">
    <children>
       <SplitPane id="userSplitPane" fx:id="userView" dividerPositions="0.19598765432098766" layoutX="10.0" prefHeight="430.0" prefWidth="650.0" style="-fx-padding: 0; -fx-border-style: none;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -23,18 +30,24 @@
                                     </ImageView>
                               <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <!--<JFXButton fx:id="btnSettings" buttonType="RAISED" ellipsisString="" graphicTextGap="0.0" onMouseClicked="#openSettings" prefHeight="29.0" prefWidth="35.0" style="-fx-background-color: white; -fx-padding: 0; -fx-border-radius: 35; -fx-background-radius: 20;">-->
-                                       <!--<graphic>-->
-                                          <!--<ImageView fitHeight="36.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" styleClass="settingsGear">-->
-                                             <!--<image>-->
-                                                <!--<Image url="@../images/settings_gear.png" />-->
-                                             <!--</image>-->
-                                          <!--</ImageView>-->
-                                       <!--</graphic>-->
-                                       <!--<HBox.margin>-->
-                                          <!--<Insets bottom="5.0" right="20.0" />-->
-                                       <!--</HBox.margin>-->
-                                    <!--</JFXButton>-->
+                                    <JFXButton fx:id="btnSettings" buttonType="RAISED"
+                                               ellipsisString="" graphicTextGap="0.0"
+                                               onMouseClicked="#openSettings" prefHeight="29.0"
+                                               prefWidth="35.0"
+                                               style="-fx-background-color: white; -fx-padding: 0; -fx-border-radius: 35; -fx-background-radius: 20;">
+                                       <graphic>
+                                          <ImageView fitHeight="36.0" fitWidth="35.0"
+                                                     pickOnBounds="true" preserveRatio="true"
+                                                     styleClass="settingsGear">
+                                             <image>
+                                                <Image url="@../images/settings_gear.png"/>
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" right="20.0"/>
+                                       </HBox.margin>
+                                    </JFXButton>
                                  </children>
                               </HBox>
                            </children>

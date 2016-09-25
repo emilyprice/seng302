@@ -1,19 +1,27 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import seng302.Environment;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class TeacherPageController {
 
@@ -238,5 +246,10 @@ public class TeacherPageController {
 
     public String getTimePeriod() {
         return convert.toString(timeSlider.getValue());
+    }
+
+    @FXML
+    public void openSettings(MouseEvent e) {
+        System.out.println("opening teacher settings");
     }
 }
