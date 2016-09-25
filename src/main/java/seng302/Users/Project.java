@@ -261,32 +261,46 @@ public class Project {
 
 
 
-    }
+
 
         //badges
         //overallBadges
-        ArrayList<Badge> overallBadges;
-        Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
-        }.getType();
-        overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
+        try {
+            ArrayList<Badge> overallBadges;
+            Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
+            }.getType();
+            overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
 
-        //tutorBadges
-        HashMap<String, ArrayList<Badge>> tutorBadges;
-        Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
-        }.getType();
-        tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
 
-        badgeManager.replaceBadges(tutorBadges, overallBadges);
+            //tutorBadges
+
+            HashMap<String, ArrayList<Badge>> tutorBadges;
+            Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
+            }.getType();
+            tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
+            if(tutorBadges != null && overallBadges != null){
+                badgeManager.replaceBadges(tutorBadges, overallBadges);
+            }
+
+        }catch(Exception e){
+            System.err.println("failed to import badge data");
+        }
 
         //100tutorMap
-        HashMap<String, Boolean> tutor100Map;
-        Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
-        }.getType();
-        tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+        try {
+            HashMap<String, Boolean> tutor100Map;
+            Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
+            }.getType();
+            tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+            if(tutor100Map != null) {
 
-        badgeManager.replaceTutor100AllMap(tutor100Map);
+                badgeManager.replaceTutor100AllMap(tutor100Map);
+            }
 
-        env.getTranscriptManager().unsavedChanges = false;
+            env.getTranscriptManager().unsavedChanges = false;
+        }catch(Exception e){
+            System.err.println("failed to import 100 tutor map");
+        }
     }
 
 
