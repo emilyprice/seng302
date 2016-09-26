@@ -393,49 +393,29 @@ public class UserPageController {
         changeTempo.setPadding(new Insets(10));
 
 
-        //HBox to contain buttons (Start, Pause, Resume, Stop)
-        HBox metronomeButtons = new HBox();
 
 
-        //Buttons
-        JFXButton startBtn = new JFXButton("Start");
-        startBtn.getStyleClass().add("primary");
-        startBtn.setOnAction(e -> anim.playFromStart());
-        JFXButton pauseBtn = new JFXButton("Pause");
-        pauseBtn.getStyleClass().add("primary");
-        pauseBtn.setOnAction(e -> anim.pause());
-        JFXButton resumeBtn = new JFXButton("Resume");
-        resumeBtn.getStyleClass().add("primary");
-        resumeBtn.setOnAction(e -> anim.play());
-        JFXButton stopBtn = new JFXButton("Stop");
-        stopBtn.getStyleClass().add("primary");
-        stopBtn.setOnAction(e -> anim.stop());
 
-        metronomeButtons.getChildren().add(startBtn);
-        metronomeButtons.getChildren().add(pauseBtn);
-        metronomeButtons.getChildren().add(resumeBtn);
-        metronomeButtons.getChildren().add(stopBtn);
-        metronomeButtons.setSpacing(10);
-        metronomeButtons.setPadding(new Insets(10));
 
         Integer currentTempo = env.getPlayer().getTempo();
         tempoLabel.setText("The current tempo is set to " + currentTempo + " BPM");
         tempoInput.setText(((Integer)currentTempo).toString());
         tempoLabelBox.getChildren().add(tempoLabel);
 
-        //Stage metronomeAnimation = new Stage();
+
         metronome.getChildren().add(metronomeAnimation());
 
 
         metronomeVBox.getChildren().add(tempoLabelBox);
         metronomeVBox.getChildren().add(metronome);
         metronomeVBox.getChildren().add(changeTempo);
-        metronomeVBox.getChildren().add(metronomeButtons);
 
         setTempo.setOnAction(event->{
-            if (Integer.valueOf(tempoInput.getText()) >= 20 && Integer.valueOf(tempoInput.getText()).intValue() <= 300) {
-                env.getPlayer().setTempo(Integer.valueOf(tempoInput.getText()).intValue());
+            if (Integer.valueOf(tempoInput.getText()) >= 20 && Integer.valueOf(tempoInput.getText()) <= 300) {
+                env.getPlayer().setTempo(Integer.valueOf(tempoInput.getText()));
                 tempoLabel.setText("The current tempo is set to " + tempoInput.getText() + " BPM");
+                anim.setDuration(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000));
+                anim.playFromStart();
             }
 
                 });
@@ -450,33 +430,30 @@ public class UserPageController {
         metronomePop.setTitle("Metronome");
     }
 
-//
+
+
     private AnchorPane metronomeAnimation() {
         AnchorPane animationPane = new AnchorPane(); //pane to contain animation
-        animationPane.setPrefSize(200,300);
-        animationPane.setMinSize(200,300);
+        animationPane.setPrefSize(200,50);
+        animationPane.setMinSize(100, 50);
         Circle ball = new Circle(); //bouncing ball for metronome
-        ball.setCenterX(100);
-        ball.setCenterY(50);
+        ball.getStyleClass().add("primary"); //make the ball match the theme
+
+        ball.setCenterX(20);
+        ball.setCenterY(25);
         ball.setRadius(4);
 
-        anim = new TranslateTransition();
-        anim.setDuration(Duration.INDEFINITE);
-        anim.setNode(ball);
-        anim.setFromY(0);
-        anim.setToY(200);
+        anim = new TranslateTransition(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000), ball);
+//        anim.setDuration(Duration.INDEFINITE);
+//        anim.setNode(ball);
+        anim.setFromX(20);
+        anim.setToX(200);
         anim.setInterpolator(Interpolator.LINEAR);
         anim.setAutoReverse(true);
         anim.setCycleCount(Timeline.INDEFINITE);
 
-
+        anim.play();
         animationPane.getChildren().add(ball);
-
-
-
-//        primaryStage.setTitle("Hello World!");
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
 
         return animationPane;
     }
