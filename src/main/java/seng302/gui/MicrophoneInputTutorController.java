@@ -1,9 +1,14 @@
 package seng302.gui;
 
+import com.jfoenix.controls.JFXButton;
+
 import org.controlsfx.control.RangeSlider;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -229,14 +234,16 @@ public class MicrophoneInputTutorController extends TutorController {
     /**
      * Constructs the question panels.
      */
-    public HBox generateQuestionPane(String midi) {
+    public HBox generateQuestionPane(String noteMidi) {
 
+        Label noteLabel = new Label(Note.lookup(noteMidi).getNote());
+//        noteLabel.setSi
         final HBox rowPane = new HBox();
-//        formatQuestionRow(rowPane);
+        formatQuestionRow(rowPane);
 ////        final String midiOne = midis.getKey().toString();
 ////        final String midiTwo = midis.getValue().toString();
-////        final Label correctAnswer = correctAnswer(getAnswer(Note.lookup(midiOne), Note.lookup(midiTwo)));
-//
+        final Note correctAnswer = Note.lookup(noteMidi);
+
 //        ToggleGroup group = new ToggleGroup();
 //        ToggleButton higher = new ToggleButton("Higher");
 //        Image imageUp = new Image(getClass().getResourceAsStream("/images/up-arrow.png"), 20, 20, true, true);
@@ -253,39 +260,25 @@ public class MicrophoneInputTutorController extends TutorController {
 //        ToggleButton skip = new ToggleButton("Skip");
 //        styleSkipToggleButton(skip);
 //        skip.setToggleGroup(group);
-//
-//        higher.setOnAction(event -> {
+
+        JFXButton record = new JFXButton("Record");
+
+        record.setOnAction(event -> {
+            // TODO microphone input
+            try {
+                env.getMicrophoneInput().startRecording();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            }
 //            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
 //            if (responseValue == 0) {
 //                correctAnswer.setVisible(true);
 //            }
-//
-//
-//        });
-//
-//        lower.setOnAction(event -> {
-//            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
-//            if (responseValue == 0) {
-//                correctAnswer.setVisible(true);
-//            }
-//        });
-//
-//        same.setOnAction(event -> {
-//            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
-//            if (responseValue == 0) {
-//                correctAnswer.setVisible(true);
-//            }
-//        });
-//
-//
-//        skip.setOnAction(event -> {
-//            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
-//            if (responseValue == 0) {
-//                correctAnswer.setVisible(true);
-//            }
-//        });
-//
-//
+        });
+
+
 //        Button playBtn = new Button();
 //        stylePlayButton(playBtn);
 //
@@ -297,21 +290,26 @@ public class MicrophoneInputTutorController extends TutorController {
 //            notes.add(note2);
 //            env.getPlayer().playNotes(notes, 48);
 //        });
-//
-//        if (isCompMode) {
-//            skip.setVisible(false);
-//            skip.setManaged(false);
-//        }
-//
-//        rowPane.getChildren().add(playBtn);
-//        rowPane.getChildren().add(higher);
-//        rowPane.getChildren().add(same);
-//        rowPane.getChildren().add(lower);
-//        rowPane.getChildren().add(skip);
-//        rowPane.getChildren().add(correctAnswer);
-//
-//        rowPane.prefWidthProperty().bind(paneQuestions.prefWidthProperty());
-//
+        JFXButton skip = new JFXButton("Skip");
+
+        skip.setOnAction(event -> {
+//            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
+//            if (responseValue == 0) {
+//                correctAnswer.setVisible(true);
+//            }
+        });
+
+        if (isCompMode) {
+            skip.setVisible(false);
+            skip.setManaged(false);
+        }
+
+        rowPane.getChildren().add(noteLabel);
+        rowPane.getChildren().add(record);
+        rowPane.getChildren().add(skip);
+
+        rowPane.prefWidthProperty().bind(paneQuestions.prefWidthProperty());
+
         return rowPane;
     }
 
