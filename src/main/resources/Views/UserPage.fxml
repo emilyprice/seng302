@@ -7,7 +7,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -119,24 +118,8 @@
                             </children>
                         </HBox>
                         <JFXListView fx:id="listView" maxHeight="1.7976931348623157E308"
-                                     prefHeight="455.0" style="-fx-border-width: 0;"
+                                     prefHeight="700.0" style="-fx-border-width: 0;"
                                      styleClass="listView"/>
-                        <Label styleClass="primaryText" text="Time Range:">
-                            <VBox.margin>
-                                <Insets bottom="10.0" left="10.0" top="10.0"/>
-                            </VBox.margin>
-                        </Label>
-                        <Slider fx:id="timeSlider" blockIncrement="1.0" majorTickUnit="1.0"
-                                max="5.0" minHeight="100" minorTickCount="0" orientation="VERTICAL"
-                                showTickLabels="true" showTickMarks="true" snapToTicks="true"
-                                styleClass="timeSlider" value="5.0" VBox.vgrow="ALWAYS">
-                            <VBox.margin>
-                                <Insets bottom="10.0"/>
-                            </VBox.margin>
-                            <padding>
-                                <Insets left="20.0"/>
-                            </padding>
-                        </Slider>
                     </children>
                     <styleClass>
                         <String fx:value="userPagePrimary"/>

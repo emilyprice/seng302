@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
@@ -66,7 +68,6 @@ public class UserPageController {
     @FXML
     ScrollPane currentPage;
 
-    @FXML
     private Slider timeSlider;
 
     StringConverter convert;
@@ -89,11 +90,13 @@ public class UserPageController {
 
     private Environment env;
 
+    private UserSummaryController summaryController;
+
 
     public void setEnvironment(Environment env) {
         this.env = env;
         this.env.setUserPageController(this);
-        setupTimeSlider();
+        //setupTimeSlider();
     }
 
 
@@ -208,7 +211,23 @@ public class UserPageController {
      */
     private void setupTimeSlider() {
         timePopover = new PopOver();
-        timePopover.setContentNode(timeSlider);
+        timePopover.setTitle("Time Range");
+        timeSlider = new Slider(0, 5, 5);
+        timeSlider.setShowTickLabels(true);
+        timeSlider.setMajorTickUnit(1.0);
+        timeSlider.setShowTickMarks(true);
+        timeSlider.minorTickCountProperty().setValue(0);
+        timeSlider.snapToTicksProperty().setValue(true);
+        timeSlider.blockIncrementProperty().setValue(1.0);
+        timeSlider.setOrientation(Orientation.VERTICAL);
+        VBox timeContent = new VBox();
+        timeContent.setPadding(new Insets(20));
+        timeContent.setSpacing(10);
+        Label timeLabel = new Label("Adjust the time range displayed on the graphs:");
+        timeContent.getChildren().add(timeLabel);
+        timeContent.getChildren().add(timeSlider);
+        timePopover.setContentNode(timeContent);
+
         timeSlider.setMaxWidth(200);
 
         convert = new StringConverter<Double>() {
@@ -269,7 +288,11 @@ public class UserPageController {
      * @param timePeriod The time period to display data from in the summary stats graphs
      */
     private void updateGraphs(String timePeriod) {
-        statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
+        if (env.getRootController().getHeader().equals("Summary")) {
+            summaryController.updateGraphs();
+        } else {
+            statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
+        }
     }
 
     /**
@@ -317,7 +340,7 @@ public class UserPageController {
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
             AnchorPane.setRightAnchor(summaryPage, 0.0);
 
-            UserSummaryController summaryController = summaryLoader.getController();
+            summaryController = summaryLoader.getController();
             summaryController.create(env);
             summaryController.loadStageMap();
 
