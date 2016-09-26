@@ -30,12 +30,12 @@ import java.util.HashMap;
 
 import javax.sound.midi.Instrument;
 
-import seng302.data.Badge;
-import seng302.managers.BadgeManager;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import seng302.Environment;
+import seng302.data.Badge;
+import seng302.managers.BadgeManager;
 import seng302.utility.InstrumentUtility;
 import seng302.utility.LevelCalculator;
 import seng302.utility.OutputTuple;
@@ -481,7 +481,6 @@ public class Project {
         // Increases user levels one by one until the user cannot level up any further
         while (LevelCalculator.isLevelUp(level, experience)) {
             level += 1;
-            env.getRootController().updateLevelBadge();
             Image image = new Image(getClass().getResourceAsStream("/images/arrow.png"), 110, 75, true, true);
             Notifications.create()
                     .title("Level Up")

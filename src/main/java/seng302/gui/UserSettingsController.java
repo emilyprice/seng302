@@ -120,7 +120,6 @@ public class UserSettingsController {
             FileHandler.copyFolder(file, filePath.toFile());
             userHandler.getCurrentUser().setUserPicture(filePath);
             imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
-            env.getRootController().updateImage();
         } catch (Exception e) {
             e.printStackTrace();
 
