@@ -139,8 +139,7 @@ public class UserLoginController {
     public void displayRecentUsers() {
         recentUsersHbox.getChildren().clear();
         for (String user : env.getUserHandler().getRecentUserNames()) {
-            //name = user.getUserName();
-            //Image image = user.getUserPicture();
+
             try {
                 String dpUrl = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + user + "/properties/profilePicUrl").getValue().toString();
                 Image img = new Image(dpUrl);
@@ -162,7 +161,6 @@ public class UserLoginController {
     @FXML
     protected void register() {
 
-        //if(classroomSelected()){
         FXMLLoader loader1 = new FXMLLoader();
         loader1.setLocation(getClass().getResource("/Views/UserRegistration.fxml"));
 
@@ -172,44 +170,49 @@ public class UserLoginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Scene scene1 = new Scene(root1);
-        scene1.getStylesheets().addAll(this.getClass().getResource("/css/style.css").toExternalForm());
 
         Stage registerStage = (Stage) btnLogin.getScene().getWindow();
 
         registerStage.setTitle("Register new user");
         registerStage.setScene(scene1);
 
+
+
         registerStage.setOnCloseRequest(event -> {
             System.exit(0);
             event.consume();
         });
 
-        registerStage.setMinWidth(600);
-        Double initialHeight = registerStage.getHeight();
-        registerStage.setMinHeight(initialHeight);
-
         registerStage.show();
         UserRegisterController userRegisterController = loader1.getController();
+
         userRegisterController.create(env);
-        // }
+
 
 
     }
 
+
+    /**
+     * OnAction handler for the classroom dropdown.
+     */
     @FXML
     void onClassroomChange() {
         classroomSelected();
-        System.out.println("in onClassroomChange" + ddClassroom.getValue().toString());
         env.getUserHandler().loadRecentUsers();
         displayRecentUsers();
 
     }
 
 
-    private Boolean classroomSelected() {
-        if (ddClassroom.getValue() != null) {
-
+    /**
+     *  Checks if a classroom is selected, and modifies the styling of the classroom hBox to alert the user.
+     * @return classroom selected.
+     */
+    private Boolean classroomSelected(){
+        if(ddClassroom.getValue() != null){
 
             hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: rgba(255, 255, 255, 1)");
 
@@ -228,6 +231,7 @@ public class UserLoginController {
 
     @FXML
     public void handleKeyPressed(KeyEvent event) {
+        System.out.println("key pressed handled!");
         if (event.getCode() == KeyCode.ENTER) {
             logIn();
         }
@@ -252,11 +256,75 @@ public class UserLoginController {
 
     }
 
+    /**
+     *  Imports a user from local files, to allow compatibility with previous versions.
+     */
     @FXML
     void importUser() {
-        UserImporter.importUser(this.env, btnLogin.getScene().getWindow());
+        if(classroomSelected()) {
+            UserImporter.importUser(this.env, ddClassroom.getValue().toString(),  btnLogin.getScene().getWindow());
+        }
+
     }
 
+
+    /**
+     * Authenticates a user against the login screen username/password inputs.
+     * @param fbClass fireBase classrooms snapshot.
+     */
+    private void authenticate(DataSnapshot fbClass) {
+
+        if(passwordInput.getLength() <= 0  && usernameInput.getLength() <= 0){
+            passwordValidator.setMessage("Please enter a username and password.");
+            passwordInput.clear();
+            passwordInput.validate();
+            usernameInput.requestFocus();
+
+        }
+        else if (fbClass.exists()) {
+
+
+
+            DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
+
+            if (userfb.exists()) {
+                //User exists
+                env.getUserHandler().setClassRoom(ddClassroom.getValue().toString());
+                String pass = userfb.child("/properties/password").getValue().toString();
+
+                if (pass.equals(passwordInput.getText())) {
+                    env.getUserHandler().setCurrentUser(usernameInput.getText(), ddClassroom.getValue().toString(), passwordInput.getText());
+                    env.getUserHandler().removeCurrentTeacher();
+                    Stage stage = (Stage) btnLogin.getScene().getWindow();
+                    stage.close();
+                    env.getRootController().showWindow(true);
+                } else {
+                    passwordValidator.setMessage("Invalid password.");
+                    passwordInput.clear();
+                    passwordInput.validate();
+                    passwordInput.requestFocus();
+                }
+            } else {
+                //User doesn't exist
+                passwordValidator.setMessage("User doesn't exist");
+                passwordInput.clear();
+                passwordInput.validate();
+                usernameInput.requestFocus();
+            }
+
+        }
+        else{
+
+            //Handle classroom doesn't exist
+            passwordValidator.setMessage("Classroom doesn't exist.");
+            passwordInput.clear();
+            passwordInput.validate();
+            ddClassroom.requestFocus();
+
+        }
+
+
+    }
 
     private boolean authenticateTeacher() {
         DataSnapshot teacher = env.getFirebase().getTeacherSnapshot().child(usernameInput.getText());
@@ -291,47 +359,6 @@ public class UserLoginController {
             usernameInput.requestFocus();
         }
         return false;
-
-    }
-
-    private void authenticate(DataSnapshot fbClass) {
-        if (fbClass.exists()) {
-            DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
-
-            if (userfb.exists()) {
-                //User exists
-                env.getUserHandler().setClassRoom(ddClassroom.getValue().toString());
-                String pass = userfb.child("/properties/password").getValue().toString();
-
-                if (pass.equals(passwordInput.getText())) {
-                    env.getUserHandler().setCurrentUser(usernameInput.getText(), ddClassroom.getValue().toString(), passwordInput.getText());
-                    env.getUserHandler().removeCurrentTeacher();
-                    Stage stage = (Stage) btnLogin.getScene().getWindow();
-                    stage.close();
-                    env.getRootController().showWindow(true);
-                } else {
-                    passwordValidator.setMessage("Invalid password.");
-                    passwordInput.clear();
-                    passwordInput.validate();
-                    passwordInput.requestFocus();
-                }
-            } else {
-                //User doesn't exist
-                passwordValidator.setMessage("Invalid username.");
-                passwordInput.clear();
-                passwordInput.validate();
-                usernameInput.requestFocus();
-            }
-
-        } else {
-            System.out.println("classroom doesn't exist");
-            //Handle classroom doesn't exist
-            passwordValidator.setMessage("Classroom doesn't exist.");
-//            txtClassroom.clear();
-//            txtClassroom.validate();
-//            txtClassroom.requestFocus();
-        }
-
 
     }
 

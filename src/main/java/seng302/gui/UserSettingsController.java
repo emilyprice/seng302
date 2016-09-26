@@ -194,7 +194,7 @@ public class UserSettingsController {
 
             ((JFXButton) modal.lookup("#btnDelete")).
                     setOnAction((event) -> {
-                        env.getUserHandler().deleteUser(env.getUserHandler().getCurrentUser().getUserName());
+                        env.getUserHandler().deleteUser(env.getUserHandler().getClassRoom(),env.getUserHandler().getCurrentUser().getUserName());
                         popup.close();
                     });
 

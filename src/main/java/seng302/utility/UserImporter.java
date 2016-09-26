@@ -23,13 +23,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
- * Created by Jonty on 25-Sep-16.
+ * Utility class used to import local user profiles from previous versions of the application before cloud storage.
  */
 public class UserImporter {
 
-    public static void importUser(Environment env, Window stage){
+    /**
+     * Imports locally stored user data, fo
+     * @param env
+     * @param stage
+     */
+    public static void importUser(Environment env, String classroom,  Window stage){
         DirectoryChooser dirChooser = new DirectoryChooser();
 
         dirChooser.setTitle("Select a project directory");
@@ -39,24 +45,28 @@ public class UserImporter {
 
         File folder = dirChooser.showDialog(stage);
 
-        if(validProjectFolder(folder)){
-            System.out.println("valid profile!!");
+        if(validUserFolder(folder)){
+            if(!env.getUserHandler().getUserNames().contains(folder.getName())){
+                uploadUserProperties(env, classroom, folder);
+                uploadUserProjects(env, new File(folder.getPath()+"/Projects"));
+            }
+            else{
+                System.err.println("Classroom already contains a user of the selected username");
+                env.getRootController().errorAlert("Could not import the given user." +
+                        "\nA user with the given username already exists!");
+            }
 
-            uploadUserProperties(env, folder);
-            //uploadProjectProperties(env, folder);
         }
-
-
 
     }
 
 
     /**
-     * Loads
-     * @param env
-     * @param path
+     * Uploads the specified user's data to firebase.
+     * @param env Environment
+     * @param path User folder path.
      */
-    public static void uploadUserProperties(Environment env, File path) {
+    public static void uploadUserProperties(Environment env, String classroom,  File path) {
 
         String userFirstName, userLastName, userName, themePrimary, themeSecondary,  userPassword;
         Date lastSignIn;
@@ -70,85 +80,97 @@ public class UserImporter {
 
         }
 
-        try {
-            Type dateType = new TypeToken<Date>() {
-            }.getType();
-            lastSignIn = gson.fromJson((String) properties.get("signInTime"), dateType);
-
-            if (lastSignIn == null) lastSignIn = new Date();
-        } catch (Exception e) {
-            lastSignIn = new Date();
-
-        }
-
-
-        userPassword = (properties.get("password")).toString();
-
-
-        //Load musical terms property
-
-        Type termsType = new TypeToken<ArrayList<Term>>() {
-        }.getType();
-        ArrayList<Term> terms = gson.fromJson((String) properties.get("musicalTerms"), termsType);
-
-
         userName = (properties.get("userName")).toString();
 
-
-
-        try {
-            userFirstName = (properties.get("firstName")).toString();
-        } catch (NullPointerException e) {
-            userFirstName = "";
-        }
-
-        try {
-            userLastName = (properties.get("lastName")).toString();
-        } catch (NullPointerException e) {
-            userLastName = "";
-        }
-
-        try {
-            //Theme
-            themePrimary = (properties.get("themePrimary")).toString();
-        } catch (NullPointerException e) {
-            themePrimary = "#1E88E5";
-        }
-
-        try {
-            //Theme
-            themeSecondary = (properties.get("themeSecondary")).toString();
-        } catch (NullPointerException e) {
-            themeSecondary = "white";
-        }
-
-
-        env.getFirebase().createStudentSnapshot("test", userName, true);
+        env.getFirebase().createStudentSnapshot(classroom, userName, true);
         env.getFirebase().getUserRef().child("properties").updateChildren(properties);
-        //env.getFirebase().getUserRef().child("projects").updateChildren();
 
-//        projectHandler = new ProjectHandler(env, userName);
 
     }
 
 
+    /**
+     * Uploads a user's project data, given the user's project directory.
+     * @param env Environment
+     * @param f User project directory. (User -> Projects -> Project)
+     */
+    private static void uploadProjectData(Environment env, File f){
+
+        HashMap<String, Object> tutorData = new HashMap<>();
+        JSONObject projectSettings = new JSONObject();
+        JSONParser parser = new JSONParser();
+
+        for(File projectFile : f.listFiles()){
+
+            if (projectFile.getName().endsWith(".json") && projectFile.getName().substring(0, projectFile.getName().length() - 5).equals(f.getName())) {
+                try{
+
+                    projectSettings = (JSONObject) parser.parse(new FileReader(f.getPath() + "/" + projectFile.getName()));
+
+                }catch(Exception e){
+                    System.err.println("Could not load the project properties for project: " + projectFile.getName());
+                }
+
+            }
+            else if(projectFile.getName().endsWith(".json")){
+                //Handle tutor data upload
+                try{
+                    JSONObject tutorRecords = (JSONObject) parser.parse(new FileReader(f.getPath() + "/" + projectFile.getName()));
+                    tutorData.put(projectFile.getName(), tutorRecords);
+
+                }catch(Exception e){
+                    System.err.println("Could not load the tutor properties for tutor: " + projectFile.getName());
+                }
+
+            }
+        }
+        for(String key : tutorData.keySet()){
+            projectSettings.put(key, tutorData.get(key));
+
+        }
+        env.getFirebase().getUserRef().child("projects/"+f.getName()).updateChildren(projectSettings);
+
+    }
+
+    /**
+     * Uploads the selected user's projects to firebase.
+     * @param env Environment
+     * @param projectsFolder the User -> Projects folder.
+     */
+    private static void uploadUserProjects(Environment env, File projectsFolder){
+
+
+        JSONParser parser = new JSONParser();
+
+        String path = projectsFolder.toString();
+
+        for (File f : projectsFolder.listFiles()) {
+            if(f.isDirectory()){ //Is a project directory.
+                uploadProjectData(env, f);
+
+            }
+
+        }
 
 
 
+    }
 
-    private static Boolean validProjectFolder(File folder){
+    /**
+     * Determines whether a given folder is a valid User folder or not.
+     * @param folder User folder.
+     * @return True if the given folder contains a projects folder, and user_properties.json.
+     */
+    private static Boolean validUserFolder(File folder){
 
         if (folder != null) {
             if (folder.isDirectory()) {
-
                 boolean user_properties = true, projectsFolder = false;
-
 
                 for (File f : folder.listFiles()) {
 
                     if (f.getName().endsWith(".json") && f.getName().substring(0, f.getName().length() - 5).equals("user_properties")) {
                         user_properties = true;
-
 
                     }
                     else if(f.isDirectory() && f.getName().equals("Projects")){
@@ -160,7 +182,6 @@ public class UserImporter {
                 if(user_properties && projectsFolder ){
                     return true;
                 }
-
 
             }
 

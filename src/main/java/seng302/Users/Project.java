@@ -35,23 +35,17 @@ public class Project {
 
     ProjectHandler projectHandler;
 
-    // Levels variables, will be updated as the user gains experience
 
-    private Integer experience;
-    private Integer level;
+    private Integer experience, level;
 
     public String projectName;
 
-    boolean saved = true;
-
-    Environment env;
+    private Environment env;
     public TutorHandler tutorHandler;
 
-    private Boolean isCompetitiveMode;
+    private Boolean isCompetitiveMode, visualiserOn;
+    Boolean saved = true;
 
-    private Boolean visualiserOn;
-
-    public Boolean isUserMapData = true;
 
 
 
@@ -104,7 +98,6 @@ public class Project {
 
         projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
 
-        // User level for current project
         projectSettings.put("level", this.level);
         projectSettings.put("experience", this.experience);
 
@@ -131,7 +124,7 @@ public class Project {
 
 
         DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/" + projectName);
-        System.out.println(projectSnapshot.getKey());
+
         projectSettings = (HashMap<String, Object>) projectSnapshot.getValue();
 
         int tempo;
@@ -242,12 +235,12 @@ public class Project {
             Type mapType = new TypeToken<HashMap<String, Boolean>>() {
             }.getType();
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
-            System.out.println(unlockMap);
+
             if(unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
             }
         }catch(Exception e){
-            System.out.println("failed to load stageMap");
+            System.err.println("failed to load stageMap");
         }
     }
 
@@ -309,13 +302,9 @@ public class Project {
         }
 
         try {
-            if (projectSettings.containsKey(propName) && !(projectSettings.get(propName).equals(currentValue))) {
-                env.getRootController().addUnsavedChangesIndicator();
-                saved = false;
-            } else if (!projectSettings.containsKey(propName)) {
-                env.getRootController().addUnsavedChangesIndicator();
-                saved = false;
-            }
+
+            env.getUserHandler().getCurrentUser().saveAll();
+
         } catch (Exception e) {
             System.err.println("Invalid property being checked for save");
         }
@@ -352,14 +341,6 @@ public class Project {
     public boolean isSaved() {
         return saved;
     }
-
-    /*public Boolean isProject() {
-        return currentProjectPath != null;
-    }*/
-
-    /*public String getCurrentProjectPath() {
-        return currentProjectPath;
-    }*/
 
     public boolean getIsCompetitiveMode() {
         return isCompetitiveMode;

@@ -14,7 +14,7 @@ import java.util.HashMap;
 /**
  * Created by Jonty on 23-Sep-16.
  */
-public class Student extends User2 {
+public class Student extends User {
 
     private ProjectHandler projectHandler;
     private Date lastSignIn;
@@ -28,10 +28,8 @@ public class Student extends User2 {
         this.userName = userName;
         this.userPassword = password;
         this.env = env;
-        //properties = new JSONObject();
-
         createUserFiles();
-        //loadBasicProperties();
+
         loadProperties();
         saveProperties();
         projectHandler = new ProjectHandler(env, userName);
@@ -39,19 +37,12 @@ public class Student extends User2 {
     }
 
 
-
-
-    @Override
+    /**
+     * Loads user properties, and any properties associated with students only.
+     */
     public void loadProperties() {
-        /**
-         * Current Theme
-         * Musical Terms
-         * Full name
-         * Project Handler
-         * Theme
-         */
 
-        properties = (HashMap<String,String>) userSnapshot.child("properties").getValue();
+        super.loadProperties();
 
         if(properties == null) properties = new HashMap<String, Object>();
 
@@ -68,7 +59,7 @@ public class Student extends User2 {
         }
 
         //Load musical terms property
-        // Gson gson = new Gson();
+
         Type termsType = new TypeToken<ArrayList<Term>>() {
         }.getType();
         ArrayList<Term> terms = new ArrayList<>();
@@ -82,62 +73,25 @@ public class Student extends User2 {
             env.getMttDataManager().setTerms(terms);
         }
 
-        try {
-            userFirstName = (properties.get("firstName")).toString();
-        } catch (NullPointerException e) {
-            userFirstName = "";
-        }
-
-        try {
-            userLastName = (properties.get("lastName")).toString();
-        } catch (NullPointerException e) {
-            userLastName = "";
-        }
-
-        try {
-            //Theme
-            themePrimary = (properties.get("themePrimary")).toString();
-
-        } catch (NullPointerException e) {
-            themePrimary = "#1E88E5";
-        }
-
-        try {
-            //Theme
-            themeSecondary = (properties.get("themeSecondary")).toString();
-        } catch (NullPointerException e) {
-            themeSecondary = "white";
-        }
-
-        try {
-            //profile pic
-            profilePicUrl = (properties.get("profilePicUrl")).toString();
-        } catch (NullPointerException e) {
-            profilePicUrl = "http://res.cloudinary.com/allegro123/image/upload/v1474434800/testDP_qmwncc.jpg";
-        }
-        env.getThemeHandler().setTheme(themePrimary, themeSecondary);
-
-
         lastSignIn = new Date();
 
         projectHandler = new ProjectHandler(env, userName);
     }
 
-    @Override
+
     public void updateProperties() {
+        super.updateProperties();
         Gson gson = new Gson();
-        properties.put("userName", userName);
-        properties.put("fullName", userFullName);
-        properties.put("password", this.userPassword);
-        properties.put("themePrimary", env.getThemeHandler().getPrimaryColour());
-        properties.put("themeSecondary", env.getThemeHandler().getSecondaryColour());
-        properties.put("firstName", this.userFirstName);
-        properties.put("lastName", this.userLastName);
         String musicalTermsJSON = gson.toJson(env.getMttDataManager().getTerms());
         properties.put("musicalTerms", musicalTermsJSON);
         String lastSignInJSON = gson.toJson(lastSignIn);
         properties.put("signInTime", lastSignInJSON);
         properties.put("profilePicUrl", profilePicUrl);
+    }
+
+    public void saveAll(){
+        saveProperties();
+        getProjectHandler().getCurrentProject().saveCurrentProject();
     }
 
 
@@ -151,12 +105,13 @@ public class Student extends User2 {
             }.getType();
             if (!properties.get("musicalTerms").equals(new Gson().fromJson((String) properties.get("muscalTerms"), termsType))) {
                 env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + "*");
-                getProjectHandler().getCurrentProject().saved = false;
+               saveAll();
             }
         } else {
             if (env.getRootController() != null) {
                 env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + "*");
-                getProjectHandler().getCurrentProject().saved = false;
+                //getProjectHandler().getCurrentProject().saved = false;
+                saveAll();
             }
 
         }

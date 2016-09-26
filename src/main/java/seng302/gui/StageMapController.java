@@ -135,7 +135,7 @@ public class StageMapController {
         generateTutorAndButtonNames();
         generateConverted();
         visualiseLockedTutors();
-        System.out.println(unlockStatus);
+
     }
 
     /**
@@ -309,14 +309,12 @@ public class StageMapController {
 
     @FXML
     private void launchScaleRecognitionAdvancedTutor() {
-        System.out.println("Advanced scale tutor");
+
         env.getRootController().getTutorFactory().openTutor("Scale Recognition Tutor");
     }
 
     @FXML
     private void launchChordRecognitionAdvancedTutor() {
-
-        System.out.println("Chord Recognition Advanced Tutor");
         env.getRootController().getTutorFactory().openTutor("Chord Recognition Tutor");
     }
 
