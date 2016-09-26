@@ -104,7 +104,7 @@
     -fx-border-width: 0px 0px 1px 0px;
 
 }
-#menuFileBar .label{
+#menuFileBar > .container > .menu > .label{
     -fx-text-fill: {2};
 
 }
@@ -127,6 +127,10 @@
 .secondary{
     -fx-background-color: {1};
     -fx-text-fill: {3} ;
+}
+
+.color-picker .color-picker-label .text {
+    -fx-fill: {0};
 }
 
 #keyPane > .title {
@@ -579,3 +583,26 @@
     -fx-rippler-fill: {0};
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * Musical Terms Page                                                          *
+ *                                                                             *
+ ******************************************************************************/
+
+.termField {
+    -fx-focus-color: {0};
+}
+
+.termField:readonly {
+    -fx-background-color: transparent;
+    -fx-border-width: 0px;
+}
+
+#errorMessage {
+    -fx-text-fill: red;
+}
+
+.errorField {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+}

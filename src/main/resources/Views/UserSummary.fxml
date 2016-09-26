@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
@@ -11,111 +18,160 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<VBox fx:id="stats" alignment="TOP_CENTER" layoutY="-13.0" prefWidth="500.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserSummaryController">
-    <children>
-      <HBox fx:id="userSummary" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-         <children>
-            <VBox HBox.hgrow="ALWAYS">
-               <children>
-                      <VBox>
-                          <children>
-                        <StackPane VBox.vgrow="NEVER">
-                           <children>
-                              <Label text="Tutor Map">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </StackPane>
-                        <StackPane>
-                           <children>
-                              <Label text="Unlock tutors in competitive mode by completing the previous tutor 3 times in a row with 100% scores!">
-                                 <font>
-                                    <Font size="10.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </StackPane>
-                              <StackPane fx:id="stageMap" HBox.hgrow="ALWAYS" />
-                          </children>
-                     <padding>
-                        <Insets top="10.0" />
-                     </padding>
-                      </VBox>
 
-                                  <VBox fx:id="levelVBox" alignment="TOP_CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <children>
-                              <Label text="Level Progress" BorderPane.alignment="CENTER">
-                                  <font>
-                                      <Font name="System Bold" size="18.0" />
-                                  </font>
-                              </Label>
-                              <ProgressBar fx:id="pbLevel" layoutX="103.0" layoutY="60.0" maxHeight="20" prefWidth="200.0" progress="0.0" />
-                              <Label fx:id="highXp" alignment="CENTER_RIGHT" layoutX="103.0" layoutY="84.0" maxHeight="17.0" prefWidth="200.0" text="Label" textAlignment="RIGHT" />
-                          </children>
-                          <padding>
-                              <Insets bottom="20.0" left="10.0" right="10.0" top="40.0" />
-                          </padding>
-                      </VBox>
+<FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2000.0" prefWidth="1000.0" style="-fx-background-color: F5F5F5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserSummaryController">
+   <children>
+      <VBox maxHeight="600.0" maxWidth="840.0" minWidth="860.0" prefHeight="840.0" prefWidth="600.0" style="-fx-background-color: white;">
+         <children>
+            <StackPane VBox.vgrow="NEVER">
+               <children>
+                  <Label text="Tutor Map">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
                </children>
-            </VBox>
+            </StackPane>
+            <StackPane>
+               <children>
+                  <Label text="Unlock tutors in competitive mode by completing the previous tutor 3 times in a row with 100% scores!">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </children>
+            </StackPane>
+            <StackPane fx:id="stageMap" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding></StackPane>
          </children>
-      </HBox>
-        <Label fx:id="overallStats" alignment="CENTER" contentDisplay="CENTER" text="Overall Stats" textAlignment="CENTER">
-            <font>
-                <Font name="System Bold" size="18.0" />
-            </font>
-            <padding>
-                <Insets top="20.0" />
-            </padding>
-            <VBox.margin>
-                <Insets />
-            </VBox.margin>
-        </Label>
-        <StackPane fx:id="overallRectangleStack" alignment="CENTER_LEFT" maxHeight="40.0" maxWidth="400.0" prefHeight="150.0" prefWidth="500.0">
-            <children>
-                <HBox fx:id="OverallRectangleHBox" alignment="CENTER" maxHeight="70.0" prefHeight="70.0" prefWidth="200.0">
-                    <children>
-                        <Rectangle fx:id="overallCorrect" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
-                        <Rectangle fx:id="overallIncorrect" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
-                    </children>
-                </HBox>
-                <Label fx:id="overallCorrectLabel" text="0 Correct">
-                    <padding>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+         <effect>
+            <DropShadow height="5.0" radius="2.0" width="5.0" />
+         </effect>
+         <FlowPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </FlowPane.margin>
+      </VBox>
+      <VBox fx:id="levelVBox" alignment="TOP_CENTER" maxHeight="200.0" maxWidth="300.0" prefHeight="200.0" prefWidth="300.0" spacing="10.0" style="-fx-background-color: white;">
+         <children>
+            <Label text="Level Progress" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <ProgressBar fx:id="pbLevel" layoutX="103.0" layoutY="60.0" maxHeight="20" prefWidth="200.0" progress="0.0">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></ProgressBar>
+            <Label fx:id="highXp" alignment="CENTER_RIGHT" layoutX="103.0" layoutY="84.0" maxHeight="17.0" prefWidth="200.0" text="Label" textAlignment="RIGHT" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="10.0" right="10.0" top="40.0" />
+         </padding>
+         <effect>
+            <DropShadow height="5.0" radius="2.0" width="5.0" />
+         </effect>
+         <FlowPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </FlowPane.margin>
+      </VBox>
+      <VBox fx:id="stats" alignment="TOP_CENTER" maxHeight="200.0" maxWidth="400.0" prefHeight="200.0" prefWidth="400.0" spacing="10.0" style="-fx-background-color: white;">
+         <children>
+            <HBox fx:id="userSummary" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <children>
+                  <VBox HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <Label fx:id="overallStats" alignment="CENTER" contentDisplay="CENTER" text="Overall Stats" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <StackPane fx:id="overallRectangleStack" alignment="CENTER_LEFT" maxHeight="40.0" maxWidth="400.0" prefHeight="150.0" prefWidth="500.0">
+               <children>
+                  <HBox fx:id="OverallRectangleHBox" alignment="CENTER" maxHeight="70.0" prefHeight="70.0" prefWidth="200.0">
+                     <children>
+                        <Rectangle fx:id="overallCorrect" fill="WHITESMOKE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
+                        <Rectangle fx:id="overallIncorrect" fill="WHITESMOKE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
+                     </children>
+                  </HBox>
+                  <Label fx:id="overallCorrectLabel" text="0 Correct">
+                     <padding>
                         <Insets left="10.0" />
-                    </padding>
-                </Label>
-                <Label fx:id="overallIncorrectLabel" layoutX="10.0" layoutY="22.0" text="0 Incorrect" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
-                    <padding>
+                     </padding>
+                  </Label>
+                  <Label fx:id="overallIncorrectLabel" layoutX="10.0" layoutY="22.0" text="0 Incorrect" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
+                     <padding>
                         <Insets right="10.0" />
-                    </padding>
-                </Label>
-                <Line fx:id="classAverage" endX="50.0" rotate="90.0" strokeWidth="3.0">
-                    <StackPane.margin>
+                     </padding>
+                  </Label>
+                  <Line fx:id="classAverage" endX="50.0" rotate="90.0" strokeWidth="3.0">
+                     <StackPane.margin>
                         <Insets left="220.0" />
                     </StackPane.margin>
+                    <effect>
+                        <DropShadow blurType="GAUSSIAN" height="72.61" radius="22.965" width="21.25" />
+                    </effect>
                 </Line>
             </children>
             <VBox.margin>
-                <Insets left="10.0" right="10.0" top="20.0"/>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
             </VBox.margin>
         </StackPane>
-        <HBox maxWidth="500.0" prefHeight="20.0" prefWidth="500.0">
-            <children>
-                <Label fx:id="summaryAverageLabel" text="Class Average: ">
-                    <font>
-                        <Font size="9.0"/>
-                    </font>
-                </Label>
-                <Label fx:id="summaryAverageNumber" text="0">
-                    <font>
-                        <Font size="9.0"/>
-                    </font>
-                </Label>
-            </children>
-        </HBox>
-        <AnchorPane maxHeight="85.0" maxWidth="351.0" minHeight="-Infinity" minWidth="-Infinity"
-                    prefHeight="85.0" prefWidth="351.0"/>
+             <HBox maxWidth="500.0" prefHeight="20.0" prefWidth="500.0">
+                 <children>
+                     <Label fx:id="summaryAverageLabel" text="Class Average: ">
+                         <font>
+                             <Font size="9.0" />
+                         </font>
+                     </Label>
+                     <Label fx:id="summaryAverageNumber" text="0">
+                         <font>
+                             <Font size="9.0" />
+                         </font>
+                     </Label>
+                 </children>
+             </HBox>
     </children>
-</VBox>
+          <effect>
+              <DropShadow height="5.0" radius="2.0" width="5.0" />
+          </effect>
+          <FlowPane.margin>
+              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+          </FlowPane.margin>
+    </VBox>
+      <VBox alignment="TOP_CENTER" prefHeight="1056.0" prefWidth="861.0" style="-fx-background-color: white;">
+         <children>
+            <Label prefHeight="27.0" prefWidth="130.0" text="Achievements" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+            </Label>
+            <GridPane fx:id="badgeGrid" hgap="10" vgap="20">
+               <padding>
+                  <Insets bottom="5" left="20" right="20" top="5" />
+               </padding>
+            </GridPane>
+         </children>
+         <FlowPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </FlowPane.margin>
+         <effect>
+            <DropShadow height="5.0" radius="2.0" width="5.0" />
+         </effect>
+      </VBox>
+   </children>
+</FlowPane>

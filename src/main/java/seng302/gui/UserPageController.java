@@ -4,19 +4,45 @@ import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
+
+import java.io.IOException;
+import java.awt.*;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+
+
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
+import javafx.scene.control.SplitPane;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+
 import seng302.Environment;
+import seng302.data.Badge;
+import seng302.managers.BadgeManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +60,9 @@ public class UserPageController {
     VBox summaryPage;
 
     @FXML
+    AnchorPane scrollPaneAnchorPage;
+
+    @FXML
     SplitPane userView;
 
     @FXML
@@ -41,7 +70,6 @@ public class UserPageController {
 
     @FXML
     private JFXButton btnSettings;
-
 
     @FXML
     Label txtFullName;
@@ -60,6 +88,7 @@ public class UserPageController {
 
     @FXML
     ScrollPane currentPage;
+
 
     @FXML
     private Slider timeSlider;
@@ -80,8 +109,6 @@ public class UserPageController {
     AnchorPane summary;
 
     private Environment env;
-
-
 
 
     public void setEnvironment(Environment env) {
@@ -152,6 +179,7 @@ public class UserPageController {
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             showPage((String) newValue);
+            System.out.println("show page called" + newValue);
         });
 
         // Set after the listener so it loads user summary correctly
@@ -185,7 +213,6 @@ public class UserPageController {
                         setDisable(false);
                     }
                 }
-
             }
         });
 
@@ -301,7 +328,6 @@ public class UserPageController {
 
     }
 
-
     /**
      * Displays the page containing summary information about the user's current project
      */
@@ -312,13 +338,15 @@ public class UserPageController {
         FXMLLoader summaryLoader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
 
         try {
-            VBox summaryPage = summaryLoader.load();
-            currentPage.setContent(summaryPage);
+            FlowPane summaryPage = summaryLoader.load();
+            //currentPage.setContent(summaryPage);
 
+            scrollPaneAnchorPage.getChildren().setAll(summaryPage);
             AnchorPane.setLeftAnchor(summaryPage, 0.0);
             AnchorPane.setTopAnchor(summaryPage, 0.0);
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
             AnchorPane.setRightAnchor(summaryPage, 0.0);
+            //summaryPage.setMinWidth(currentPage.getWidth());
 
             summaryController = summaryLoader.getController();
             summaryController.create(env);
@@ -342,7 +370,8 @@ public class UserPageController {
 
         try {
             VBox stats = tutorStatsLoader.load();
-            currentPage.setContent(stats);
+            //currentPage.setContent(stats);
+            scrollPaneAnchorPage.getChildren().setAll(stats);
             AnchorPane.setLeftAnchor(stats, 0.0);
             AnchorPane.setTopAnchor(stats, 0.0);
             AnchorPane.setBottomAnchor(stats, 0.0);
@@ -351,7 +380,7 @@ public class UserPageController {
 
             statsController.create(env);
             statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
-
+            statsController.updateBadgesDisplay();
             listView.getSelectionModel().select(tutor);
 
 

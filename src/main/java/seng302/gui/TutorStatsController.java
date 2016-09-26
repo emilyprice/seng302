@@ -6,7 +6,10 @@ import com.jfoenix.controls.JFXButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javafx.animation.Interpolator;
@@ -22,12 +25,11 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -35,6 +37,8 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 import seng302.Environment;
+import seng302.data.Badge;
+import seng302.managers.BadgeManager;
 import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
 
@@ -111,7 +115,7 @@ public class TutorStatsController {
     private Label badgesLabel;
 
     @FXML
-    private AnchorPane badgesAnchor;
+    private GridPane badgeGrid;
 
     @FXML
     private Label classAverageLabel;
@@ -120,6 +124,8 @@ public class TutorStatsController {
     private Label classAverageNumber;
 
     String currentTutor;
+    private ColorAdjust blackout;
+    private int gridCount;
 
     public void create(Environment env) {
         this.env = env;
@@ -129,7 +135,7 @@ public class TutorStatsController {
 
 
     /**
-     * creates the most recent tutor record graph and the overall tutor record graph
+     * Creates the most recent tutor record graph and the overall tutor record graph
      *
      * @param tutor the specific tutor that the graphs will getting data from
      */
@@ -335,8 +341,98 @@ public class TutorStatsController {
             label.setAlignment(Pos.CENTER);
             return label;
         }
-
     }
+
+    /**
+     * Used to create the badgeGrid and display the badges in stackpanes with the correct effect
+     */
+    public void updateBadgesDisplay() {
+        ArrayList<Badge> tutorBadges = new ArrayList();
+
+        ColorAdjust blackout = new ColorAdjust();
+        blackout.setBrightness(-1.0);
+        this.blackout = blackout;
+
+        HashMap tutorBadgeMap = BadgeManager.getTutorBadges();
+
+        for (Object tutor : tutorBadgeMap.keySet()) {
+            if (tutor.toString().equals(tutorName.getText())) {
+                for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {
+                    tutorBadges.add((Badge) b);
+                }
+            }
+        }
+
+        badgeGrid.getChildren().removeAll();
+        Collections.sort(tutorBadges, new badgeComparator());
+        tutorBadges.forEach(this::addTutorBadgeToGrid);
+    }
+
+    /**
+     * Helper function used to order badges for the badgeGrid
+     */
+    public static class badgeComparator implements Comparator<Badge> {
+        @Override
+        public int compare(Badge b1, Badge b2) {
+            return (b1.currentBadgeType > b2.currentBadgeType) ? -1: (b1.currentBadgeType < b2.currentBadgeType) ? 1:0;
+        }
+    }
+
+    /**
+     * Used to add a tutor badge to the badgeGrid
+     * @param b the Badge to be added
+     */
+    public void addTutorBadgeToGrid(Badge b) {
+        Image ribbonImage = new Image("/images/ribbonAward.png");
+        ImageView rView = new ImageView(ribbonImage);
+        rView.fitHeightProperty().setValue(70);
+        rView.fitWidthProperty().setValue(70);
+        Image bImage = new Image("/images/"+b.imageName+".png");
+        ImageView bView = new ImageView(bImage);
+        bView.fitHeightProperty().setValue(26);
+        bView.fitWidthProperty().setValue(26);
+        Image lockImg = new Image("/images/lock.png");
+        ImageView lockView = new ImageView(lockImg);
+        lockView.fitHeightProperty().setValue(40);
+        lockView.fitWidthProperty().setValue(40);
+
+        ColorAdjust badgeEffect = new ColorAdjust();
+        if (b.currentBadgeType == 0) {
+            badgeEffect = this.blackout;
+            bView = lockView;
+        } else if (b.currentBadgeType == 1) {
+            badgeEffect.setHue(-0.863);
+            badgeEffect.setSaturation(0.8);
+            badgeEffect.setBrightness(0.4);
+        } else if (b.currentBadgeType == 2) {
+            badgeEffect.setHue(0);
+            badgeEffect.setSaturation(-1);
+            badgeEffect.setBrightness(0.32);
+        } else if ( b.currentBadgeType == 3) {
+            badgeEffect.setHue(-0.687);
+            badgeEffect.setSaturation(1);
+            badgeEffect.setBrightness(0.1);
+        }
+        rView.setEffect(badgeEffect);
+        StackPane badgeStack = new StackPane(rView, bView);
+        badgeStack.getChildren().get(1).setTranslateY(-13);
+        badgeStack.getChildren().get(1).setTranslateX(-0.6);
+
+        VBox badgeBox = new VBox();
+        Label badgeName = new Label(b.name);
+        badgeName.setFont(javafx.scene.text.Font.font(16));
+        Label tutorName = new Label(this.tutorName.getText());
+        Label description = new Label(b.description);
+        Label progressDesc = new Label((int) b.badgeProgress+" out of "+b.badgeLevels.get(b.currentBadgeType));
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
+        badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description, progressDesc);
+        badgeBox.setAlignment(Pos.CENTER);
+        badgeBox.setSpacing(4);
+        badgeGrid.add(badgeBox, gridCount, 0);
+        gridCount++;
+    }
+
 
 
     @FXML

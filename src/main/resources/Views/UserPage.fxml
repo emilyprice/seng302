@@ -7,6 +7,14 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import com.jfoenix.controls.JFXBadge?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import java.lang.String?>
@@ -21,6 +29,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import java.lang.String?>
 
 <AnchorPane id="userPage" fx:id="userPage" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserPageController">
     <children>
@@ -89,7 +98,9 @@
                 <AnchorPane>
                     <children>
                         <ScrollPane fx:id="currentPage" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        </ScrollPane>
+                     <content>
+                        <AnchorPane fx:id="scrollPaneAnchorPage" prefHeight="200.0" prefWidth="200.0" />
+                     </content></ScrollPane>
                     </children>
                 </AnchorPane>
             </items>

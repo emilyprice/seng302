@@ -149,6 +149,7 @@ RomanNumerals = (I|II|III|IV|V|VI|VII)
     "origin of"         {return symbol(DslSymbol.COMMAND_MUSICAL_TERM_ORIGIN); }
     "category of"       {return symbol(DslSymbol.COMMAND_MUSICAL_TERM_CATEGORY); }
     "add musical term"  {return symbol(DslSymbol.COMMAND_ADD_MUSICAL_TERM); }
+    "delete musical term" {return symbol(DslSymbol.COMMAND_DELETE_MUSICAL_TERM); }
     "all enharmonics"   {return symbol(DslSymbol.COMMAND_ALL_ENHARMONICS); }
     "undo"              {return symbol(DslSymbol.COMMAND_UNDO); }
     "redo"              {return symbol(DslSymbol.COMMAND_REDO); }

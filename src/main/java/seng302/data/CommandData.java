@@ -10,14 +10,15 @@ import seng302.command.Chord;
 import seng302.command.ChordFinder;
 import seng302.command.Command;
 import seng302.command.CrotchetDuration;
+import seng302.command.DeleteTermCommand;
 import seng302.command.Diatonic;
 import seng302.command.Enharmonic;
 import seng302.command.Help;
 import seng302.command.InstrumentCommand;
 import seng302.command.IntervalCommand;
 import seng302.command.KeySignatureCommand;
-import seng302.command.Modes;
 import seng302.command.Midi;
+import seng302.command.Modes;
 import seng302.command.MusicalTerm;
 import seng302.command.NoteCommand;
 import seng302.command.PlayNote;
@@ -30,8 +31,8 @@ import seng302.command.UndoRedo;
 import seng302.command.Version;
 
 /**
- * This Data class holds a single instance of every command, to be used for fetching help info.
- * Also contains a collection of lists for sorting the commands into type.
+ * This Data class holds a single instance of every command, to be used for fetching help info. Also
+ * contains a collection of lists for sorting the commands into type.
  */
 public class CommandData {
 
@@ -157,6 +158,8 @@ public class CommandData {
         scaleInfo.put("scale_type", "phrygian");
         keywordToCommand.put("parent of", new Modes(scaleInfo));
 
+        keywordToCommand.put("delete musical term", new DeleteTermCommand("lento"));
+
 
         //These are the commands we want in the 'terms' category
         List<String> terms = new ArrayList<>();
@@ -172,6 +175,7 @@ public class CommandData {
         special.add("redo");
         special.add("version");
         special.add("help");
+        special.add("delete musical term");
 
         //These are the commands we want in the 'translation' category
         List<String> translation = new ArrayList<>();

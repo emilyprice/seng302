@@ -21,6 +21,8 @@ import java.util.HashMap;
 
 import javax.sound.midi.Instrument;
 
+import seng302.data.Badge;
+import seng302.managers.BadgeManager;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -42,14 +44,13 @@ public class Project {
 
     private Environment env;
     public TutorHandler tutorHandler;
+    private BadgeManager badgeManager;
+
 
     private Boolean isCompetitiveMode, visualiserOn;
     Boolean saved = true;
 
-
-
-
-
+    public Boolean isUserMapData = true;
 
     /**
      * Constructor for creating a new project.
@@ -69,9 +70,9 @@ public class Project {
         this.experience = 0;
         this.level = 1;
         this.visualiserOn = false;
+        badgeManager = new BadgeManager(env);
         loadProject(projectName);
         loadProperties();
-
 
     }
 
@@ -86,8 +87,6 @@ public class Project {
      * write to disk)
      */
     private void saveProperties() {
-
-
         Gson gson = new Gson();
         projectSettings.put("tempo", env.getPlayer().getTempo());
         String transcriptString = gson.toJson(env.getTranscriptManager().getTranscriptTuples());
@@ -103,16 +102,17 @@ public class Project {
 
         projectSettings.put("competitionMode", gson.toJson(isCompetitiveMode.toString()));
 
-
         projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
 
+        projectSettings.put("overallBadges", gson.toJson(badgeManager.getOverallBadges()));
+        projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
+        projectSettings.put("tutor100Map", gson.toJson(badgeManager.get100TutorBadges()));
 
         try {
             projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
         }catch(Exception e){
             System.err.println("cant save unlock map");
         }
-
     }
 
 
@@ -220,8 +220,53 @@ public class Project {
             visualiserOn = false;
         }
 
-    }
 
+        //badges
+        //overallBadges
+        ArrayList<Badge> overallBadges;
+        try{
+
+            Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
+            }.getType();
+            overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
+        }catch(Exception e){
+            overallBadges = new ArrayList<>();
+        }
+
+
+        //tutorBadges
+        HashMap<String, ArrayList<Badge>> tutorBadges;
+        try{
+            Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
+            }.getType();
+            tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
+        }catch(Exception e){
+            tutorBadges = new HashMap<>() ;
+        }
+
+
+        try {
+            badgeManager.replaceBadges(tutorBadges, overallBadges);
+        } catch (NullPointerException e) {
+            tutorBadges = BadgeManager.getTutorBadges();
+            overallBadges = BadgeManager.getOverallBadges();
+        }
+
+        //100tutorMap
+        HashMap<String, Boolean> tutor100Map;
+        try{
+            Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
+            }.getType();
+            tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+        }catch (Exception e){
+            tutor100Map = new HashMap<>();
+        }
+
+
+        badgeManager.replaceTutor100AllMap(tutor100Map);
+
+        env.getTranscriptManager().unsavedChanges = false;
+    }
 
 
     /**
@@ -235,7 +280,6 @@ public class Project {
             Type mapType = new TypeToken<HashMap<String, Boolean>>() {
             }.getType();
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
-
             if(unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
             }
@@ -262,7 +306,6 @@ public class Project {
 
     /**
      * Handles Saving a .json Project file, for the specified project address
-     *
      * @param projectName Project directory address.
      */
     public void saveProject(String projectName) {
@@ -412,5 +455,7 @@ public class Project {
     public boolean getVisualiserOn() {
         return visualiserOn;
     }
+
+    public BadgeManager getBadgeManager(){return badgeManager;}
 
 }
