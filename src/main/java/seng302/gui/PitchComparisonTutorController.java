@@ -73,6 +73,12 @@ public class PitchComparisonTutorController extends TutorController {
      */
     @FXML
     private void goAction() {
+
+        for (int x = 0; x < 12; x++) {
+            int num = generateRangesliderDefault();
+            System.out.println("Note Range: "+num+"-"+(num+24));
+        }
+
         paneInit.setVisible(false);
         paneQuestions.setVisible(true);
         record = new TutorRecord();
@@ -118,16 +124,15 @@ public class PitchComparisonTutorController extends TutorController {
 
     /**
      * Generates default rangeslider value for competitive mode
-     * @return
+     * @return int the lower bound of the note range
      */
     private int generateRangesliderDefault(){
-        int num = rand.nextInt(127);
-        if(num + 24 > 127){
-            return 103;
-        }else{
-            return num;
+        int num = rand.nextInt(95);
+        if (num + 24 > 95) {
+            return 84;
+        } else {
+            return num + 16;
         }
-
     }
 
     /**
