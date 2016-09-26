@@ -49,8 +49,12 @@ public class MicrophoneInput implements PitchDetectionHandler {
      * for comparison.
      */
     public MicrophoneInput() {
-        this.mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
-        resetNoteFrequencies();
+        try {
+            this.mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
+            resetNoteFrequencies();
+        } catch (ArrayIndexOutOfBoundsException a) {
+            // For GitLab testings inability to use a microphone
+        }
     }
 
 
