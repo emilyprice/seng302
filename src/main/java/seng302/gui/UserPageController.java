@@ -373,6 +373,8 @@ public class UserPageController {
 
         //Goes inside metronome popover
         VBox metronomeVBox = new VBox();
+        metronomeVBox.setMinSize(250, 150);
+        metronomeVBox.setMaxSize(250, 150);
 
         //Hbox to contain label stating current BPM
         HBox tempoLabelBox = new HBox();
@@ -435,7 +437,7 @@ public class UserPageController {
     private AnchorPane metronomeAnimation() {
         AnchorPane animationPane = new AnchorPane(); //pane to contain animation
         animationPane.setPrefSize(200,50);
-        animationPane.setMinSize(100, 50);
+        animationPane.setMinSize(200, 50);
         Circle ball = new Circle(); //bouncing ball for metronome
         ball.getStyleClass().add("primary"); //make the ball match the theme
 
@@ -446,8 +448,8 @@ public class UserPageController {
         anim = new TranslateTransition(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000), ball);
 //        anim.setDuration(Duration.INDEFINITE);
 //        anim.setNode(ball);
-        anim.setFromX(20);
-        anim.setToX(200);
+        anim.setFromX(10);
+        anim.setToX(170);
         anim.setInterpolator(Interpolator.LINEAR);
         anim.setAutoReverse(true);
         anim.setCycleCount(Timeline.INDEFINITE);
@@ -456,6 +458,12 @@ public class UserPageController {
         animationPane.getChildren().add(ball);
 
         return animationPane;
+    }
+
+    public void updateMetronome() {
+        anim.setDuration(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000));
+        anim.playFromStart();
+
     }
 
 //    private AnchorPane buildMetronomeAnimation(AnchorPane metronomeBox) {
