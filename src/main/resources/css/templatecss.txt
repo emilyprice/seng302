@@ -104,7 +104,7 @@
     -fx-border-width: 0px 0px 1px 0px;
 
 }
-#menuFileBar .container .label{
+#menuFileBar > .container > .menu > .label{
     -fx-text-fill: {2};
 
 }

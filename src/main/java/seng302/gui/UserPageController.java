@@ -22,40 +22,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContextMenu;
 
-import javafx.geometry.*;
-import javafx.geometry.Insets;
-import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.StackedBarChart;
-import javafx.scene.chart.XYChart;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.SepiaTone;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.*;
-import javafx.util.Pair;
+
 import seng302.Environment;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
@@ -349,7 +333,7 @@ public class UserPageController {
         listView.getSelectionModel().selectFirst();
 
         FXMLLoader summaryLoader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
-        System.out.println("before try");
+
         try {
             FlowPane summaryPage = summaryLoader.load();
             //currentPage.setContent(summaryPage);
@@ -359,8 +343,6 @@ public class UserPageController {
             AnchorPane.setTopAnchor(summaryPage, 0.0);
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
             AnchorPane.setRightAnchor(summaryPage, 0.0);
-
-
             //summaryPage.setMinWidth(currentPage.getWidth());
 
             summaryController = summaryLoader.getController();

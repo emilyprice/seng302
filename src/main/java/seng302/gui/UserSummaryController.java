@@ -135,8 +135,10 @@ public class UserSummaryController {
         overallCorrectLabel.setText(correctIncorrectOverall.getKey() + " \ncorrect");
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
         classAverage.setVisible(false);
+        System.out.println("before update badges display");
         updateBadgesDisplay();
 
+        System.out.println("after update badges display");
         displayClassAverage(env.getUserPageController().getTimePeriod());
 
 
@@ -238,7 +240,7 @@ public class UserSummaryController {
            // Retrieving badges from json file
         }
 
-        System.out.println(tutorBadgeMap);
+
 
         for (Object tutor : tutorBadgeMap.keySet()) {
             for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {

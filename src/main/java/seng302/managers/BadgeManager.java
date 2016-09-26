@@ -145,6 +145,8 @@ public class BadgeManager {
 
         //intalize tutor badges
         for (String tutor:allTutors){
+
+            System.out.println("loading badge");
             ArrayList<Badge> badges = new ArrayList<>();
             badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, tutorImages.get(tutor), 10));
             badges.add(new Badge("Completed Sessions", tutor, "Number of tutor sessions completed", sessionBadges, 0, 0, tutorImages.get(tutor), 10));
