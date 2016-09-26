@@ -1,6 +1,9 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
+
+import java.util.ArrayList;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -21,9 +24,8 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import seng302.Environment;
 import seng302.Users.Student;
+import seng302.Users.TutorHandler;
 import seng302.utility.LevelCalculator;
-
-import java.util.ArrayList;
 
 /**
  * Controller for the GUI page which displays a user's summary information.
@@ -122,7 +124,7 @@ public class UserSummaryController {
 
         updateProgressBarStudent(userName, project);
 
-        Pair<Integer, Integer> correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTotalsForStudent(userName, project, timePeriod);
+        Pair<Integer, Integer> correctIncorrectOverall = new TutorHandler(env).getTotalsForStudent(userName, project, timePeriod);
 
         // Set up Overall graph and labels.
 
@@ -244,8 +246,13 @@ public class UserSummaryController {
         ArrayList<Pair<Integer, Integer>> data = new ArrayList<>();
         users.getChildren().forEach(user -> {
             user.child("projects").getChildren().forEach(project -> {
-                Pair<Integer, Integer> totals = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getTutorHandler().getTotalsForAllTutorsInProject(project, timePeriod);
-                data.add(totals);
+                try {
+                    Pair<Integer, Integer> totals = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getTutorHandler().getTotalsForAllTutorsInProject(project, timePeriod);
+                    data.add(totals);
+                } catch (Exception e) {
+                    Pair<Integer, Integer> totals = new TutorHandler(env).getTotalsForAllTutorsInProject(project, timePeriod);
+                    data.add(totals);
+                }
             });
         });
 

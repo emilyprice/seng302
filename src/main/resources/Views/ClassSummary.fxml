@@ -4,9 +4,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<VBox fx:id="classSummary" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.ClassSummaryController">
+<VBox fx:id="classSummary" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+      minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.ClassSummaryController">
    <children>
-      <HBox>
+       <HBox alignment="CENTER">
          <children>
             <Label alignment="CENTER" text="Class Summary">
                <font>
@@ -15,7 +17,7 @@
             </Label>
          </children>
       </HBox>
-       <HBox maxHeight="100.0" fx:id="chartHolder">
+       <HBox fx:id="chartHolder" alignment="CENTER" maxHeight="100.0">
          <children>
          </children>
       </HBox>

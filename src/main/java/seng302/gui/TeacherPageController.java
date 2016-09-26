@@ -159,7 +159,6 @@ public class TeacherPageController {
             AnchorPane.setBottomAnchor(summary, 0.0);
             AnchorPane.setRightAnchor(summary, 0.0);
             ClassSummaryController classSummaryController = loader.getController();
-            //statsController = tutorStatsLoader.getController();
 
             classSummaryController.create(env);
 
