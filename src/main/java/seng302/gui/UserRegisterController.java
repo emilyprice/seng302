@@ -244,11 +244,12 @@ public class UserRegisterController {
                 }
             }
             else if(selectedType.equals("Teacher")){
-                //env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText()).setValue("test");
                 env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText(), txtClassRoomName.getText());
                 env.getFirebase().getFirebase().child("classrooms/" + txtClassRoomName.getText()+"/users/").setValue("none");
-                //env.getFirebase().createClassRoomSnapshot(txtClassRoomName.getText(), true);
-                //TODO: add action for registering and logging in as a teacher.
+                env.getUserHandler().setCurrentTeacher(txtUsername.getText(), txtClassRoomName.getText(), txtPassword.getText());
+                Stage stage = (Stage) btnRegister.getScene().getWindow();
+                stage.close();
+                env.getRootController().showWindow(true);
 
 
             }
