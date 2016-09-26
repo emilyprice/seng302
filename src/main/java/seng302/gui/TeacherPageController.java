@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import seng302.Environment;
@@ -173,7 +174,7 @@ public class TeacherPageController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
 
         try {
-            VBox summary = loader.load();
+            FlowPane summary = loader.load();
             currentPage.setContent(summary);
             AnchorPane.setLeftAnchor(summary, 0.0);
             AnchorPane.setTopAnchor(summary, 0.0);
@@ -182,6 +183,7 @@ public class TeacherPageController {
             userSummaryController = loader.getController();
             //statsController = tutorStatsLoader.getController();
 
+            userSummaryController.hideBadges();
             //change to be the user that was clicked on
             userSummaryController.createStudent(env, userName,"All Time", project);
 

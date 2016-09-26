@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-
+<?import javafx.scene.text.*?>
 <FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2000.0" prefWidth="1000.0" style="-fx-background-color: F5F5F5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserSummaryController">
    <children>
       <VBox maxHeight="600.0" maxWidth="840.0" minWidth="860.0" prefHeight="840.0" prefWidth="600.0" style="-fx-background-color: white;">
@@ -150,7 +138,7 @@
               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
           </FlowPane.margin>
     </VBox>
-      <VBox alignment="TOP_CENTER" prefHeight="1056.0" prefWidth="861.0" style="-fx-background-color: white;">
+      <VBox fx:id="badges" alignment="TOP_CENTER" prefHeight="1056.0" prefWidth="861.0" style="-fx-background-color: white;">
          <children>
             <Label prefHeight="27.0" prefWidth="130.0" text="Achievements" textAlignment="CENTER">
                <font>
