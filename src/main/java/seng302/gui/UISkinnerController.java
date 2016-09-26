@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -22,7 +23,10 @@ public class UISkinnerController {
 
 
     @FXML
-    private JFXColorPicker jfxColourPicker;
+    private JFXColorPicker primaryColour;
+
+    @FXML
+    private JFXColorPicker secondaryColour;
 
 
     // RGB colour values
@@ -36,6 +40,7 @@ public class UISkinnerController {
     private AnchorPane baseNode;
     private Environment env;
     private ArrayList<String> rules = new ArrayList<String>();
+    private String lighterOrDarker;
 
 
     /**
@@ -51,7 +56,7 @@ public class UISkinnerController {
         String colour = Color.valueOf(env.getThemeHandler().getPrimaryColour()).toString();
         colour = "#" + colour.substring(2, 8);
 
-        this.jfxColourPicker.setValue(Color.valueOf(colour));
+        this.primaryColour.setValue(Color.valueOf(colour));
         env.getRootController().setHeader("Theme Settings");
 
     }
@@ -62,14 +67,15 @@ public class UISkinnerController {
      */
     @FXML
     void changeColour(ActionEvent event) {
-        Color base = jfxColourPicker.getValue();
-        String baseRgb = ColourUtils.toRGBString(base);
+        Color base = primaryColour.getValue();
+        this.baseRGB = ColourUtils.toRGBString(base);
         Color comp_colour = ColourUtils.getComplementaryColourString(base);
+//        Color comp_colour = secondaryColour.getValue();
         setDarkerRGB(base);
         setLighterRGB(base);
         String complementary_rgb = ColourUtils.toRGBString(comp_colour);
         String styleString = "";
-        String lighterOrDarker;
+//        String lighterOrDarker;
         double luma = 0.2126 * (base.getRed() * 255) + 0.7152 * (base.getGreen() * 255) + 0.0722 * (base.getBlue() * 255);
         if (luma < 126) {
             lighterOrDarker = floatToRGBString(lighterRGB);
@@ -77,9 +83,18 @@ public class UISkinnerController {
             lighterOrDarker = floatToRGBString(darkerRGB);
         }
 
-        env.getThemeHandler().setTheme(baseRgb, lighterOrDarker);
+        String newSecondary = hex2Rgb(secondaryColour.getValue().toString().substring(0, 8));
+
+        if (secondaryColour.getValue().equals(Color.WHITE)) {
+            env.getThemeHandler().setTheme(baseRGB, lighterOrDarker);
+        } else {
+            env.getThemeHandler().setTheme(baseRGB, newSecondary);
+        }
+
         env.getUserHandler().getCurrentUser().saveProperties();
-        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
+        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Creative").currentBadgeType == 0) {
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
+        }
 
     }
 
@@ -166,4 +181,9 @@ public class UISkinnerController {
         return result;
     }
 
+    public void generateSecondaryColour(ActionEvent actionEvent) {
+        env.getThemeHandler().setTheme(baseRGB, lighterOrDarker);
+        env.getUserHandler().getCurrentUser().saveProperties();
+        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
+    }
 }
