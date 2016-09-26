@@ -2,73 +2,35 @@ package seng302.gui;
 
 import com.jfoenix.controls.*;
 
-import java.awt.*;
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.awt.*;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
-import java.awt.image.ImageProducer;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
-
 import javafx.animation.*;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.*;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
-
-import javafx.geometry.*;
 import javafx.geometry.Insets;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.StackedBarChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.LineBuilder;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.*;
-import javafx.util.Pair;
 import org.controlsfx.control.PopOver;
 import seng302.Environment;
-import seng302.MusicPlayer;
-import seng302.data.Badge;
-import seng302.managers.BadgeManager;
-import seng302.MusicPlayer;
 
-import javax.swing.*;
-import seng302.Environment;;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -76,17 +38,6 @@ import static javafx.scene.paint.Color.RED;
  * Handles and Creates Users.
  */
 public class UserPageController {
-
-
-    @FXML
-    AnchorPane contentPane;
-
-    @FXML
-    VBox summaryPage;
-
-    /*
-    metronome popover
-     */
 
     private PopOver metronomePop;
 
@@ -112,11 +63,6 @@ public class UserPageController {
     @FXML
     JFXBadge levelBadge;
 
-    @FXML
-    Label latestAttempt;
-
-    @FXML
-    StackPane stageMap;
 
     @FXML
     ScrollPane currentPage;
@@ -387,7 +333,8 @@ public class UserPageController {
         muteMetronome.setMinSize(80, 30);
         setTempo.setMinSize(80,30);
 
-        HBox errorLabelBox = new HBox(); //will contain error message for if the tempo range is exceeded
+        //HBox that will contain error message for if the tempo range is exceeded
+        HBox errorLabelBox = new HBox();
         Label errorLabel = new Label("Tempo is outside of appropriate range");
         errorLabel.setTextFill(RED);
         errorLabelBox.getChildren().add(errorLabel);
@@ -403,7 +350,7 @@ public class UserPageController {
             }
         });
 
-        tempoInput.setPrefColumnCount(3); //setting col size (user can input 4 characters)
+        tempoInput.setPrefColumnCount(3); //setting col size (user can input 3 characters)
         changeTempo.getChildren().add(tempoInput);
         changeTempo.getChildren().add(setTempo);
         changeTempo.getChildren().add(muteMetronome);
@@ -431,12 +378,12 @@ public class UserPageController {
                 tempoInput.setStyle("-fx-border-color: lightgray;");
                 errorLabel.setVisible(false);
 
+                //else if the user tries to input a tempo value outside of appropriate range
             } else {
-                tempoInput.setStyle("-fx-border-color: red;");
-                errorLabel.setVisible(true);
+                tempoInput.setStyle("-fx-border-color: red;"); //text border will set red
+                errorLabel.setVisible(true); //label will display
                 errorLabel.setStyle("-fx-text-color: red;");
             }
-
                 });
 
 
@@ -499,7 +446,6 @@ public class UserPageController {
 
         final AudioClip tickSound = new AudioClip("http://www.denhaku.com/r_box/sr16/sr16perc/losticks.wav"); //metronome tick sound
         ChangeListener<Number> tick = (observable, oldValue, newValue) -> {
-            //System.out.println(newValue);
 
             //if not on mute, play tick sound
             if (!mute) {
@@ -508,10 +454,7 @@ public class UserPageController {
                 }
             }
         };
-
-
         ball.translateXProperty().addListener(tick);
-
     }
 
     /**
