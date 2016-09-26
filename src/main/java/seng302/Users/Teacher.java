@@ -3,13 +3,8 @@
 package seng302.Users;
 
 
-import seng302.Environment;
-
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import seng302.Environment;
 
@@ -28,9 +23,6 @@ public class Teacher extends User {
 
         env.getFirebase().createTeacherSnapshot(userName, true);
 
-        Map classroomInfo = new HashMap<>();
-        classroomInfo.put("users", "none");
-        env.getFirebase().getFirebase().child("classrooms/" + classroom).updateChildren(classroomInfo);
         userSnapshot = env.getFirebase().getUserSnapshot();
 
         this.userName = userName;

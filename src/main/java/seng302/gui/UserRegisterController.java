@@ -11,9 +11,6 @@ import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -33,9 +30,6 @@ public class UserRegisterController {
 
     @FXML
     private JFXTextField txtUsername;
-
-    @FXML
-    private JFXRadioButton studentRadioBtn;
 
     @FXML
     private JFXTextField txtClassRoomName;
@@ -83,10 +77,6 @@ public class UserRegisterController {
 
     public void create(Environment env) {
         this.env = env;
-
-        studentRadioBtn.setSelected(true);
-        txtClassRoomName.setVisible(false);
-
     }
 
 
