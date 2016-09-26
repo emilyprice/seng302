@@ -1,15 +1,14 @@
 package seng302.gui;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.*;
 import org.controlsfx.control.Notifications;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import jdk.nashorn.internal.parser.JSONParser;
 import seng302.Environment;
 import javafx.scene.control.Button;
@@ -180,6 +179,9 @@ public class StageMapController {
             }
             description.getChildren().add(image);
 
+            description.setAlignment(Pos.CENTER);
+            description.setHgrow(description.getChildren().get(0), Priority.ALWAYS);
+            description.setHgrow(description.getChildren().get(1), Priority.ALWAYS);
 
             descriptionVbox.getChildren().add(description);
         }

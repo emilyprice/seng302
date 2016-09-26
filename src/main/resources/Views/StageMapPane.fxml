@@ -47,7 +47,7 @@
                   <Label layoutX="474.0" layoutY="245.0" prefHeight="15.0" prefWidth="242.0" text="Scale Spelling Tutor" />
                </children>
             </AnchorPane>
-            <VBox fx:id="descriptionVbox" prefHeight="152.0" prefWidth="640.0">
+            <VBox fx:id="descriptionVbox">
                <children>
                   <StackPane>
                      <children>
