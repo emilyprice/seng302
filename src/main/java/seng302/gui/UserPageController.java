@@ -7,6 +7,7 @@ import com.jfoenix.controls.JFXListView;
 
 import java.awt.*;
 import java.awt.TextField;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.awt.*;
 import java.awt.image.FilteredImageSource;
@@ -16,15 +17,19 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
+import javafx.animation.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.*;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 
 import javafx.geometry.*;
 import javafx.geometry.Insets;
-import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
@@ -39,17 +44,17 @@ import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.LineBuilder;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
@@ -412,6 +417,10 @@ public class UserPageController {
         tempoInput.setText(((Integer)currentTempo).toString());
         tempoLabelBox.getChildren().add(tempoLabel);
 
+        //Stage metronomeAnimation = new Stage();
+        //metronome.getChildren().add(buildMetronomeAnimation(metronomeAnimation));
+
+
         metronomePopOver.getChildren().add(tempoLabelBox);
         metronomePopOver.getChildren().add(metronome);
         metronomePopOver.getChildren().add(changeTempo);
@@ -426,7 +435,6 @@ public class UserPageController {
                 });
 
 
-
         // used the spacing etc from settings to see if it will come out nicely. Subject to change
         metronomePopOver.setSpacing(10);
         metronomePopOver.setPadding(new Insets(10));
@@ -435,6 +443,68 @@ public class UserPageController {
         metronomePop = new PopOver(metronomePopOver);
         metronomePop.setTitle("Metronome");
     }
+
+
+    private Pane metronomeAnimation() {
+        Pane animationPane = new Pane(); //pane to contain animation
+        Circle ball = new Circle(); //bouncing ball for metronome
+
+        AnchorPane scene = new AnchorPane(300, 250);
+
+        primaryStage.setTitle("Hello World!");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        return animationPane;
+    }
+
+//    private AnchorPane buildMetronomeAnimation(AnchorPane metronomeBox) {
+//        //setting up the animated metronome
+//        Line line;
+//        DoubleProperty startXVal = new SimpleDoubleProperty(100.0);
+//        Timeline anim = TimelineBuilder.create()
+//                .autoReverse(true)
+//                .keyFrames(
+//                        new KeyFrame(
+//                                new Duration(0.0),
+//                                new KeyValue(startXVal, 100.0)
+//                        ),
+//                        new KeyFrame(
+//                                new Duration(50),
+//                                new KeyValue(startXVal, 300.0, Interpolator.LINEAR)
+//                        )
+//                )
+//                .cycleCount(Timeline.INDEFINITE)
+//                .build();
+//
+//        AnchorPane scene  = new AnchorPane()
+//                .width(400)
+//                .height(500)
+//                .root(
+//                        GroupBuilder.create()
+//                                .children(
+//                                        line = LineBuilder.create()
+//                                                .startY(50)
+//                                                .endX(200)
+//                                                .endY(400)
+//                                                .strokeWidth(4)
+//                                                .stroke(Color.GREEN)
+//                                                .build()
+//                                )
+//                                .build()
+//                )
+//                .build();
+//
+//
+//        line.startXProperty().bind(startXVal);
+//
+//        metronomeBox.set
+//        metronomeBox.setTitle("Metronome 1");
+//        metronomeBox.show();
+//
+//        return metronomeBox;
+//
+//    }
 
     /**
      * Hides and shows the metronome popover when the metronome button is selected
@@ -519,3 +589,48 @@ public class UserPageController {
     }
 
 }
+
+///** ticks according to a tempo in beats per minute controlled by the associated pulsar. */
+//class Metronome {
+//    private final AudioClip tick = new AudioClip("http://www.denhaku.com/r_box/sr16/sr16perc/losticks.wav");
+//    private final Pulsar pulsar;
+//
+//    public Metronome(final double initialTempo) {
+//        // the first time the audioclip is played, there is a delay before you hear it,
+//        // so play with zero volume now as to make sure it is ready to play when straight away when needed.
+//        tick.play(0);
+//
+//        pulsar = new Pulsar(initialTempo, new EventHandler<ActionEvent>() {
+//            @Override public void handle(ActionEvent actionEvent) {
+//                tick.play();
+//            }
+//        });
+//    }
+//
+//    public Pulsar getPulsar() {
+//        return pulsar;
+//    }
+//}
+//
+///** handles events according to a tempo in beats per minute. */
+//class Pulsar {
+//    private final DoubleProperty tempo    = new SimpleDoubleProperty(100);
+//    private final Timeline       timeline = new Timeline();
+//
+//    public Pulsar(final double initialTempo, final EventHandler<ActionEvent> pulseHandler) {
+//        timeline.setCycleCount(Animation.INDEFINITE);
+//        timeline.getKeyFrames().setAll(
+//                new KeyFrame(Duration.ZERO,       pulseHandler),
+//                new KeyFrame(Duration.minutes(1), null)
+//        );
+//        timeline.rateProperty().bind(tempo);
+//
+//
+//    public void start() {
+//        timeline.play();
+//    }
+//
+//    public void stop() {
+//        timeline.stop();
+//    }
+//}
