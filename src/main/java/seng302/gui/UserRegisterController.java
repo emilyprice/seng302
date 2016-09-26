@@ -243,23 +243,20 @@ public class UserRegisterController {
                 }
             }
             else if(selectedType.equals("Teacher")){
-                env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText(), txtClassRoomName.getText());
-                //env.getFirebase().getFirebase().child("classrooms/" + txtClassRoomName.getText()+"/users/").setValue("none");
-                env.getUserHandler().setCurrentTeacher(txtUsername.getText(), txtClassRoomName.getText(), txtPassword.getText());
-
-                env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText() + "/classrooms").push().setValue(txtClassRoomName.getText());
-
-                Stage stage = (Stage) btnRegister.getScene().getWindow();
-                stage.close();
-                env.getRootController().showWindow(true);
                 if(!classRoomExists(txtClassRoomName.getText())) {
-                    System.out.println("room adding");
+                    env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText(), txtClassRoomName.getText());
+                    env.getUserHandler().setCurrentTeacher(txtUsername.getText(), txtClassRoomName.getText(), txtPassword.getText());
+
+                    env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText() + "/classrooms").push().setValue(txtClassRoomName.getText());
+
                     env.getFirebase().getFirebase().child("classrooms/" + txtClassRoomName.getText() + "/users/").setValue("none");
+
+                    Stage stage = (Stage) btnRegister.getScene().getWindow();
+                    stage.close();
+                    env.getRootController().showWindow(true);
                 }else{
                     txtClassRoomName.setStyle("-fx-border-color: red;");
                 }
-                //env.getFirebase().createClassRoomSnapshot(txtClassRoomName.getText(), true);
-                //TODO: add action for registering and logging in as a teacher.
 
 
             }
