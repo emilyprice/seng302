@@ -288,6 +288,16 @@
     -fx-padding: 0 0 0 0;
 }
 
+#userSideBar{
+    -fx-background-color: {0};
+}
+
+.listView{
+    -fx-border-color: derive({0}, 90%);
+    -fx-background-color: {0};
+    -fx-border-width: 1px 0px 0px 0px;
+}
+
 .primaryText {
 
     -fx-text-fill: {2};
@@ -437,9 +447,7 @@
 	-fx-background-color: {0};
 }
 
-.listView>.virtual-flow>.scroll-bar:vertical>.thumb {
-    -fx-pref-width: 0;
-}
+
 
 
 .scroll-bar>.track-background {

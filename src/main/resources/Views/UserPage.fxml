@@ -69,7 +69,7 @@
                                 <Insets bottom="5.0" top="5.0" />
                             </padding>
                         </VBox>
-                        <JFXListView fx:id="listView" maxHeight="1.7976931348623157E308" prefHeight="455.0" style="-fx-border-width: 0;" styleClass="listView" />
+                        <JFXListView fx:id="listView" maxHeight="1.7976931348623157E308" prefHeight="455.0" style="-fx-padding: 0;" styleClass="listView" />
                         <Label styleClass="primaryText" text="Time Range:">
                             <VBox.margin>
                                 <Insets bottom="10.0" left="10.0" top="10.0" />
