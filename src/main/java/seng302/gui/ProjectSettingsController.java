@@ -162,7 +162,7 @@ public class ProjectSettingsController {
             if (newValue.intValue() >= 20 && newValue.intValue() <= 300) {
                 env.getPlayer().setTempo(newValue.intValue());
                 env.getUserPageController().tempoLabel.setText("The current tempo is set to " + newValue.intValue() + " BPM");
-                env.getUserPageController().tempoInput.setText(String.valueOf(newValue.intValue()));
+                env.getUserPageController().updateCurrentTempo(newValue);
                 env.getUserPageController().updateMetronome();
                 projectHandler.getCurrentProject().checkChanges("tempo");
 

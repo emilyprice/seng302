@@ -67,6 +67,8 @@ import seng302.MusicPlayer;
 
 import javax.swing.*;
 
+import static javafx.scene.paint.Color.RED;
+
 /**
  * Handles and Creates Users.
  */
@@ -377,8 +379,8 @@ public class UserPageController {
 
         //Goes inside metronome popover
         VBox metronomeVBox = new VBox();
-        metronomeVBox.setMinSize(270, 150);
-        metronomeVBox.setMaxSize(270, 150);
+        metronomeVBox.setMinSize(270, 175);
+        metronomeVBox.setMaxSize(270, 175);
 
         //Hbox to contain label stating current BPM
         HBox tempoLabelBox = new HBox();
@@ -396,6 +398,11 @@ public class UserPageController {
         muteMetronome.setMinSize(80, 30);
         setTempo.setMinSize(80,30);
 
+        HBox errorLabelBox = new HBox(); //will contain error message for if the tempo range is exceeded
+        Label errorLabel = new Label("Tempo is outside of appropriate range");
+        errorLabel.setTextFill(RED);
+        errorLabelBox.getChildren().add(errorLabel);
+        errorLabel.setVisible(false);
 
         muteMetronome.setOnAction(e -> {
             if (muteMetronome.getText().equals("Mute")) {
@@ -407,25 +414,23 @@ public class UserPageController {
             }
         });
 
-        tempoInput.setPrefColumnCount(4); //setting col size (user can input 4 characters)
+        tempoInput.setPrefColumnCount(3); //setting col size (user can input 4 characters)
         changeTempo.getChildren().add(tempoInput);
         changeTempo.getChildren().add(setTempo);
         changeTempo.getChildren().add(muteMetronome);
         changeTempo.setSpacing(10);
-        changeTempo.setPadding(new Insets(10));
+        changeTempo.setPadding(new Insets(5));
 
         Integer currentTempo = env.getPlayer().getTempo();
         tempoLabel.setText("The current tempo is set to " + currentTempo + " BPM");
         tempoInput.setText(((Integer)currentTempo).toString());
         tempoLabelBox.getChildren().add(tempoLabel);
 
-
         metronome.getChildren().add(metronomeAnimation()); //adds AnchorPane with animation to HBox metronome
-
-
         metronomeVBox.getChildren().add(tempoLabelBox);
         metronomeVBox.getChildren().add(metronome);
         metronomeVBox.getChildren().add(changeTempo);
+        metronomeVBox.getChildren().add(errorLabelBox);
 
 
         setTempo.setOnAction(event->{
@@ -434,6 +439,13 @@ public class UserPageController {
                 tempoLabel.setText("The current tempo is set to " + tempoInput.getText() + " BPM");
                 anim.setDuration(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000));
                 anim.playFromStart();
+                tempoInput.setStyle("-fx-border-color: lightgray;");
+                errorLabel.setVisible(false);
+
+            } else {
+                tempoInput.setStyle("-fx-border-color: red;");
+                errorLabel.setVisible(true);
+                errorLabel.setStyle("-fx-text-color: red;");
             }
 
                 });
@@ -498,7 +510,7 @@ public class UserPageController {
 
         final AudioClip tickSound = new AudioClip("http://www.denhaku.com/r_box/sr16/sr16perc/losticks.wav"); //metronome tick sound
         ChangeListener<Number> tick = (observable, oldValue, newValue) -> {
-            System.out.println(newValue);
+            //System.out.println(newValue);
 
             //if not on mute, play tick sound
             if (!mute) {
@@ -510,6 +522,14 @@ public class UserPageController {
 
 
         ball.translateXProperty().addListener(tick);
+
+    }
+
+    /**
+     * Updates the tempo to the current set tempo
+     */
+    public void updateCurrentTempo(Number newValue) {
+        tempoInput.setText(String.valueOf(newValue.intValue()));
 
     }
 
@@ -530,11 +550,9 @@ public class UserPageController {
     private void toggleMetronomePopOver() {
         if (metronomePop.isShowing()) {
             metronomePop.hide();
-            //anim.pause(); //metronome stops when popover is showing
-
         } else {
             metronomePop.show(metronomeBtn);
-            //anim.playFromStart();
+
         }
     }
 
