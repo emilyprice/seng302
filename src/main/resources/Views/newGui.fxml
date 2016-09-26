@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.text.*?>
 <?import com.jfoenix.controls.JFXBadge?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
@@ -8,6 +14,7 @@
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane fx:id="paneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="457.0" minWidth="700.0" prefHeight="457.0" prefWidth="700.0" style="-fx-border-style: none;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.RootController">
     <children>
         <VBox prefHeight="457.0" prefWidth="700.0" style="-fx-border-style: none;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -74,6 +81,11 @@
                   <Menu fx:id="teacherMenu" mnemonicParsing="false" text="File" visible="false">
                      <items>
                         <MenuItem fx:id="teacherMenuQuit" accelerator="Shortcut+Q" mnemonicParsing="false" onAction="#closeApplication" text="Quit" />
+                        <Menu mnemonicParsing="false" text="New..">
+                           <items>
+                              <MenuItem accelerator="Shortcut+N" mnemonicParsing="false" onAction="#newClassroom" text="Classroom" />
+                           </items>
+                        </Menu>
                      </items>
                   </Menu>
 

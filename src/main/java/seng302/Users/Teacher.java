@@ -3,11 +3,9 @@
 package seng302.Users;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import seng302.Environment;
+
+import java.util.HashMap;
 
 /**
  * Handles functionality for representing and manipulating a teacher's information. Also handles
@@ -18,10 +16,8 @@ import seng302.Environment;
 
 public class Teacher extends User {
 
-    private List<String> classrooms;
 
-
-    public Teacher(String userName, String password, Environment env, String classroom) {
+    public Teacher(String userName, String password, Environment env) {
 
         env.getFirebase().createTeacherSnapshot(userName, true);
 
@@ -31,16 +27,11 @@ public class Teacher extends User {
         this.userPassword = password;
         this.env = env;
 
-        classrooms = new ArrayList<>();
-        classrooms.add(classroom);
-        //properties = new JSONObject();
 
         createUserFiles();
 
         loadProperties();
         saveProperties();
-
-        env.getFirebase().getUserRef().child("classrooms").setValue(classrooms);
 
     }
 

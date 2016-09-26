@@ -1,7 +1,6 @@
 package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -11,13 +10,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import seng302.Environment;
 
 /**
  * Handles Users.
@@ -155,7 +151,7 @@ public class UserHandler {
     }
 
     public void createTeacher(String user, String password, String classroom) {
-        this.currentTeacher = new Teacher(user, password, env, classroom);
+        this.currentTeacher = new Teacher(user, password, env);
     }
 
 
@@ -219,7 +215,7 @@ public class UserHandler {
 
     public void setCurrentTeacher(String userName, String classroom, String password) {
         this.classroom = classroom;
-        this.currentTeacher = new Teacher(userName, password, env, classroom);
+        this.currentTeacher = new Teacher(userName, password, env);
 
     }
 

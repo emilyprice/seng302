@@ -1,16 +1,11 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -23,6 +18,9 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.Environment;
 import seng302.utility.UserImporter;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Controller for the user login screen. Displays recent users and contains functionality for
@@ -240,14 +238,19 @@ public class UserLoginController {
 
     @FXML
     protected void logIn() {
-        System.out.println("login called");
 
         if (classroomSelected()) {
             //Classroom dropdown value selected.
             // try to log in as a teacher
             DataSnapshot teacher = env.getFirebase().getTeacherSnapshot().child(usernameInput.getText());
-            boolean isTeacher = teacher.exists() && ((ArrayList) teacher.child("/classrooms").getValue()).contains(ddClassroom.getValue());
-            System.out.println(isTeacher);
+            final boolean[] teacherHasClassroom = {false};
+
+            teacher.child("/classrooms").getChildren().forEach(e-> {
+                if (e.getValue().equals(ddClassroom.getValue().toString())) {
+                    teacherHasClassroom[0] = true;
+                }
+            });
+            boolean isTeacher = teacher.exists() && teacherHasClassroom[0];
             if (!isTeacher) {
                 authenticate(env.getFirebase().getClassroomsSnapshot().child(ddClassroom.getValue().toString()));
             } else {

@@ -702,6 +702,24 @@ public class RootController implements Initializable {
         env.getUserHandler().getCurrentUser().getProjectHandler().createNewProject();
     }
 
+    @FXML
+    public void newClassroom() {
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle("New Classroom");
+        dialog.setHeaderText("New Classroom");
+        dialog.setContentText("Please enter the classroom name:");
+
+        // Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            String newClassroom = result.get();
+            env.getUserHandler().setClassRoom(newClassroom);
+            env.getFirebase().getUserRef().child("classrooms").push().setValue(newClassroom);
+            env.getTeacherPageController().updateDisplay();
+
+        }
+    }
+
     /**
      * Saves project information
      */

@@ -53,6 +53,8 @@ public class TeacherPageController {
 
     private UserSummaryController userSummaryController;
 
+    private ClassSummaryController classSummaryController;
+
     private StringConverter convert;
 
 
@@ -73,7 +75,7 @@ public class TeacherPageController {
     }
 
 
-    public void populateUserOptions() {
+    private void populateUserOptions() {
 
         ArrayList<String> options = new ArrayList<>();
         options.add("Summary");
@@ -154,7 +156,7 @@ public class TeacherPageController {
             AnchorPane.setTopAnchor(summary, 0.0);
             AnchorPane.setBottomAnchor(summary, 0.0);
             AnchorPane.setRightAnchor(summary, 0.0);
-            ClassSummaryController classSummaryController = loader.getController();
+            classSummaryController = loader.getController();
 
             classSummaryController.create(env);
 
@@ -190,6 +192,12 @@ public class TeacherPageController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void updateDisplay() {
+        populateUserOptions();
+        showPage("Summary");
 
     }
 }
