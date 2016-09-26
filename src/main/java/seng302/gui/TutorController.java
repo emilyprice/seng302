@@ -18,6 +18,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.Environment;
 import seng302.Users.Project;
@@ -37,6 +39,8 @@ public abstract class TutorController {
     public TutorRecord record;
 
     public float userScore;
+
+    public String outputText;
 
     public int selectedQuestions;
 
@@ -121,35 +125,36 @@ public abstract class TutorController {
         });
     }
 
-//    /**
-//     * If the user chooses to re-test their self on their failed questions, this function sets up
-//     * the tutoring environment for that.
-//     */
-//    public void retest() {
-//        record = new TutorRecord();
-//        ArrayList<Pair> tempIncorrectResponses = new ArrayList<>(manager.getTempIncorrectResponses());
-//        manager.clearTempIncorrect();
-//        Collections.shuffle(tempIncorrectResponses);
-//        manager.questions = tempIncorrectResponses.size();
-//        List retestPanes = new ArrayList<>();
-//
-//        for (Pair pair : tempIncorrectResponses) {
-//            HBox questionRow = generateQuestionPane(pair);
-//            TitledPane qPane = new TitledPane("Question " + (tempIncorrectResponses.indexOf(pair) + 1), questionRow);
-//            qPane.setPadding(new Insets(2, 2, 2, 2));
-//            retestPanes.add(qPane);
-//            VBox.setMargin(questionRow, new Insets(10, 10, 10, 10));
-//        }
-//        qAccordion.getPanes().remove(0, qAccordion.getPanes().size());
-//        qAccordion.getPanes().addAll(retestPanes);
-//        questionRows.getChildren().add(qAccordion);
-//    }
+    /**
+     * If the user chooses to re-test their self on their failed questions, this function sets up
+     * the tutoring environment for that.
+     */
+    public void retest() {
+        record = new TutorRecord();
+        ArrayList<Pair> tempIncorrectResponses = new ArrayList<>(manager.getTempIncorrectResponses());
+        manager.clearTempIncorrect();
+        Collections.shuffle(tempIncorrectResponses);
+        manager.questions = tempIncorrectResponses.size();
+        List retestPanes = new ArrayList<>();
+
+        for (Pair pair : tempIncorrectResponses) {
+            HBox questionRow = generateQuestionPane(pair);
+            TitledPane qPane = new TitledPane("Question " + (tempIncorrectResponses.indexOf(pair) + 1), questionRow);
+            qPane.setPadding(new Insets(2, 2, 2, 2));
+            retestPanes.add(qPane);
+            VBox.setMargin(questionRow, new Insets(10, 10, 10, 10));
+        }
+        qAccordion.getPanes().remove(0, qAccordion.getPanes().size());
+        qAccordion.getPanes().addAll(retestPanes);
+        questionRows.getChildren().add(qAccordion);
+    }
 
     /**
      * Run whenever a tutoring session ends. Saves information about that session
      */
     protected void finished() {
         env.getPlayer().stop();
+        String tutorName = env.getRootController().getHeader();
 
         //Calculates and gives a user their experience.
         //Note: I've ignored "skipped questions" here, as you won't be able to "skip" a
@@ -157,6 +162,10 @@ public abstract class TutorController {
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             int expGained = ExperienceCalculator.calculateExperience(manager.correct, manager.questions);
             env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(expGained);
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().updateTutorBadges(tutorName, manager.correct, manager.answered);
+            if (manager.correct == manager.questions) {
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().updateTutorMaster(tutorName);
+            }
         }
 
         userScore = getScore(manager.correct, manager.answered);
@@ -190,6 +199,10 @@ public abstract class TutorController {
         manager.resetStats();
     }
 
+    /**
+     * An empty function which is overridden by each tutor
+     */
+    abstract HBox generateQuestionPane(Pair data);
 
     /**
      * A function for disabling a selection of buttons. For example, disable all inputs but not the

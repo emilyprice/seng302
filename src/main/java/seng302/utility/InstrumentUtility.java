@@ -37,6 +37,10 @@ public class InstrumentUtility {
         return env.getPlayer().getAvailableInstruments()[id];
     }
 
+    public static Instrument[] getInstruments(Environment env){
+        return env.getPlayer().getAvailableInstruments();
+    }
+
     /**
      * Fetches the first instrument that the music player lists as available.
      * @param env The environment that the instrument is being selected from

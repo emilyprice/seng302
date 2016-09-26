@@ -1,7 +1,6 @@
 package seng302.gui;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -11,7 +10,6 @@ import javafx.scene.control.Button;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +21,6 @@ import java.util.HashMap;
 public class StageMapController {
 
     public Project currentProject;
-
 
     @FXML
     private Button scaleRecognitionTutorButton;
@@ -271,8 +268,7 @@ public class StageMapController {
                 //set the tutor status to be unlocked
                 unlockStatus.put(tutorOrder.get((tutorOrder.indexOf(converted.get(tutorId)) + 1)), true);
                 visualiseLockedTutors();
-
-
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Completist").updateBadgeProgress(env, 1);
             }
         }
     }
@@ -341,7 +337,6 @@ public class StageMapController {
     private void launchMajorModesTutor() {
         env.getRootController().getTutorFactory().openTutor("Major Modes Tutor");
     }
-
 
 
 }

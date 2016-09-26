@@ -220,7 +220,7 @@ public class ChordRecognitionTutorController extends TutorController {
             record.addQuestionAnswer(question);
             handleAccordion();
             if (manager.answered == manager.questions) {
-                finished();
+                    finished();
             }
         });
 
