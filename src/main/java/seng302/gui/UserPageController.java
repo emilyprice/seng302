@@ -71,8 +71,6 @@ public class UserPageController {
     @FXML
     ScrollPane currentPage;
 
-    @FXML
-    FlowPane currentFlowPane;
 
     @FXML
     private Slider timeSlider;
@@ -165,6 +163,7 @@ public class UserPageController {
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             showPage((String) newValue);
+            System.out.println("show page called" + newValue);
         });
 
         // Set after the listener so it loads user summary correctly
@@ -323,7 +322,7 @@ public class UserPageController {
         listView.getSelectionModel().selectFirst();
 
         FXMLLoader summaryLoader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
-
+        System.out.println("before try");
         try {
             FlowPane summaryPage = summaryLoader.load();
             //currentPage.setContent(summaryPage);
@@ -335,9 +334,7 @@ public class UserPageController {
             AnchorPane.setRightAnchor(summaryPage, 0.0);
 
 
-            summaryPage.setMinWidth(currentPage.getWidth());
-
-
+            //summaryPage.setMinWidth(currentPage.getWidth());
 
             summaryController = summaryLoader.getController();
             summaryController.create(env);
@@ -361,7 +358,8 @@ public class UserPageController {
 
         try {
             VBox stats = tutorStatsLoader.load();
-            currentPage.setContent(stats);
+            //currentPage.setContent(stats);
+            scrollPaneAnchorPage.getChildren().setAll(stats);
             AnchorPane.setLeftAnchor(stats, 0.0);
             AnchorPane.setTopAnchor(stats, 0.0);
             AnchorPane.setBottomAnchor(stats, 0.0);

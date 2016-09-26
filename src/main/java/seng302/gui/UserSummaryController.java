@@ -140,6 +140,7 @@ public class UserSummaryController {
      * Loads the stage map into the summary page
      */
     public void loadStageMap() {
+
         if (env.getStageMapController() == null) {
             loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
 
