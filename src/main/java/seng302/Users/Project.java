@@ -44,6 +44,7 @@ public class Project {
 
     private Environment env;
     public TutorHandler tutorHandler;
+    private BadgeManager badgeManager;
 
 
     private Boolean isCompetitiveMode, visualiserOn;
@@ -223,23 +224,39 @@ public class Project {
         //badges
         //overallBadges
         ArrayList<Badge> overallBadges;
-        Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
-        }.getType();
-        overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
+        try{
+
+            Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
+            }.getType();
+            overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
+        }catch(Exception e){
+            overallBadges = new ArrayList<>();
+        }
+
 
         //tutorBadges
         HashMap<String, ArrayList<Badge>> tutorBadges;
-        Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
-        }.getType();
-        tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
+        try{
+            Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
+            }.getType();
+            tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
+        }catch(Exception e){
+            tutorBadges = new HashMap<>() ;
+        }
+
 
         badgeManager.replaceBadges(tutorBadges, overallBadges);
 
         //100tutorMap
         HashMap<String, Boolean> tutor100Map;
-        Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
-        }.getType();
-        tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+        try{
+            Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
+            }.getType();
+            tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+        }catch (Exception e){
+            tutor100Map = new HashMap<>();
+        }
+
 
         badgeManager.replaceTutor100AllMap(tutor100Map);
 
@@ -284,7 +301,7 @@ public class Project {
 
     /**
      * Handles Saving a .json Project file, for the specified project address
-     * @param projectAddress Project directory address.
+     * @param projectName Project directory address.
      */
     public void saveProject(String projectName) {
         saveProperties();

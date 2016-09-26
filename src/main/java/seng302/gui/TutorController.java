@@ -3,6 +3,8 @@ package seng302.gui;
 import com.jfoenix.controls.JFXSlider;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -21,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
@@ -174,7 +177,7 @@ public abstract class TutorController {
         record.setFinished();
         record.updateDate();
 
-        String tutorName = env.getRootController().getHeader();
+
 
         if (currentProject != null) {
             currentProject.saveCurrentProject();

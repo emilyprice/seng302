@@ -16,6 +16,7 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
@@ -222,6 +223,8 @@ public class UserSummaryController {
         lockView.fitHeightProperty().setValue(45);
         lockView.fitWidthProperty().setValue(45);
         this.lockView = lockView;
+
+        System.out.println(tutorBadgeMap);
 
         for (Object tutor : tutorBadgeMap.keySet()) {
             for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {
