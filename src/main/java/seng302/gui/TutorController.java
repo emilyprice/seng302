@@ -196,7 +196,7 @@ public abstract class TutorController {
         }
 
         env.getStageMapController().fetchTutorFile(tutorName);
-        env.getUserPageController();
+        //env.getUserPageController(); 27Sept
 
         // Clear the current session
         manager.resetStats();
