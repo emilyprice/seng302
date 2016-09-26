@@ -1,26 +1,19 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import seng302.Environment;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class TeacherPageController {
 
@@ -51,6 +44,9 @@ public class TeacherPageController {
     @FXML
     private Slider timeSlider;
 
+    @FXML
+    private TreeView studentTree;
+
 
     private Environment env;
 
@@ -72,6 +68,7 @@ public class TeacherPageController {
     public void load() {
         imageDP2.setImage(env.getUserHandler().getCurrentTeacher().getUserPicture());
         populateUserOptions();
+        showPage("Summary");
     }
 
 
@@ -100,7 +97,7 @@ public class TeacherPageController {
             root.getChildren().add(thisStudent);
         });
 
-        TreeView studentTree = new TreeView<>(root);
+        studentTree.setRoot(root);
         studentTree.setShowRoot(false);
         studentTree.setCellFactory(thing -> new TreeCell<String>() {
 
@@ -131,13 +128,11 @@ public class TeacherPageController {
 
             }
         });
-        studentInfo.getChildren().add(studentTree);
 
     }
 
     public void showPage(String pageName) {
 
-        setupTimeSlider();
         if (pageName.equals("Summary")) {
             showSummaryPage();
         } else {
@@ -188,61 +183,11 @@ public class TeacherPageController {
             //statsController = tutorStatsLoader.getController();
 
             //change to be the user that was clicked on
-            userSummaryController.createStudent(env, userName, getTimePeriod(), project);
+            userSummaryController.createStudent(env, userName,"All Time", project);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-    }
-
-    private void setupTimeSlider() {
-        timeSlider.setMaxWidth(200);
-
-        convert = new StringConverter<Double>() {
-            @Override
-            public String toString(Double object) {
-                if (object == 0) {
-                    return "Last 24 Hours";
-                } else if (object == 1) {
-                    return "Last Week";
-                } else if (object == 2) {
-                    return "Last Month";
-                } else if (object == 3) {
-                    return "Last Six Months";
-                } else if (object == 4) {
-                    return "Last Year";
-                } else if (object == 5) {
-                    return "All Time";
-                }
-                return null;
-
-            }
-
-            @Override
-            public Double fromString(String string) {
-                if (string.equals("Last 24 Hours")) {
-                    return 0d;
-                } else if (string.equals("Last Week")) {
-                    return 1d;
-                } else if (string.equals("Last Month")) {
-                    return 2d;
-                } else if (string.equals("Last Six Months")) {
-                    return 3d;
-                } else if (string.equals("Last Year")) {
-                    return 4d;
-                } else if (string.equals("All Time")) {
-                    return 5d;
-                }
-                return null;
-            }
-        };
-
-        timeSlider.setLabelFormatter(convert);
-
-    }
-
-    public String getTimePeriod() {
-        return convert.toString(timeSlider.getValue());
     }
 }
