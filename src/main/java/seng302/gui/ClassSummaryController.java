@@ -2,6 +2,9 @@ package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
 
+import org.controlsfx.control.spreadsheet.StringConverterWithFormat;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +13,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import seng302.Environment;
@@ -22,12 +26,54 @@ public class ClassSummaryController {
     @FXML
     private HBox chartHolder;
 
+    @FXML
+    private Slider tutorSlider;
+
 
     private Environment env;
 
     public void create(Environment env) {
         this.env = env;
         setupBarChart();
+        setupTutorSlider();
+    }
+
+    private void setupTutorSlider() {
+        ArrayList<String> tutorNames = new ArrayList<>();
+        tutorNames.add("Musical Terms Tutor");
+        tutorNames.add("Pitch Comparison Tutor");
+        tutorNames.add("Scale Recognition Tutor");
+        tutorNames.add("Chord Recognition Tutor");
+        tutorNames.add("Interval Recognition Tutor");
+        tutorNames.add("Chord Spelling Tutor");
+        tutorNames.add("Key Signature Tutor");
+        tutorNames.add("Diatonic Chord Tutor");
+        tutorNames.add("Scale Modes Tutor");
+        tutorNames.add("Scale Spelling Tutor");
+
+        tutorSlider.setLabelFormatter(new StringConverterWithFormat<Double>() {
+            @Override
+            public String toString(Double object) {
+                return tutorNames.get(object.intValue());
+            }
+
+            @Override
+            public Double fromString(String string) {
+                return (double) tutorNames.indexOf(string);
+            }
+        });
+
+        tutorSlider.setMin(0);
+        tutorSlider.setMax(tutorNames.size() - 1);
+        tutorSlider.setMajorTickUnit(1.0);
+        tutorSlider.setMinorTickCount(0);
+        tutorSlider.setShowTickLabels(true);
+        tutorSlider.setSnapToTicks(true);
+        tutorSlider.setShowTickMarks(true);
+
+        tutorSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue.toString());
+        });
     }
 
     private void setupBarChart() {
