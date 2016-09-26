@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
@@ -150,7 +151,7 @@ public class UserPageController {
         options.add("Scale Modes Tutor");
         options.add("Scale Spelling Tutor");
 
-        Image lockImg = new Image(getClass().getResourceAsStream("/images/lock.png"), 20, 20, false, false);
+        Image lockImg = new Image(getClass().getResourceAsStream("/images/locked-padlock.png"), 20, 20, false, false);
 
         listView.getItems().addAll(FXCollections.observableArrayList(options));
 
@@ -177,21 +178,29 @@ public class UserPageController {
 
                 } else {
                     //if in competitive mode, lock the relevant tabs
-                    if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
-                            setGraphic(new ImageView(lockImg));
-                            setTextFill(Color.GRAY);
-                            setText(tutor);
-                            setDisable(true);
-                        }
-
-
+                    if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() && !tutor.equals("Summary") && !env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor))) {
+                        ImageView lock = new ImageView(lockImg);
+                        StackPane image = new StackPane();
+                        image.setPadding(new Insets(0, 5, 0, 0));
+                        image.getChildren().add(lock);
+                        setGraphic(image);
+                        setTextFill(Color.GRAY);
+                        setText(tutor);
+                        setAlignment(Pos.CENTER_LEFT);
+                        setPadding(new Insets(0, 0, 0, 10));
+                        setDisable(true);
                     } else {
+                        setGraphic(null);
+                        setText(tutor);
+                        setPadding(new Insets(0, 0, 0, 40));
+                        setAlignment(Pos.CENTER_LEFT);
                         setDisable(false);
                     }
+                        }
+                    }
                 }
-            }
-        });
+
+        );
 
     }
 
