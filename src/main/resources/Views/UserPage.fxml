@@ -53,11 +53,15 @@
                                                 </JFXBadge>
                                             </children>
                                         </StackPane>
-                                        <Label fx:id="txtFullName" styleClass="primaryText"/>
+                                        <Label fx:id="txtFullName" styleClass="primaryText">
+                                            <VBox.margin>
+                                                <Insets top="5.0"/>
+                                            </VBox.margin>
+                                        </Label>
 
                                     </children>
                                     <padding>
-                                        <Insets bottom="5.0" top="5.0"/>
+                                        <Insets bottom="20.0" top="20.0"/>
                                     </padding>
                                 </VBox>
                                 <VBox maxWidth="30.0" prefHeight="200.0" prefWidth="30.0">
@@ -87,7 +91,7 @@
                                             </graphic>
                                         </JFXButton>
                                         <JFXButton fx:id="timeSliderButton" maxHeight="20.0"
-                                                   maxWidth="30.0">
+                                                   maxWidth="30.0" onAction="#showTimeSlider">
                                             <graphic>
                                                 <ImageView fitHeight="20.0" fitWidth="20.0"
                                                            pickOnBounds="true" preserveRatio="true"

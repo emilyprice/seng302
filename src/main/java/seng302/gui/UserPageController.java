@@ -5,6 +5,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
+import org.controlsfx.control.PopOver;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -21,6 +23,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.util.StringConverter;
 import seng302.Environment;
 
@@ -77,7 +80,12 @@ public class UserPageController {
     private ScrollPane scrollPane;
 
     @FXML
+    private JFXButton timeSliderButton;
+
+    @FXML
     AnchorPane summary;
+
+    private PopOver timePopover;
 
     private Environment env;
 
@@ -85,7 +93,7 @@ public class UserPageController {
     public void setEnvironment(Environment env) {
         this.env = env;
         this.env.setUserPageController(this);
-
+        setupTimeSlider();
     }
 
 
@@ -95,7 +103,8 @@ public class UserPageController {
     protected void load() {
         populateUserOptions();
 
-
+        Circle imageClip = new Circle(50, 50, 50);
+        imageDP2.setClip(imageClip);
         imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         updateLevelBadge();
 
@@ -183,12 +192,23 @@ public class UserPageController {
 
     }
 
+    @FXML
+    private void showTimeSlider() {
+        if (timePopover.isShowing()) {
+            timePopover.hide();
+        } else {
+            timePopover.show(timeSliderButton);
+        }
+    }
+
 
     /**
      * Creates the GUI time slider. This allows the user to select a specific time period to view
      * tutor results from.
      */
     private void setupTimeSlider() {
+        timePopover = new PopOver();
+        timePopover.setContentNode(timeSlider);
         timeSlider.setMaxWidth(200);
 
         convert = new StringConverter<Double>() {
