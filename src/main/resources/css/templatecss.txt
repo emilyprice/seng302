@@ -606,3 +606,7 @@
     -fx-border-color: red;
     -fx-border-width: 2px;
 }
+
+.default-color0.chart-bar {
+    -fx-bar-fill: {0};
+}

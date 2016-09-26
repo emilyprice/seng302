@@ -3,7 +3,6 @@ package seng302.gui;
 import com.jfoenix.controls.JFXColorPicker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -186,6 +185,7 @@ public class UISkinnerController {
     }
 
     public void generateSecondaryColour(ActionEvent actionEvent) {
+        //TODO: make this work for teachers
         env.getThemeHandler().setTheme(baseRGB, lighterOrDarker);
         env.getUserHandler().getCurrentUser().saveProperties();
         env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
