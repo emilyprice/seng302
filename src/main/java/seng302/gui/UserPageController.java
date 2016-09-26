@@ -45,6 +45,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.*;
@@ -66,6 +68,7 @@ import seng302.managers.BadgeManager;
 import seng302.MusicPlayer;
 
 import javax.swing.*;
+import seng302.Environment;;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -128,15 +131,6 @@ public class UserPageController {
 
     private TutorStatsController statsController;
 
-    @FXML
-    VBox tutors;
-
-    @FXML
-    private ScrollPane scrollPane;
-
-    @FXML
-    AnchorPane summary;
-
     private Environment env;
 
     public Label tempoLabel = new Label();
@@ -151,7 +145,6 @@ public class UserPageController {
     public void setEnvironment(Environment env) {
         this.env = env;
         this.env.setUserPageController(this);
-
     }
 
 
@@ -210,12 +203,9 @@ public class UserPageController {
         Image lockImg = new Image(getClass().getResourceAsStream("/images/lock.png"), 20, 20, false, false);
 
         listView.getItems().addAll(FXCollections.observableArrayList(options));
-
-
         listView.setMaxWidth(200);
         listView.setMinWidth(200);
         listView.setDepthProperty(1);
-
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             showPage((String) newValue);
@@ -223,7 +213,6 @@ public class UserPageController {
 
         // Set after the listener so it loads user summary correctly
         listView.getSelectionModel().selectFirst();
-
 
         // This allows images to be displayed in the listview. Still trying to
         // make the text centered and the height and width the same as the others.
@@ -627,48 +616,3 @@ public class UserPageController {
     }
 
 }
-
-///** ticks according to a tempo in beats per minute controlled by the associated pulsar. */
-//class Metronome {
-//    private final AudioClip tick = new AudioClip("http://www.denhaku.com/r_box/sr16/sr16perc/losticks.wav");
-//    private final Pulsar pulsar;
-//
-//    public Metronome(final double initialTempo) {
-//        // the first time the audioclip is played, there is a delay before you hear it,
-//        // so play with zero volume now as to make sure it is ready to play when straight away when needed.
-//        tick.play(0);
-//
-//        pulsar = new Pulsar(initialTempo, new EventHandler<ActionEvent>() {
-//            @Override public void handle(ActionEvent actionEvent) {
-//                tick.play();
-//            }
-//        });
-//    }
-//
-//    public Pulsar getPulsar() {
-//        return pulsar;
-//    }
-//}
-//
-///** handles events according to a tempo in beats per minute. */
-//class Pulsar {
-//    private final DoubleProperty tempo    = new SimpleDoubleProperty(100);
- //       private final Timeline timeline = new Timeline();
-//
-//    public Pulsar(final double initialTempo, final EventHandler<ActionEvent> pulseHandler) {
-//        timeline.setCycleCount(Animation.INDEFINITE);
-//        timeline.getKeyFrames().setAll(
-//                new KeyFrame(Duration.ZERO,       pulseHandler),
-//                new KeyFrame(Duration.minutes(1), null)
-//        );
-//        timeline.rateProperty().bind(tempo);
-//
-//
-//    public void start() {
-//        timeline.play();
-//    }
-//
-//    public void stop() {
-//        timeline.stop();
-//    }
-//}
