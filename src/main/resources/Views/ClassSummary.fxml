@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<VBox fx:id="classSummary" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-      minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.ClassSummaryController">
+<VBox fx:id="classSummary" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.ClassSummaryController">
    <children>
        <HBox alignment="CENTER">
            <children>
                <Label alignment="CENTER" text="Class Summary">
                    <font>
-                       <Font name="System Bold" size="18.0"/>
+                       <Font name="System Bold" size="18.0" />
                    </font>
                </Label>
            </children>
        </HBox>
-       <HBox>
+       <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
          <children>
-             <Slider fx:id="tutorSlider" HBox.hgrow="ALWAYS"/>
+             <Slider fx:id="tutorSlider" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="20.0" right="20.0" />
+               </HBox.margin>
+            </Slider>
          </children>
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" />
+         </VBox.margin>
       </HBox>
+      <JFXListView fx:id="studentsAtStage" minHeight="0.0" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" />
+         </VBox.margin>
+      </JFXListView>
        <HBox fx:id="chartHolder" alignment="CENTER" maxHeight="100.0">
          <children>
          </children>
