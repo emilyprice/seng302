@@ -561,3 +561,7 @@
 .jfx-button:hover {
     -fx-background-color: {1}
     }
+
+.jfx-rippler{
+    -fx-rippler-fill:{0};
+}
