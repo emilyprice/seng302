@@ -102,6 +102,17 @@
                         </VBox>
                     </children>
                 </HBox>
+                <Separator>
+                    <padding>
+                        <Insets bottom="5.0" top="5.0"/>
+                    </padding>
+                </Separator>
+                <StackPane>
+                    <children>
+                        <Button fx:id="transcriptButton" disable="true" mnemonicParsing="false"
+                                onAction="#sendToTranscript" text="Use in transcript"/>
+                    </children>
+                </StackPane>
             </children>
         </VBox>
     </children>

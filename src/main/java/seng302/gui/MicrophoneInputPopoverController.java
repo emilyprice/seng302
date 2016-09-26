@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -26,6 +28,9 @@ public class MicrophoneInputPopoverController {
     @FXML
     private TextArea allNotesTextArea;
 
+    @FXML
+    private Button transcriptButton;
+
     private Environment env;
     private MicrophoneInput microphoneInput;
     private boolean recording = false;
@@ -42,6 +47,14 @@ public class MicrophoneInputPopoverController {
         microphoneInput = env.getMicrophoneInput();
         currentNoteText.setText("");
         microphoneInput.addPopover(this);
+        allNotesTextArea.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (allNotesTextArea.isFocused()) {
+                    env.getRootController().getTranscriptController().giveFocus();
+                }
+            }
+        });
     }
 
     /**
@@ -53,6 +66,7 @@ public class MicrophoneInputPopoverController {
             recordButton.setText("Start Recording");
             microphoneInput.stopRecording();
             recording = false;
+            transcriptButton.setDisable(false);
         } else {
             try {
                 microphoneInput.startRecording();
@@ -89,4 +103,12 @@ public class MicrophoneInputPopoverController {
         this.foundNotes = foundNotes;
     }
 
+    @FXML
+    private void sendToTranscript() {
+        transcriptButton.setDisable(true);
+        String prevTxt = env.getRootController().getTranscriptController().txtCommand.getText();
+        String newTxt = prevTxt + " " + allNotesTextArea.getText();
+        allNotesTextArea.clear();
+        env.getRootController().getTranscriptController().txtCommand.setText(newTxt);
+    }
 }
