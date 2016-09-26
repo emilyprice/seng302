@@ -102,7 +102,9 @@ public class UserSummaryController {
                 new KeyFrame(Duration.millis(800), new KeyValue(overallIncorrect.widthProperty(), overallWidthIncorrect, Interpolator.EASE_OUT)));
         overallIncorrectAnim.play();
         overallIncorrect.setWidth(overallWidthIncorrect);
-        overallIncorrect.setFill(Color.GRAY);
+        overallIncorrect.setFill(Color.LIGHTGRAY);
+        overallIncorrect.setStyle("-fx-border-radius: 10 10 0 0;\n" +
+                "  -fx-background-radius: 10 10 0 0;");
         overallCorrectLabel.setText(correctIncorrectOverall.getKey() + " \ncorrect");
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
 

@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -38,6 +39,9 @@ public class UserPageController {
 
     @FXML
     VBox summaryPage;
+
+    @FXML
+    AnchorPane scrollPaneAnchorPage;
 
     @FXML
     SplitPane userView;
@@ -66,6 +70,9 @@ public class UserPageController {
 
     @FXML
     ScrollPane currentPage;
+
+    @FXML
+    FlowPane currentFlowPane;
 
     @FXML
     private Slider timeSlider;
@@ -318,13 +325,19 @@ public class UserPageController {
         FXMLLoader summaryLoader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
 
         try {
-            VBox summaryPage = summaryLoader.load();
-            currentPage.setContent(summaryPage);
+            FlowPane summaryPage = summaryLoader.load();
+            //currentPage.setContent(summaryPage);
 
+            scrollPaneAnchorPage.getChildren().setAll(summaryPage);
             AnchorPane.setLeftAnchor(summaryPage, 0.0);
             AnchorPane.setTopAnchor(summaryPage, 0.0);
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
             AnchorPane.setRightAnchor(summaryPage, 0.0);
+
+
+            summaryPage.setMinWidth(currentPage.getWidth());
+
+
 
             summaryController = summaryLoader.getController();
             summaryController.create(env);
