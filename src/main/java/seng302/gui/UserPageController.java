@@ -1,9 +1,6 @@
 package seng302.gui;
 
-import com.jfoenix.controls.JFXBadge;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXListCell;
-import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.*;
 
 import java.awt.*;
 import java.awt.TextField;
@@ -20,6 +17,8 @@ import java.util.List;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -117,6 +116,9 @@ public class UserPageController {
     @FXML
     ScrollPane currentPage;
 
+    private Circle ball; //bouncing ball for metronome
+
+
     @FXML
     private Slider timeSlider;
 
@@ -138,6 +140,8 @@ public class UserPageController {
     public Label tempoLabel = new Label();
 
     private TranslateTransition anim;
+
+    private Boolean mute;
 
     public javafx.scene.control.TextField tempoInput = new javafx.scene.control.TextField();
 
@@ -373,8 +377,8 @@ public class UserPageController {
 
         //Goes inside metronome popover
         VBox metronomeVBox = new VBox();
-        metronomeVBox.setMinSize(250, 150);
-        metronomeVBox.setMaxSize(250, 150);
+        metronomeVBox.setMinSize(270, 150);
+        metronomeVBox.setMaxSize(270, 150);
 
         //Hbox to contain label stating current BPM
         HBox tempoLabelBox = new HBox();
@@ -387,17 +391,28 @@ public class UserPageController {
         HBox changeTempo = new HBox();
         JFXButton setTempo = new JFXButton("Set tempo");
         setTempo.getStyleClass().add("primary");
+        JFXButton muteMetronome = new JFXButton("Mute");
+        muteMetronome.getStyleClass().add("primary");
+        muteMetronome.setMinSize(80, 30);
+        setTempo.setMinSize(80,30);
+
+
+        muteMetronome.setOnAction(e -> {
+            if (muteMetronome.getText().equals("Mute")) {
+                mute = true;
+                muteMetronome.setText("Unmute");
+            } else {
+                mute = false;
+                muteMetronome.setText("Mute");
+            }
+        });
 
         tempoInput.setPrefColumnCount(4); //setting col size (user can input 4 characters)
         changeTempo.getChildren().add(tempoInput);
         changeTempo.getChildren().add(setTempo);
+        changeTempo.getChildren().add(muteMetronome);
         changeTempo.setSpacing(10);
         changeTempo.setPadding(new Insets(10));
-
-
-
-
-
 
         Integer currentTempo = env.getPlayer().getTempo();
         tempoLabel.setText("The current tempo is set to " + currentTempo + " BPM");
@@ -405,12 +420,13 @@ public class UserPageController {
         tempoLabelBox.getChildren().add(tempoLabel);
 
 
-        metronome.getChildren().add(metronomeAnimation());
+        metronome.getChildren().add(metronomeAnimation()); //adds AnchorPane with animation to HBox metronome
 
 
         metronomeVBox.getChildren().add(tempoLabelBox);
         metronomeVBox.getChildren().add(metronome);
         metronomeVBox.getChildren().add(changeTempo);
+
 
         setTempo.setOnAction(event->{
             if (Integer.valueOf(tempoInput.getText()) >= 20 && Integer.valueOf(tempoInput.getText()) <= 300) {
@@ -430,15 +446,30 @@ public class UserPageController {
         //Declaring the popover
         metronomePop = new PopOver(metronomeVBox);
         metronomePop.setTitle("Metronome");
+
+        //ensures the metronome stops playing when the popout is not showing
+        metronomePop.showingProperty().addListener((o,old,newValue) -> {
+            if (newValue) {
+                anim.playFromStart();
+
+            } else {
+                anim.pause();
+
+            }
+        });
     }
 
 
-
+    /**
+     * Creates the metronome animation of a bouncing ball in an AnchorPane, and plays back the sound when the
+     * animation makes contact with "start point"
+     * @return AnchorPane containing animation
+     */
     private AnchorPane metronomeAnimation() {
+        ball = new Circle();
         AnchorPane animationPane = new AnchorPane(); //pane to contain animation
-        animationPane.setPrefSize(200,50);
-        animationPane.setMinSize(200, 50);
-        Circle ball = new Circle(); //bouncing ball for metronome
+        animationPane.setPrefSize(250,50);
+        animationPane.setMinSize(250, 50);
         ball.getStyleClass().add("primary"); //make the ball match the theme
 
         ball.setCenterX(20);
@@ -446,73 +477,51 @@ public class UserPageController {
         ball.setRadius(4);
 
         anim = new TranslateTransition(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000), ball);
-//        anim.setDuration(Duration.INDEFINITE);
-//        anim.setNode(ball);
         anim.setFromX(10);
-        anim.setToX(170);
+        anim.setToX(200);
         anim.setInterpolator(Interpolator.LINEAR);
         anim.setAutoReverse(true);
         anim.setCycleCount(Timeline.INDEFINITE);
-
-        anim.play();
+        //anim.stop(); //the popover will be closed on app launch
         animationPane.getChildren().add(ball);
+
+        mute = false;
+        initializeTickSound();
 
         return animationPane;
     }
 
+    /**
+     * Toggles the ticking sound of the metronome
+     */
+    private void initializeTickSound() {
+
+        final AudioClip tickSound = new AudioClip("http://www.denhaku.com/r_box/sr16/sr16perc/losticks.wav"); //metronome tick sound
+        ChangeListener<Number> tick = (observable, oldValue, newValue) -> {
+            System.out.println(newValue);
+
+            //if not on mute, play tick sound
+            if (!mute) {
+                if (newValue.equals(10.0) || newValue.equals(200.0)) {
+                    tickSound.play();
+                }
+            }
+        };
+
+
+        ball.translateXProperty().addListener(tick);
+
+    }
+
+    /**
+     * Updates the metronome animation to be in sync with the current tempo
+     */
     public void updateMetronome() {
         anim.setDuration(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000));
         anim.playFromStart();
 
     }
 
-//    private AnchorPane buildMetronomeAnimation(AnchorPane metronomeBox) {
-//        //setting up the animated metronome
-//        Line line;
-//        DoubleProperty startXVal = new SimpleDoubleProperty(100.0);
-//        Timeline anim = TimelineBuilder.create()
-//                .autoReverse(true)
-//                .keyFrames(
-//                        new KeyFrame(
-//                                new Duration(0.0),
-//                                new KeyValue(startXVal, 100.0)
-//                        ),
-//                        new KeyFrame(
-//                                new Duration(50),
-//                                new KeyValue(startXVal, 300.0, Interpolator.LINEAR)
-//                        )
-//                )
-//                .cycleCount(Timeline.INDEFINITE)
-//                .build();
-//
-//        AnchorPane scene  = new AnchorPane()
-//                .width(400)
-//                .height(500)
-//                .root(
-//                        GroupBuilder.create()
-//                                .children(
-//                                        line = LineBuilder.create()
-//                                                .startY(50)
-//                                                .endX(200)
-//                                                .endY(400)
-//                                                .strokeWidth(4)
-//                                                .stroke(Color.GREEN)
-//                                                .build()
-//                                )
-//                                .build()
-//                )
-//                .build();
-//
-//
-//        line.startXProperty().bind(startXVal);
-//
-//        metronomeBox.set
-//        metronomeBox.setTitle("Metronome 1");
-//        metronomeBox.show();
-//
-//        return metronomeBox;
-//
-//    }
 
     /**
      * Hides and shows the metronome popover when the metronome button is selected
@@ -521,9 +530,11 @@ public class UserPageController {
     private void toggleMetronomePopOver() {
         if (metronomePop.isShowing()) {
             metronomePop.hide();
+            //anim.pause(); //metronome stops when popover is showing
 
         } else {
             metronomePop.show(metronomeBtn);
+            //anim.playFromStart();
         }
     }
 
