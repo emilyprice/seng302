@@ -245,7 +245,12 @@ public class Project {
         }
 
 
-        badgeManager.replaceBadges(tutorBadges, overallBadges);
+        try {
+            badgeManager.replaceBadges(tutorBadges, overallBadges);
+        } catch (NullPointerException e) {
+            tutorBadges = BadgeManager.getTutorBadges();
+            overallBadges = BadgeManager.getOverallBadges();
+        }
 
         //100tutorMap
         HashMap<String, Boolean> tutor100Map;

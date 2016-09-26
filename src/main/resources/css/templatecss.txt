@@ -129,6 +129,10 @@
     -fx-text-fill: {3} ;
 }
 
+.color-picker .color-picker-label .text {
+    -fx-fill: {0};
+}
+
 #keyPane > .title {
     /* common styles for title, eg */
     -fx-background-color: {0} ;

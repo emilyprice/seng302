@@ -224,6 +224,20 @@ public class UserSummaryController {
         lockView.fitWidthProperty().setValue(45);
         this.lockView = lockView;
 
+        try {
+            for (Object tutor : tutorBadgeMap.keySet()) {
+                for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {
+                    tutorBadges.add((Badge) b);
+                }
+            }
+            Collections.sort(generalBadges, new badgeComparator());
+            generalBadges.forEach(this::addBadgeToGrid);
+            Collections.sort(tutorBadges, new badgeComparator());
+            tutorBadges.forEach(this::addTutorBadgeToGrid);
+        } catch (NullPointerException e) {
+           // Retrieving badges from json file
+        }
+
         System.out.println(tutorBadgeMap);
 
         for (Object tutor : tutorBadgeMap.keySet()) {
@@ -232,10 +246,6 @@ public class UserSummaryController {
             }
         }
 
-        Collections.sort(generalBadges, new badgeComparator());
-        generalBadges.forEach(this::addBadgeToGrid);
-        Collections.sort(tutorBadges, new badgeComparator());
-        tutorBadges.forEach(this::addTutorBadgeToGrid);
     }
 
     /**
@@ -291,6 +301,18 @@ public class UserSummaryController {
         lockView.fitHeightProperty().setValue(40);
         lockView.fitWidthProperty().setValue(40);
 
+        VBox badgeBox = new VBox();
+        Label badgeName = new Label(b.name);
+        badgeName.setFont(javafx.scene.text.Font.font(16));
+        Label description = new Label(b.description);
+        ProgressBar progressBar = new ProgressBar();
+
+        try {
+            progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
+        } catch (NullPointerException n) {
+            progressBar.setProgress(b.badgeProgress);
+        }
+
         ColorAdjust badgeEffect = new ColorAdjust();
         if (b.currentBadgeType == 0) {
             badgeEffect = this.blackout;
@@ -300,16 +322,7 @@ public class UserSummaryController {
         }
         bView.setEffect(badgeEffect);
 
-        VBox badgeBox = new VBox();
-        Label badgeName = new Label(b.name);
-        badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label description = new Label(b.description);
-        ProgressBar progressBar = new ProgressBar();
-        if (b.badgeLevels != null) {
-            progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
-        } else {
-            progressBar.setProgress(b.badgeProgress);
-        }
+
         badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
@@ -381,11 +394,4 @@ public class UserSummaryController {
             gridY++;
         }
     }
-
-
-
-
-
-
-
 }
