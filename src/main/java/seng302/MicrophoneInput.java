@@ -42,15 +42,22 @@ public class MicrophoneInput implements PitchDetectionHandler {
 
     private MicrophoneInputPopoverController microphoneInputPopoverController = null;
 
-
     private ArrayList<String> lastRecorded = new ArrayList<>();
 
+    /**
+     * Constructor. Sets the default mixer (input device), and creates the list of midi frequencies
+     * for comparison.
+     */
     public MicrophoneInput() {
         this.mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
         resetNoteFrequencies();
     }
 
 
+    /**
+     * Resets the list of midi frequencies - used for determining the closest note in the find note
+     * function.
+     */
     private void resetNoteFrequencies() {
         midiFrequencies.clear();
         int a = 440; // a is 440 hz...
@@ -59,6 +66,12 @@ public class MicrophoneInput implements PitchDetectionHandler {
         }
     }
 
+    /**
+     * Given a frequency, finds the musical note that fits closest to the frequency.
+     *
+     * @param freq Detected frequency
+     * @return Musical note closest to the detected frequency.
+     */
     private String findNote(Double freq) {
         String note;
         midiFrequencies.add(freq);
@@ -83,6 +96,12 @@ public class MicrophoneInput implements PitchDetectionHandler {
         return note;
     }
 
+    /**
+     * Starts the recoding thread with proconfigured options.
+     * Uses the currently selected input device and sound threshold level.
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     */
     public void startRecording() throws LineUnavailableException, UnsupportedAudioFileException {
         lastRecorded.clear();
         float sampleRate = 44100;
@@ -121,11 +140,20 @@ public class MicrophoneInput implements PitchDetectionHandler {
         recordingThread.start();
     }
 
+    /**
+     * Stops the recording thread. Returns the list of most recently recorded notes.
+     * @return List of recorded notes.
+     */
     public ArrayList<String> stopRecording() {
         dispatcher.stop();
         return lastRecorded;
     }
 
+    /**
+     * Algorithm to determine whether a note has been detected.
+     * If a note has been detected, the note is added to the list of detected notes.
+     * Has an allowance for outliers.
+     */
     private void hasNoteBeenFound() {
         int arraySize = detectedFrequencies.size();
         switch (arraySize) {
@@ -173,22 +201,26 @@ public class MicrophoneInput implements PitchDetectionHandler {
         algorithmDone = true;
     }
 
+    /**
+     * Returns the list of the most recently recorded notes.
+     * @return Most recently recorded notes.
+     */
     public ArrayList<String> getLastRecorded() {
         return lastRecorded;
     }
 
-
+    /**
+     * Called when a audio event has been detected. Used to handle this audio event.
+     * Calls the hasNoteBeenFound function. Sleeps the detection thread until the
+     * note has been verified either way.
+     * @param pitchDetectionResult Result of the pitch analysis of the current audio event.
+     * @param audioEvent Audio event
+     */
     @Override
     public void handlePitch(PitchDetectionResult pitchDetectionResult, AudioEvent audioEvent) {
         if (pitchDetectionResult.getPitch() != -1) {
-            double timeStamp = audioEvent.getTimeStamp();
             float pitch = pitchDetectionResult.getPitch();
             final float probability = pitchDetectionResult.getProbability();
-            double rms = audioEvent.getRMS() * 100;
-//            String estimatedNote = findNote((double) pitch);
-//            String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f)\n", timeStamp, pitch, probability, rms);
-//            textArea.setText(textArea.getText() + message);
-//            textArea.positionCaret(textArea.getLength());
             Thread t = new Thread() {
                 @Override
                 public void run() {
@@ -217,7 +249,12 @@ public class MicrophoneInput implements PitchDetectionHandler {
         }
     }
 
-
+    /**
+     * Gets the information of all currently available audio devices.
+     * @param supportsPlayback - Whether or not the device supports playback (output).
+     * @param supportsRecording - Whether or not the device supports recording (input).
+     * @return A vector containing a list of the information for mixers.
+     */
     public static Vector<Mixer.Info> getMixerInfo(
             final boolean supportsPlayback, final boolean supportsRecording) {
         final Vector<Mixer.Info> infos = new Vector<Mixer.Info>();
@@ -236,6 +273,11 @@ public class MicrophoneInput implements PitchDetectionHandler {
         return infos;
     }
 
+    /**
+     * Finds the locally recognised names of a specified (Mixer)
+     * @param info Mixer's information
+     * @return Returns the name of the mixer formatted according to operating system.
+     */
     public static String toLocalString(Mixer.Info info) {
         if (!System.getProperty("os.name").startsWith("Windows")) {
             return info.getDescription();
@@ -248,18 +290,34 @@ public class MicrophoneInput implements PitchDetectionHandler {
         }
     }
 
+    /**
+     * Returns the current input device
+     * @return Mixer - currently selected input device.
+     */
     public Mixer getMixer() {
         return mixer;
     }
 
+    /**
+     * Sets the current mixer.
+     * @param mixer Mixer - Audio device.
+     */
     public void setMixer(Mixer mixer) {
         this.mixer = mixer;
     }
 
+    /**
+     * Sets the minimum sound threshold that an audio even must reach to be used.
+     * @param threshold
+     */
     public void setThreshold(double threshold) {
         this.threshold = threshold;
     }
 
+    /**
+     * Adds the microphone input popover - used for notifying and updating the popover.
+     * @param m MicrophoneInputPopoverController
+     */
     public void addPopover(MicrophoneInputPopoverController m) {
         this.microphoneInputPopoverController = m;
     }

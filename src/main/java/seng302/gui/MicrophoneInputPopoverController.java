@@ -31,7 +31,12 @@ public class MicrophoneInputPopoverController {
     private boolean recording = false;
     private ArrayList<String> foundNotes;
 
-
+    /**
+     * Initialises some of the basic settings for the popover - this includes the environment, which
+     * provides access to the microphone input functionality.
+     *
+     * @param env Environment.
+     */
     public void create(Environment env) {
         this.env = env;
         microphoneInput = env.getMicrophoneInput();
@@ -39,6 +44,9 @@ public class MicrophoneInputPopoverController {
         microphoneInput.addPopover(this);
     }
 
+    /**
+     * OnAction command for the recordButton. Stops or starts recording as per current state.
+     */
     @FXML
     private void startStopRecording() {
         if (recording) {
@@ -58,6 +66,12 @@ public class MicrophoneInputPopoverController {
         }
     }
 
+    /**
+     * Implementation of the observable pattern. Called by the microphone input - updates the
+     * fields in the popover.
+     * @param foundNotes - A list of all the notes recognised to date.
+     * @param currentNote - The most recently recognised note.
+     */
     public void update(ArrayList<String> foundNotes, String currentNote) {
         if (currentNote != null) {
             currentNoteText.setText(currentNote);

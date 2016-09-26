@@ -64,6 +64,12 @@ public class MicInputSettingsController {
 
     private Environment env;
 
+    /**
+     * Initialises a lot of functionality for this class. Links to the current environment, and
+     * generates the options for input devices and the threshold slider.
+     *
+     * @param env Current environment
+     */
     public void create(Environment env) {
         microphoneInput = env.getMicrophoneInput();
         recordButton.setOnAction(event -> {

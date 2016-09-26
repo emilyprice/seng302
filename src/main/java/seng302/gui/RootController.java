@@ -900,6 +900,9 @@ public class RootController implements Initializable {
         menuTranscript.setDisable(false);
     }
 
+    /**
+     * Opens the microphone input popover
+     */
     @FXML
     private void openMicrophonePopover() {
         PopOver microphonePopover = new PopOver();
@@ -919,6 +922,11 @@ public class RootController implements Initializable {
                 @Override
                 public void handle(WindowEvent event) {
                     env.getMicrophoneInput().addPopover(null);
+                    try {
+                        env.getMicrophoneInput().stopRecording();
+                    } catch (Exception e) {
+                        // mic input was not recording.
+                    }
                 }
             });
         } catch (IOException e) {
