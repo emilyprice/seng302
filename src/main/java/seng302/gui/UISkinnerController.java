@@ -1,9 +1,6 @@
 package seng302.gui;
 
 import com.jfoenix.controls.JFXColorPicker;
-
-import java.util.ArrayList;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
@@ -11,6 +8,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import seng302.Environment;
 import seng302.utility.ColourUtils;
+
+import java.util.ArrayList;
 
 /**
  * Controller for the themeSettings Page. (UISKinner.fxml)
@@ -79,7 +78,11 @@ public class UISkinnerController {
 
 
         env.getThemeHandler().setTheme(baseRgb, lighterOrDarker);
-        env.getUserHandler().getCurrentUser().saveProperties();
+        try {
+            env.getUserHandler().getCurrentUser().saveProperties();
+        } catch (NullPointerException e) {
+            env.getUserHandler().getCurrentTeacher().saveProperties();
+        }
 
 
     }

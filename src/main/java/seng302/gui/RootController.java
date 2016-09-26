@@ -206,6 +206,7 @@ public class RootController implements Initializable {
             boolean isTeacher = env.getUserHandler().getCurrentTeacher() != null;
 
             if (isTeacher) {
+                applyTeacherTheme();
                 stage.show();
                 resizeSplitPane(1.0);
                 menuTranscript.setSelected(false);
@@ -242,6 +243,12 @@ public class RootController implements Initializable {
         //Apply user theme
         env.getThemeHandler().setBaseNode(paneMain);
         String[] themeColours = env.getUserHandler().getCurrentUser().getThemeColours();
+        env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
+    }
+
+    private void applyTeacherTheme() {
+        env.getThemeHandler().setBaseNode(paneMain);
+        String[] themeColours = env.getUserHandler().getCurrentTeacher().getThemeColours();
         env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
