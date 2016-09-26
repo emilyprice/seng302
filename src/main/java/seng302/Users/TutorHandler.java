@@ -150,7 +150,7 @@ public class TutorHandler {
             }.getType());
 
         } catch (FileNotFoundException e) {
-            System.err.println("File not found.");
+            //System.err.println("File not found.");
         } catch (JsonSyntaxException e) {
             System.err.println("File was not of the correct type.");
         }

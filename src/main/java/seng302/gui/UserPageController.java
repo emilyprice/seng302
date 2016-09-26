@@ -151,7 +151,7 @@ public class UserPageController {
         options.add("Scale Modes Tutor");
         options.add("Scale Spelling Tutor");
 
-        Image lockImg = new Image(getClass().getResourceAsStream("/images/locked-padlock.png"), 20, 20, false, false);
+        Image lockImg = new Image(getClass().getResourceAsStream("/images/lock-blocked-medium.png"), 20, 20, true, true);
 
         listView.getItems().addAll(FXCollections.observableArrayList(options));
 
