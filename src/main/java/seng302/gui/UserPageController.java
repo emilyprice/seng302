@@ -122,6 +122,11 @@ public class UserPageController {
 
     }
 
+    @FXML
+    public void onLogoutClick() {
+        env.getRootController().showCloseWindow("logout");
+    }
+
     /**
      * Refreshes the display of the level indicator badge so that it matches the level of the user's
      * current project

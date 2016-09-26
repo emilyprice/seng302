@@ -103,7 +103,7 @@
                                             </graphic>
                                         </JFXButton>
                                         <JFXButton fx:id="logoutButton" maxHeight="20.0"
-                                                   maxWidth="30.0">
+                                                   maxWidth="30.0" onAction="#onLogoutClick">
                                             <graphic>
                                                 <ImageView fitHeight="20.0" fitWidth="20.0"
                                                            pickOnBounds="true" preserveRatio="true"
