@@ -1,9 +1,6 @@
 package seng302.gui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -156,6 +153,7 @@ public class UserSummaryController {
 
             try {
                 noteMap = loader.load();
+                stageMap.getChildren().clear();
                 stageMap.getChildren().add(noteMap);
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
@@ -177,6 +175,7 @@ public class UserSummaryController {
         } else {
 
             try {
+                stageMap.getChildren().clear();
                 stageMap.getChildren().add(env.getStagePane());
                 env.getStageMapController().visualiseLockedTutors();
 
