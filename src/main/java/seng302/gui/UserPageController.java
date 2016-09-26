@@ -142,6 +142,7 @@ public class UserPageController {
         options.add("Diatonic Chord Tutor");
         options.add("Scale Modes Tutor");
         options.add("Scale Spelling Tutor");
+        options.add("Microphone Input Tutor");
 
         Image lockImg = new Image(getClass().getResourceAsStream("/images/lock.png"), 20, 20, false, false);
 
