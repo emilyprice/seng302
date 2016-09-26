@@ -4,13 +4,15 @@ package seng302.Users;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import seng302.Environment;
 
 /**
- * Handles functionality for representing and manipulating a teacher's information. Also handles saving
- * and loading teachers. Inherits User, which handles the basic information a teacher shares with all users types.
+ * Handles functionality for representing and manipulating a teacher's information. Also handles
+ * saving and loading teachers. Inherits User, which handles the basic information a teacher shares
+ * with all users types.
  */
 
 
@@ -50,6 +52,8 @@ public class Teacher extends User {
 
         super.loadProperties();
 
+        if (properties == null) properties = new HashMap<String, Object>();
+
 
     }
 
@@ -58,11 +62,6 @@ public class Teacher extends User {
 
         super.updateProperties();
     }
-
-
-
-
-
 
 
 }
