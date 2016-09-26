@@ -50,7 +50,11 @@
                                     <Image url="images/testDP.jpg" />
                                  </image>
                               </ImageView>
-                               <JFXButton fx:id="btnUploadImage" buttonType="RAISED" contentDisplay="CENTER" ellipsisString="" graphicTextGap="0.0" maxHeight="25.0" maxWidth="43.0" onAction="#launchPhotoChooser" prefHeight="25.0" prefWidth="43.0" ripplerFill="#2fe1ae" styleClass="primaryControl">
+                               <JFXButton fx:id="btnUploadImage" buttonType="RAISED"
+                                          contentDisplay="CENTER" ellipsisString=""
+                                          graphicTextGap="0.0" maxHeight="25.0" maxWidth="43.0"
+                                          onAction="#launchPhotoChooser" prefHeight="25.0"
+                                          prefWidth="43.0" styleClass="primary">
                                  <HBox.margin>
                                      <Insets left="20.0" top="20.0" />
                                  </HBox.margin>
