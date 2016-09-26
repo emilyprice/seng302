@@ -81,9 +81,7 @@ public class Tempo implements Command {
             // Only change the tempo under valid circumstances
             if (force || inValidRange(tempo)) {
                 env.getPlayer().setTempo(tempo);
-                env.getUserPageController().tempoLabel.setText("The current tempo is set to " + String.valueOf(tempo) + " BPM");
                 env.getUserPageController().updateCurrentTempo(tempo);
-                env.getUserPageController().updateMetronome();
 
             }
             if (force) {

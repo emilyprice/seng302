@@ -529,8 +529,9 @@ public class UserPageController {
      * Updates the tempo to the current set tempo
      */
     public void updateCurrentTempo(Number newValue) {
+        tempoLabel.setText("The current tempo is set to " + String.valueOf(newValue.intValue()) + " BPM");
         tempoInput.setText(String.valueOf(newValue.intValue()));
-
+        updateMetronome();
     }
 
     /**

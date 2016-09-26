@@ -335,7 +335,6 @@ public class MusicPlayer {
     public void setTempo(int tempo) {
         this.tempo = tempo;
 
-
     }
 
     public void stop() {
