@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 
 import org.controlsfx.control.RangeSlider;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,8 +26,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.*;
+import javafx.scene.text.Font;
 import javafx.util.Pair;
 import seng302.Environment;
+import seng302.MicrophoneInput;
 import seng302.data.Note;
 import seng302.utility.NoteRangeSlider;
 import seng302.utility.TutorRecord;
@@ -57,6 +61,8 @@ public class MicrophoneInputTutorController extends TutorController {
 
     @FXML
     RangeSlider rangeSlider;
+
+    private MicrophoneInput microphoneInput;
 
     @FXML
     Label notes;
@@ -237,33 +243,22 @@ public class MicrophoneInputTutorController extends TutorController {
     public HBox generateQuestionPane(String noteMidi) {
 
         Label noteLabel = new Label(Note.lookup(noteMidi).getNote());
-//        noteLabel.setSi
+        noteLabel.setFont(Font.font("System Regular", 17));
+        Label answerLabel = new Label();
         final HBox rowPane = new HBox();
         formatQuestionRow(rowPane);
-////        final String midiOne = midis.getKey().toString();
-////        final String midiTwo = midis.getValue().toString();
         final Note correctAnswer = Note.lookup(noteMidi);
 
-//        ToggleGroup group = new ToggleGroup();
-//        ToggleButton higher = new ToggleButton("Higher");
-//        Image imageUp = new Image(getClass().getResourceAsStream("/images/up-arrow.png"), 20, 20, true, true);
-//        higher.setGraphic(new ImageView(imageUp));
-//        higher.setToggleGroup(group);
-//        ToggleButton same = new ToggleButton("Same");
-//        Image imageSame = new Image(getClass().getResourceAsStream("/images/minus-symbol.png"), 20, 20, true, true);
-//        same.setGraphic(new ImageView(imageSame));
-//        same.setToggleGroup(group);
-//        ToggleButton lower = new ToggleButton("Lower");
-//        Image imageLower = new Image(getClass().getResourceAsStream("/images/download-arrow-1.png"), 20, 20, true, true);
-//        lower.setGraphic(new ImageView(imageLower));
-//        lower.setToggleGroup(group);
-//        ToggleButton skip = new ToggleButton("Skip");
-//        styleSkipToggleButton(skip);
-//        skip.setToggleGroup(group);
+        ToggleGroup group = new ToggleGroup();
+        ToggleButton recordButton = new ToggleButton("Record");
+        recordButton.setToggleGroup(group);
 
-        JFXButton record = new JFXButton("Record");
 
-        record.setOnAction(event -> {
+        ToggleButton stopButton = new ToggleButton("Stop");
+        stopButton.setToggleGroup(group);
+
+        microphoneInput = env.getMicrophoneInput();
+        recordButton.setOnAction(event -> {
             // TODO microphone input
             try {
                 env.getMicrophoneInput().startRecording();
@@ -278,18 +273,8 @@ public class MicrophoneInputTutorController extends TutorController {
 //            }
         });
 
+        stopButton.setOnAction(event -> answerLabel.setText(microphoneInput.stopRecording().toString() + "\n"));
 
-//        Button playBtn = new Button();
-//        stylePlayButton(playBtn);
-//
-//        playBtn.setOnAction(event -> {
-//            Note note1 = Note.lookup(midiOne);
-//            Note note2 = Note.lookup(midiTwo);
-//            ArrayList<Note> notes = new ArrayList<>();
-//            notes.add(note1);
-//            notes.add(note2);
-//            env.getPlayer().playNotes(notes, 48);
-//        });
         JFXButton skip = new JFXButton("Skip");
 
         skip.setOnAction(event -> {
@@ -305,7 +290,9 @@ public class MicrophoneInputTutorController extends TutorController {
         }
 
         rowPane.getChildren().add(noteLabel);
-        rowPane.getChildren().add(record);
+        rowPane.getChildren().add(recordButton);
+        rowPane.getChildren().add(stopButton);
+        rowPane.getChildren().add(answerLabel);
         rowPane.getChildren().add(skip);
 
         rowPane.prefWidthProperty().bind(paneQuestions.prefWidthProperty());
@@ -318,7 +305,7 @@ public class MicrophoneInputTutorController extends TutorController {
     /**
      * Note comparison
      *
-     * @param isHigher whether the user thinks the second note is higher or lower.
+//     * @param isHigher whether the user thinks the second note is higher or lower.
      * @param note1    the first note being compared.
      * @param note2    the second note being compared.
      * @return boolean if the user was correct or incorrect.
