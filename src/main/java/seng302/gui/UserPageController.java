@@ -137,6 +137,8 @@ public class UserPageController {
 
     public Label tempoLabel = new Label();
 
+    private TranslateTransition anim;
+
     public javafx.scene.control.TextField tempoInput = new javafx.scene.control.TextField();
 
 
@@ -370,7 +372,7 @@ public class UserPageController {
     public void launchMetronomePopOver() {
 
         //Goes inside metronome popover
-        VBox metronomePopOver = new VBox();
+        VBox metronomeVBox = new VBox();
 
         //Hbox to contain label stating current BPM
         HBox tempoLabelBox = new HBox();
@@ -398,12 +400,16 @@ public class UserPageController {
         //Buttons
         JFXButton startBtn = new JFXButton("Start");
         startBtn.getStyleClass().add("primary");
+        startBtn.setOnAction(e -> anim.playFromStart());
         JFXButton pauseBtn = new JFXButton("Pause");
         pauseBtn.getStyleClass().add("primary");
+        pauseBtn.setOnAction(e -> anim.pause());
         JFXButton resumeBtn = new JFXButton("Resume");
         resumeBtn.getStyleClass().add("primary");
+        resumeBtn.setOnAction(e -> anim.play());
         JFXButton stopBtn = new JFXButton("Stop");
         stopBtn.getStyleClass().add("primary");
+        stopBtn.setOnAction(e -> anim.stop());
 
         metronomeButtons.getChildren().add(startBtn);
         metronomeButtons.getChildren().add(pauseBtn);
@@ -418,13 +424,13 @@ public class UserPageController {
         tempoLabelBox.getChildren().add(tempoLabel);
 
         //Stage metronomeAnimation = new Stage();
-        //metronome.getChildren().add(buildMetronomeAnimation(metronomeAnimation));
+        metronome.getChildren().add(metronomeAnimation());
 
 
-        metronomePopOver.getChildren().add(tempoLabelBox);
-        metronomePopOver.getChildren().add(metronome);
-        metronomePopOver.getChildren().add(changeTempo);
-        metronomePopOver.getChildren().add(metronomeButtons);
+        metronomeVBox.getChildren().add(tempoLabelBox);
+        metronomeVBox.getChildren().add(metronome);
+        metronomeVBox.getChildren().add(changeTempo);
+        metronomeVBox.getChildren().add(metronomeButtons);
 
         setTempo.setOnAction(event->{
             if (Integer.valueOf(tempoInput.getText()) >= 20 && Integer.valueOf(tempoInput.getText()).intValue() <= 300) {
@@ -436,24 +442,41 @@ public class UserPageController {
 
 
         // used the spacing etc from settings to see if it will come out nicely. Subject to change
-        metronomePopOver.setSpacing(10);
-        metronomePopOver.setPadding(new Insets(10));
+        metronomeVBox.setSpacing(10);
+        metronomeVBox.setPadding(new Insets(10));
 
         //Declaring the popover
-        metronomePop = new PopOver(metronomePopOver);
+        metronomePop = new PopOver(metronomeVBox);
         metronomePop.setTitle("Metronome");
     }
 
-
-    private Pane metronomeAnimation() {
-        Pane animationPane = new Pane(); //pane to contain animation
+//
+    private AnchorPane metronomeAnimation() {
+        AnchorPane animationPane = new AnchorPane(); //pane to contain animation
+        animationPane.setPrefSize(200,300);
+        animationPane.setMinSize(200,300);
         Circle ball = new Circle(); //bouncing ball for metronome
+        ball.setCenterX(100);
+        ball.setCenterY(50);
+        ball.setRadius(4);
 
-        AnchorPane scene = new AnchorPane(300, 250);
+        anim = new TranslateTransition();
+        anim.setDuration(Duration.INDEFINITE);
+        anim.setNode(ball);
+        anim.setFromY(0);
+        anim.setToY(200);
+        anim.setInterpolator(Interpolator.LINEAR);
+        anim.setAutoReverse(true);
+        anim.setCycleCount(Timeline.INDEFINITE);
 
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+
+        animationPane.getChildren().add(ball);
+
+
+
+//        primaryStage.setTitle("Hello World!");
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
 
         return animationPane;
     }
@@ -615,7 +638,7 @@ public class UserPageController {
 ///** handles events according to a tempo in beats per minute. */
 //class Pulsar {
 //    private final DoubleProperty tempo    = new SimpleDoubleProperty(100);
-//    private final Timeline       timeline = new Timeline();
+ //       private final Timeline timeline = new Timeline();
 //
 //    public Pulsar(final double initialTempo, final EventHandler<ActionEvent> pulseHandler) {
 //        timeline.setCycleCount(Animation.INDEFINITE);
