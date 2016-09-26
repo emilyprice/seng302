@@ -187,13 +187,15 @@ public class UserSummaryController {
             env.setStagePane(noteMap);
             env.getStageMapController().setEnvironment(env);
             env.getStageMapController().create();
+            System.out.println("stage map create function called.");
 
             env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().loadStageMapData();
 
             env.getStageMapController().visualiseLockedTutors();
 
-        } else {
-
+        }
+    else {
+            System.out.println("stage map not null.");
             try {
                 stageMap.getChildren().add(env.getStagePane());
                 env.getStageMapController().visualiseLockedTutors();

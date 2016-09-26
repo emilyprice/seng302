@@ -176,7 +176,7 @@ public class UserPageController {
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             showPage((String) newValue);
-            System.out.println("show page called" + newValue);
+
         });
 
         // Set after the listener so it loads user summary correctly
@@ -348,6 +348,7 @@ public class UserPageController {
             summaryController = summaryLoader.getController();
             summaryController.create(env);
             summaryController.loadStageMap();
+
 
 
         } catch (IOException e) {

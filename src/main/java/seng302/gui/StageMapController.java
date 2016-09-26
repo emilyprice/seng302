@@ -224,6 +224,7 @@ public class StageMapController {
         //If in competitive mode, relevant stages should be locked
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             for (String tutor: unlockStatus.keySet()) {
+                System.out.println(tutor + "  " +  unlockStatus.get(tutor));
                 tutorAndButton.get(tutor).setDisable(false);
                 tutorAndButton.get(tutor).setGraphic(null);
                 if (unlockStatus.get(tutor) == false) {
@@ -253,20 +254,25 @@ public class StageMapController {
     public void fetchTutorFile(String tutorId) {
 //        boolean enoughEntries = false; //must be at least 3 entries for their to be a valid entry
         boolean unlock = true;
-        ArrayList<TutorRecord> records = tutorHandler.getTutorData(converted.get(tutorId));
+        ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutorId.replaceAll("\\s", ""));
+        System.out.println("tutor id in stage map: " + tutorId);
 
         if (records.size() < 3) {
             //if there are less than 3 existing files
+            System.out.println("less than 3 existing records");
         } else {
             for (int i = records.size() - 3; i < records.size(); i++) {
                 TutorRecord record = records.get(i);
-                if (!(record.getStats().get("questionsCorrect").toString()).equals("10")) {
+                System.out.println(record.getStats().get("questionsCorrect"));
+                if (!(record.getStats().get("percentageCorrect").toString()).equals("100")) {
                     unlock = false;
                 }
             }
+            System.out.println("what is unlock?" + unlock + " for tutor.." + tutorId);
             if (unlock) {
                 //set the tutor status to be unlocked
-                unlockStatus.put(tutorOrder.get((tutorOrder.indexOf(converted.get(tutorId)) + 1)), true);
+                System.out.println("unlock is true!");
+                unlockStatus.put(tutorId.replaceAll("\\s", ""), true);
                 visualiseLockedTutors();
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Completist").updateBadgeProgress(env, 1);
             }

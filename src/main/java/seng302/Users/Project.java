@@ -220,7 +220,6 @@ public class Project {
             visualiserOn = false;
         }
 
-
         //badges
         //overallBadges
         ArrayList<Badge> overallBadges;
@@ -280,6 +279,8 @@ public class Project {
             Type mapType = new TypeToken<HashMap<String, Boolean>>() {
             }.getType();
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
+            System.out.println("unlock map");
+            System.out.println(unlockMap);
             if(unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
             }

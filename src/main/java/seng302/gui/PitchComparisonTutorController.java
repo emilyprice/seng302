@@ -76,7 +76,7 @@ public class PitchComparisonTutorController extends TutorController {
 
         for (int x = 0; x < 12; x++) {
             int num = generateRangesliderDefault();
-            System.out.println("Note Range: "+num+"-"+(num+24));
+
         }
 
         paneInit.setVisible(false);
