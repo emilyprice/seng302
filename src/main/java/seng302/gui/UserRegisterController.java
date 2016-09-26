@@ -58,6 +58,9 @@ public class UserRegisterController {
     @FXML
     private JFXComboBox cbClassroom;
 
+    @FXML
+    private JFXRadioButton studentRadioBtn;
+
 
 
 
@@ -71,6 +74,8 @@ public class UserRegisterController {
 
     public void create(Environment env) {
         this.env = env;
+        studentRadioBtn.setSelected(true);
+        txtClassRoomName.setVisible(false);
     }
 
 
@@ -239,7 +244,7 @@ public class UserRegisterController {
             }
             else if(selectedType.equals("Teacher")){
                 env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText(), txtClassRoomName.getText());
-                env.getFirebase().getFirebase().child("classrooms/" + txtClassRoomName.getText()+"/users/").setValue("none");
+                //env.getFirebase().getFirebase().child("classrooms/" + txtClassRoomName.getText()+"/users/").setValue("none");
                 env.getUserHandler().setCurrentTeacher(txtUsername.getText(), txtClassRoomName.getText(), txtPassword.getText());
 
                 env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText() + "/classrooms").push().setValue(txtClassRoomName.getText());
@@ -247,6 +252,14 @@ public class UserRegisterController {
                 Stage stage = (Stage) btnRegister.getScene().getWindow();
                 stage.close();
                 env.getRootController().showWindow(true);
+                if(!classRoomExists(txtClassRoomName.getText())) {
+                    System.out.println("room adding");
+                    env.getFirebase().getFirebase().child("classrooms/" + txtClassRoomName.getText() + "/users/").setValue("none");
+                }else{
+                    txtClassRoomName.setStyle("-fx-border-color: red;");
+                }
+                //env.getFirebase().createClassRoomSnapshot(txtClassRoomName.getText(), true);
+                //TODO: add action for registering and logging in as a teacher.
 
 
             }
@@ -286,6 +299,14 @@ public class UserRegisterController {
 
 
 
+    public boolean classRoomExists(String className){
+        DataSnapshot classroom = env.getFirebase().getClassroomsSnapshot().child(className);
+        if(classroom.exists()){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * Replaces the registration window with a log in window.
      */
