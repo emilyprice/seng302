@@ -19,6 +19,11 @@ public class Visualiser implements MetaEventListener {
         this.env = env;
     }
 
+    public Environment getEnvironment() {
+        return env;
+    }
+
+
 
     @Override
     public void meta(MetaMessage meta) {

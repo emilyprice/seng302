@@ -205,7 +205,7 @@ public class KeyboardPaneController {
 
         // Style settings button.
         Image cog = new Image(getClass().getResourceAsStream
-                ("/images/gear-1119298_960_720.png"), 10, 10, true, true);
+                ("/images/settings (1).png"), 10, 10, true, true);
         settingsButton.setGraphic(new ImageView(cog));
         settingsButton.setText(null);
 
@@ -559,9 +559,6 @@ public class KeyboardPaneController {
         displayScales.getChildren().add(scale2);
         displayScales.getChildren().add(startNoteKey);
         displayScales.getChildren().add(otherNoteKey);
-
-
-
 
         // used the spacing etc from settings to see if it will come out nicely. Subject to change
         displayScales.setSpacing(10);

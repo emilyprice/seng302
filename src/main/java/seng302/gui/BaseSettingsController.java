@@ -63,8 +63,19 @@ public class BaseSettingsController {
         this.env = env;
         populateListView();
         openUserSettings();
+        applyTheme();
 
 
+    }
+
+    /**
+     * Applies the theme to the settings window.
+     */
+    private void applyTheme() {
+        //Apply user theme
+        env.getThemeHandler().setBaseNode(settingsPane);
+        String[] themeColours = env.getUserHandler().getCurrentUser().getThemeColours();
+        env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
     /**

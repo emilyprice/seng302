@@ -10,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 
 import seng302.Environment;
+import seng302.gui.UserPageController;
 import seng302.managers.TranscriptManager;
 import seng302.utility.MusicalTermsTutorBackEnd;
 
@@ -24,6 +25,9 @@ public class UndoRedoTest {
     @Mock
     private TranscriptManager transcriptManager;
 
+    @Mock
+    private UserPageController userPageController;
+
     private MusicalTermsTutorBackEnd tutorDataManger = new MusicalTermsTutorBackEnd();
 
     @Before
@@ -31,6 +35,7 @@ public class UndoRedoTest {
         env = new Environment();
         env.setTranscriptManager(transcriptManager);
         env.setMttDataManager(tutorDataManger);
+        env.setUserPageController(userPageController);
     }
 
     @Test
