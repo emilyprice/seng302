@@ -1,46 +1,42 @@
 package seng302.gui;
 
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXBadge;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListCell;
+import com.jfoenix.controls.JFXListView;
 
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
-import java.util.*;
-import javafx.animation.*;
-import javafx.beans.value.ChangeListener;
 import java.util.ArrayList;
 
+import javafx.animation.Interpolator;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import javafx.scene.shape.Circle;
-import javafx.util.StringConverter;
-import org.controlsfx.control.PopOver;
 import seng302.Environment;
-
 
 import static javafx.scene.paint.Color.RED;
 
@@ -52,7 +48,7 @@ public class UserPageController {
     private PopOver metronomePop;
 
     @FXML
-    private Button metronomeBtn;
+    private Button metroButton;
 
 
     @FXML
@@ -127,7 +123,7 @@ public class UserPageController {
      */
     protected void load() {
         populateUserOptions();
-        launchMetronomePopOver();
+        setupMetronomePopOver();
         //tempoLabel = new Label();
 
 
@@ -364,8 +360,20 @@ public class UserPageController {
      * options
      */
     @FXML
-    void openSettings() {
+    public void openSettings() {
         env.getRootController().launchSettings();
+    }
+
+    /**
+     * Hides and shows the metronome popover when the metronome button is selected
+     */
+    @FXML
+    public void openMetronome() {
+        if (metronomePop.isShowing()) {
+            metronomePop.hide();
+        } else {
+            metronomePop.show(metroButton);
+        }
     }
 
 
@@ -374,12 +382,11 @@ public class UserPageController {
      * Opens a popover that contains the metronome
      *
      */
-    @FXML
-    public void launchMetronomePopOver() {
+    public void setupMetronomePopOver() {
 
         //Goes inside metronome popover
         VBox metronomeVBox = new VBox();
-        metronomeVBox.setMinSize(270, 175);
+        metronomeVBox.setMinSize(270, 145);
         metronomeVBox.setMaxSize(270, 175);
 
         //Hbox to contain label stating current BPM
@@ -404,6 +411,7 @@ public class UserPageController {
         errorLabel.setTextFill(RED);
         errorLabelBox.getChildren().add(errorLabel);
         errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
 
         muteMetronome.setOnAction(e -> {
             if (muteMetronome.getText().equals("Mute")) {
@@ -442,11 +450,13 @@ public class UserPageController {
                 anim.playFromStart();
                 tempoInput.setStyle("-fx-border-color: lightgray;");
                 errorLabel.setVisible(false);
+                errorLabel.setManaged(false);
 
                 //else if the user tries to input a tempo value outside of appropriate range
             } else {
                 tempoInput.setStyle("-fx-border-color: red;"); //text border will set red
                 errorLabel.setVisible(true); //label will display
+                errorLabel.setManaged(true);
                 errorLabel.setStyle("-fx-text-color: red;");
             }
                 });
@@ -458,6 +468,7 @@ public class UserPageController {
 
         //Declaring the popover
         metronomePop = new PopOver(metronomeVBox);
+        metronomePop.headerAlwaysVisibleProperty().setValue(true);
         metronomePop.setTitle("Metronome");
 
         //ensures the metronome stops playing when the popout is not showing
@@ -541,18 +552,6 @@ public class UserPageController {
     }
 
 
-    /**
-     * Hides and shows the metronome popover when the metronome button is selected
-     */
-    @FXML
-    private void toggleMetronomePopOver() {
-        if (metronomePop.isShowing()) {
-            metronomePop.hide();
-        } else {
-            metronomePop.show(metronomeBtn);
-
-        }
-    }
 
 
 

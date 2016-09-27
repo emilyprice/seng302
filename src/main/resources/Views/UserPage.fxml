@@ -75,7 +75,7 @@
                                             </graphic>
                                         </JFXButton>
                                         <JFXButton fx:id="metroButton" maxHeight="20.0"
-                                                   maxWidth="30.0">
+                                                   maxWidth="30.0" onAction="#openMetronome">
                                             <graphic>
                                                 <ImageView fitHeight="20.0" fitWidth="20.0"
                                                            pickOnBounds="true" preserveRatio="true"
