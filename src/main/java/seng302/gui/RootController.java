@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -94,6 +95,9 @@ public class RootController implements Initializable {
 
     @FXML
     private Menu menuOpenProjects;
+
+    @FXML
+    private Menu menuOpenClassroom;
 
     @FXML
     private Menu helpMenu;
@@ -753,6 +757,20 @@ public class RootController implements Initializable {
             menuOpenProjects.getItems().add(projectItem); //Add to Open projects menu
         }
 
+    }
+
+    public void updateClassroomsList(List<String> classes) {
+        menuOpenClassroom.getItems().clear();
+        for (String className:classes) {
+            MenuItem classMenuItem = new MenuItem(className);
+            classMenuItem.setOnAction(event -> {
+                env.getUserHandler().setClassRoom(classMenuItem.getText());
+                env.getTeacherPageController().updateDisplay();
+            });
+
+            menuOpenClassroom.getItems().add(new MenuItem(className));
+
+        }
     }
 
 

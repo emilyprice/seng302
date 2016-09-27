@@ -15,6 +15,7 @@ import seng302.Environment;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TeacherPageController {
 
@@ -57,6 +58,9 @@ public class TeacherPageController {
 
     private StringConverter convert;
 
+    private List<String> teacherClasses = new ArrayList<>();
+
+
 
     @FXML
     void openSettings(MouseEvent event) {
@@ -69,7 +73,15 @@ public class TeacherPageController {
     }
 
     public void load() {
-        imageDP2.setImage(env.getUserHandler().getCurrentTeacher().getUserPicture());
+
+       imageDP2.setImage(env.getUserHandler().getCurrentTeacher().getUserPicture());
+
+        env.getFirebase().getTeacherSnapshot().child(env.getUserHandler().getCurrentTeacher().getUserName() + "/classrooms").getChildren().forEach(classroomName -> {
+            teacherClasses.add(classroomName.getValue().toString());
+        });
+
+
+        env.getRootController().updateClassroomsList(teacherClasses);
         populateUserOptions();
         showPage("Summary");
     }
@@ -77,10 +89,10 @@ public class TeacherPageController {
 
     private void populateUserOptions() {
 
+        DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
+
         ArrayList<String> options = new ArrayList<>();
         options.add("Summary");
-
-        DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
 
         TreeItem<String> root = new TreeItem<>("Root");
         root.getChildren().add(new TreeItem<>("Summary"));
