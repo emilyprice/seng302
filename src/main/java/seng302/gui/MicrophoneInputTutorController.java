@@ -249,32 +249,27 @@ public class MicrophoneInputTutorController extends TutorController {
         formatQuestionRow(rowPane);
         final Note correctAnswer = Note.lookup(noteMidi);
 
-        ToggleGroup group = new ToggleGroup();
-        ToggleButton recordButton = new ToggleButton("Record");
-        recordButton.setToggleGroup(group);
+//        ToggleGroup group = new ToggleGroup();
+        Button recordButton = new Button("Record");
+//        recordButton.setToggleGroup(group);
 
-
-        ToggleButton stopButton = new ToggleButton("Stop");
-        stopButton.setToggleGroup(group);
+//
+//        ToggleButton stopButton = new ToggleButton("Stop");
+//        stopButton.setToggleGroup(group);
 
         microphoneInput = env.getMicrophoneInput();
         recordButton.setOnAction(event -> {
             // TODO microphone input
-            try {
-                env.getMicrophoneInput().startRecording();
-            } catch (LineUnavailableException e) {
-                e.printStackTrace();
-            } catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            }
+            answerLabel.setText(env.getMicrophoneInput().recordSingleNote());
 //            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
 //            if (responseValue == 0) {
 //                correctAnswer.setVisible(true);
 //            }
+
         });
 
-        stopButton.setOnAction(event ->
-                answerLabel.setText(microphoneInput.stopRecording().toString() + "\n"));
+//        stopButton.setOnAction(event ->
+//                answerLabel.setText(microphoneInput.stopRecording().toString() + "\n"));
 
         String recordedAnswer = answerLabel.getText();
 
@@ -294,7 +289,7 @@ public class MicrophoneInputTutorController extends TutorController {
 
         rowPane.getChildren().add(noteLabel);
         rowPane.getChildren().add(recordButton);
-        rowPane.getChildren().add(stopButton);
+//        rowPane.getChildren().add(stopButton);
         rowPane.getChildren().add(answerLabel);
         rowPane.getChildren().add(skip);
 

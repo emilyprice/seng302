@@ -55,7 +55,7 @@ public class MicrophoneInputPopoverController {
             recording = false;
         } else {
             try {
-                microphoneInput.startRecording();
+                microphoneInput.startRecording(false);
                 recordButton.setText("Stop Recording");
                 recording = true;
             } catch (LineUnavailableException e) {

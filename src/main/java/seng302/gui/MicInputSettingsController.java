@@ -74,7 +74,7 @@ public class MicInputSettingsController {
         microphoneInput = env.getMicrophoneInput();
         recordButton.setOnAction(event -> {
             try {
-                microphoneInput.startRecording();
+                microphoneInput.startRecording(false);
             } catch (LineUnavailableException e) {
                 e.printStackTrace();
             } catch (UnsupportedAudioFileException e) {

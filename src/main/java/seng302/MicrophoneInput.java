@@ -35,8 +35,7 @@ public class MicrophoneInput implements PitchDetectionHandler {
     private Integer outlierCount;
     private String latestNote;
     private Boolean noteFound;
-    private int currentIndex = 0;
-    private boolean algorithmDone = false;
+    private Boolean singleNote;
 
     private Thread recordingThread = null;
 
@@ -106,11 +105,13 @@ public class MicrophoneInput implements PitchDetectionHandler {
      * @throws LineUnavailableException
      * @throws UnsupportedAudioFileException
      */
-    public void startRecording() throws LineUnavailableException, UnsupportedAudioFileException {
+    public void startRecording(Boolean singleNote) throws LineUnavailableException, UnsupportedAudioFileException {
         lastRecorded.clear();
         float sampleRate = 44100;
         int bufferSize = 1024;
         int overlap = 0;
+
+        this.singleNote = singleNote;
 
         noteCount = 0;
         outlierCount = 0;
@@ -202,7 +203,6 @@ public class MicrophoneInput implements PitchDetectionHandler {
                     }
                 }
         }
-        algorithmDone = true;
     }
 
     /**
@@ -248,6 +248,9 @@ public class MicrophoneInput implements PitchDetectionHandler {
                 t.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+            if (noteFound && singleNote) {
+                stopRecording();
             }
 
         }
@@ -324,6 +327,32 @@ public class MicrophoneInput implements PitchDetectionHandler {
      */
     public void addPopover(MicrophoneInputPopoverController m) {
         this.microphoneInputPopoverController = m;
+    }
+
+    public String recordSingleNote() {
+        Thread recording = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    startRecording(true);
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedAudioFileException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        try {
+            recording.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            recording.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return latestNote;
     }
 
 }
