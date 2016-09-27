@@ -15,6 +15,7 @@ import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.ProjectHandler;
 import seng302.utility.InstrumentUtility;
+import seng302.gui.KeyboardPaneController;
 
 /**
  * Controller class for the GUI used to change project-based settings.
@@ -46,6 +47,8 @@ public class ProjectSettingsController {
 
     private ProjectHandler projectHandler;
 
+    private KeyboardPaneController keyBoardPaneController;
+
     /**
      * Links the project settings controller to the environment, so it has access to the current
      * project and settings.
@@ -69,13 +72,17 @@ public class ProjectSettingsController {
 
     @FXML
     private void toggleBetweenModes() {
+
+        keyBoardPaneController = new KeyboardPaneController();
         Project currentProject = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject();
         if (modeToggle.isSelected()) {
             // Competition Mode
             currentProject.setIsCompetitiveMode(true);
+            keyBoardPaneController.initialize();
         } else {
             // Practice mode
             currentProject.setIsCompetitiveMode(false);
+            keyBoardPaneController.initialize();
         }
     }
 

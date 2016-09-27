@@ -36,6 +36,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import seng302.Environment;
+import seng302.Users.UserHandler;
 import seng302.data.Note;
 import seng302.utility.NoteRangeSlider;
 import seng302.utility.musicNotation.OctaveUtil;
@@ -145,16 +146,19 @@ public class KeyboardPaneController {
     private String playMode;
 
 
+
+
     /**
-     * Set up keyboard, by creating settings popOver and TouchPanes(keys) for the keyboard.
+     * Set up keyboard, by creating settings popOver, display scale popover and TouchPanes(keys) for the keyboard.
      */
     @FXML
-    private void initialize() {
+    public void initialize() {
         keyboardBox.setMaxHeight(200);
         keyboardBox.setMinHeight(200);
         blackKeys.setMaxHeight(130);
         playMode = "play";
         HBox.setHgrow(rightStack, Priority.ALWAYS);
+
 
         // Picking is computed by intersecting with the geometric
         // shape of the node, instead of the bounds.
@@ -174,6 +178,12 @@ public class KeyboardPaneController {
                 positionBlackKeys();
             }
         });
+//
+//        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
+//            displayScalesButton.setDisable(true);
+//        } else {
+//            displayScalesButton.setDisable(false);
+//        }
 
     }
 
@@ -219,10 +229,25 @@ public class KeyboardPaneController {
         noteLabelsOff.setSelected(true);
         noteLabelsClick = new RadioButton("Show on click");
         noteLabelsClick.setToggleGroup(notenames);
-        noteLabelsClick.setOnAction(event -> toggleShowKeyboardNotesAction());
-        noteLabelsAlways = new RadioButton("Always show");
-        noteLabelsAlways.setToggleGroup(notenames);
-        noteLabelsAlways.setOnAction(event -> toggleShowKeyboardNotesAlways());
+
+        //if in practice mode, users can see notes on click. If in competition, it is disabled
+        if (!(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())) {
+            noteLabelsClick.setDisable(false);
+            noteLabelsClick.setOnAction(event -> toggleShowKeyboardNotesAction());
+            noteLabelsAlways = new RadioButton("Always show");
+        } else {
+            noteLabelsClick.setDisable(true);
+        }
+
+        //if in practice mode, users can see notes on keys always. If in competition, it is disabled
+        if (!(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())) {
+            noteLabelsAlways.setDisable(false);
+            noteLabelsAlways.setToggleGroup(notenames);
+            noteLabelsAlways.setOnAction(event -> toggleShowKeyboardNotesAlways());
+        } else {
+            noteLabelsAlways.setDisable(true);
+        }
+
 
         // Generate Keyboard notes based on value of range slider.
         slider.lowValueProperty().addListener(
@@ -669,12 +694,20 @@ public class KeyboardPaneController {
      */
     @FXML
     private void toggleDisplayScales() {
-        if (displayScalesPop.isShowing()) {
-            displayScalesPop.hide();
-            displayScalesButton.setText("Display Scales");
+        //if in competitive mode, disable display scales
+        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
+            displayScalesButton.setDisable(true);
+
+            //in practice mode, display scale should be available
         } else {
-            displayScalesPop.show(displayScalesButton);
-            displayScalesButton.setText("Hide Display Scales");
+            displayScalesButton.setDisable(false);
+            if (displayScalesPop.isShowing()) {
+                displayScalesPop.hide();
+                displayScalesButton.setText("Display Scales");
+            } else {
+                displayScalesPop.show(displayScalesButton);
+                displayScalesButton.setText("Hide Display Scales");
+            }
         }
     }
 
@@ -843,9 +876,11 @@ public class KeyboardPaneController {
      */
     public void toggleShowKeyboardNotesAlways() {
         ObservableList<Node> keys = keyboardBox.getChildren();
-        for (Node key : keys) {
-            if (key instanceof TouchPane) {
-                ((TouchPane) key).toggleDisplayLabel();
+        if (!(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())) {
+            for (Node key : keys) {
+                if (key instanceof TouchPane) {
+                    ((TouchPane) key).toggleDisplayLabel();
+                }
             }
         }
     }
@@ -925,9 +960,12 @@ public class KeyboardPaneController {
      */
     public void toggleShowKeyboardNotesAction() {
         ObservableList<Node> keys = keyboardBox.getChildren();
-        for (Node key : keys) {
-            if (key instanceof TouchPane) {
-                ((TouchPane) key).toggleDisplayLabelOnAction();
+        //if in practice mode, show labels
+        if (!(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())) {
+            for (Node key : keys) {
+                if (key instanceof TouchPane) {
+                    ((TouchPane) key).toggleDisplayLabelOnAction();
+                }
             }
         }
     }
