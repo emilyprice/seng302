@@ -7,6 +7,7 @@ import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
+import javafx.scene.control.Label;
 import seng302.data.Note;
 import seng302.gui.MicrophoneInputPopoverController;
 
@@ -42,6 +43,8 @@ public class MicrophoneInput implements PitchDetectionHandler {
     private MicrophoneInputPopoverController microphoneInputPopoverController = null;
 
     private ArrayList<String> lastRecorded = new ArrayList<>();
+
+    private Label tutorAnswer = null;
 
     /**
      * Constructor. Sets the default mixer (input device), and creates the list of midi frequencies
@@ -151,6 +154,9 @@ public class MicrophoneInput implements PitchDetectionHandler {
      */
     public ArrayList<String> stopRecording() {
         dispatcher.stop();
+        if (tutorAnswer != null && tutorAnswer.getText().equals("")) {
+            tutorAnswer.setText(lastRecorded.get(0));
+        }
         return lastRecorded;
     }
 
@@ -329,7 +335,8 @@ public class MicrophoneInput implements PitchDetectionHandler {
         this.microphoneInputPopoverController = m;
     }
 
-    public String recordSingleNote() {
+    public void recordSingleNoteTutorInput(Label answerLabel) {
+        tutorAnswer = answerLabel;
         Thread recording = new Thread() {
             @Override
             public void run() {
@@ -342,17 +349,12 @@ public class MicrophoneInput implements PitchDetectionHandler {
                 }
             }
         };
+        recording.start();
         try {
             recording.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        try {
-            recording.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return latestNote;
     }
 
 }

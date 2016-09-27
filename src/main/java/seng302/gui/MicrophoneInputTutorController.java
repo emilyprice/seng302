@@ -260,7 +260,7 @@ public class MicrophoneInputTutorController extends TutorController {
         microphoneInput = env.getMicrophoneInput();
         recordButton.setOnAction(event -> {
             // TODO microphone input
-            answerLabel.setText(env.getMicrophoneInput().recordSingleNote());
+            env.getMicrophoneInput().recordSingleNoteTutorInput(answerLabel);
 //            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
 //            if (responseValue == 0) {
 //                correctAnswer.setVisible(true);
