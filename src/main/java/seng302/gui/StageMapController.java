@@ -136,7 +136,6 @@ public class StageMapController {
      */
     private void setNextLockedStage(){
         for(String tutor : tutorOrder){
-            System.out.println(tutor);
             if(unlockStatus.get(tutor) == false){
                 nextUnlockTutor = tutor;
                 break;
@@ -194,8 +193,6 @@ public class StageMapController {
      * @return
      */
     public HashMap getUnlockStatus(){
-        System.out.println("get unlock status");
-        System.out.println(unlockStatus);
         return this.unlockStatus;
     }
 
@@ -253,7 +250,6 @@ public class StageMapController {
             unlockDescriptions.put(tutor, temp);
 
         }
-        System.out.println(unlockDescriptions);
 
     }
 
@@ -369,14 +365,15 @@ public class StageMapController {
             ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
             boolean unlock = true;
 
-            int requiredScore = 7;
+            int requiredScore = 2; //7
             if(nextUnlockTutor.equals("scaleTutor")||nextUnlockTutor.equals("chordTutor")){
                 if(tutor.equals("basicScaleTutor")|| tutor.equals("basicChordTutor")){
-                    requiredScore = 9;
+                    requiredScore = 2; //9
                 }
             }
 
             if (records.size() < 3) {
+                unlock = false;
                 //if there are less than 3 existing files
             } else {
                 for (int i = records.size() - 3; i < records.size(); i++) {

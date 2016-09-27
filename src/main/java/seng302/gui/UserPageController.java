@@ -178,12 +178,15 @@ public class UserPageController {
 
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (((String) newValue).equals("Scale Recognition Tutor (Basic)")) {
-                showPage("Scale Recognition Tutor");
-            }else if(((String) newValue).equals("Chord Recognition Tutor (Basic)")){
-                showPage("Chord Recognition Tutor");
-            }else {
-                showPage((String) newValue);
+
+            if(newValue != null) {
+                if (((String) newValue).equals("Scale Recognition Tutor (Basic)")) {
+                    showPage("Scale Recognition Tutor");
+                } else if (((String) newValue).equals("Chord Recognition Tutor (Basic)")) {
+                    showPage("Chord Recognition Tutor");
+                } else {
+                    showPage((String) newValue);
+                }
             }
         });
 
@@ -314,7 +317,7 @@ public class UserPageController {
      * @param pageName The name of the page to display - either "summary" or the name of a tutor.
      */
     public void showPage(String pageName) {
-
+        System.out.println("show page function" + pageName);
         setupTimeSlider();
         if (pageName.equals("Summary")) {
             showSummaryPage();
@@ -395,8 +398,9 @@ public class UserPageController {
         try {
             VBox stats = tutorStatsLoader.load();
             //currentPage.setContent(stats);
-            all.getChildren().add(stats);
-            scrollPaneAnchorPage.getChildren().setAll(all);
+            all.getChildren().setAll(stats);
+            scrollPaneAnchorPage.getChildren().clear();
+            //scrollPaneAnchorPage.getChildren().setAll(all);
             AnchorPane.setLeftAnchor(stats, 0.0);
             AnchorPane.setTopAnchor(stats, 0.0);
             AnchorPane.setBottomAnchor(stats, 0.0);
@@ -406,14 +410,17 @@ public class UserPageController {
             statsController.create(env);
             statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
             statsController.updateBadgesDisplay();
-            listView.getSelectionModel().select(tutor);
 
-            if(tutor.equals("Scale Recognition Tutor (Basic)")) {
+            System.out.println("in show tutor stats for tutor" + tutor);
+
+            //listView.getSelectionModel().select(tutor);
+
+            /*if(tutor.equals("Scale Recognition Tutor (Basic)")) {
                 listView.getSelectionModel().select("Scale Recognition Tutor");
             }else{
                 listView.getSelectionModel().select(tutor);
 
-            }
+            }*/
 
 
         } catch (IOException e) {
@@ -425,7 +432,7 @@ public class UserPageController {
             try {
                 VBox stats = tutorbasicStatsLoader.load();
                 all.getChildren().add(stats);
-                currentPage.setContent(all);
+                //scrollPaneAnchorPage.getChildren().setAll(all);
                 AnchorPane.setLeftAnchor(stats, 0.0);
                 AnchorPane.setTopAnchor(stats, 0.0);
                 AnchorPane.setBottomAnchor(stats, 0.0);
@@ -435,13 +442,14 @@ public class UserPageController {
                 basicStatsController.create(env);
                 basicStatsController.displayGraphs( tutor + " (Basic)", convert.toString(timeSlider.getValue()));
 
-                listView.getSelectionModel().select(tutor);
-
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        scrollPaneAnchorPage.getChildren().setAll(all);
+
+        listView.getSelectionModel().select(tutor);
 
     }
 

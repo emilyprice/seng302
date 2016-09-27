@@ -64,7 +64,9 @@ public class BadgeManager {
         allTutors.add("Interval Recognition Tutor");
         allTutors.add("Musical Terms Tutor");
         allTutors.add("Scale Recognition Tutor");
+        allTutors.add("Scale Recognition Tutor (Basic)");
         allTutors.add("Chord Recognition Tutor");
+        allTutors.add("Chord Recognition Tutor (Basic)");
         allTutors.add("Chord Spelling Tutor");
         allTutors.add("Diatonic Chord Tutor");
         allTutors.add("Key Signature Tutor");
@@ -80,7 +82,9 @@ public class BadgeManager {
         tutorImages.put("Interval Recognition Tutor", "rest-note");
         tutorImages.put("Musical Terms Tutor", "open-book");
         tutorImages.put("Scale Recognition Tutor", "scale");
+        tutorImages.put("Scale Recognition Tutor (Basic)", "scale");
         tutorImages.put("Chord Recognition Tutor", "chord");
+        tutorImages.put("Chord Recognition Tutor (Basic)", "chord");
         tutorImages.put("Chord Spelling Tutor", "chord-spelling");
         tutorImages.put("Diatonic Chord Tutor", "sound-wave");
         tutorImages.put("Key Signature Tutor", "key-sig");
@@ -98,7 +102,9 @@ public class BadgeManager {
         masterTutors.put("Musical Terms Tutor", false);
         masterTutors.put("Scale Recognition Tutor", false);
         masterTutors.put("Chord Recognition Tutor", false);
+        masterTutors.put("Chord Recognition Tutor (Basic)", false);
         masterTutors.put("Chord Spelling Tutor", false);
+        masterTutors.put("Chord Spelling Tutor (Basic)", false);
         masterTutors.put("Diatonic Chord Tutor", false);
         masterTutors.put("Key Signature Tutor", false);
         masterTutors.put("Scale Modes Tutor", false);
@@ -144,7 +150,9 @@ public class BadgeManager {
         tutorTotal.add(10);
 
         //intalize tutor badges
+        System.out.println("Populating tutorBadgeMap");
         for (String tutor:allTutors){
+            System.out.println(tutor);
 
             ArrayList<Badge> badges = new ArrayList<>();
             badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, tutorImages.get(tutor), 10));

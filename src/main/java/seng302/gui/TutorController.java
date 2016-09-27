@@ -186,7 +186,6 @@ public abstract class TutorController {
 
             if(isCompMode){
                 String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
-                System.out.println("tutor name.." + tutorName);
                 //String tutorFileName = currentProject.getCurrentProjectPath() + "/" + tutorNameNoSpaces + ".json";
                 tutorHandler.saveTutorRecordsToFile(tutorNameNoSpaces, record);
             }else{
