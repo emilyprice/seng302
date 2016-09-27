@@ -237,6 +237,44 @@ public class MusicPlayer {
     }
 
     /**
+     * Helper method used in the pitchComparisonTutor when the chord is played in both arpeggio
+     * and unison
+     * @param arpeggioChord the chord in arpeggio arraylist
+     * @param unisonChord the chord in unison collection
+     */
+    public void playArpeggioUnison(ArrayList<Note> arpeggioChord, Collection<Note> unisonChord) {
+        int ticks = rh.getBeatResolution();
+        try {
+            // 16 ticks per crotchet note.
+            Sequence sequence = new Sequence(Sequence.PPQ, ticks);
+            Track track = sequence.createTrack();
+
+            ShortMessage sm = new ShortMessage();
+            sm.setMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentInt, 0);
+            track.add(new MidiEvent(sm, 0));
+
+            int currentTick = 0;
+            rh.resetIndex(); //Reset rhythm to first crotchet.
+            for (Note note : arpeggioChord) { // Arpeggio notes to play
+                int timing = rh.getNextTickTiming();
+                addNote(track, currentTick, timing, note.getMidi(), 64); //velocity 64
+                currentTick += timing;
+            }
+
+            currentTick += 40;
+            for (Note note : unisonChord) { // Unison notes to play
+                addNote(track, currentTick, rh.getNextTickTiming() + 8, note.getMidi(), 64);
+            }
+
+            playSequence(sequence);
+
+        } catch (InvalidMidiDataException e) {
+            System.err.println("The notes you are trying to play were invalid");
+        }
+    }
+
+
+    /**
      * Convenience method to convert a single note into an array list so the method playNotes() can
      * be used.
      *

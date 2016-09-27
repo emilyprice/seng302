@@ -165,7 +165,8 @@ public class ChordRecognitionTutorController extends TutorController {
         final Note startNote = noteAndChordType.getKey();
         final String chordType = noteAndChordType.getValue();
 
-        final Collection<Note> theChord = new ArrayList<Note>(ChordUtil.getChord(startNote, chordType));
+        final Collection<Note> unisonChord = new ArrayList<Note>(ChordUtil.getChord(startNote, chordType));
+        final ArrayList<Note> arpeggioChord = new ArrayList<Note>(ChordUtil.getChord(startNote, chordType));
 
         Button play = new Button();
         stylePlayButton(play);
@@ -174,24 +175,11 @@ public class ChordRecognitionTutorController extends TutorController {
             //Play the scale
             int currentTempo = env.getPlayer().getTempo();
             if (playChords.getValue().equals("Unison")) {
-                env.getPlayer().playSimultaneousNotes(theChord);
+                env.getPlayer().playSimultaneousNotes(unisonChord);
             } else if (playChords.getValue().equals("Arpeggio")) {
-                env.getPlayer().playNotes((ArrayList) theChord);
+                env.getPlayer().playNotes(arpeggioChord);
             } else {
-                env.getPlayer().playNotes((ArrayList) theChord);
-                try {
-                    //Calculates how long three crotchets is at the current tempo
-                    Integer wait;
-                    if (chordTypeBox.getValue().equals("Both") || chordTypeBox.getValue().equals("4 Notes")) {
-                        wait = 1000 * 240 / currentTempo + 40;
-                    } else {
-                        wait = 1000 * 180 / currentTempo + 40;
-                    }
-                    Thread.sleep(wait);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                env.getPlayer().playSimultaneousNotes(theChord);
+                env.getPlayer().playArpeggioUnison(arpeggioChord, unisonChord);
             }
         });
 
