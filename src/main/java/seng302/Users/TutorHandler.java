@@ -122,6 +122,7 @@ public class TutorHandler {
         ArrayList<TutorRecord> records = new ArrayList<>();
 
         project.child(tutorId).getChildren().forEach((key) -> {
+
                     TutorRecord record = new TutorRecord();
                     HashMap<String, Object> recordMap = (HashMap<String, Object>) key.getValue();
             HashMap<String, Object> dateMap = (HashMap<String, Object>) recordMap.get("date");
@@ -131,8 +132,10 @@ public class TutorHandler {
             record.setQuestions((List<Map<String, String>>) recordMap.get("questions"));
             record.setFinished();
             records.add(record);
+
                 }
         );
+
         return records;
     }
 

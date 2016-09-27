@@ -215,7 +215,7 @@ public class UserSummaryController {
      * Loads the stage map into the summary page
      */
     public void loadStageMap() {
-        if (env.getStageMapController() == null) {
+        //if (env.getStageMapController() == null) {
             loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
 
             try {
@@ -233,25 +233,27 @@ public class UserSummaryController {
             env.setStagePane(noteMap);
             env.getStageMapController().setEnvironment(env);
             env.getStageMapController().create();
+            System.out.println("stage map create function called.");
 
             user.getProjectHandler().getCurrentProject().loadStageMapData();
 
             env.getStageMapController().visualiseLockedTutors();
 
-        } else {
-
-            try {
-                stageMap.getChildren().add(env.getStagePane());
-                env.getStageMapController().visualiseLockedTutors();
-
-            } catch (Exception e) {
-                System.err.println("Failed to load stage map");
-                System.out.println(e.getStackTrace());
-                e.printStackTrace();
-            }
         }
-
-    }
+//    else {
+//            System.out.println("stage map not null.");
+//            try {
+//                stageMap.getChildren().add(env.getStagePane());
+//                env.getStageMapController().visualiseLockedTutors();
+//
+//            } catch (Exception e) {
+//                System.err.println("Failed to load stage map");
+//                System.out.println(e.getStackTrace());
+//                e.printStackTrace();
+//            }
+//        }
+//
+//    }
 
     /**
      * Used to create the badgeGrid and display the badges in stackpanes with the correct effect

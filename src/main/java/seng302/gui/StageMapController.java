@@ -122,6 +122,7 @@ public class StageMapController {
      * the order of the tutors, and whether the tutor is unlocked or locked)
      */
     public void create() {
+        System.out.println("create function called!");
         tutorAndButton = new HashMap<>();
         tutorOrder = new ArrayList<>();
         unlockStatus = new HashMap<>();
@@ -141,7 +142,7 @@ public class StageMapController {
      **/
     private void generateConverted(){
         converted.put("Musical Terms Tutor", "musicalTermsTutor");
-        converted.put("Pitch Comparison Tutor", "pitchTutor" );
+        converted.put("Pitch Comparison Tutor", "PitchComparisonTutor" );
         converted.put("Scale Recognition Tutor","scaleTutor");
         converted.put("Chord Recognition Tutor", "chordTutor");
         converted.put("Interval Recognition Tutor", "intervalTutor");
@@ -161,7 +162,7 @@ public class StageMapController {
     private void generateTutorOrder() {
         //pitch tutor and musical terms tutor are unlocked by default
         tutorOrder.add("musicalTermsTutor");
-        tutorOrder.add("pitchTutor");
+        tutorOrder.add("PitchComparisonTutor");
         tutorOrder.add("scaleTutor");
         tutorOrder.add("chordTutor");
         tutorOrder.add("intervalTutor");
@@ -180,7 +181,7 @@ public class StageMapController {
 
     private void generateTutorAndButtonNames() {
         tutorAndButton.put("musicalTermsTutor", musicalTermsTutorButton);
-        tutorAndButton.put("pitchTutor", pitchTutorButton);
+        tutorAndButton.put("PitchComparisonTutor", pitchTutorButton);
         tutorAndButton.put("scaleTutor", scaleRecognitionTutorButton);
         tutorAndButton.put("chordTutor", chordRecognitionTutorButton);
         tutorAndButton.put("intervalTutor", intervalRecognitionButton);
@@ -200,7 +201,7 @@ public class StageMapController {
     private void generateLockingStatus() {
         //pitch tutor and musical terms tutor are unlocked by default
         unlockStatus.put("musicalTermsTutor", true);
-        unlockStatus.put("pitchTutor", true);
+        unlockStatus.put("PitchComparisonTutor", true);
         unlockStatus.put("scaleTutor", false);
         unlockStatus.put("chordTutor", false);
         unlockStatus.put("intervalTutor", false);
@@ -211,6 +212,11 @@ public class StageMapController {
         unlockStatus.put("keySignatureTutor", false);
         unlockStatus.put("diatonicChordTutor", false);
         unlockStatus.put("scaleModesTutor", false);
+    }
+
+    public void unlockTutor(String id){
+        unlockStatus.put(id, true);
+        this.env.getUserHandler().getCurrentUser().saveAll();
     }
 
     /**
@@ -224,6 +230,7 @@ public class StageMapController {
         //If in competitive mode, relevant stages should be locked
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             for (String tutor: unlockStatus.keySet()) {
+                System.out.println(tutor + "  " +  unlockStatus.get(tutor));
                 tutorAndButton.get(tutor).setDisable(false);
                 tutorAndButton.get(tutor).setGraphic(null);
                 if (unlockStatus.get(tutor) == false) {
@@ -254,19 +261,26 @@ public class StageMapController {
 //        boolean enoughEntries = false; //must be at least 3 entries for their to be a valid entry
         boolean unlock = true;
         ArrayList<TutorRecord> records = tutorHandler.getTutorData(converted.get(tutorId));
+        System.out.println("tutor id in stage map: " + tutorId + " converted; " + converted.get(tutorId));
+
 
         if (records.size() < 3) {
             //if there are less than 3 existing files
+            System.out.println("less than 3 existing records");
         } else {
-            for (int i = records.size() - 3; i < records.size(); i++) {
+            for (int i = records.size() - 2; i < records.size(); i++) {
                 TutorRecord record = records.get(i);
-                if (!(record.getStats().get("questionsCorrect").toString()).equals("10")) {
+                System.out.println(record.getStats().get("questionsCorrect"));
+                if (!((Float.parseFloat(record.getStats().get("percentageCorrect").toString())) > 10)) {
                     unlock = false;
                 }
             }
+            System.out.println("what is unlock?" + unlock + " for tutor.." + tutorId );
             if (unlock) {
                 //set the tutor status to be unlocked
-                unlockStatus.put(tutorOrder.get((tutorOrder.indexOf(converted.get(tutorId)) + 1)), true);
+                System.out.println("unlock is true, unlocking tutor: " + tutorOrder.get(tutorOrder.indexOf(converted.get(tutorId)) +1));
+
+                unlockTutor(tutorOrder.get(tutorOrder.indexOf(converted.get(tutorId)) +1));
                 visualiseLockedTutors();
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Completist").updateBadgeProgress(env, 1);
             }

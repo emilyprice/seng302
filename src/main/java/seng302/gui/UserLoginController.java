@@ -298,6 +298,7 @@ public class UserLoginController {
             if (userfb.exists()) {
                 //User exists
                 env.getUserHandler().setClassRoom(ddClassroom.getValue().toString());
+                System.out.println(userfb);
                 String pass = userfb.child("/properties/password").getValue().toString();
 
                 if (pass.equals(passwordInput.getText())) {
