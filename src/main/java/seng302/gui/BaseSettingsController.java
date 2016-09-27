@@ -68,6 +68,9 @@ public class BaseSettingsController {
 
     }
 
+    /**
+     * Applies the theme to the settings window.
+     */
     private void applyTheme() {
         //Apply user theme
         env.getThemeHandler().setBaseNode(settingsPane);

@@ -176,7 +176,6 @@ public class UserSummaryController {
 
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
-                //e.printStackTrace();
             }
         }
         

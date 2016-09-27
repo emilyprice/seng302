@@ -66,7 +66,6 @@ public class UserSettingsController {
 
     public void create(Environment env) {
         this.env = env;
-        //applyTheme();
 
         this.imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         env.getRootController().setHeader("User Settings");

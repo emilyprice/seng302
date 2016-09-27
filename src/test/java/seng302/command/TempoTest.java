@@ -1,6 +1,5 @@
 package seng302.command;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +30,6 @@ public class TempoTest {
     public void setUp() throws Exception {
         env = new Environment();
         env.setTranscriptManager(transcriptManager);
-        //env.getUserPageController();
         RootController root = new RootController();
         env.setRootController(root);
         env.setUserPageController(userPageController);

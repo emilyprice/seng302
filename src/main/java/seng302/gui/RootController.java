@@ -803,7 +803,6 @@ public class RootController implements Initializable {
 
     @FXML
     protected void launchSettings() {
-        //showUserBar(true);
 
 
         FXMLLoader loader = new FXMLLoader();
@@ -811,12 +810,6 @@ public class RootController implements Initializable {
 
         try {
             AnchorPane settingsPage = loader.load();
-//            centerPane.getChildren().setAll(settingsPage);
-//
-//            AnchorPane.setRightAnchor(settingsPage, 0.0);
-//            AnchorPane.setLeftAnchor(settingsPage, 0.0);
-//            AnchorPane.setBottomAnchor(settingsPage, 0.0);
-//            AnchorPane.setTopAnchor(settingsPage, 0.0);
 
             Stage stage = new Stage();
             stage.setTitle("Settings");

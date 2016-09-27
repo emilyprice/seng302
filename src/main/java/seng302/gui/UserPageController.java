@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -105,8 +106,7 @@ public class UserPageController {
 
     private Boolean mute;
 
-    public javafx.scene.control.TextField tempoInput = new javafx.scene.control.TextField();
-
+    private TextField tempoInput = new TextField();
 
     private UserSummaryController summaryController;
 
@@ -114,7 +114,6 @@ public class UserPageController {
     public void setEnvironment(Environment env) {
         this.env = env;
         this.env.setUserPageController(this);
-        //setupTimeSlider();
     }
 
 
@@ -124,22 +123,24 @@ public class UserPageController {
     protected void load() {
         populateUserOptions();
         setupMetronomePopOver();
-        //tempoLabel = new Label();
-
-
         updateProfilePicDisplay();
         updateLevelBadge();
-
         updateNameDisplay();
-
     }
 
+    /**
+     * Sets profile pic to user picture (in a circle)
+     */
     public void updateProfilePicDisplay() {
         Circle imageClip = new Circle(50, 50, 50);
         imageDP2.setClip(imageClip);
         imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
     }
 
+
+    /**
+     * Sets name under profile pic to display the user's name or username if they have no name.
+     */
     public void updateNameDisplay() {
         try {
 
@@ -378,9 +379,8 @@ public class UserPageController {
 
 
     /**
-     * OnClick action for the UserPage metronome button.
-     * Opens a popover that contains the metronome
-     *
+     * OnClick action for the UserPage metronome button. Opens a popover that contains the
+     * metronome
      */
     public void setupMetronomePopOver() {
 
@@ -403,7 +403,7 @@ public class UserPageController {
         JFXButton muteMetronome = new JFXButton("Mute");
         muteMetronome.getStyleClass().add("primary");
         muteMetronome.setMinSize(80, 30);
-        setTempo.setMinSize(80,30);
+        setTempo.setMinSize(80, 30);
 
         //HBox that will contain error message for if the tempo range is exceeded
         HBox errorLabelBox = new HBox();
@@ -432,7 +432,7 @@ public class UserPageController {
 
         Integer currentTempo = env.getPlayer().getTempo();
         tempoLabel.setText("The current tempo is set to " + currentTempo + " BPM");
-        tempoInput.setText(((Integer)currentTempo).toString());
+        tempoInput.setText(((Integer) currentTempo).toString());
         tempoLabelBox.getChildren().add(tempoLabel);
 
         metronome.getChildren().add(metronomeAnimation()); //adds AnchorPane with animation to HBox metronome
@@ -442,11 +442,11 @@ public class UserPageController {
         metronomeVBox.getChildren().add(errorLabelBox);
 
 
-        setTempo.setOnAction(event->{
+        setTempo.setOnAction(event -> {
             if (Integer.valueOf(tempoInput.getText()) >= 20 && Integer.valueOf(tempoInput.getText()) <= 300) {
                 env.getPlayer().setTempo(Integer.valueOf(tempoInput.getText()));
                 tempoLabel.setText("The current tempo is set to " + tempoInput.getText() + " BPM");
-                anim.setDuration(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000));
+                anim.setDuration(Duration.millis((60 / Float.valueOf(tempoInput.getText())) * 1000));
                 anim.playFromStart();
                 tempoInput.setStyle("-fx-border-color: lightgray;");
                 errorLabel.setVisible(false);
@@ -459,7 +459,7 @@ public class UserPageController {
                 errorLabel.setManaged(true);
                 errorLabel.setStyle("-fx-text-color: red;");
             }
-                });
+        });
 
 
         // used the spacing etc from settings to see if it will come out nicely. Subject to change
@@ -472,7 +472,7 @@ public class UserPageController {
         metronomePop.setTitle("Metronome");
 
         //ensures the metronome stops playing when the popout is not showing
-        metronomePop.showingProperty().addListener((o,old,newValue) -> {
+        metronomePop.showingProperty().addListener((o, old, newValue) -> {
             if (newValue) {
                 anim.playFromStart();
 
@@ -485,14 +485,15 @@ public class UserPageController {
 
 
     /**
-     * Creates the metronome animation of a bouncing ball in an AnchorPane, and plays back the sound when the
-     * animation makes contact with "start point"
+     * Creates the metronome animation of a bouncing ball in an AnchorPane, and plays back the sound
+     * when the animation makes contact with "start point"
+     *
      * @return AnchorPane containing animation
      */
     private AnchorPane metronomeAnimation() {
         ball = new Circle();
         AnchorPane animationPane = new AnchorPane(); //pane to contain animation
-        animationPane.setPrefSize(250,50);
+        animationPane.setPrefSize(250, 50);
         animationPane.setMinSize(250, 50);
         ball.getStyleClass().add("primary"); //make the ball match the theme
 
@@ -500,13 +501,12 @@ public class UserPageController {
         ball.setCenterY(25);
         ball.setRadius(4);
 
-        anim = new TranslateTransition(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000), ball);
+        anim = new TranslateTransition(Duration.millis((60 / Float.valueOf(tempoInput.getText())) * 1000), ball);
         anim.setFromX(10);
         anim.setToX(200);
         anim.setInterpolator(Interpolator.LINEAR);
         anim.setAutoReverse(true);
         anim.setCycleCount(Timeline.INDEFINITE);
-        //anim.stop(); //the popover will be closed on app launch
         animationPane.getChildren().add(ball);
 
         mute = false;
@@ -546,13 +546,10 @@ public class UserPageController {
      * Updates the metronome animation to be in sync with the current tempo
      */
     public void updateMetronome() {
-        anim.setDuration(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000));
+        anim.setDuration(Duration.millis((60 / Float.valueOf(tempoInput.getText())) * 1000));
         anim.playFromStart();
 
     }
-
-
-
 
 
     /**
