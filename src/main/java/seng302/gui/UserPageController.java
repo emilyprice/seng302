@@ -301,7 +301,7 @@ public class UserPageController {
      */
     public void updateGraphs() {
         statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), convert.toString(timeSlider.getValue()));
-        basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", timePeriod);
+        basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", convert.toString(timeSlider.getValue()));
     }
     private void updateGraphs(String timePeriod) {
         statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);

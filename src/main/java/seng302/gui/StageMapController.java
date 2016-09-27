@@ -136,6 +136,7 @@ public class StageMapController {
      */
     private void setNextLockedStage(){
         for(String tutor : tutorOrder){
+            System.out.println(tutor);
             if(unlockStatus.get(tutor) == false){
                 nextUnlockTutor = tutor;
                 break;
@@ -193,6 +194,8 @@ public class StageMapController {
      * @return
      */
     public HashMap getUnlockStatus(){
+        System.out.println("get unlock status");
+        System.out.println(unlockStatus);
         return this.unlockStatus;
     }
 
@@ -312,9 +315,12 @@ public class StageMapController {
         unlockStatus.put("keySignatureTutor", false);
         unlockStatus.put("diatonicChordTutor", false);
         unlockStatus.put("scaleModesTutor", false);
+
+        System.out.println("generated locking status");
     }
 
     public void unlockTutor(String id){
+        System.out.println(id);
         unlockStatus.put(id, true);
         this.env.getUserHandler().getCurrentUser().saveAll();
     }
@@ -375,6 +381,8 @@ public class StageMapController {
             } else {
                 for (int i = records.size() - 3; i < records.size(); i++) {
                     TutorRecord record = records.get(i);
+                    System.out.println(record);
+                    System.out.println(record.getStats().get("questionsCorrect"));
                     if (!(record.getStats().get("questionsCorrect").intValue() >= requiredScore)) {
                         unlock = false;
                     }

@@ -89,11 +89,37 @@ public class TutorHandler {
     /**
      * This method will give the total number of correct and incorrect answers for a given tutor.
      *
+     * @param tabId The tab ID of the tutor
+     * @return a pair containing two integers. The number of answers correct and the number of
+     * incorrect answers.
+     */
+    public Pair<Integer, Integer> getTutorTotals(String tabId, String timePeriod) {
+        ArrayList<TutorRecord> records = getTutorData(tabId);
+        Integer correct = 0;
+        Integer incorrect = 0;
+        for (TutorRecord record : records) {
+            Date date = record.getDate();
+            Date compare = dates.get(timePeriod);
+            if (date.after(compare)) {
+                Map<String, Number> stats = record.getStats();
+                correct += stats.get("questionsCorrect").intValue();
+                incorrect += stats.get("questionsIncorrect").intValue();
+            }
+        }
+        return new Pair<>(correct, incorrect);
+    }
+
+
+    /**
+     * This method will give the total number of correct and incorrect answers for a given tutor.
+     *
      * @param tabId The tabid of the tutor
      * @return a pair containing two integers. The number of answers correct and the number of
      * incorrect answers.
      */
     public Pair<Integer, Integer> getRecentTutorTotals(String tabId) throws IndexOutOfBoundsException {
+
+
         ArrayList<TutorRecord> records = getTutorData(tabId);
         if (records.size() != 0) {
             TutorRecord lastRecord = records.get(records.size() - 1);
@@ -132,7 +158,7 @@ public class TutorHandler {
         } else if (id.equals("chordTutor")) {
             filename = "ChordRecognitionTutor";
         } else if (id.equals("basicChordTutor")) {
-            filename = projectAddress + "ChordRecognitionTutor(Basic)";
+            filename = "ChordRecognitionTutor(Basic)";
         } else if (id.equals("chordSpellingTutor")) {
             filename = "ChordSpellingTutor";
         } else if (id.equals("keySignatureTutor")) {
