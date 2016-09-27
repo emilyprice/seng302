@@ -239,7 +239,7 @@ public class KeyboardPaneController {
             noteLabelsClick.setDisable(true);
         }
 
-        //if in practice mode, users can see notes on keys always. If in competition, it is disabled
+        //if in practice mode, users can see notes on keys always. If in competition, it is disabled.
         if (!(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())) {
             noteLabelsAlways.setDisable(false);
             noteLabelsAlways.setToggleGroup(notenames);
