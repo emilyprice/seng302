@@ -247,6 +247,7 @@ public class KeyboardPaneController {
 
         pop = new PopOver(settings);
         pop.setTitle("Keyboard Settings");
+        pop.getRoot().getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
 
 
         settings.getChildren().add(noteLabelsOff);
@@ -567,6 +568,7 @@ public class KeyboardPaneController {
         //Declaring the popover
         displayScalesPop = new PopOver(displayScales);
         displayScalesPop.setTitle("Display Scales");
+        displayScalesPop.getRoot().getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
         displayScalesPop.setOnHiding(event -> {
             displayScalesButton.setText("Display Scales");
         });

@@ -60,6 +60,7 @@ public class DslReferenceController {
         dslRef.setHeaderAlwaysVisible(true);
         dslRef.setArrowLocation(PopOver.ArrowLocation.RIGHT_CENTER);
         dslRef.setTitle("DSL Reference Card");
+        dslRef.getRoot().getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
         return dslRef;
     }
 
