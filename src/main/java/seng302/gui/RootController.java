@@ -211,7 +211,6 @@ public class RootController implements Initializable {
                 applyTheme();
                 stage.show();
                 resizeSplitPane(1.0);
-                updateImage();
                 menuTranscript.setSelected(false);
                 toggleTranscript();
                 keyboardPaneController.showWholeKeyboard();
