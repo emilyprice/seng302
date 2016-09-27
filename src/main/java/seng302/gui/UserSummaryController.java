@@ -15,6 +15,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -181,6 +182,8 @@ public class UserSummaryController {
                 noteMap = loader.load();
                 stageMap.getChildren().clear();
                 stageMap.getChildren().add(noteMap);
+            } catch (LoadException e) {
+                // It's all fine.
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
                 e.printStackTrace();

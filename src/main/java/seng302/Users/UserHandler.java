@@ -214,9 +214,6 @@ public class UserHandler {
         this.classroom = classroom;
         this.currentUser = new Student(userName, password, env);
         updateRecentUsers(userName);
-        //update User drop down to display user's name
-        env.getRootController().updateUserInfo(userName);
-
     }
 
 

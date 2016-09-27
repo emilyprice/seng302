@@ -448,8 +448,9 @@ public class Project {
             env.getRootController().disallowTranscript();
             env.getRootController().getTranscriptController().hideTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
-            env.getUserPageController().populateUserOptions();
             env.getUserPageController().getSummaryController().loadStageMap();
+            env.getUserPageController().populateUserOptions();
+
         } catch (NullPointerException e) {
             // User Page might not exist yet so it doesn't have to load stuff
         }
@@ -461,8 +462,9 @@ public class Project {
             this.isCompetitiveMode = false;
             env.getRootController().allowTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
-            env.getUserPageController().populateUserOptions();
             env.getUserPageController().getSummaryController().loadStageMap();
+            env.getUserPageController().populateUserOptions();
+
         } catch (NullPointerException e) {
             // User page might not exist yet
         }

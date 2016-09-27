@@ -98,8 +98,6 @@ public class UserPageController {
 
     private TutorStatsController statsController;
 
-    private UserSummaryController summaryController;
-
     private TutorStatsController basicStatsController;
 
     @FXML
@@ -172,7 +170,8 @@ public class UserPageController {
 
     @FXML
     public void onLogoutClick() {
-        env.getRootController().showCloseWindow("logout");
+        //env.getRootController().showCloseWindow("logout");
+        env.getRootController().logOutUser();
     }
 
     /**
@@ -237,11 +236,10 @@ public class UserPageController {
 
                 } else {
                     //if in competitive mode, lock the relevant tabs
-                    if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())
-                            && (!tutor.equals("Summary")
-                            && !env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)))
-                            || ((tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor"))
-                            && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)"))))) {
+                    if ((env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())
+                            && (!tutor.equals("Summary") && !env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)))
+                            && ((!tutor.equals("Scale Recognition Tutor") || !tutor.equals("Chord Recognition Tutor"))
+                            || !env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")))){
                         ImageView lock = new ImageView(lockImg);
                         StackPane image = new StackPane();
                         image.setPadding(new Insets(0, 5, 0, 0));
