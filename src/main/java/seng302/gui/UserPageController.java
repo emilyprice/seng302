@@ -230,6 +230,7 @@ public class UserPageController {
     }
 
 
+
     /**
      * Creates the GUI time slider. This allows the user to select a specific time period to view
      * tutor results from.
