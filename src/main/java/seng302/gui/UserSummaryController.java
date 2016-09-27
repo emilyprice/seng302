@@ -170,13 +170,13 @@ public class UserSummaryController {
         } else {
 
             try {
+                stageMap.getChildren().clear();
                 stageMap.getChildren().add(env.getStagePane());
                 env.getStageMapController().visualiseLockedTutors();
 
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
-                System.out.println(e.getStackTrace());
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
         

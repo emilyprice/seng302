@@ -91,6 +91,7 @@ public class UserPageController {
 
     private Environment env;
 
+
     private UserSummaryController summaryController;
 
 
@@ -107,19 +108,28 @@ public class UserPageController {
     protected void load() {
         populateUserOptions();
 
+        updateProfilePicDisplay();
+        updateLevelBadge();
+
+        updateNameDisplay();
+
+    }
+
+    public void updateProfilePicDisplay() {
         Circle imageClip = new Circle(50, 50, 50);
         imageDP2.setClip(imageClip);
         imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
-        updateLevelBadge();
+    }
 
+    public void updateNameDisplay() {
         try {
 
             txtFullName.setText(env.getUserHandler().getCurrentUser().getUserFirstName() + " "
                     + env.getUserHandler().getCurrentUser().getUserLastName());
         } catch (NullPointerException e) {
+            txtFullName.setText(env.getUserHandler().getCurrentUser().getUserName());
             //txtFullName not initialized yet.
         }
-
     }
 
     @FXML
@@ -157,20 +167,20 @@ public class UserPageController {
         options.add("Scale Spelling Tutor");
 
         Image lockImg = new Image(getClass().getResourceAsStream("/images/lock-blocked-medium.png"), 20, 20, true, true);
-
+        listView.getItems().clear();
         listView.getItems().addAll(FXCollections.observableArrayList(options));
 
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            showPage((String) newValue);
+            if (newValue != null) {
+                showPage((String) newValue);
+            }
         });
 
         // Set after the listener so it loads user summary correctly
         listView.getSelectionModel().selectFirst();
 
 
-        // This allows images to be displayed in the listview. Still trying to
-        // make the text centered and the height and width the same as the others.
         listView.setCellFactory(listView -> new JFXListCell<String>() {
 
             @Override
@@ -403,6 +413,11 @@ public class UserPageController {
      */
     public String getTimePeriod() {
         return convert.toString(timeSlider.getValue());
+    }
+
+
+    public UserSummaryController getSummaryController() {
+        return summaryController;
     }
 
 }

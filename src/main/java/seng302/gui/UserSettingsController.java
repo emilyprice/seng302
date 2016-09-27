@@ -120,10 +120,13 @@ public class UserSettingsController {
             FileHandler.copyFolder(file, filePath.toFile());
             userHandler.getCurrentUser().setUserPicture(filePath);
             imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
+            env.getUserPageController().updateProfilePicDisplay();
+
         } catch (Exception e) {
             e.printStackTrace();
 
         }
+
     }
 
     /**
@@ -142,6 +145,7 @@ public class UserSettingsController {
             userHandler.getCurrentUser().setUserFirstName(txtFName.getText());
             userHandler.getCurrentUser().updateProperties();
             userHandler.getCurrentUser().saveProperties();
+            env.getUserPageController().updateNameDisplay();
             txtFName.setEditable(false);
             btnEditFName.setText("Edit");
         }
@@ -164,6 +168,7 @@ public class UserSettingsController {
             userHandler.getCurrentUser().setUserLastName(txtLName.getText());
             userHandler.getCurrentUser().updateProperties();
             userHandler.getCurrentUser().saveProperties();
+            env.getUserPageController().updateNameDisplay();
             txtLName.setEditable(false);
             btnEditLName.setText("Edit");
         }
