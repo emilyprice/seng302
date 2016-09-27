@@ -174,6 +174,7 @@ public class UserSummaryController {
 
             try {
                 noteMap = loader.load();
+                stageMap.getChildren().clear();
                 stageMap.getChildren().add(noteMap);
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
@@ -197,6 +198,7 @@ public class UserSummaryController {
 //    else {
 //            System.out.println("stage map not null.");
 //            try {
+//                stageMap.getChildren().clear();
 //                stageMap.getChildren().add(env.getStagePane());
 //                env.getStageMapController().visualiseLockedTutors();
 //

@@ -30,6 +30,7 @@ import seng302.Environment;
 import seng302.utility.InstrumentUtility;
 import seng302.utility.LevelCalculator;
 import seng302.utility.OutputTuple;
+import seng302.utility.TutorRecord;
 
 public class Project {
 
@@ -52,6 +53,9 @@ public class Project {
 
     public Boolean isUserMapData = true;
 
+    public HashMap<String, TutorRecord> recentPracticeTutorRecordMap;
+
+
     /**
      * Constructor for creating a new project.
      *
@@ -71,6 +75,7 @@ public class Project {
         this.level = 1;
         this.visualiserOn = false;
         badgeManager = new BadgeManager(env);
+        recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
         loadProject(projectName);
         loadProperties();
 
@@ -108,11 +113,21 @@ public class Project {
         projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
         projectSettings.put("tutor100Map", gson.toJson(badgeManager.get100TutorBadges()));
 
+        projectSettings.put("tutorPracticeMap", gson.toJson(recentPracticeTutorRecordMap));
+
+
         try {
             projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
         }catch(Exception e){
             System.err.println("cant save unlock map");
         }
+
+        try {
+            projectSettings.put("unlockMapDescriptions", gson.toJson(env.getStageMapController().getUnlockDescriptions()));
+        }catch(Exception e){
+            System.err.println("cant save unlock map descriptions");
+        }
+
     }
 
 
@@ -149,7 +164,6 @@ public class Project {
             env.getRootController().setTranscriptPaneText(env.getTranscriptManager().convertToText());
         } catch (NullPointerException np) {
 
-        }
 
         //Rhythm
         int[] rhythms;
@@ -220,48 +234,64 @@ public class Project {
             visualiserOn = false;
         }
 
+
+        try {
+            HashMap<String, TutorRecord> practiceMap;
+            Type mapType = new TypeToken<HashMap<String, TutorRecord>>() {
+            }.getType();
+            practiceMap = gson.fromJson((String) projectSettings.get("tutorPracticeMap"), mapType);
+            if(practiceMap != null) {
+                recentPracticeTutorRecordMap = practiceMap;
+
+            }
+
+        }catch(Exception e) {
+            System.err.println("failed to load tutorPracticeMap");
+
+        }
+
+
+
+
+
         //badges
         //overallBadges
-        ArrayList<Badge> overallBadges;
-        try{
-
+        try {
+            ArrayList<Badge> overallBadges;
             Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
             }.getType();
             overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
-        }catch(Exception e){
-            overallBadges = new ArrayList<>();
-        }
 
 
-        //tutorBadges
-        HashMap<String, ArrayList<Badge>> tutorBadges;
-        try{
+            //tutorBadges
+
+            HashMap<String, ArrayList<Badge>> tutorBadges;
             Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
             }.getType();
             tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
-        }catch(Exception e){
-            tutorBadges = new HashMap<>() ;
-        }
+            if(tutorBadges != null && overallBadges != null){
+                badgeManager.replaceBadges(tutorBadges, overallBadges);
+            }
 
+            }catch(Exception e){
+                System.err.println("failed to import badge data");
+            }
 
-        try {
-            badgeManager.replaceBadges(tutorBadges, overallBadges);
-        } catch (NullPointerException e) {
-            tutorBadges = BadgeManager.getTutorBadges();
-            overallBadges = BadgeManager.getOverallBadges();
-        }
+            //100tutorMap
+            try {
+                HashMap<String, Boolean> tutor100Map;
+                Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
+                }.getType();
+                tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+                if(tutor100Map != null) {
 
-        //100tutorMap
-        HashMap<String, Boolean> tutor100Map;
-        try{
-            Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
-            }.getType();
-            tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
-        }catch (Exception e){
-            tutor100Map = new HashMap<>();
-        }
+                    badgeManager.replaceTutor100AllMap(tutor100Map);
+                }
 
-
+                env.getTranscriptManager().unsavedChanges = false;
+            }catch(Exception e){
+                System.err.println("failed to import 100 tutor map");
+            }
         badgeManager.replaceTutor100AllMap(tutor100Map);
 
         env.getTranscriptManager().unsavedChanges = false;
@@ -279,14 +309,32 @@ public class Project {
             Type mapType = new TypeToken<HashMap<String, Boolean>>() {
             }.getType();
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
-            System.out.println("unlock map");
-            System.out.println(unlockMap);
             if(unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
+                env.getStageMapController().setDescription();
             }
         }catch(Exception e){
-            System.err.println("failed to load stageMap");
+            e.printStackTrace();
+            System.out.println("failed to load stageMap");
         }
+
+        try {
+            Gson gson = new Gson();
+            HashMap<String, HashMap<String,Boolean>> unlockMapDescriptions;
+            Type mapType = new TypeToken<HashMap<String, HashMap<String, Boolean>>>() {
+            }.getType();
+            unlockMapDescriptions = gson.fromJson((String) projectSettings.get("unlockMapDescriptions"), mapType);
+            if(unlockMapDescriptions != null) {
+                env.getStageMapController().unlockDescriptions = unlockMapDescriptions;
+                env.getStageMapController().setDescription();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("failed to load stageMapDescriptions");
+        }
+
+
+
     }
 
 
@@ -343,6 +391,8 @@ public class Project {
             case "unlockMap":
                 currentValue = env.getStageMapController().getUnlockStatus();
                 break;
+            case "unlockMapDescriptions":
+                currentValue = env.getStageMapController().getUnlockDescriptions();
         }
 
         try {
@@ -453,8 +503,15 @@ public class Project {
         checkChanges("visualiserOn");
     }
 
+    public void setRecentPracticeTutorRecordMap(String tutor, TutorRecord record){
+        recentPracticeTutorRecordMap.put(tutor, record);
+    }
     public boolean getVisualiserOn() {
         return visualiserOn;
+    }
+
+    public HashMap<String, TutorRecord> getRecentPracticeTutorRecordMap(){
+        return recentPracticeTutorRecordMap;
     }
 
     public BadgeManager getBadgeManager(){return badgeManager;}
