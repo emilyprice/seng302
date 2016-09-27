@@ -175,7 +175,7 @@ public class UserSettingsController {
     }
 
     /**
-     * Shows a delete user confimation dialog, and deletes the current user if suitable.
+     * Shows a delete user confirmation dialog, and deletes the current user if suitable.
      */
     @FXML
     private void deleteUser() {

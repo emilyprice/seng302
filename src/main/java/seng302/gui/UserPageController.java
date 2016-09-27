@@ -1,46 +1,59 @@
 package seng302.gui;
 
-import com.jfoenix.controls.JFXBadge;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXListCell;
-import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.*;
 
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
+import java.util.*;
+import javafx.animation.*;
+import javafx.beans.value.ChangeListener;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
+import javafx.util.StringConverter;
 import javafx.scene.shape.Circle;
 import javafx.util.StringConverter;
+import org.controlsfx.control.PopOver;
 import seng302.Environment;
+
+
+import static javafx.scene.paint.Color.RED;
 
 /**
  * Handles and Creates Users.
  */
 public class UserPageController {
 
+    private PopOver metronomePop;
 
     @FXML
-    AnchorPane contentPane;
+    private Button metronomeBtn;
 
-    @FXML
-    VBox summaryPage;
 
     @FXML
     SplitPane userView;
@@ -60,15 +73,14 @@ public class UserPageController {
     @FXML
     JFXBadge levelBadge;
 
-    @FXML
-    Label latestAttempt;
-
-    @FXML
-    StackPane stageMap;
 
     @FXML
     ScrollPane currentPage;
 
+    private Circle ball; //bouncing ball for metronome
+
+
+    @FXML
     private Slider timeSlider;
 
     StringConverter convert;
@@ -91,6 +103,14 @@ public class UserPageController {
 
     private Environment env;
 
+    public Label tempoLabel = new Label();
+
+    private TranslateTransition anim;
+
+    private Boolean mute;
+
+    public javafx.scene.control.TextField tempoInput = new javafx.scene.control.TextField();
+
 
     private UserSummaryController summaryController;
 
@@ -107,6 +127,9 @@ public class UserPageController {
      */
     protected void load() {
         populateUserOptions();
+        launchMetronomePopOver();
+        //tempoLabel = new Label();
+
 
         updateProfilePicDisplay();
         updateLevelBadge();
@@ -344,6 +367,193 @@ public class UserPageController {
     void openSettings() {
         env.getRootController().launchSettings();
     }
+
+
+    /**
+     * OnClick action for the UserPage metronome button.
+     * Opens a popover that contains the metronome
+     *
+     */
+    @FXML
+    public void launchMetronomePopOver() {
+
+        //Goes inside metronome popover
+        VBox metronomeVBox = new VBox();
+        metronomeVBox.setMinSize(270, 175);
+        metronomeVBox.setMaxSize(270, 175);
+
+        //Hbox to contain label stating current BPM
+        HBox tempoLabelBox = new HBox();
+
+
+        //HBox to contain metronome
+        HBox metronome = new HBox();
+
+        //Hbox to contain text box that allows user to change tempo
+        HBox changeTempo = new HBox();
+        JFXButton setTempo = new JFXButton("Set tempo");
+        setTempo.getStyleClass().add("primary");
+        JFXButton muteMetronome = new JFXButton("Mute");
+        muteMetronome.getStyleClass().add("primary");
+        muteMetronome.setMinSize(80, 30);
+        setTempo.setMinSize(80,30);
+
+        //HBox that will contain error message for if the tempo range is exceeded
+        HBox errorLabelBox = new HBox();
+        Label errorLabel = new Label("Tempo is outside of appropriate range");
+        errorLabel.setTextFill(RED);
+        errorLabelBox.getChildren().add(errorLabel);
+        errorLabel.setVisible(false);
+
+        muteMetronome.setOnAction(e -> {
+            if (muteMetronome.getText().equals("Mute")) {
+                mute = true;
+                muteMetronome.setText("Unmute");
+            } else {
+                mute = false;
+                muteMetronome.setText("Mute");
+            }
+        });
+
+        tempoInput.setPrefColumnCount(3); //setting col size (user can input 3 characters)
+        changeTempo.getChildren().add(tempoInput);
+        changeTempo.getChildren().add(setTempo);
+        changeTempo.getChildren().add(muteMetronome);
+        changeTempo.setSpacing(10);
+        changeTempo.setPadding(new Insets(5));
+
+        Integer currentTempo = env.getPlayer().getTempo();
+        tempoLabel.setText("The current tempo is set to " + currentTempo + " BPM");
+        tempoInput.setText(((Integer)currentTempo).toString());
+        tempoLabelBox.getChildren().add(tempoLabel);
+
+        metronome.getChildren().add(metronomeAnimation()); //adds AnchorPane with animation to HBox metronome
+        metronomeVBox.getChildren().add(tempoLabelBox);
+        metronomeVBox.getChildren().add(metronome);
+        metronomeVBox.getChildren().add(changeTempo);
+        metronomeVBox.getChildren().add(errorLabelBox);
+
+
+        setTempo.setOnAction(event->{
+            if (Integer.valueOf(tempoInput.getText()) >= 20 && Integer.valueOf(tempoInput.getText()) <= 300) {
+                env.getPlayer().setTempo(Integer.valueOf(tempoInput.getText()));
+                tempoLabel.setText("The current tempo is set to " + tempoInput.getText() + " BPM");
+                anim.setDuration(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000));
+                anim.playFromStart();
+                tempoInput.setStyle("-fx-border-color: lightgray;");
+                errorLabel.setVisible(false);
+
+                //else if the user tries to input a tempo value outside of appropriate range
+            } else {
+                tempoInput.setStyle("-fx-border-color: red;"); //text border will set red
+                errorLabel.setVisible(true); //label will display
+                errorLabel.setStyle("-fx-text-color: red;");
+            }
+                });
+
+
+        // used the spacing etc from settings to see if it will come out nicely. Subject to change
+        metronomeVBox.setSpacing(10);
+        metronomeVBox.setPadding(new Insets(10));
+
+        //Declaring the popover
+        metronomePop = new PopOver(metronomeVBox);
+        metronomePop.setTitle("Metronome");
+
+        //ensures the metronome stops playing when the popout is not showing
+        metronomePop.showingProperty().addListener((o,old,newValue) -> {
+            if (newValue) {
+                anim.playFromStart();
+
+            } else {
+                anim.pause();
+
+            }
+        });
+    }
+
+
+    /**
+     * Creates the metronome animation of a bouncing ball in an AnchorPane, and plays back the sound when the
+     * animation makes contact with "start point"
+     * @return AnchorPane containing animation
+     */
+    private AnchorPane metronomeAnimation() {
+        ball = new Circle();
+        AnchorPane animationPane = new AnchorPane(); //pane to contain animation
+        animationPane.setPrefSize(250,50);
+        animationPane.setMinSize(250, 50);
+        ball.getStyleClass().add("primary"); //make the ball match the theme
+
+        ball.setCenterX(20);
+        ball.setCenterY(25);
+        ball.setRadius(4);
+
+        anim = new TranslateTransition(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000), ball);
+        anim.setFromX(10);
+        anim.setToX(200);
+        anim.setInterpolator(Interpolator.LINEAR);
+        anim.setAutoReverse(true);
+        anim.setCycleCount(Timeline.INDEFINITE);
+        //anim.stop(); //the popover will be closed on app launch
+        animationPane.getChildren().add(ball);
+
+        mute = false;
+        initializeTickSound();
+
+        return animationPane;
+    }
+
+    /**
+     * Toggles the ticking sound of the metronome
+     */
+    private void initializeTickSound() {
+
+        final AudioClip tickSound = new AudioClip("http://www.denhaku.com/r_box/sr16/sr16perc/losticks.wav"); //metronome tick sound
+        ChangeListener<Number> tick = (observable, oldValue, newValue) -> {
+
+            //if not on mute, play tick sound
+            if (!mute) {
+                if (newValue.equals(10.0) || newValue.equals(200.0)) {
+                    tickSound.play();
+                }
+            }
+        };
+        ball.translateXProperty().addListener(tick);
+    }
+
+    /**
+     * Updates the tempo to the current set tempo
+     */
+    public void updateCurrentTempo(Number newValue) {
+        tempoLabel.setText("The current tempo is set to " + String.valueOf(newValue.intValue()) + " BPM");
+        tempoInput.setText(String.valueOf(newValue.intValue()));
+        updateMetronome();
+    }
+
+    /**
+     * Updates the metronome animation to be in sync with the current tempo
+     */
+    public void updateMetronome() {
+        anim.setDuration(Duration.millis((60/Float.valueOf(tempoInput.getText()))*1000));
+        anim.playFromStart();
+
+    }
+
+
+    /**
+     * Hides and shows the metronome popover when the metronome button is selected
+     */
+    @FXML
+    private void toggleMetronomePopOver() {
+        if (metronomePop.isShowing()) {
+            metronomePop.hide();
+        } else {
+            metronomePop.show(metronomeBtn);
+
+        }
+    }
+
 
 
     /**
