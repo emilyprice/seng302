@@ -271,7 +271,7 @@ public class Project {
                 env.getStageMapController().unlockStatus = unlockMap;
             }
         } catch (Exception e) {
-            System.out.println("failed to load stageMap");
+            System.err.println("failed to load stageMap");
         }
     }
 
