@@ -1,8 +1,6 @@
 package seng302.gui;
 
 
-import com.jfoenix.controls.JFXBadge;
-
 import org.json.simple.JSONArray;
 
 import java.io.File;
@@ -24,7 +22,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SplitPane;
@@ -87,8 +84,6 @@ public class RootController implements Initializable {
     @FXML
     private HBox hbUser;
 
-    @FXML
-    private JFXBadge levelBadge;
 
     @FXML
     private MenuItem menuOpen;
@@ -118,9 +113,6 @@ public class RootController implements Initializable {
     private MenuItem dslReferenceMenuItem;
 
     @FXML
-    private MenuButton userDropDown;
-
-    @FXML
     private RadioMenuItem menuTranscript;
 
     @FXML
@@ -144,8 +136,6 @@ public class RootController implements Initializable {
                 + "-fx-border-width:2.0";
 
 
-        userDropDown.setEllipsisString("User");
-        userDropDown.setText("User");
         if (transcriptPaneController.getIsExpanded()) {
             transcriptPaneController.showTranscript();
             menuTranscript.setSelected(true);
@@ -160,7 +150,7 @@ public class RootController implements Initializable {
      * Loads a new user image into a circular shape
      */
     public void updateImage() {
-        updateLevelBadge();
+
         final Circle clip = new Circle(imageDP.getFitWidth() - 25.0, imageDP.getFitHeight() - 25.0, 50.0);
         imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         clip.setRadius(25.0);
@@ -184,14 +174,6 @@ public class RootController implements Initializable {
         });
     }
 
-    /**
-     * Updates the level indicator badge to display the level of the user's current project
-     */
-    public void updateLevelBadge() {
-        levelBadge.refreshBadge();
-        levelBadge.setText(Integer.toString(env.getUserHandler().getCurrentUser().getUserLevel()));
-    }
-
 
     /**
      * Display or hide the main GUI window.
@@ -204,7 +186,6 @@ public class RootController implements Initializable {
             applyTheme();
             stage.show();
             resizeSplitPane(1.0);
-            updateImage();
             menuTranscript.setSelected(false);
             toggleTranscript();
             try {
@@ -320,14 +301,6 @@ public class RootController implements Initializable {
         keyboardPaneController.stopShowingNotesOnKeyboard();
     }
 
-
-    /**
-     * Updates the user menu button text to display the current user's name.
-     */
-    public void updateUserInfo(String name) {
-        userDropDown.setEllipsisString(name);
-        userDropDown.setText(name);
-    }
 
 
     /**
@@ -761,7 +734,6 @@ public class RootController implements Initializable {
 
     @FXML
     protected void launchSettings() {
-        showUserBar(true);
 
 
         FXMLLoader loader = new FXMLLoader();
@@ -769,11 +741,11 @@ public class RootController implements Initializable {
 
         try {
             AnchorPane settingsPage = loader.load();
-            centerPane.getChildren().setAll(settingsPage);
-            AnchorPane.setRightAnchor(settingsPage, 0.0);
-            AnchorPane.setLeftAnchor(settingsPage, 0.0);
-            AnchorPane.setBottomAnchor(settingsPage, 0.0);
-            AnchorPane.setTopAnchor(settingsPage, 0.0);
+
+            Stage stage = new Stage();
+            stage.setTitle("Settings");
+            stage.setScene(new Scene(settingsPage, 1000, 700));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

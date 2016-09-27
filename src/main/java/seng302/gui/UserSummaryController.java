@@ -20,9 +20,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -112,7 +112,13 @@ public class UserSummaryController {
         this.env = env;
 
         updateProgressBar();
+        updateGraphs();
+        updateBadgesDisplay();
 
+
+    }
+
+    public void updateGraphs() {
         Pair<Integer, Integer> correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTotalsForAllTutors(env.getUserPageController().getTimePeriod());
 
         // Set up Overall graph and labels.
@@ -177,7 +183,6 @@ public class UserSummaryController {
                 stageMap.getChildren().add(noteMap);
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
-
                 e.printStackTrace();
             }
 

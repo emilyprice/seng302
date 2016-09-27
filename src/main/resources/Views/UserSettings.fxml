@@ -9,7 +9,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<AnchorPane fx:id="chordSpellingAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="450.0" prefWidth="700.0" stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserSettingsController">
+<AnchorPane fx:id="settingsPane" maxHeight="1.7976931348623157E308"
+            maxWidth="1.7976931348623157E308" prefHeight="450.0" prefWidth="700.0"
+            stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserSettingsController">
    <children>
        <VBox layoutX="32.0" layoutY="71.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -47,7 +50,11 @@
                                     <Image url="images/testDP.jpg" />
                                  </image>
                               </ImageView>
-                               <JFXButton fx:id="btnUploadImage" buttonType="RAISED" contentDisplay="CENTER" ellipsisString="" graphicTextGap="0.0" maxHeight="25.0" maxWidth="43.0" onAction="#launchPhotoChooser" prefHeight="25.0" prefWidth="43.0" ripplerFill="#2fe1ae" styleClass="primaryControl">
+                               <JFXButton fx:id="btnUploadImage" buttonType="RAISED"
+                                          contentDisplay="CENTER" ellipsisString=""
+                                          graphicTextGap="0.0" maxHeight="25.0" maxWidth="43.0"
+                                          onAction="#launchPhotoChooser" prefHeight="25.0"
+                                          prefWidth="43.0" styleClass="primary">
                                  <HBox.margin>
                                      <Insets left="20.0" top="20.0" />
                                  </HBox.margin>

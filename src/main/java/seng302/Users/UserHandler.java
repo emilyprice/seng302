@@ -2,16 +2,25 @@ package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import seng302.Environment;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import seng302.Environment;
+import seng302.utility.FileHandler;
 
 /**
  * Handles Users.
