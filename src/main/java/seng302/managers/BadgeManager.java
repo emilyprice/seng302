@@ -127,21 +127,25 @@ public class BadgeManager {
         sessionBadges.add(10);
         sessionBadges.add(25);
         sessionBadges.add(100);
+        sessionBadges.add(-1);
 
         ArrayList<Integer> questionBadges = new ArrayList<>();
-        questionBadges.add(1);
         questionBadges.add(10);
         questionBadges.add(50);
         questionBadges.add(120);
         questionBadges.add(600);
+        questionBadges.add(-1);
 
         ArrayList<Integer> musicianBadges = new ArrayList<>();
         musicianBadges.add(1);
         musicianBadges.add(3);
         musicianBadges.add(10);
+        musicianBadges.add(12);
+        musicianBadges.add(-1);
 
         ArrayList<Integer> tutorTotal = new ArrayList<>();
         tutorTotal.add(10);
+        tutorTotal.add(-1);
 
         //intalize tutor badges
         for (String tutor:allTutors){
