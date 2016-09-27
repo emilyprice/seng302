@@ -219,7 +219,7 @@
     -fx-background-color: {1};
     -fx-pref-height: 40px;
     -fx-pref-tile-height: 40px ;
-    -fx-text-fill: {3};
+
 
 
 }
@@ -532,4 +532,36 @@
 
 .jfx-toggle-button .jfx-rippler{
     -fx-rippler-fill: {0};
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Musical Terms Page                                                          *
+ *                                                                             *
+ ******************************************************************************/
+
+.termField {
+    -fx-focus-color: {0};
+}
+
+.termField:readonly {
+    -fx-background-color: transparent;
+    -fx-border-width: 0px;
+}
+
+#errorMessage {
+    -fx-text-fill: red;
+}
+
+.errorField {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+}
+
+.jfx-button:hover {
+    -fx-background-color: {1}
+    }
+
+.jfx-rippler{
+    -fx-rippler-fill:{0};
 }

@@ -82,3 +82,8 @@ It was discovered that the tutor files would have to be manually parsed if we le
 Moffat is happy for us to do this. For old tutor files he would like us to just have a message that files relate to a previous version and are not compatible.
 
 If we have time and the PO approves, we will create a utility to convert the old files to the new format.
+
+## Locked Badges decision
+
+When displaying locked badges (not yet achieved) it had to be decided how to differentiate between locked and unlocked badges. After consulting the team, the conclusion came to would be to grey out the locked badges and show a lock icon on top.
+

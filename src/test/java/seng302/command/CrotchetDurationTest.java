@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import seng302.Environment;
-import seng302.gui.RootController;
+import seng302.gui.UserPageController;
 import seng302.managers.TranscriptManager;
 
 import static org.mockito.Mockito.verify;
@@ -22,13 +22,14 @@ public class CrotchetDurationTest {
     @Mock
     private TranscriptManager transcriptManager;
 
+    @Mock
+    private UserPageController userPageController;
+
     @Before
     public void setUp() throws Exception {
         env = new Environment();
         env.setTranscriptManager(transcriptManager);
-        RootController root = new RootController();
-        env.setRootController(root);
-        //env.getUserHandler().setCurrentUser("test");
+        env.setUserPageController(userPageController);
     }
 
 

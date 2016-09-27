@@ -27,6 +27,8 @@ public class BaseSettingsController {
 
     private ProjectSettingsController projectSettingsController;
 
+    private TermsSettingsController termsSettingsController;
+
     private FXMLLoader userSettingsLoader, themeLoader, projectSettingsLoader;
 
     private MicInputSettingsController micInputSettingsController;
@@ -63,8 +65,19 @@ public class BaseSettingsController {
         this.env = env;
         populateListView();
         openUserSettings();
+        applyTheme();
 
 
+    }
+
+    /**
+     * Applies the theme to the settings window.
+     */
+    private void applyTheme() {
+        //Apply user theme
+        env.getThemeHandler().setBaseNode(settingsPane);
+        String[] themeColours = env.getUserHandler().getCurrentUser().getThemeColours();
+        env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
     /**
@@ -77,6 +90,7 @@ public class BaseSettingsController {
         options.add("Theme Settings");
         options.add("Project Settings");
         options.add("Mic Input");
+        options.add("Musical Terms");
 
         settingsOptions.getItems().addAll(FXCollections.observableArrayList(options));
 
@@ -116,6 +130,10 @@ public class BaseSettingsController {
 
             case "Mic Input":
                 openMicInput();
+                break;
+
+            case "Musical Terms":
+                openTermsSettings();
                 break;
         }
 
@@ -182,6 +200,26 @@ public class BaseSettingsController {
             this.setAnchors(loadedPane);
             micInputSettingsController = micSettingsLoader.getController();
             micInputSettingsController.create(env);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+    /**
+     * Displays the page containing musical terms and information about them
+     */
+    private void openTermsSettings() {
+        try {
+            FXMLLoader termsLoader = new FXMLLoader();
+            termsLoader.setLocation(getClass().getResource("/Views/TermsSettings.fxml"));
+            Node loadedPane = (Node) termsLoader.load();
+            settingsPane.getChildren().setAll(loadedPane);
+            this.setAnchors(loadedPane);
+            termsSettingsController = termsLoader.getController();
+            termsSettingsController.create(env);
 
         } catch (IOException e) {
             e.printStackTrace();

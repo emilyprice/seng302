@@ -17,6 +17,10 @@ public class Twinkle implements Command {
         return 14 * crotchetLength;
     }
 
+    /**
+     * Called when the Twinkle command is submitted to the transcript
+     * @param env the current environment.
+     */
     public void execute(Environment env) {
         ArrayList<Note> song = new ArrayList<Note>();
         song.add(Note.lookup("C4"));
@@ -35,6 +39,7 @@ public class Twinkle implements Command {
         song.add(Note.lookup("C4"));
         env.getPlayer().playNotes(song);
         env.getTranscriptManager().setResult("Playing...");
+        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("TwinkleTwinkle");
     }
 
     @Override

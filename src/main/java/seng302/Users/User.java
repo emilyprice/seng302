@@ -209,7 +209,7 @@ public class User {
             //Theme
             themePrimary = (properties.get("themeColor")).toString();
         } catch (NullPointerException e) {
-            themePrimary = "white";
+            themePrimary = "black";
         }
 
 
@@ -300,14 +300,12 @@ public class User {
         if (properties.containsKey("musicalTerms")) {
             Type termsType = new TypeToken<ArrayList<Term>>() {
             }.getType();
-            if (!properties.get("musicalTerms").equals(new Gson().fromJson((String) properties.get("muscalTerms"), termsType))) {
-                env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + "*");
-                getProjectHandler().getCurrentProject().saved = false;
+            if (!properties.get("musicalTerms").equals(new Gson().fromJson((String) properties.get("musicalTerms"), termsType))) {
+                saveProperties();
             }
         } else {
             if (env.getRootController() != null) {
-                env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + "*");
-                getProjectHandler().getCurrentProject().saved = false;
+                saveProperties();
             }
 
         }

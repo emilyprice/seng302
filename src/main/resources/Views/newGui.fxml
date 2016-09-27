@@ -13,14 +13,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -187,29 +184,8 @@
               nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="100.0"
               styleClass="flatDropDown" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <children>
-                <JFXBadge fx:id="levelBadge" position="TOP_RIGHT" styleClass="icons-badge" text="1">
-                    <control>
-
-                        <ImageView fx:id="imageDP" fitHeight="50" fitWidth="50">
-                            <image>
-                                <Image url="images/testDP.jpg"/>
-                            </image>
-                            <HBox.margin>
-                                <Insets right="5.0"/>
-                            </HBox.margin>
-                        </ImageView>
-                    </control>
-                </JFXBadge>
-                <MenuButton fx:id="userDropDown" alignment="CENTER" contentDisplay="LEFT"
-                            ellipsisString="user" mnemonicParsing="false" text="user"
-                            textOverrun="CENTER_ELLIPSIS">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#logoutButtonClick"
-                                  text="Logout"/>
-                        <MenuItem fx:id="userSettingsButton" mnemonicParsing="false"
-                                  onAction="#launchSettings" text="Settings"/>
-                    </items>
-                </MenuButton>
+                <JFXBadge fx:id="levelBadge" position="TOP_RIGHT" styleClass="icons-badge"
+                          text="1"/>
             </children>
         </HBox>
 

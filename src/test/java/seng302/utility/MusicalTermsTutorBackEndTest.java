@@ -20,7 +20,11 @@ public class MusicalTermsTutorBackEndTest {
     @Test
     public void testAddTerm() {
         Term testTerm = new Term("a", "b", "c", "d");
-        backEnd.addTerm(testTerm);
+        try {
+            backEnd.addTerm(testTerm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         assert backEnd.getTerms().size() == 1;
         assert backEnd.getTerms().contains(testTerm);
     }
@@ -31,9 +35,13 @@ public class MusicalTermsTutorBackEndTest {
         Term testTerm2 = new Term("e", "f", "g", "h");
         Term testTerm3 = new Term("i", "j", "k", "l");
 
-        backEnd.addTerm(testTerm1);
-        backEnd.addTerm(testTerm2);
-        backEnd.addTerm(testTerm3);
+        try {
+            backEnd.addTerm(testTerm1);
+            backEnd.addTerm(testTerm2);
+            backEnd.addTerm(testTerm3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         assert backEnd.getTerms().size() == 3;
         assert backEnd.getTerms().contains(testTerm1);

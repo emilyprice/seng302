@@ -1,20 +1,23 @@
 package seng302.Users;
 
-import org.apache.commons.io.FileDeleteStrategy;
-import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import seng302.Environment;
-import seng302.utility.FileHandler;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import seng302.Environment;
+import seng302.utility.FileHandler;
 
 /**
  * Created by jmw280 on 22/07/16.
@@ -221,9 +224,6 @@ public class UserHandler {
         this.currentUser = new User(env, userName);
         currentUser.loadFullProperties();
         updateUserList(userName);
-
-        //update User drop down to display user's name
-        env.getRootController().updateUserInfo(userName);
 
     }
 
