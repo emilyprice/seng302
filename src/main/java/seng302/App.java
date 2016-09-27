@@ -48,8 +48,8 @@ public class App extends Application {
             primaryStage.setWidth(primaryScreenBounds.getWidth());
             primaryStage.setHeight(primaryScreenBounds.getHeight());
 
-            primaryStage.setMinHeight(450);
-            primaryStage.setMinWidth(700);
+            primaryStage.setMinHeight(600);
+            primaryStage.setMinWidth(1025);
 
             RootController controller = loader.getController();
             try {
