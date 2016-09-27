@@ -81,6 +81,8 @@ public class Tempo implements Command {
             // Only change the tempo under valid circumstances
             if (force || inValidRange(tempo)) {
                 env.getPlayer().setTempo(tempo);
+                env.getUserPageController().updateCurrentTempo(tempo);
+
             }
             if (force) {
                 try {
@@ -101,6 +103,10 @@ public class Tempo implements Command {
         }
 
     }
+
+
+
+
 
     public String getHelp() {
         if (isSetter) {

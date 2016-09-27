@@ -161,6 +161,7 @@ public class ProjectSettingsController {
 
             if (newValue.intValue() >= 20 && newValue.intValue() <= 300) {
                 env.getPlayer().setTempo(newValue.intValue());
+                env.getUserPageController().updateCurrentTempo(newValue);
                 projectHandler.getCurrentProject().checkChanges("tempo");
 
             }

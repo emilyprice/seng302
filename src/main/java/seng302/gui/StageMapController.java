@@ -1,18 +1,18 @@
 package seng302.gui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import jdk.nashorn.internal.parser.JSONParser;
 import seng302.Environment;
-import javafx.scene.control.Button;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -304,14 +304,12 @@ public class StageMapController {
 
     @FXML
     private void launchScaleRecognitionAdvancedTutor() {
-        System.out.println("Advanced scale tutor");
         env.getRootController().getTutorFactory().openTutor("Scale Recognition Tutor");
     }
 
     @FXML
     private void launchChordRecognitionAdvancedTutor() {
 
-        System.out.println("Chord Recognition Advanced Tutor");
         env.getRootController().getTutorFactory().openTutor("Chord Recognition Tutor");
     }
 

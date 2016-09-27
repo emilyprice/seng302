@@ -15,9 +15,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -25,16 +25,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import javafx.scene.control.ScrollPane;
-
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
-
 import javafx.util.Pair;
 import seng302.Environment;
 import seng302.data.Badge;
@@ -100,7 +90,13 @@ public class UserSummaryController {
         this.env = env;
 
         updateProgressBar();
+        updateGraphs();
+        updateBadgesDisplay();
 
+
+    }
+
+    public void updateGraphs() {
         Pair<Integer, Integer> correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTotalsForAllTutors(env.getUserPageController().getTimePeriod());
 
         // Set up Overall graph and labels.
@@ -121,9 +117,6 @@ public class UserSummaryController {
         overallCorrectLabel.setText(correctIncorrectOverall.getKey() + " \ncorrect");
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
         classAverage.setVisible(false);
-        updateBadgesDisplay();
-
-
     }
 
     /**
@@ -159,7 +152,6 @@ public class UserSummaryController {
                 stageMap.getChildren().add(noteMap);
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
-                System.out.println(e.getStackTrace());
                 e.printStackTrace();
             }
 
@@ -177,13 +169,12 @@ public class UserSummaryController {
         } else {
 
             try {
+                stageMap.getChildren().clear();
                 stageMap.getChildren().add(env.getStagePane());
                 env.getStageMapController().visualiseLockedTutors();
 
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
-                System.out.println(e.getStackTrace());
-                e.printStackTrace();
             }
         }
         
