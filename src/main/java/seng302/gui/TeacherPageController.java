@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import seng302.Environment;
 
@@ -124,33 +125,50 @@ public class TeacherPageController {
 
         studentTree.setRoot(root);
         studentTree.setShowRoot(false);
-        studentTree.setCellFactory(thing -> new TreeCell<String>() {
 
+
+        studentTree.setCellFactory(new Callback<TreeView, TreeCell>() {
             @Override
-            public void updateItem(String text, boolean empty) {
+            public TreeCell call(TreeView param) {
+                final TreeCell<String> cell = new TreeCell<String>() {
+                    @Override
+                    public void updateItem(String text, boolean empty) {
 
-                super.updateItem(text, empty);
-                if (empty) {
-                    setText(null);
-                    setGraphic(null);
+                        super.updateItem(text, empty);
+                        setDisclosureNode(null);
+                        if (empty) {
+                            setText(null);
+                            setGraphic(null);
 
-                } else {
-                    setText(null);
-                    AnchorPane view = new AnchorPane();
-                    Label label = new Label();
-                    view.getChildren().addAll(label);
-                    view.setStyle("-fx-fill-color: gray");
-                    view.setPadding(new Insets(5));
-                    AnchorPane.setLeftAnchor(label, 15.0);
-                    label.setText(text.substring(text.lastIndexOf('/') + 1));
-                    setGraphic(view);
-                    view.setOnMouseClicked(event -> {
-                        if (text.contains("/") || text.equalsIgnoreCase("summary")) {
-                            showPage(text);
+                        } else {
+                            setText(null);
+                            AnchorPane view = new AnchorPane();
+                            Label label = new Label();
+                            view.getChildren().addAll(label);
+                            view.setStyle("-fx-fill-color: gray");
+                            view.setPadding(new Insets(5));
+                            AnchorPane.setLeftAnchor(label, 15.0);
+                            label.setText(text.substring(text.lastIndexOf('/') + 1));
+                            setGraphic(view);
+                            view.setOnMouseClicked(event -> {
+                                if (text.contains("/") || text.equalsIgnoreCase("summary")) {
+                                    showPage(text);
+                                }
+                            });
                         }
-                    });
-                }
 
+                    }
+                };
+
+                cell.setOnMouseClicked(event -> {
+                    if (!cell.isEmpty()) {
+                        cell.getTreeItem().setExpanded(!cell.getTreeItem().isExpanded());
+                    }
+                });
+
+
+
+                return cell;
             }
         });
 
