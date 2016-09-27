@@ -75,7 +75,6 @@ public class ProjectHandler {
         this.currentProject = new Project(env, projName, this);
         //updateProjectList(projName);
         try {
-            env.getRootController().updateLevelBadge();
             env.getUserPageController().updateLevelBadge();
             env.getUserPageController().updateGraphs();
             env.getUserPageController().getSummaryController().updateProgressBar();

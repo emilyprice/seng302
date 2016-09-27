@@ -1,19 +1,26 @@
 package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import seng302.Environment;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import seng302.Environment;
+import seng302.utility.FileHandler;
 
 /**
  * Handles Users.
@@ -105,6 +112,7 @@ public class UserHandler {
 
     /**
      * Populates the list of users from the users json file.
+     *
      */
     public void populateUsers() {
 
@@ -143,6 +151,8 @@ public class UserHandler {
 
     /**
      * Creates a new user for the given username/password.
+     * @param user
+     * @param password
      */
     public void createUser(String user, String password) {
         this.currentUser = new Student(user, password, env);
@@ -203,14 +213,12 @@ public class UserHandler {
 
     /**
      * Sets the current user and loads user related properties.
+     * @param userName
      */
     public void setCurrentUser(String userName, String classroom, String password) {
         this.classroom = classroom;
         this.currentUser = new Student(userName, password, env);
         updateRecentUsers(userName);
-        //update User drop down to display user's name
-        env.getRootController().updateUserInfo(userName);
-
     }
 
     public void setCurrentTeacher(String userName, String classroom, String password) {
@@ -226,6 +234,7 @@ public class UserHandler {
 
     /**
      * Full deletes the specified user incl. project files.
+     * @param username
      */
     public void deleteUser(String classroom, String username) {
 

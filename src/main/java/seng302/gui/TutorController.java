@@ -1,5 +1,6 @@
 package seng302.gui;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
 
 import java.io.File;
@@ -20,8 +21,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import seng302.Environment;
@@ -75,6 +74,9 @@ public abstract class TutorController {
     VBox paneInit;
 
     @FXML
+    private JFXButton back;
+
+    @FXML
     JFXSlider numQuestions;
 
     @FXML
@@ -97,6 +99,19 @@ public abstract class TutorController {
         currentProject = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject();
         tutorHandler = currentProject.getTutorHandler();
         isCompMode = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode();
+    }
+
+    @FXML
+    public void backAction() {
+        try {
+            String tutorName = env.getRootController().getHeader();
+            env.getUserPageController().showPage(tutorName);
+            env.getRootController().showUserPage();
+
+
+        } catch (Exception e) {
+
+        }
     }
 
     /**

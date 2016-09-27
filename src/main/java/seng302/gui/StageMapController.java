@@ -1,23 +1,25 @@
 package seng302.gui;
 
-import javafx.geometry.Pos;
-import javafx.scene.layout.*;
-import org.controlsfx.control.Notifications;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import jdk.nashorn.internal.parser.JSONParser;
+import org.controlsfx.control.Notifications;
 import seng302.Environment;
-import javafx.scene.control.Button;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**

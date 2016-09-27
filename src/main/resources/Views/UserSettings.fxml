@@ -3,83 +3,87 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<AnchorPane fx:id="chordSpellingAnchor" maxHeight="1.7976931348623157E308"
-            maxWidth="1.7976931348623157E308" prefWidth="700.0"
+<AnchorPane fx:id="settingsPane" maxHeight="1.7976931348623157E308"
+            maxWidth="1.7976931348623157E308" prefHeight="450.0" prefWidth="700.0"
             stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserSettingsController">
    <children>
-       <VBox layoutX="32.0" layoutY="71.0" maxHeight="1.7976931348623157E308"
-             maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="50.0"
-             AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-             AnchorPane.topAnchor="0.0">
+       <VBox layoutX="32.0" layoutY="71.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-             <VBox alignment="CENTER" prefHeight="129.0" prefWidth="431.0">
-                 <children>
-                     <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="40.0"
-                           VBox.vgrow="ALWAYS">
+             <SplitPane dividerPositions="0.28883495145631066, 0.5509708737864077" orientation="VERTICAL" prefHeight="416.0" prefWidth="700.0" styleClass="noDivider">
+              <items>
+                 <AnchorPane maxHeight="140.0" minHeight="0.0" minWidth="0.0" prefHeight="31.0" prefWidth="118.0">
                      <children>
-                         <JFXTextField fx:id="txtFName" editable="false" promptText="First name"/>
-                         <JFXButton fx:id="btnEditFName" buttonType="RAISED"
-                                    focusTraversable="false" maxHeight="25.0"
-                                    onAction="#editFirstName" styleClass="btnEdit" text="Edit"/>
+                        <VBox alignment="CENTER" layoutX="18.0" layoutY="-1.0" prefHeight="129.0" prefWidth="431.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="40.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <JFXTextField fx:id="txtFName" editable="false" promptText="First name" />
+                                    <JFXButton fx:id="btnEditFName" buttonType="RAISED" focusTraversable="false" maxHeight="25.0" onAction="#editFirstName" styleClass="btnEdit" text="Edit" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <JFXTextField fx:id="txtLName" editable="false" promptText="Last name" />
+                                    <JFXButton fx:id="btnEditLName" buttonType="RAISED" maxHeight="25.0" onAction="#editLastName" styleClass="btnEdit" text="Edit" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                               <Insets top="20.0" />
+                           </padding>
+                        </VBox>
                      </children>
-                     </HBox>
-                     <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0"
-                           VBox.vgrow="ALWAYS">
+                  </AnchorPane>
+                 <AnchorPane maxHeight="100.0" minHeight="0.0" minWidth="0.0" prefHeight="72.0" prefWidth="698.0">
                      <children>
-                         <JFXTextField fx:id="txtLName" editable="false" promptText="Last name"/>
-                         <JFXButton fx:id="btnEditLName" buttonType="RAISED" maxHeight="25.0"
-                                    onAction="#editLastName" styleClass="btnEdit" text="Edit"/>
+                         <HBox alignment="CENTER_LEFT" layoutX="110.0" layoutY="-23.0" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <ImageView fx:id="imageDP" fitHeight="50.0" fitWidth="50">
+                                 <image>
+                                    <Image url="images/testDP.jpg" />
+                                 </image>
+                              </ImageView>
+                               <JFXButton fx:id="btnUploadImage" buttonType="RAISED"
+                                          contentDisplay="CENTER" ellipsisString=""
+                                          graphicTextGap="0.0" maxHeight="25.0" maxWidth="43.0"
+                                          onAction="#launchPhotoChooser" prefHeight="25.0"
+                                          prefWidth="43.0" styleClass="primary">
+                                 <HBox.margin>
+                                     <Insets left="20.0" top="20.0" />
+                                 </HBox.margin>
+                              </JFXButton>
+                           </children>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </HBox>
                      </children>
-                     </HBox>
-                 </children>
-                 <padding>
-                     <Insets top="20.0"/>
-                 </padding>
-             </VBox>
-             <HBox alignment="CENTER_LEFT" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0">
-                 <children>
-                     <ImageView fx:id="imageDP" fitHeight="50.0" fitWidth="50">
-                         <image>
-                             <Image url="images/testDP.jpg"/>
-                         </image>
-                     </ImageView>
-                     <JFXButton fx:id="btnUploadImage" buttonType="RAISED" contentDisplay="CENTER"
-                                ellipsisString="" graphicTextGap="0.0" maxHeight="25.0"
-                                maxWidth="43.0" onAction="#launchPhotoChooser" prefHeight="25.0"
-                                prefWidth="43.0" ripplerFill="#2fe1ae" styleClass="primaryControl">
-                         <HBox.margin>
-                             <Insets left="20.0" top="20.0"/>
-                         </HBox.margin>
-                     </JFXButton>
-                 </children>
-                 <padding>
-                     <Insets left="20.0"/>
-                 </padding>
-             </HBox>
-             <HBox alignment="CENTER_LEFT" prefHeight="123.0" prefWidth="698.0">
-                 <children>
-                     <JFXButton fx:id="btnDeleteUser" buttonType="RAISED" onAction="#deleteUser"
-                                ripplerFill="#6b3939"
-                                style="-fx-background-color: red; -fx-border-color: darkred;"
-                                text="Delete User" textFill="WHITE">
-                         <opaqueInsets>
-                             <Insets left="10.0" top="10.0"/>
-                         </opaqueInsets>
-                         <HBox.margin>
-                             <Insets left="20.0"/>
-                         </HBox.margin>
-                     </JFXButton>
-                 </children>
-                 <padding>
-                     <Insets bottom="20.0"/>
-                 </padding>
-             </HBox>
+                  </AnchorPane>
+                 <AnchorPane maxHeight="100.0" prefHeight="100.0" prefWidth="698.0">
+                     <children>
+                         <HBox alignment="CENTER_LEFT" prefHeight="123.0" prefWidth="698.0" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <JFXButton fx:id="btnDeleteUser" buttonType="RAISED" onAction="#deleteUser" ripplerFill="#6b3939" style="-fx-background-color: red; -fx-border-color: darkred;" text="Delete User" textFill="WHITE">
+                                 <opaqueInsets>
+                                    <Insets left="10.0" top="10.0" />
+                                 </opaqueInsets>
+                                 <HBox.margin>
+                                     <Insets left="20.0" />
+                                 </HBox.margin>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
          </children>
       </VBox>
    </children>

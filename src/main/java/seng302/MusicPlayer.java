@@ -3,6 +3,7 @@ package seng302;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Observable;
 
 import javax.sound.midi.Instrument;
 import javax.sound.midi.InvalidMidiDataException;
@@ -79,6 +80,8 @@ public class MusicPlayer {
     public Instrument[] getAvailableInstruments() {
         return availableInstruments;
     }
+
+
 
 
     /**
@@ -336,6 +339,7 @@ public class MusicPlayer {
      */
     public void setTempo(int tempo) {
         this.tempo = tempo;
+
     }
 
     public void stop() {
