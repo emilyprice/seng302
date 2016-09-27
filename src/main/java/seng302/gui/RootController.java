@@ -765,10 +765,11 @@ public class RootController implements Initializable {
             MenuItem classMenuItem = new MenuItem(className);
             classMenuItem.setOnAction(event -> {
                 env.getUserHandler().setClassRoom(classMenuItem.getText());
+                setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
                 env.getTeacherPageController().updateDisplay();
             });
 
-            menuOpenClassroom.getItems().add(new MenuItem(className));
+            menuOpenClassroom.getItems().add(classMenuItem);
 
         }
     }

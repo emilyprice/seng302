@@ -74,7 +74,9 @@ public class TeacherPageController {
 
     public void load() {
 
-       imageDP2.setImage(env.getUserHandler().getCurrentTeacher().getUserPicture());
+        env.getRootController().setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
+
+        imageDP2.setImage(env.getUserHandler().getCurrentTeacher().getUserPicture());
 
         env.getFirebase().getTeacherSnapshot().child(env.getUserHandler().getCurrentTeacher().getUserName() + "/classrooms").getChildren().forEach(classroomName -> {
             teacherClasses.add(classroomName.getValue().toString());
