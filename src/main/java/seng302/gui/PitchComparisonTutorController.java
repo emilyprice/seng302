@@ -3,6 +3,8 @@ package seng302.gui;
 import org.controlsfx.control.RangeSlider;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import javafx.fxml.FXML;
@@ -322,6 +324,8 @@ public class PitchComparisonTutorController extends TutorController {
 
         return rowPane;
     }
+
+
 
 
     /**

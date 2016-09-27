@@ -18,16 +18,16 @@ public class TutorHandler {
 
 
     private static final List<String> tutorIds = new ArrayList<String>() {{
-        add("PitchComparisonTutor");
-        add("ScaleRecognitionTutor");
-        add("IntervalRecognitionTutor");
-        add("MusicalTermsTutor");
-        add("ChordRecognitionTutor");
-        add("ChordSpellingTutor");
-        add("KeySignatureTutor");
-        add("DiatonicChordTutor");
-        add("ScaleModesTutor");
-        add("ScaleSpellingTutor");
+        add("pitchTutor");
+        add("scaleTutor");
+        add("intervalTutor");
+        add("musicalTermsTutor");
+        add("chordTutor");
+        add("chordSpellingTutor");
+        add("keySignatureTutor");
+        add("diatonicChordTutor");
+        add("scaleModesTutor");
+        add("scaleSpellingTutor");
     }};
 
     /**
@@ -83,11 +83,37 @@ public class TutorHandler {
     /**
      * This method will give the total number of correct and incorrect answers for a given tutor.
      *
+     * @param tabId The tab ID of the tutor
+     * @return a pair containing two integers. The number of answers correct and the number of
+     * incorrect answers.
+     */
+    public Pair<Integer, Integer> getTutorTotals(String tabId, String timePeriod) {
+        ArrayList<TutorRecord> records = getTutorData(tabId);
+        Integer correct = 0;
+        Integer incorrect = 0;
+        for (TutorRecord record : records) {
+            Date date = record.getDate();
+            Date compare = dates.get(timePeriod);
+            if (date.after(compare)) {
+                Map<String, Number> stats = record.getStats();
+                correct += stats.get("questionsCorrect").intValue();
+                incorrect += stats.get("questionsIncorrect").intValue();
+            }
+        }
+        return new Pair<>(correct, incorrect);
+    }
+
+
+    /**
+     * This method will give the total number of correct and incorrect answers for a given tutor.
+     *
      * @param tabId The tabid of the tutor
      * @return a pair containing two integers. The number of answers correct and the number of
      * incorrect answers.
      */
     public Pair<Integer, Integer> getRecentTutorTotals(String tabId) throws IndexOutOfBoundsException {
+
+
         ArrayList<TutorRecord> records = getTutorData(tabId);
         if (records.size() != 0) {
             TutorRecord lastRecord = records.get(records.size() - 1);
@@ -112,10 +138,37 @@ public class TutorHandler {
         while (env.getFirebase().getUserSnapshot() == null) {
             continue;
         }
+        String filename = "";
+        if (id.equals("pitchTutor")) {
+            filename = "PitchComparisonTutor";
+        } else if (id.equals("scaleTutor")) {
+            filename = "ScaleRecognitionTutor";
+        } else if (id.equals("basicScaleTutor")) {
+            filename = "ScaleRecognitionTutor(Basic)";
+        } else if (id.equals("intervalTutor")) {
+            filename = "IntervalRecognitionTutor";
+        } else if (id.equals("musicalTermTutor")) {
+            filename = "MusicalTermsTutor";
+        } else if (id.equals("chordTutor")) {
+            filename = "ChordRecognitionTutor";
+        } else if (id.equals("basicChordTutor")) {
+            filename = "ChordRecognitionTutor(Basic)";
+        } else if (id.equals("chordSpellingTutor")) {
+            filename = "ChordSpellingTutor";
+        } else if (id.equals("keySignatureTutor")) {
+            filename = "KeySignatureTutor";
+        } else if (id.equals("diatonicChordTutor")) {
+            filename = "DiatonicChordTutor";
+        } else if (id.equals("scaleModesTutor")) {
+            filename = "ScaleModesTutor";
+        } else if (id.equals("scaleSpellingTutor")) {
+            filename = "ScaleSpellingTutor";
+        }
 
         DataSnapshot tutorSnap = env.getFirebase().getUserSnapshot().child("projects/" +
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName);
-        return getTutorDataFromProject(tutorSnap, id);
+        return getTutorDataFromProject(tutorSnap, filename);
+
     }
 
     public ArrayList<TutorRecord> getTutorDataFromProject(DataSnapshot project, String tutorId) {

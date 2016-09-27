@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.controlsfx.control.Notifications;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import seng302.Environment;
 import seng302.utility.InstrumentUtility;
 import seng302.utility.LevelCalculator;
 import seng302.utility.OutputTuple;
+import seng302.utility.TutorRecord;
 
 public class Project {
 
@@ -52,6 +54,9 @@ public class Project {
 
     public Boolean isUserMapData = true;
 
+    public HashMap<String, TutorRecord> recentPracticeTutorRecordMap;
+
+
     /**
      * Constructor for creating a new project.
      *
@@ -71,6 +76,7 @@ public class Project {
         this.level = 1;
         this.visualiserOn = false;
         badgeManager = new BadgeManager(env);
+        recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
         loadProject(projectName);
         loadProperties();
 
@@ -94,8 +100,12 @@ public class Project {
         projectSettings.put("transcript", transcriptString);
 
         projectSettings.put("rhythm", gson.toJson(env.getPlayer().getRhythmHandler().getRhythmTimings()));
+        try{ //HACK. Sometimes runs a null pointer exception
+            projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
+        }catch (NullPointerException e){
+            projectSettings.put("instrument", "Acoustic Grand Piano");
+        }
 
-        projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
 
         projectSettings.put("level", this.level);
         projectSettings.put("experience", this.experience);
@@ -108,11 +118,21 @@ public class Project {
         projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
         projectSettings.put("tutor100Map", gson.toJson(badgeManager.get100TutorBadges()));
 
+        projectSettings.put("tutorPracticeMap", gson.toJson(recentPracticeTutorRecordMap));
+
+
         try {
             projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
         }catch(Exception e){
             System.err.println("cant save unlock map");
         }
+
+        try {
+            projectSettings.put("unlockMapDescriptions", gson.toJson(env.getStageMapController().getUnlockDescriptions()));
+        }catch(Exception e){
+            System.err.println("cant save unlock map descriptions");
+        }
+
     }
 
 
@@ -148,123 +168,135 @@ public class Project {
             env.getTranscriptManager().setTranscriptContent(transcript);
             env.getRootController().setTranscriptPaneText(env.getTranscriptManager().convertToText());
         } catch (NullPointerException np) {
-
         }
 
-        //Rhythm
-        int[] rhythms;
+            //Rhythm
+            int[] rhythms;
 
 
-        try {
-            rhythms = ((int[]) gson.fromJson((String) projectSettings.get("rhythm"), int[].class));
-            rhythms = rhythms == null ? new int[]{12} : rhythms;
-        } catch (Exception e) {
-            rhythms = new int[]{12};
-        }
-        env.getPlayer().getRhythmHandler().setRhythmTimings(rhythms);
+            try {
+                rhythms = ((int[]) gson.fromJson((String) projectSettings.get("rhythm"), int[].class));
+                rhythms = rhythms == null ? new int[]{12} : rhythms;
+            } catch (Exception e) {
+                rhythms = new int[]{12};
+            }
+            env.getPlayer().getRhythmHandler().setRhythmTimings(rhythms);
 
 
-        //Instrument
-        //Uses the default instrument to start with
-        Instrument instrument;
-        try {
-            String instrumentName = gson.fromJson((String) projectSettings.get("instrument"), String.class);
-            instrument = InstrumentUtility.getInstrumentByName(instrumentName, env);
-            if (instrument == null) {
+            //Instrument
+            //Uses the default instrument to start with
+            Instrument instrument;
+            try {
+                String instrumentName = gson.fromJson((String) projectSettings.get("instrument"), String.class);
+                instrument = InstrumentUtility.getInstrumentByName(instrumentName, env);
+                if (instrument == null) {
+                    // Uses the default instrument if there's a problem
+                    instrument = InstrumentUtility.getDefaultInstrument(env);
+                }
+            } catch (Exception e) {
                 // Uses the default instrument if there's a problem
+                System.err.println("Could not load instrument - setting to default.");
                 instrument = InstrumentUtility.getDefaultInstrument(env);
             }
-        } catch (Exception e) {
-            // Uses the default instrument if there's a problem
-            System.err.println("Could not load instrument - setting to default.");
-            instrument = InstrumentUtility.getDefaultInstrument(env);
-        }
-        env.getPlayer().setInstrument(instrument);
+            env.getPlayer().setInstrument(instrument);
 
-        //User experience
-        try {
-            experience = Integer.parseInt(projectSettings.get("experience").toString());
-        } catch (NullPointerException e) {
-            //If XP has never been set (ie old account), default to 0
-            experience = 0;
-        }
-
-        //Level
-        try {
-            level = Integer.parseInt(projectSettings.get("level").toString());
-        } catch (NullPointerException e) {
-            //If level has never been set, (ie old account), default to 1
-            level = 1;
-        }
-        try {
-            String mode = gson.fromJson((String) projectSettings.get("competitionMode"), String.class);
-            if (mode.equals("true")) {
-                setToCompetitionMode();
-            } else {
-                setToPracticeMode();
+            //User experience
+            try {
+                experience = Integer.parseInt(projectSettings.get("experience").toString());
+            } catch (NullPointerException e) {
+                //If XP has never been set (ie old account), default to 0
+                experience = 0;
             }
-        } catch (Exception e) {
-            // Defaults to comp mode
-            setToCompetitionMode();
-        }
 
-        try {
-            String isVisOn = gson.fromJson((String) projectSettings.get("visualiserOn"), String.class);
-            if (isVisOn.equals("true")) {
-                visualiserOn = true;
-            } else {
+            //Level
+            try {
+                level = Integer.parseInt(projectSettings.get("level").toString());
+            } catch (NullPointerException e) {
+                //If level has never been set, (ie old account), default to 1
+                level = 1;
+            }
+            try {
+                String mode = gson.fromJson((String) projectSettings.get("competitionMode"), String.class);
+                if (mode.equals("true")) {
+                    setToCompetitionMode();
+                } else {
+                    setToPracticeMode();
+                }
+            } catch (Exception e) {
+                // Defaults to comp mode
+                setToCompetitionMode();
+            }
+
+            try {
+                String isVisOn = gson.fromJson((String) projectSettings.get("visualiserOn"), String.class);
+                if (isVisOn.equals("true")) {
+                    visualiserOn = true;
+                } else {
+                    visualiserOn = false;
+                }
+            } catch (Exception e) {
+                // Off by default
                 visualiserOn = false;
             }
-        } catch (Exception e) {
-            // Off by default
-            visualiserOn = false;
-        }
-
-        //badges
-        //overallBadges
-        ArrayList<Badge> overallBadges;
-        try{
-
-            Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
-            }.getType();
-            overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
-        }catch(Exception e){
-            overallBadges = new ArrayList<>();
-        }
 
 
-        //tutorBadges
-        HashMap<String, ArrayList<Badge>> tutorBadges;
-        try{
-            Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
-            }.getType();
-            tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
-        }catch(Exception e){
-            tutorBadges = new HashMap<>() ;
-        }
+            try {
+                HashMap<String, TutorRecord> practiceMap;
+                Type mapType = new TypeToken<HashMap<String, TutorRecord>>() {
+                }.getType();
+                practiceMap = gson.fromJson((String) projectSettings.get("tutorPracticeMap"), mapType);
+                if (practiceMap != null) {
+                    recentPracticeTutorRecordMap = practiceMap;
+
+                }
+
+            } catch (Exception e) {
+                System.err.println("failed to load tutorPracticeMap");
+
+            }
 
 
-        try {
-            badgeManager.replaceBadges(tutorBadges, overallBadges);
-        } catch (NullPointerException e) {
-            tutorBadges = BadgeManager.getTutorBadges();
-            overallBadges = BadgeManager.getOverallBadges();
-        }
-
-        //100tutorMap
-        HashMap<String, Boolean> tutor100Map;
-        try{
-            Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
-            }.getType();
-            tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
-        }catch (Exception e){
-            tutor100Map = new HashMap<>();
-        }
+            //badges
+            //overallBadges
+            try {
+                ArrayList<Badge> overallBadges;
+                Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
+                }.getType();
+                overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
 
 
-        badgeManager.replaceTutor100AllMap(tutor100Map);
+                //tutorBadges
 
-        env.getTranscriptManager().unsavedChanges = false;
+                HashMap<String, ArrayList<Badge>> tutorBadges;
+                Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
+                }.getType();
+                tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
+                if (tutorBadges != null && overallBadges != null) {
+                    badgeManager.replaceBadges(tutorBadges, overallBadges);
+                }
+
+            } catch (Exception e) {
+                System.err.println("failed to import badge data");
+            }
+
+            //100tutorMap
+            HashMap<String, Boolean> tutor100Map;
+            try {
+
+                Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
+                }.getType();
+                tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+                if (tutor100Map != null) {
+
+                    badgeManager.replaceTutor100AllMap(tutor100Map);
+                }
+
+                env.getTranscriptManager().unsavedChanges = false;
+            } catch (Exception e) {
+                System.err.println("failed to import 100 tutor map");
+            }
+
+
     }
 
 
@@ -279,14 +311,32 @@ public class Project {
             Type mapType = new TypeToken<HashMap<String, Boolean>>() {
             }.getType();
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
-            System.out.println("unlock map");
-            System.out.println(unlockMap);
             if(unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
+                env.getStageMapController().setDescription();
             }
         }catch(Exception e){
-            System.err.println("failed to load stageMap");
+            e.printStackTrace();
+
         }
+
+        try {
+            Gson gson = new Gson();
+            HashMap<String, HashMap<String,Boolean>> unlockMapDescriptions;
+            Type mapType = new TypeToken<HashMap<String, HashMap<String, Boolean>>>() {
+            }.getType();
+            unlockMapDescriptions = gson.fromJson((String) projectSettings.get("unlockMapDescriptions"), mapType);
+            if(unlockMapDescriptions != null) {
+                env.getStageMapController().unlockDescriptions = unlockMapDescriptions;
+                env.getStageMapController().setDescription();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
+
+
+
     }
 
 
@@ -343,6 +393,8 @@ public class Project {
             case "unlockMap":
                 currentValue = env.getStageMapController().getUnlockStatus();
                 break;
+            case "unlockMapDescriptions":
+                currentValue = env.getStageMapController().getUnlockDescriptions();
         }
 
         try {
@@ -375,6 +427,7 @@ public class Project {
         this.projectName = pName;
         loadProperties();
         env.getRootController().setWindowTitle("Allegro - " + pName);
+
 
     }
 
@@ -453,8 +506,15 @@ public class Project {
         checkChanges("visualiserOn");
     }
 
+    public void setRecentPracticeTutorRecordMap(String tutor, TutorRecord record){
+        recentPracticeTutorRecordMap.put(tutor, record);
+    }
     public boolean getVisualiserOn() {
         return visualiserOn;
+    }
+
+    public HashMap<String, TutorRecord> getRecentPracticeTutorRecordMap(){
+        return recentPracticeTutorRecordMap;
     }
 
     public BadgeManager getBadgeManager(){return badgeManager;}

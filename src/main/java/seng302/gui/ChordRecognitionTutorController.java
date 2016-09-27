@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -45,6 +46,8 @@ public class ChordRecognitionTutorController extends TutorController {
 
     private Random rand;
 
+    private Boolean fullTutor;
+
 
     @FXML
     /**
@@ -77,10 +80,11 @@ public class ChordRecognitionTutorController extends TutorController {
     /**
      * Initialises certain GUI elements
      */
-    public void create(Environment env) {
+    public void create(Environment env, Boolean advancedTutor) {
         super.create(env);
         initialiseQuestionSelector();
         rand = new Random();
+        fullTutor = advancedTutor;
         playChords.getItems().addAll("Unison", "Arpeggio", "Both");
         octaves.getItems().addAll(1, 2, 3, 4);
         chordTypeBox.getItems().addAll("3 Notes", "4 Notes", "Both");
@@ -90,7 +94,11 @@ public class ChordRecognitionTutorController extends TutorController {
             playChords.setDisable(true);
             octaves.setValue(1);
             octaves.setDisable(true);
-            chordTypeBox.setValue("Both");
+            if(fullTutor == true) {
+                chordTypeBox.setValue("Both");
+            }else{
+                chordTypeBox.setValue("3 Notes");
+            }
             chordTypeBox.setDisable(true);
 
         }else{

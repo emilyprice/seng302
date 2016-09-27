@@ -707,6 +707,11 @@ public class RootController implements Initializable {
     public void newProject() {
         env.resetProjectEnvironment();
         env.getUserHandler().getCurrentUser().getProjectHandler().createNewProject();
+        try {
+            showUserPage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -750,6 +755,11 @@ public class RootController implements Initializable {
                 projectItem.setSelected(true);
                 if (saveChangesDialog())
                     env.getUserHandler().getCurrentUser().getProjectHandler().setCurrentProject(projectName);
+                try {
+                    showUserPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
             if (projectName.equals(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName)) {
                 projectItem.setSelected(true);

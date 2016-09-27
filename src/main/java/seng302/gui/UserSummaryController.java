@@ -127,10 +127,9 @@ public class UserSummaryController {
         overallCorrectLabel.setText(correctIncorrectOverall.getKey() + " \ncorrect");
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
         classAverage.setVisible(false);
-        System.out.println("before update badges display");
+
         updateBadgesDisplay();
 
-        System.out.println("after update badges display");
         displayClassAverage(env.getUserPageController().getTimePeriod());
 
         // TutorStatsController statsController = statsLoader.getController();
@@ -220,6 +219,7 @@ public class UserSummaryController {
 
             try {
                 noteMap = loader.load();
+                stageMap.getChildren().clear();
                 stageMap.getChildren().add(noteMap);
             } catch (Exception e) {
                 System.err.println("Failed to load stage map");
@@ -233,7 +233,7 @@ public class UserSummaryController {
             env.setStagePane(noteMap);
             env.getStageMapController().setEnvironment(env);
             env.getStageMapController().create();
-            System.out.println("stage map create function called.");
+
 
             user.getProjectHandler().getCurrentProject().loadStageMapData();
 
@@ -243,6 +243,7 @@ public class UserSummaryController {
 //    else {
 //            System.out.println("stage map not null.");
 //            try {
+//                stageMap.getChildren().clear();
 //                stageMap.getChildren().add(env.getStagePane());
 //                env.getStageMapController().visualiseLockedTutors();
 //

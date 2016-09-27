@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
+import java.awt.*;
 import java.io.IOException;
 import java.awt.*;
 import java.awt.image.FilteredImageSource;
@@ -99,6 +100,8 @@ public class UserPageController {
 
     private UserSummaryController summaryController;
 
+    private TutorStatsController basicStatsController;
+
     @FXML
     VBox tutors;
 
@@ -178,8 +181,16 @@ public class UserPageController {
 
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            showPage((String) newValue);
 
+            if(newValue != null) {
+                if (((String) newValue).equals("Scale Recognition Tutor (Basic)")) {
+                    showPage("Scale Recognition Tutor");
+                } else if (((String) newValue).equals("Chord Recognition Tutor (Basic)")) {
+                    showPage("Chord Recognition Tutor");
+                } else {
+                    showPage((String) newValue);
+                }
+            }
         });
 
         // Set after the listener so it loads user summary correctly
@@ -201,11 +212,24 @@ public class UserPageController {
                 } else {
                     //if in competitive mode, lock the relevant tabs
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
-                            setGraphic(new ImageView(lockImg));
-                            setTextFill(Color.GRAY);
-                            setText(tutor);
-                            setDisable(true);
+                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false ) {
+
+                            if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+                                if(env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")) == true){
+
+                                }else {
+                                    setGraphic(new ImageView(lockImg));
+                                    setTextFill(Color.GRAY);
+                                    setText(tutor);
+                                    setDisable(true);
+                                }
+                            }else {
+
+                                setGraphic(new ImageView(lockImg));
+                                setTextFill(Color.GRAY);
+                                setText(tutor);
+                                setDisable(true);
+                            }
                         }
 
 
@@ -283,6 +307,11 @@ public class UserPageController {
      */
     public void updateGraphs() {
         statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), convert.toString(timeSlider.getValue()));
+        basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", convert.toString(timeSlider.getValue()));
+    }
+    private void updateGraphs(String timePeriod) {
+        statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
+        basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", timePeriod);
     }
 
     /**
@@ -353,7 +382,6 @@ public class UserPageController {
             summaryController.loadStageMap();
 
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -368,11 +396,14 @@ public class UserPageController {
 
         env.getRootController().setHeader(tutor);
         FXMLLoader tutorStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
+        VBox all = new VBox();
 
         try {
             VBox stats = tutorStatsLoader.load();
             //currentPage.setContent(stats);
-            scrollPaneAnchorPage.getChildren().setAll(stats);
+            all.getChildren().setAll(stats);
+            scrollPaneAnchorPage.getChildren().clear();
+            //scrollPaneAnchorPage.getChildren().setAll(all);
             AnchorPane.setLeftAnchor(stats, 0.0);
             AnchorPane.setTopAnchor(stats, 0.0);
             AnchorPane.setBottomAnchor(stats, 0.0);
@@ -382,12 +413,35 @@ public class UserPageController {
             statsController.create(env);
             statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
             statsController.updateBadgesDisplay();
-            listView.getSelectionModel().select(tutor);
 
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+            FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
+            try {
+                VBox stats = tutorbasicStatsLoader.load();
+                all.getChildren().add(stats);
+                //scrollPaneAnchorPage.getChildren().setAll(all);
+                AnchorPane.setLeftAnchor(stats, 0.0);
+                AnchorPane.setTopAnchor(stats, 0.0);
+                AnchorPane.setBottomAnchor(stats, 0.0);
+                AnchorPane.setRightAnchor(stats, 0.0);
+                basicStatsController = tutorbasicStatsLoader.getController();
+
+                basicStatsController.create(env);
+                basicStatsController.displayGraphs( tutor + " (Basic)", convert.toString(timeSlider.getValue()));
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        scrollPaneAnchorPage.getChildren().setAll(all);
+
+        listView.getSelectionModel().select(tutor);
 
     }
 

@@ -97,13 +97,14 @@ public class ScaleRecognitionTutorController extends TutorController {
     /**
      * Initialises certain GUI elements
      */
-    public void create(Environment env) {
+    public void create(Environment env, Boolean advancedTutor) {
         super.create(env);
         initialiseQuestionSelector();
         rand = new Random();
         direction.getItems().addAll("Up", "Down", "UpDown");
         ccbScales.getItems().addAll("Major", "Minor", "Melodic Minor", "Blues", "Major Pentatonic", "Minor Pentatonic", "Major Mode", "Melodic Minor Mode", "Harmonic Minor");
         octaves.getItems().addAll(1, 2, 3, 4);
+        fullTutor = advancedTutor;
 
         if (currentProject.getIsCompetitiveMode()) {
             if (fullTutor) {

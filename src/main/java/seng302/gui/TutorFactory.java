@@ -46,11 +46,17 @@ public class TutorFactory {
             case "Interval Recognition Tutor":
                 openIntervalTutor();
                 break;
+            case "Scale Recognition Tutor (Basic)":
+                openBasicScaleTutor();
+                break;
             case "Scale Recognition Tutor":
                 openScaleTutor();
                 break;
             case "Musical Terms Tutor":
                 openMusicalTermTutor();
+                break;
+            case "Chord Recognition Tutor (Basic)":
+                openBasicChordTutor();
                 break;
             case "Chord Recognition Tutor":
                 openChordTutor();
@@ -70,6 +76,8 @@ public class TutorFactory {
             case "Scale Spelling Tutor":
                 openScaleSpellingTutor();
                 break;
+
+
         }
     }
 
@@ -135,6 +143,8 @@ public class TutorFactory {
 
     }
 
+
+
     /**
      * opens the musical terms tutor when the musical term tutor menu option is pressed If there is
      * already an open tutor of the same form then it sets focus to the already open tutor
@@ -151,6 +161,20 @@ public class TutorFactory {
     }
 
 
+
+    /***
+     * Opens the basic scale tutor
+     */
+    private void openBasicScaleTutor() {
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/ScaleRecognitionPane.fxml"));
+        loadNode(loader);
+        ScaleRecognitionTutorController scaleRecognitionTutorController = loader.getController();
+        scaleRecognitionTutorController.create(env, false);
+
+
+    }
     /***
      * Opens the scale tutor
      */
@@ -160,8 +184,26 @@ public class TutorFactory {
         loader.setLocation(getClass().getResource("/Views/ScaleRecognitionPane.fxml"));
         loadNode(loader);
         ScaleRecognitionTutorController scaleRecognitionTutorController = loader.getController();
-        scaleRecognitionTutorController.create(env);
+        scaleRecognitionTutorController.create(env, true);
 
+
+    }
+
+    /**
+     * opens the basic chord tutor when the chord tutor menu option is pressed If there is already an open
+     * tutor of the same form then it sets focus to the already open tutor
+     */
+    @FXML
+    private void openBasicChordTutor() {
+
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/ChordRecognitionPane.fxml"));
+
+        loadNode(loader);
+
+        ChordRecognitionTutorController chordRecognitionTabController = loader.getController();
+        chordRecognitionTabController.create(env, false);
 
     }
 
@@ -179,7 +221,7 @@ public class TutorFactory {
         loadNode(loader);
 
         ChordRecognitionTutorController chordRecognitionTabController = loader.getController();
-        chordRecognitionTabController.create(env);
+        chordRecognitionTabController.create(env, true);
 
     }
 
