@@ -1,10 +1,5 @@
 package seng302.gui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -30,6 +25,11 @@ import seng302.Environment;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 import seng302.utility.LevelCalculator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * Controller for the GUI page which displays a user's summary information.
@@ -193,7 +193,7 @@ public class UserSummaryController {
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
         this.blackout = blackout;
-        Image lockImg = new Image("/images/lock.png");
+        Image lockImg = new Image("/images/lock.png", 45, 45, true, false);
         ImageView lockView = new ImageView(lockImg);
         lockView.fitHeightProperty().setValue(45);
         lockView.fitWidthProperty().setValue(45);
@@ -226,12 +226,12 @@ public class UserSummaryController {
      * @param b the Badge to be added
      */
     public void addBadgeToGrid(Badge b) {
-        Image bImage = new Image("/images/"+b.imageName+".png");
+        Image bImage = new Image("/images/"+b.imageName+".png", 70, 70, true, false);
         ImageView bView = new ImageView(bImage);
         bView.fitHeightProperty().setValue(70);
         bView.fitWidthProperty().setValue(70);
         StackPane badgeStack;
-        Image lockImg = new Image("/images/lock.png");
+        Image lockImg = new Image("/images/lock.png", 40, 40, true, false);
         ImageView lockView = new ImageView(lockImg);
         lockView.fitHeightProperty().setValue(40);
         lockView.fitWidthProperty().setValue(40);
@@ -272,15 +272,15 @@ public class UserSummaryController {
      * @param b the Badge to be added
      */
     public void addTutorBadgeToGrid(Badge b) {
-        Image ribbonImage = new Image("/images/ribbonAward.png");
+        Image ribbonImage = new Image("/images/ribbonAward.png", 70, 70, true, false);
         ImageView rView = new ImageView(ribbonImage);
         rView.fitHeightProperty().setValue(70);
         rView.fitWidthProperty().setValue(70);
-        Image bImage = new Image("/images/"+b.imageName+".png");
+        Image bImage = new Image("/images/"+b.imageName+".png", 26.0, 26.0, true, false);
         ImageView bView = new ImageView(bImage);
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
-        Image lockImg = new Image("/images/lock.png");
+        Image lockImg = new Image("/images/lock.png", 40, 40, true, false);
         ImageView lockView = new ImageView(lockImg);
         lockView.fitHeightProperty().setValue(40);
         lockView.fitWidthProperty().setValue(40);

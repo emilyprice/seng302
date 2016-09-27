@@ -2,9 +2,12 @@ package seng302.Users;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
+import javafx.scene.image.Image;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import seng302.Environment;
+import seng302.data.Term;
+import seng302.utility.FileHandler;
 
 import java.io.File;
 import java.io.FileReader;
@@ -18,11 +21,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
-
-import javafx.scene.image.Image;
-import seng302.Environment;
-import seng302.data.Term;
-import seng302.utility.FileHandler;
 
 /**
  * Handles functionality for representing and manipulating a user's information. Also handles saving
@@ -49,6 +47,8 @@ public class User {
     private String userFirstName;
 
     private String userLastName;
+
+    private Image displayImage;
 
     /**
      * User constructor used for generating new users.
@@ -77,6 +77,7 @@ public class User {
         }
 
         profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
+        displayImage = new Image(profilePicPath.toUri().toString(), 100, 100, true, true);
 
         projectHandler = new ProjectHandler(env, userName);
 
@@ -96,6 +97,7 @@ public class User {
         properties = new JSONObject();
         loadBasicProperties();
         profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
+        displayImage = new Image(profilePicPath.toUri().toString(), 100, 100, true, true);
 
 
     }
@@ -336,7 +338,7 @@ public class User {
     }
 
     public Image getUserPicture() {
-        return new Image(profilePicPath.toUri().toString());
+        return displayImage;
     }
 
     public void setUserFirstName(String name) {
