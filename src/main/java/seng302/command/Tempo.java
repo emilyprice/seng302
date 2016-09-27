@@ -105,9 +105,6 @@ public class Tempo implements Command {
     }
 
 
-
-
-
     public String getHelp() {
         if (isSetter) {
             if (force) {

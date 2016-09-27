@@ -232,8 +232,8 @@ public class UserPageController {
                         setAlignment(Pos.CENTER_LEFT);
                         setDisable(false);
                     }
-                        }
-                    }
+                }
+            }
                 }
 
         );

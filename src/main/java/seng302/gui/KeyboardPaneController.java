@@ -413,7 +413,8 @@ public class KeyboardPaneController {
 
                     //Listener for changes in the drop down menu
                     typeScale1.valueProperty().addListener(new ChangeListener<String>() {
-                        @Override public void changed(ObservableValue ov, String t, String t1) {
+                        @Override
+                        public void changed(ObservableValue ov, String t, String t1) {
                             clearScaleIndicators("firstScale");
                             okScale1.setText("OK");
 
@@ -469,7 +470,8 @@ public class KeyboardPaneController {
 
                     //Listener for changes in the drop down menu
                     typeScale2.valueProperty().addListener(new ChangeListener<String>() {
-                        @Override public void changed(ObservableValue ov, String t, String t1) {
+                        @Override
+                        public void changed(ObservableValue ov, String t, String t1) {
                             clearScaleIndicators("secondScale");
                             okScale2.setText("OK");
                         }

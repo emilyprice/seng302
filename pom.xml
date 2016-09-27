@@ -23,6 +23,11 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>be.hogent.tarsos.dsp</groupId>
+      <artifactId>tarsosdsp</artifactId>
+      <version>1.0</version>
+    </dependency>
 
 
     <dependency>

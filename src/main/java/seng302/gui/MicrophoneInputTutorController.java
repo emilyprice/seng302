@@ -333,4 +333,10 @@ public class MicrophoneInputTutorController extends TutorController {
         rangeSlider.setHighValue(72);
     }
 
+    @Override
+    protected HBox generateQuestionPane(Pair data) {
+        // does nothing. Used to get around compiling error.
+        return null;
+    }
+
 }

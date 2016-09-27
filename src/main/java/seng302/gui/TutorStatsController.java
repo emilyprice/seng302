@@ -387,12 +387,13 @@ public class TutorStatsController {
     public static class badgeComparator implements Comparator<Badge> {
         @Override
         public int compare(Badge b1, Badge b2) {
-            return (b1.currentBadgeType > b2.currentBadgeType) ? -1: (b1.currentBadgeType < b2.currentBadgeType) ? 1:0;
+            return (b1.currentBadgeType > b2.currentBadgeType) ? -1 : (b1.currentBadgeType < b2.currentBadgeType) ? 1 : 0;
         }
     }
 
     /**
      * Used to add a tutor badge to the badgeGrid
+     *
      * @param b the Badge to be added
      */
     public void addTutorBadgeToGrid(Badge b) {
@@ -400,7 +401,7 @@ public class TutorStatsController {
         ImageView rView = new ImageView(ribbonImage);
         rView.fitHeightProperty().setValue(70);
         rView.fitWidthProperty().setValue(70);
-        Image bImage = new Image("/images/"+b.imageName+".png");
+        Image bImage = new Image("/images/" + b.imageName + ".png");
         ImageView bView = new ImageView(bImage);
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
@@ -421,7 +422,7 @@ public class TutorStatsController {
             badgeEffect.setHue(0);
             badgeEffect.setSaturation(-1);
             badgeEffect.setBrightness(0.32);
-        } else if ( b.currentBadgeType == 3) {
+        } else if (b.currentBadgeType == 3) {
             badgeEffect.setHue(-0.888);
             badgeEffect.setSaturation(1);
             badgeEffect.setBrightness(0.4);
@@ -436,9 +437,9 @@ public class TutorStatsController {
         badgeName.setFont(javafx.scene.text.Font.font(16));
         Label tutorName = new Label(this.tutorName.getText());
         Label description = new Label(b.description);
-        Label progressDesc = new Label((int) b.badgeProgress+" out of "+b.badgeLevels.get(b.currentBadgeType));
+        Label progressDesc = new Label((int) b.badgeProgress + " out of " + b.badgeLevels.get(b.currentBadgeType));
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
+        progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
         badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description, progressDesc);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);

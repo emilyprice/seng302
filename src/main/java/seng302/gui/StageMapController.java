@@ -81,7 +81,8 @@ public class StageMapController {
     private ArrayList<String> tutorOrder; //the order in which the tutors unlock
 
     /**
-     * stores the convertion of tutor name to a shortened tutor string that is used for manipulations
+     * stores the convertion of tutor name to a shortened tutor string that is used for
+     * manipulations
      */
     public HashMap<String, String> converted;
 
@@ -222,7 +223,7 @@ public class StageMapController {
 
         //If in competitive mode, relevant stages should be locked
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-            for (String tutor: unlockStatus.keySet()) {
+            for (String tutor : unlockStatus.keySet()) {
                 tutorAndButton.get(tutor).setDisable(false);
                 tutorAndButton.get(tutor).setGraphic(null);
                 if (unlockStatus.get(tutor) == false) {
@@ -233,9 +234,9 @@ public class StageMapController {
 
                 }
             }
-        //else if in practice mode, all of the levels should be unlocked
+            //else if in practice mode, all of the levels should be unlocked
         } else {
-            for (String tutor: unlockStatus.keySet()) {
+            for (String tutor : unlockStatus.keySet()) {
                 tutorAndButton.get(tutor).setDisable(false);
                 tutorAndButton.get(tutor).setGraphic(null);
             }
@@ -243,7 +244,6 @@ public class StageMapController {
         }
 
     }
-
 
 
     /**

@@ -16,7 +16,11 @@
 <?import javafx.scene.layout.VBox?>
 <AnchorPane id="userPage" fx:id="userPage" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserPageController">
     <children>
-        <SplitPane id="userSplitPane" fx:id="userView" dividerPositions="0.19598765432098766" layoutX="10.0" prefHeight="430.0" prefWidth="650.0" style="-fx-padding: 0; -fx-border-style: none;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <SplitPane id="userSplitPane" fx:id="userView" dividerPositions="0.19598765432098766"
+                   layoutX="10.0" prefHeight="430.0" prefWidth="650.0"
+                   style="-fx-padding: 0; -fx-border-style: none;" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                   AnchorPane.topAnchor="0.0">
             <items>
                 <VBox id="userSideBar" maxWidth="210.0"
                       style="-fx-border-color: pink; -fx-border-width: 0; -fx-padding: 0; border-style: none;"
@@ -125,13 +129,16 @@
                                      styleClass="listView"/>
                     </children>
                     <styleClass>
-                        <String fx:value="userPagePrimary" />
-                        <String fx:value="sideMenu" />
+                        <String fx:value="userPagePrimary"/>
+                        <String fx:value="sideMenu"/>
                     </styleClass>
                 </VBox>
                 <AnchorPane SplitPane.resizableWithParent="false">
                     <children>
-                        <ScrollPane fx:id="currentPage" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <ScrollPane fx:id="currentPage" fitToHeight="true" fitToWidth="true"
+                                    hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0"
+                                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                    AnchorPane.topAnchor="0.0">
                         </ScrollPane>
                     </children>
                 </AnchorPane>

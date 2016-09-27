@@ -2,9 +2,11 @@ package seng302.data;
 
 
 import org.controlsfx.control.Notifications;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class Badge {
     public String description;
 
 
-    public Badge(String name, String tutorName, String description, ArrayList<Integer> badgeLevels, double badgeProgress, Integer currentBadgeType, String imageName, Integer expWorth){
+    public Badge(String name, String tutorName, String description, ArrayList<Integer> badgeLevels, double badgeProgress, Integer currentBadgeType, String imageName, Integer expWorth) {
         this.name = name;
         this.tutorName = tutorName;
         this.currentBadgeType = currentBadgeType;
@@ -44,16 +46,18 @@ public class Badge {
     /**
      * Used to update a badge's progress either after a tutor session or once the badges criteria
      * has been met.
-     * @param env the Environment
+     *
+     * @param env      the Environment
      * @param progress the amount of progress the badge as increased in
      */
-    public void updateBadgeProgress(seng302.Environment env, double progress){
+    public void updateBadgeProgress(seng302.Environment env, double progress) {
         badgeProgress += progress;
 
-        while (badgeProgress >= badgeLevels.get(currentBadgeType)){
+        while (badgeProgress >= badgeLevels.get(currentBadgeType)) {
             try {
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(expWorth * currentBadgeType);
-            } catch (NullPointerException e) {}
+            } catch (NullPointerException e) {
+            }
             currentBadgeType += 1;
             Image unlock = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
             List<String> badgeTypes = new ArrayList<>();

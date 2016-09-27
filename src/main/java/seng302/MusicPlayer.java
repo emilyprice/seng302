@@ -81,8 +81,6 @@ public class MusicPlayer {
     }
 
 
-
-
     /**
      * Sets the synthesizer to synthesize playback with a given instrument.
      *

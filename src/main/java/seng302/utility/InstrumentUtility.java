@@ -37,7 +37,7 @@ public class InstrumentUtility {
         return env.getPlayer().getAvailableInstruments()[id];
     }
 
-    public static Instrument[] getInstruments(Environment env){
+    public static Instrument[] getInstruments(Environment env) {
         return env.getPlayer().getAvailableInstruments();
     }
 

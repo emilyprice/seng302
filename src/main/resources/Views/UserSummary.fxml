@@ -127,7 +127,7 @@
         </Label>
         <GridPane fx:id="badgeGrid" hgap="10" vgap="20">
             <padding>
-                <Insets top="5" right="20" bottom="5" left="20" />
+                <Insets top="5" right="20" bottom="5" left="20"/>
             </padding>
         </GridPane>
         <AnchorPane maxHeight="85.0" maxWidth="351.0" minHeight="-Infinity" minWidth="-Infinity"

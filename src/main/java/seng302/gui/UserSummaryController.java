@@ -68,11 +68,11 @@ public class UserSummaryController {
     FXMLLoader loader = new FXMLLoader();
 
     AnchorPane noteMap;
-    
+
     @FXML
     StackPane stageMap;
 
-    
+
     private ColorAdjust blackout;
     private ImageView lockView;
     @FXML
@@ -177,7 +177,7 @@ public class UserSummaryController {
                 System.err.println("Failed to load stage map");
             }
         }
-        
+
     }
 
     /**
@@ -217,16 +217,17 @@ public class UserSummaryController {
     public static class badgeComparator implements Comparator<Badge> {
         @Override
         public int compare(Badge b1, Badge b2) {
-            return (b1.currentBadgeType > b2.currentBadgeType) ? -1: (b1.currentBadgeType < b2.currentBadgeType) ? 1:0;
+            return (b1.currentBadgeType > b2.currentBadgeType) ? -1 : (b1.currentBadgeType < b2.currentBadgeType) ? 1 : 0;
         }
     }
 
     /**
      * Used to add a non-tutor badge to the badgeGrid
+     *
      * @param b the Badge to be added
      */
     public void addBadgeToGrid(Badge b) {
-        Image bImage = new Image("/images/"+b.imageName+".png");
+        Image bImage = new Image("/images/" + b.imageName + ".png");
         ImageView bView = new ImageView(bImage);
         bView.fitHeightProperty().setValue(70);
         bView.fitWidthProperty().setValue(70);
@@ -269,6 +270,7 @@ public class UserSummaryController {
 
     /**
      * Used to add a tutor badge to the badgeGrid
+     *
      * @param b the Badge to be added
      */
     public void addTutorBadgeToGrid(Badge b) {
@@ -276,7 +278,7 @@ public class UserSummaryController {
         ImageView rView = new ImageView(ribbonImage);
         rView.fitHeightProperty().setValue(70);
         rView.fitWidthProperty().setValue(70);
-        Image bImage = new Image("/images/"+b.imageName+".png");
+        Image bImage = new Image("/images/" + b.imageName + ".png");
         ImageView bView = new ImageView(bImage);
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
@@ -297,7 +299,7 @@ public class UserSummaryController {
             badgeEffect.setHue(0);
             badgeEffect.setSaturation(-1);
             badgeEffect.setBrightness(0.32);
-        } else if ( b.currentBadgeType == 3) {
+        } else if (b.currentBadgeType == 3) {
             badgeEffect.setHue(-0.687);
             badgeEffect.setSaturation(1);
             badgeEffect.setBrightness(0.1);
@@ -313,7 +315,7 @@ public class UserSummaryController {
         Label tutorName = new Label(b.tutorName);
         Label description = new Label(b.description);
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
+        progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
         badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
