@@ -273,7 +273,10 @@ public class MicrophoneInputTutorController extends TutorController {
 //            }
         });
 
-        stopButton.setOnAction(event -> answerLabel.setText(microphoneInput.stopRecording().toString() + "\n"));
+        stopButton.setOnAction(event ->
+                answerLabel.setText(microphoneInput.stopRecording().toString() + "\n"));
+
+        String recordedAnswer = answerLabel.getText();
 
         JFXButton skip = new JFXButton("Skip");
 
