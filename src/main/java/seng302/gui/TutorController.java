@@ -115,7 +115,7 @@ public abstract class TutorController {
         questions.setText(Integer.toString(selectedQuestions));
 
         // The listener for the number of questions selected
-        numQuestions.valueProperty().addListener((observable, newValue, oldValue) -> {
+        numQuestions.valueProperty().addListener((observable, oldValue, newValue) -> {
             selectedQuestions = newValue.intValue();
             questions.setText(Integer.toString(selectedQuestions));
         });
