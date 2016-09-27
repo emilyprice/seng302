@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.controlsfx.control.Notifications;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,8 +100,12 @@ public class Project {
         projectSettings.put("transcript", transcriptString);
 
         projectSettings.put("rhythm", gson.toJson(env.getPlayer().getRhythmHandler().getRhythmTimings()));
+        try{ //HACK. Sometimes runs a null pointer exception
+            projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
+        }catch (NullPointerException e){
+            projectSettings.put("instrument", "Acoustic Grand Piano");
+        }
 
-        projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
 
         projectSettings.put("level", this.level);
         projectSettings.put("experience", this.experience);
@@ -424,6 +429,7 @@ public class Project {
         this.projectName = pName;
         loadProperties();
         env.getRootController().setWindowTitle("Allegro - " + pName);
+
 
     }
 

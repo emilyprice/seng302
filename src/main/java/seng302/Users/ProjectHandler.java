@@ -79,10 +79,14 @@ public class ProjectHandler {
             env.getUserPageController().updateLevelBadge();
             env.getUserPageController().updateGraphs();
             env.getUserPageController().getSummaryController().updateProgressBar();
+
+
         }
         catch (Exception e) {
-            System.err.println("Root controller not initialised");
+            //e.printStackTrace();
+            System.err.println("Root controller not initialised asdsad");
         }
+
     }
 
 
