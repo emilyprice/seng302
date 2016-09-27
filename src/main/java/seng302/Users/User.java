@@ -29,6 +29,8 @@ public abstract class User {
 
     DataSnapshot userSnapshot;
 
+    private Image displayImage;
+
 
     public User(){
 
@@ -145,10 +147,11 @@ public abstract class User {
 
     public void setUserPicture(String imageUrl) {
         this.profilePicUrl = imageUrl;
+        displayImage = new Image(this.profilePicUrl);
     }
 
     public Image getUserPicture() {
-        return new Image(this.profilePicUrl);
+        return displayImage;
     }
 
     public void setUserFirstName(String name) {
