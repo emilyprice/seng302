@@ -61,6 +61,11 @@ public class DslReferenceController {
         dslRef.setArrowLocation(PopOver.ArrowLocation.RIGHT_CENTER);
         dslRef.setTitle("DSL Reference Card");
         dslRef.getRoot().getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+//        dslRef.setConsumeAutoHidingEvents(false);
+//        System.out.println("dslAutoHide: " + dslRef.isAutoHide());
+//        dslRef.autoHideProperty().setValue(false);
+//        System.out.println("dslFocusTraversable: " + dslRef.getRoot().isFocusTraversable());
+//        dslRef.getRoot().setFocusTraversable(true);
         return dslRef;
     }
 
