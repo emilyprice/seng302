@@ -215,6 +215,8 @@ public class RootController implements Initializable {
                 resizeSplitPane(1.0);
                 menuTranscript.setSelected(false);
                 toggleTranscript();
+                keyboardPaneController.hideWholeKeyboard();
+                splitPane.setDividerPosition(0, 1.0);
                 try {
                     showTeacherPage();
                 } catch (IOException e) {
@@ -228,6 +230,7 @@ public class RootController implements Initializable {
                 updateImage();
                 menuTranscript.setSelected(false);
                 toggleTranscript();
+                keyboardPaneController.showWholeKeyboard();
                 try {
                     showUserPage();
                 } catch (IOException e) {
