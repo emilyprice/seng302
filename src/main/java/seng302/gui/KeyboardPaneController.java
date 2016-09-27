@@ -40,6 +40,8 @@ import seng302.data.Note;
 import seng302.utility.NoteRangeSlider;
 import seng302.utility.musicNotation.OctaveUtil;
 
+import javax.swing.event.DocumentListener;
+
 import static seng302.utility.musicNotation.Checker.isValidNormalNote;
 
 /**
@@ -398,6 +400,26 @@ public class KeyboardPaneController {
                     scale1NoteInput.setStyle("-fx-border-color: lightgray;"); //defaults border colour incase it was red
                     scale2NoteInput.setStyle("-fx-border-color: lightgray;");
                     okScale1.setText("Hide");
+
+                    //adding a listener so if the text or input for the text field changes, the Hide button will
+                    //toggle back to OK, and clear the scale
+
+                    // Listen for changes in the text
+                    scale1NoteInput.textProperty().addListener((observable, oldValue, newValue) -> {
+                        clearScaleIndicators("firstScale");
+                        okScale1.setText("OK");
+
+                    });
+
+                    //Listener for changes in the drop down menu
+                    typeScale1.valueProperty().addListener(new ChangeListener<String>() {
+                        @Override public void changed(ObservableValue ov, String t, String t1) {
+                            clearScaleIndicators("firstScale");
+                            okScale1.setText("OK");
+
+                        }
+                    });
+
                 } else if (scale1Note.equals(scale2Note)) {
                     //if scale 1 input matches scale 2 input
                     scale1NoteInput.setStyle("-fx-border-color: red;");
@@ -434,6 +456,26 @@ public class KeyboardPaneController {
                     scale2NoteInput.setStyle("-fx-border-color: lightgray;"); //defaults border colour incase it was red
                     scale1NoteInput.setStyle("-fx-border-color: lightgray;");
                     okScale2.setText("Hide");
+
+                    //adding a listener so if the text or input for the text field changes, the Hide button will
+                    //toggle back to OK, and clear the scale
+
+                    // Listen for changes in the text
+                    scale2NoteInput.textProperty().addListener((observable, oldValue, newValue) -> {
+                        clearScaleIndicators("secondScale");
+                        okScale2.setText("OK");
+
+                    });
+
+                    //Listener for changes in the drop down menu
+                    typeScale2.valueProperty().addListener(new ChangeListener<String>() {
+                        @Override public void changed(ObservableValue ov, String t, String t1) {
+                            clearScaleIndicators("secondScale");
+                            okScale2.setText("OK");
+                        }
+                    });
+
+
                 } else if (scale2Note.equals(scale1Note)) {
                     //if scale 1 input matches scale 2 input
                     scale1NoteInput.setStyle("-fx-border-color: red;");
