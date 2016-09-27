@@ -73,6 +73,14 @@ public class TeacherPageController {
     }
 
     public void load() {
+        String fullName = env.getUserHandler().getCurrentTeacher().getUserFirstName() + env.getUserHandler().getCurrentTeacher().getUserLastName();
+
+        if (fullName.length() == 0) {
+            txtFullName.setText(env.getUserHandler().getCurrentTeacher().getUserName());
+        } else {
+            txtFullName.setText(fullName);
+        }
+
 
         env.getRootController().setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
 

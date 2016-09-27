@@ -247,6 +247,9 @@ public class UserRegisterController {
                     env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText(), txtClassRoomName.getText());
                     env.getUserHandler().setCurrentTeacher(txtUsername.getText(), txtClassRoomName.getText(), txtPassword.getText());
 
+                    env.getUserHandler().getCurrentTeacher().setUserFirstName(txtfname.getText());
+                    env.getUserHandler().getCurrentTeacher().setUserLastName(txtlname.getText());
+
                     env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText() + "/classrooms").push().setValue(txtClassRoomName.getText());
 
                     env.getFirebase().getFirebase().child("classrooms/" + txtClassRoomName.getText() + "/users/").setValue("none");
