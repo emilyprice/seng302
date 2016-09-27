@@ -156,7 +156,7 @@ public class ProjectSettingsController {
         tempoSlider.setValue(env.getPlayer().getTempo());
 
         // The listener for the number of questions selected
-        tempoSlider.valueProperty().addListener((observable, newValue, oldValue) -> {
+        tempoSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             tempoText.setText(Integer.toString(newValue.intValue()));
 
             if (newValue.intValue() >= 20 && newValue.intValue() <= 300) {
