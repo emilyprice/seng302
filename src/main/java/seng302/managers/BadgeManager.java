@@ -150,9 +150,9 @@ public class BadgeManager {
         tutorTotal.add(10);
 
         //intalize tutor badges
-        System.out.println("Populating tutorBadgeMap");
+
         for (String tutor:allTutors){
-            System.out.println(tutor);
+
 
             ArrayList<Badge> badges = new ArrayList<>();
             badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, tutorImages.get(tutor), 10));
@@ -246,10 +246,9 @@ public class BadgeManager {
      */
     public void updateTutorBadges(String tutorName, int correct, int answered) {
         ArrayList badges = tutorBadgeMap.get(tutorName);
-        System.out.println("inside update tutor badges for " + tutorName);
-        System.out.println(badges);
+
         for (Object badg : badges) {
-            System.out.println(badg);
+
             Badge b = (Badge) badg;
             if (b.name.equals("Correct Questions")) {
                 b.updateBadgeProgress(env, correct);

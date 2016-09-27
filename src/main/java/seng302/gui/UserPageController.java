@@ -317,7 +317,7 @@ public class UserPageController {
      * @param pageName The name of the page to display - either "summary" or the name of a tutor.
      */
     public void showPage(String pageName) {
-        System.out.println("show page function" + pageName);
+
         setupTimeSlider();
         if (pageName.equals("Summary")) {
             showSummaryPage();
@@ -410,17 +410,6 @@ public class UserPageController {
             statsController.create(env);
             statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
             statsController.updateBadgesDisplay();
-
-            System.out.println("in show tutor stats for tutor" + tutor);
-
-            //listView.getSelectionModel().select(tutor);
-
-            /*if(tutor.equals("Scale Recognition Tutor (Basic)")) {
-                listView.getSelectionModel().select("Scale Recognition Tutor");
-            }else{
-                listView.getSelectionModel().select(tutor);
-
-            }*/
 
 
         } catch (IOException e) {

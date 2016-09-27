@@ -312,14 +312,12 @@ public class Project {
             }.getType();
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
             if(unlockMap != null) {
-                System.out.println("unlock map here");
-                System.out.println(unlockMap);
                 env.getStageMapController().unlockStatus = unlockMap;
                 env.getStageMapController().setDescription();
             }
         }catch(Exception e){
             e.printStackTrace();
-            System.out.println("failed to load stageMap");
+
         }
 
         try {
@@ -334,7 +332,7 @@ public class Project {
             }
         }catch(Exception e){
             e.printStackTrace();
-            System.out.println("failed to load stageMapDescriptions");
+
         }
 
 

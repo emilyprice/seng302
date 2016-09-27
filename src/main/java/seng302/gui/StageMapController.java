@@ -163,7 +163,7 @@ public class StageMapController {
 
         for(String key: unlockDescriptions.get(nextUnlockTutor).keySet()){
             HBox description = new HBox();
-            System.out.println(key);
+
             if(key.equals("basicScaleTutor")||key.equals("basicChordTutor")){
                 description.getChildren().add(new Label("Get 3 consecutive scores of 9 or higher in the "+key));
             }else{
@@ -312,11 +312,11 @@ public class StageMapController {
         unlockStatus.put("diatonicChordTutor", false);
         unlockStatus.put("scaleModesTutor", false);
 
-        System.out.println("generated locking status");
+
     }
 
     public void unlockTutor(String id){
-        System.out.println(id);
+
         unlockStatus.put(id, true);
         this.env.getUserHandler().getCurrentUser().saveAll();
     }
@@ -378,8 +378,7 @@ public class StageMapController {
             } else {
                 for (int i = records.size() - 3; i < records.size(); i++) {
                     TutorRecord record = records.get(i);
-                    System.out.println(record);
-                    System.out.println(record.getStats().get("questionsCorrect"));
+
                     if (!(record.getStats().get("questionsCorrect").intValue() >= requiredScore)) {
                         unlock = false;
                     }
@@ -394,7 +393,7 @@ public class StageMapController {
         }
 
         if(!(unlockDescriptions.get(nextUnlockTutor).values().contains(false))){
-            System.out.println("unlocking next tutor");
+
             unlockTutor(tutorOrder.get(tutorOrder.indexOf(converted.get(tutorId)) +1));
             visualiseLockedTutors();
             String nextTutorName = null;
