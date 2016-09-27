@@ -60,9 +60,14 @@ public class UserSettingsController {
 
     private UserHandler userHandler;
 
+    @FXML
+    private AnchorPane settingsPane;
+
 
     public void create(Environment env) {
         this.env = env;
+        //applyTheme();
+
         this.imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         env.getRootController().setHeader("User Settings");
         userHandler = env.getUserHandler();
@@ -79,7 +84,6 @@ public class UserSettingsController {
     @FXML
     public void initialize() {
         String css = this.getClass().getResource("/css/user_settings.css").toExternalForm();
-
 
         ImageView imgUpload = new ImageView(new Image(getClass().getResourceAsStream("/images/file_upload_white_36dp.png"), 25, 25, false, false));
 
@@ -116,11 +120,13 @@ public class UserSettingsController {
             FileHandler.copyFolder(file, filePath.toFile());
             userHandler.getCurrentUser().setUserPicture(filePath);
             imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
-            env.getRootController().updateImage();
+            env.getUserPageController().updateProfilePicDisplay();
+
         } catch (Exception e) {
             e.printStackTrace();
 
         }
+
     }
 
     /**
@@ -139,10 +145,12 @@ public class UserSettingsController {
             userHandler.getCurrentUser().setUserFirstName(txtFName.getText());
             userHandler.getCurrentUser().updateProperties();
             userHandler.getCurrentUser().saveProperties();
+            env.getUserPageController().updateNameDisplay();
             txtFName.setEditable(false);
             btnEditFName.setText("Edit");
         }
     }
+
 
     /**
      * On click action for the last name edit/save button.
@@ -160,13 +168,14 @@ public class UserSettingsController {
             userHandler.getCurrentUser().setUserLastName(txtLName.getText());
             userHandler.getCurrentUser().updateProperties();
             userHandler.getCurrentUser().saveProperties();
+            env.getUserPageController().updateNameDisplay();
             txtLName.setEditable(false);
             btnEditLName.setText("Edit");
         }
     }
 
     /**
-     * Shows a delete user confimation dialog, and deletes the current user if suitable.
+     * Shows a delete user confirmation dialog, and deletes the current user if suitable.
      */
     @FXML
     private void deleteUser() {

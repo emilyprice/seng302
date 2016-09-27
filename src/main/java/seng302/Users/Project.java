@@ -30,12 +30,12 @@ import java.util.HashMap;
 
 import javax.sound.midi.Instrument;
 
-import seng302.data.Badge;
-import seng302.managers.BadgeManager;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import seng302.Environment;
+import seng302.data.Badge;
+import seng302.managers.BadgeManager;
 import seng302.utility.InstrumentUtility;
 import seng302.utility.LevelCalculator;
 import seng302.utility.OutputTuple;
@@ -120,14 +120,14 @@ public class Project {
 
         projectSettings.put("competitionMode", gson.toJson(isCompetitiveMode.toString()));
         projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
-        
+
         projectSettings.put("overallBadges", gson.toJson(badgeManager.getOverallBadges()));
         projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
         projectSettings.put("tutor100Map", gson.toJson(badgeManager.get100TutorBadges()));
 
         try {
             projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
-        }catch(Exception e){
+        } catch (Exception e) {
             System.err.println("cant save unlock map");
         }
     }
@@ -259,7 +259,6 @@ public class Project {
 
     /**
      * Loads in the data for the stage map in regards to which tutors are locked and unlocked.
-     *
      */
     public void loadStageMapData() {
         try {
@@ -268,10 +267,10 @@ public class Project {
             Type mapType = new TypeToken<HashMap<String, Boolean>>() {
             }.getType();
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
-            if(unlockMap != null) {
+            if (unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("failed to load stageMap");
         }
     }
@@ -294,6 +293,7 @@ public class Project {
 
     /**
      * Handles Saving a .json Project file, for the specified project address
+     *
      * @param projectAddress Project directory address.
      */
     public void saveProject(String projectAddress) {
@@ -446,16 +446,29 @@ public class Project {
     }
 
     private void setToCompetitionMode() {
-        this.isCompetitiveMode = true;
-        env.getRootController().disallowTranscript();
-        env.getRootController().getTranscriptController().hideTranscript();
-        env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
+        try {
+            this.isCompetitiveMode = true;
+            env.getRootController().disallowTranscript();
+            env.getRootController().getTranscriptController().hideTranscript();
+            env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
+            env.getUserPageController().populateUserOptions();
+            env.getUserPageController().getSummaryController().loadStageMap();
+        } catch (NullPointerException e) {
+            // User Page might not exist yet so it doesn't have to load stuff
+        }
+
     }
 
     private void setToPracticeMode() {
-        this.isCompetitiveMode = false;
-        env.getRootController().allowTranscript();
-        env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
+        try {
+            this.isCompetitiveMode = false;
+            env.getRootController().allowTranscript();
+            env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
+            env.getUserPageController().populateUserOptions();
+            env.getUserPageController().getSummaryController().loadStageMap();
+        } catch (NullPointerException e) {
+            // User page might not exist yet
+        }
     }
 
     public void setIsCompetitiveMode(boolean isCompetitiveMode) {
@@ -481,7 +494,6 @@ public class Project {
         // Increases user levels one by one until the user cannot level up any further
         while (LevelCalculator.isLevelUp(level, experience)) {
             level += 1;
-            env.getRootController().updateLevelBadge();
             Image image = new Image(getClass().getResourceAsStream("/images/arrow.png"), 110, 75, true, true);
             Notifications.create()
                     .title("Level Up")
@@ -512,6 +524,8 @@ public class Project {
         return visualiserOn;
     }
 
-    public BadgeManager getBadgeManager(){return badgeManager;}
+    public BadgeManager getBadgeManager() {
+        return badgeManager;
+    }
 
 }
