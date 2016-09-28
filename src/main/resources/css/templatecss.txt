@@ -598,7 +598,7 @@
     -fx-border-width: 0px;
 }
 
-#errorMessage {
+.errorMessage {
     -fx-text-fill: red;
 }
 

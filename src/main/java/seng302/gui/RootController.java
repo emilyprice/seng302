@@ -687,22 +687,22 @@ public class RootController implements Initializable {
 
     @FXML
     public void newClassroom() {
-        CharSequence[] invalidChars = {".", "#", "$", "[", "]"};
-        TextInputDialog dialog = new TextInputDialog("");
-        dialog.setTitle("New Classroom");
-        dialog.setHeaderText("New Classroom");
-        dialog.setContentText("Please enter the classroom name:");
+        //launch the clasroom creator
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/ClassroomCreator.fxml"));
 
-        // Traditional way to get the response value.
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            String newClassroom = result.get();
-            env.getUserHandler().setClassRoom(newClassroom);
-            env.getFirebase().getFirebase().child("classrooms/" + newClassroom + "/users/").setValue("none");
-            env.getFirebase().getUserRef().child("classrooms").push().setValue(newClassroom);
-            env.getTeacherPageController().updateDisplay();
+        try {
+            AnchorPane classCreator = loader.load();
 
+            Stage classroomCreatorStage = new Stage();
+            classroomCreatorStage.setTitle("Create New Classroom");
+            classroomCreatorStage.setScene(new Scene(classCreator, 400, 200));
+            classroomCreatorStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        ClassroomCreatorController classroomCreatorController = loader.getController();
+        classroomCreatorController.create(env);
     }
 
     /**
