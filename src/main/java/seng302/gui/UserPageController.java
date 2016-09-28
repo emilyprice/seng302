@@ -7,15 +7,20 @@ import com.jfoenix.controls.JFXListView;
 
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Alert;
+
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
@@ -27,12 +32,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -44,6 +43,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+import org.controlsfx.control.action.Action;
 import seng302.Environment;
 
 import static javafx.scene.paint.Color.RED;
@@ -166,55 +166,20 @@ public class UserPageController {
         }
     }
 
-//    @FXML
-//    public void onLogoutClick() {
-//
-//        if (logoutPop.isShowing()) {
-//            logoutPop.hide();
-//        } else {
-//            logoutPop.show(logoutButton);
-//        }
-//    }
-//
-//    private void logoutConfirmPopover() {
-//        VBox mainBox = new VBox();
-//
-//        HBox labelBox = new HBox();
-//        HBox buttonBox = new HBox();
-//
-//        Label confirm = new Label("Are you sure you want to log out?");
-//        JFXButton yes = new JFXButton("Yes");
-//        yes.getStyleClass().add("primary");
-//        JFXButton no = new JFXButton("No");
-//        no.getStyleClass().add("primary");
-//
-//        labelBox.getChildren().add(confirm);
-//        buttonBox.getChildren().add(yes);
-//        buttonBox.getChildren().add(no);
-//
-//        buttonBox.setSpacing(10);
-//        buttonBox.setPadding(new Insets(10));
-//
-//        yes.setOnAction(e -> {
-//            e.consume();
-//            logoutPop.hide();
-//            env.getRootController().logOutUser();
-//        });
-//
-//        no.setOnAction(e -> {
-//            logoutPop.hide();
-//        });
-//
-//
-//        mainBox.getChildren().add(labelBox);
-//        mainBox.getChildren().add(buttonBox);
-//        mainBox.setSpacing(10);
-//        mainBox.setPadding(new Insets(10));
-//        logoutPop = new PopOver(mainBox);
-//        logoutPop.headerAlwaysVisibleProperty().setValue(true);
-//        logoutPop.setTitle("Log Out");
-//
-//    }
+
+    @FXML
+    public void onLogoutClick() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Log Out Confirmation");
+        alert.setContentText("Are you sure you want to log out?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            env.getRootController().logOutUser();
+        } else {
+            alert.close();
+        }
+    }
+
 
     /**
      * Refreshes the display of the level indicator badge so that it matches the level of the user's
