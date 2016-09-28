@@ -60,8 +60,7 @@
                 <Font size="17.0" />
             </font>
         </Label>
-        <StackPane fx:id="rectangleStack" alignment="CENTER_LEFT" maxHeight="40.0" maxWidth="500.0"
-                   prefHeight="150.0" prefWidth="500.0">
+        <StackPane fx:id="rectangleStack" alignment="CENTER_LEFT" maxHeight="40.0" maxWidth="500.0" prefHeight="150.0" prefWidth="500.0">
             <children>
                 <HBox fx:id="rectangleHBox" alignment="CENTER" maxHeight="70.0" prefHeight="70.0" prefWidth="200.0">
                     <children>
@@ -84,7 +83,6 @@
                 <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
             </VBox.margin>
         </StackPane>
-      <JFXButton fx:id="reTestBtn" text="Re-Test" />
         <Label fx:id="overallStats" alignment="CENTER" contentDisplay="CENTER" text="Overall Stats" textAlignment="CENTER">
             <font>
                 <Font size="17.0" />
@@ -96,8 +94,7 @@
                 <Insets />
             </VBox.margin>
         </Label>
-        <StackPane fx:id="overallRectangleStack" alignment="CENTER_LEFT" maxHeight="40.0"
-                   maxWidth="500.0" prefHeight="150.0" prefWidth="500.0">
+        <StackPane fx:id="overallRectangleStack" alignment="CENTER_LEFT" maxHeight="40.0" maxWidth="500.0" prefHeight="150.0" prefWidth="500.0">
             <children>
                 <HBox fx:id="OverallRectangleHBox" alignment="CENTER" maxHeight="70.0" prefHeight="70.0" prefWidth="200.0">
                     <children>
@@ -132,23 +129,23 @@
             <children>
                 <Label fx:id="classAverageLabel" alignment="TOP_LEFT" text="Class Average: ">
                     <font>
-                        <Font size="9.0"/>
+                        <Font size="9.0" />
                     </font>
                     <HBox.margin>
-                        <Insets/>
+                        <Insets />
                     </HBox.margin>
                 </Label>
                 <Label fx:id="classAverageNumber" text="0.5">
                     <font>
-                        <Font size="9.0"/>
+                        <Font size="9.0" />
                     </font>
                     <HBox.margin>
-                        <Insets/>
+                        <Insets />
                     </HBox.margin>
                 </Label>
             </children>
             <VBox.margin>
-                <Insets left="10.0" right="10.0"/>
+                <Insets left="10.0" right="10.0" />
             </VBox.margin>
         </HBox>
         <LineChart fx:id="lineChart" horizontalZeroLineVisible="false" legendVisible="false" minHeight="200.0" prefHeight="228.0" prefWidth="379.0" title="Past Results">

@@ -640,28 +640,8 @@ public class UserPageController {
         FXMLLoader tutorStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
         VBox all = new VBox();
 
-        try {
-            VBox stats = tutorStatsLoader.load();
-            //currentPage.setContent(stats);
-            all.getChildren().setAll(stats);
-            scrollPaneAnchorPage.getChildren().clear();
-            //scrollPaneAnchorPage.getChildren().setAll(all);
-            AnchorPane.setLeftAnchor(stats, 0.0);
-            AnchorPane.setTopAnchor(stats, 0.0);
-            AnchorPane.setBottomAnchor(stats, 0.0);
-            AnchorPane.setRightAnchor(stats, 0.0);
-            statsController = tutorStatsLoader.getController();
-
-            statsController.create(env);
-            statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
-            statsController.updateBadgesDisplay();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+            System.out.println("making basic");
             FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
             try {
                 VBox stats = tutorbasicStatsLoader.load();
@@ -681,6 +661,32 @@ public class UserPageController {
                 e.printStackTrace();
             }
         }
+
+        System.out.println(tutor);
+        if((Boolean)(env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))) {
+            try {
+                VBox stats = tutorStatsLoader.load();
+                //currentPage.setContent(stats);
+                all.getChildren().add(stats);
+                scrollPaneAnchorPage.getChildren().clear();
+                //scrollPaneAnchorPage.getChildren().setAll(all);
+                AnchorPane.setLeftAnchor(stats, 0.0);
+                AnchorPane.setTopAnchor(stats, 0.0);
+                AnchorPane.setBottomAnchor(stats, 0.0);
+                AnchorPane.setRightAnchor(stats, 0.0);
+                statsController = tutorStatsLoader.getController();
+
+                statsController.create(env);
+                statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
+                statsController.updateBadgesDisplay();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         scrollPaneAnchorPage.getChildren().setAll(all);
 
         listView.getSelectionModel().select(tutor);
