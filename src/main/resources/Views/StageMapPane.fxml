@@ -87,7 +87,7 @@
                   <Label layoutX="15.0" layoutY="421.0" prefHeight="15.0" prefWidth="242.0" text="Scale Recognition Tutor (Advanced)" />
                   <Label layoutX="94.0" layoutY="270.0" prefHeight="15.0" prefWidth="214.0" text="Chord Recognition Tutor (Basic)" />
                   <Label layoutX="38.0" layoutY="329.0" prefHeight="15.0" prefWidth="173.0" text="Interval Recognition Tutor" />
-                  <Button fx:id="scaleSpellingTutorButton" layoutX="426.0" layoutY="233.0" mnemonicParsing="false" onAction="#launchScaleSpellingTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="9" />
+                  <Button fx:id="scaleSpellingTutorButton" layoutX="426.0" layoutY="233.0" mnemonicParsing="false" onAction="#launchScaleSpellingTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="9" >
                   <Label layoutX="474.0" layoutY="245.0" prefHeight="15.0" prefWidth="242.0" text="Scale Spelling Tutor" />
                      <font>
                         <Font size="12.0" />

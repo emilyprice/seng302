@@ -69,6 +69,9 @@ public class ProjectSettingsController {
         setupRhythmSelector();
     }
 
+    /**
+     * Used by the modes toggle to switch modes
+     */
     @FXML
     private void toggleBetweenModes() {
 

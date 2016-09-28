@@ -394,10 +394,14 @@ public class UserPageController {
      */
     @FXML
     public void openSettings() {
-        if (env.getRootController().getBaseSettingsController() == null) {
+        try {
+            if (!env.getRootController().settingsStage.isShowing()) {
+                env.getRootController().launchSettings();
+            } else {
+                env.getRootController().settingsStage.toFront();
+            }
+        } catch (NullPointerException e) {
             env.getRootController().launchSettings();
-        } else {
-            env.getRootController().settingsStage.toFront();
         }
     }
 

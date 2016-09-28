@@ -509,21 +509,24 @@ public class TutorStatsController {
         String ribbonPath = "/images/ribbonAward.png";
         String lockImagePath = "/images/lock.png";
         String badgeImagePath = "/images/" + b.imageName + ".png";
+        String platBadgePath = "/images/plat-badge.png";
 
 
         ImageView rView = new ImageView(UserSummaryController.imageCache.retrieve(ribbonPath, 70));
         rView.fitHeightProperty().setValue(70);
         rView.fitWidthProperty().setValue(70);
 
-
         ImageView bView = new ImageView(UserSummaryController.imageCache.retrieve(badgeImagePath, 26));
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
 
         ImageView lockView = new ImageView(UserSummaryController.imageCache.retrieve(lockImagePath, 40));
-
         lockView.fitHeightProperty().setValue(40);
         lockView.fitWidthProperty().setValue(40);
+
+        ImageView pView = new ImageView(UserSummaryController.imageCache.retrieve(platBadgePath, 70));
+        bView.fitHeightProperty().setValue(70);
+        bView.fitWidthProperty().setValue(70);
 
         ColorAdjust badgeEffect = new ColorAdjust();
         if (b.currentBadgeType == 0) {
@@ -542,8 +545,7 @@ public class TutorStatsController {
             badgeEffect.setSaturation(1);
             badgeEffect.setBrightness(0.1);
         } else if (b.currentBadgeType == 4) {
-            Image platImage = new Image("/images/plat-badge.png");
-            rView.setImage(platImage);
+            rView = pView;
 //            b.badgeProgress = b.badgeLevels.get(3);
         }
         rView.setEffect(badgeEffect);
