@@ -80,7 +80,7 @@ public class StageMapController {
     /**
      * Stores the status of each tutor(if the tutor is unlocked)
      */
-    public HashMap<String, Boolean> unlockStatus;
+    public static HashMap<String, Boolean> unlockStatus;
 
 
     /**

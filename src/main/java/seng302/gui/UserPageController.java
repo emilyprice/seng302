@@ -621,6 +621,9 @@ public class UserPageController {
             summaryController = summaryLoader.getController();
             summaryController.create(env);
             summaryController.loadStageMap();
+            if(!env.getFirebase().getUserSnapshot().child("projects/"+env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName+"/unlockMap").exists()){
+                env.getUserHandler().getCurrentUser().saveAll();
+            }
 
 
         } catch (IOException e) {

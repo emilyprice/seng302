@@ -122,7 +122,7 @@ public class Project {
 
 
         try {
-            projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
+            projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().unlockStatus));
         } catch (Exception e) {
             System.err.println("cant save unlock map");
         }
@@ -279,7 +279,7 @@ public class Project {
                 System.err.println("failed to import badge data");
             }
 
-            //100tutorMap
+            /*//100tutorMap
             HashMap<String, Boolean> tutor100Map;
             try {
 
@@ -295,6 +295,9 @@ public class Project {
             } catch (Exception e) {
                 System.err.println("failed to import 100 tutor map");
             }
+
+            */
+
 
 
     }

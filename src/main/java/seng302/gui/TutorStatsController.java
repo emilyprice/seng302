@@ -49,21 +49,12 @@ public class TutorStatsController {
 
     private Environment env;
 
-    @FXML
-    private VBox stats;
-
-    @FXML
-    private StackedBarChart stackedBar;
 
 
     @FXML
     private LineChart lineChart;
 
-    @FXML
-    private StackedBarChart levelBar;
 
-    @FXML
-    private ImageView imageDP;
 
     @FXML
     private Label latestAttempt;
@@ -99,20 +90,12 @@ public class TutorStatsController {
     @FXML
     private Line classAverage;
 
-    @FXML
-    private Rectangle progressBar;
 
-    @FXML
-    private BorderPane tutorHeader;
 
     @FXML
     private Label tutorName;
 
-    @FXML
-    private JFXButton btnLoadTutor;
 
-    @FXML
-    private Label badgesLabel;
 
     @FXML
     private GridPane badgeGrid;
@@ -159,7 +142,7 @@ public class TutorStatsController {
         */
 
         try {
-            /*
+
             switch (tutor) {
 
                 case "Pitch Comparison Tutor":
@@ -308,7 +291,7 @@ public class TutorStatsController {
                     dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("scaleSpellingTutor", timePeriod);
                     break;
 
-            }*/
+            }
 
 
             latestAttempt.setVisible(true);

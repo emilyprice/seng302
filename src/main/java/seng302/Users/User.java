@@ -82,6 +82,7 @@ public abstract class User {
             displayImage = new Image(this.profilePicUrl);
         }
 
+
         env.getThemeHandler().setTheme(themePrimary, themeSecondary);
 
     }
