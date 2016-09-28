@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import seng302.Environment;
 
 
@@ -66,6 +67,10 @@ public class BaseSettingsController {
         applyTheme();
 
 
+    }
+
+    public void closeWindow(){
+        ((Stage)settingsOptions.getScene().getWindow()).close();
     }
 
     /**
