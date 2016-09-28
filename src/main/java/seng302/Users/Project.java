@@ -129,8 +129,6 @@ public class Project {
             System.err.println("cant save unlock map descriptions");
         }
 
-        System.out.println(inputVolumeThreshold);
-
         projectSettings.put("inputVolumeThreshold", gson.toJson(inputVolumeThreshold));
 
 
