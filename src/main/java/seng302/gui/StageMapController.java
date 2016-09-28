@@ -165,8 +165,7 @@ public class StageMapController {
 
         for(String key: unlockDescriptions.get(nextUnlockTutor).keySet()){
             HBox description = new HBox();
-
-            if(key.equals("basicScaleTutor")||key.equals("basicChordTutor")){
+            if(unlockDescriptions.get(nextUnlockTutor).keySet().size() > 1 && (key.equals("basicScaleTutor")||key.equals("basicChordTutor"))){
                 description.getChildren().add(new Label("Get 3 consecutive scores of 9 or higher in the "+key));
             }else{
 
@@ -372,15 +371,16 @@ public class StageMapController {
      */
     public void fetchTutorFile(String tutorId) {
 
-
+        System.out.println("need for unlock");
         for(String tutor: unlockDescriptions.get(nextUnlockTutor).keySet()) {
             ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
+            System.out.println(records);
             boolean unlock = true;
 
-            int requiredScore = 2; //7
+            int requiredScore = 7; //7
             if(nextUnlockTutor.equals("scaleTutor")||nextUnlockTutor.equals("chordTutor")){
                 if(tutor.equals("basicScaleTutor")|| tutor.equals("basicChordTutor")){
-                    requiredScore = 2; //9
+                    requiredScore = 9; //9
                 }
             }
 
@@ -390,7 +390,7 @@ public class StageMapController {
             } else {
                 for (int i = records.size() - 3; i < records.size(); i++) {
                     TutorRecord record = records.get(i);
-
+                    System.out.println(record.getStats().get("questionsCorrect").intValue());
                     if (!(record.getStats().get("questionsCorrect").intValue() >= requiredScore)) {
                         unlock = false;
                     }

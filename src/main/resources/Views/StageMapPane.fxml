@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -55,6 +56,9 @@
                            <font>
                               <Font name="System Bold" size="19.0" />
                            </font>
+                           <padding>
+                              <Insets top="20.0" />
+                           </padding>
                         </Label>
                      </children>
                   </StackPane>
