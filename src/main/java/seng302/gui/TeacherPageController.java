@@ -241,6 +241,7 @@ public class TeacherPageController {
             userSummaryController.hideBadges();
             //change to be the user that was clicked on
             userSummaryController.createStudent(env, userName,"All Time", project);
+            userSummaryController.showStudentStagemap(userName, project);
 
         } catch (IOException e) {
             e.printStackTrace();

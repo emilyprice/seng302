@@ -140,6 +140,10 @@ public class StageMapController {
         userPageController = env.getUserPageController();
     }
 
+    public void setEnvOnly(Environment env) {
+        this.env = env;
+    }
+
 
     public StageMapController() {
 
@@ -228,10 +232,8 @@ public class StageMapController {
      * the order of the tutors, and whether the tutor is unlocked or locked)
      */
     public void create() {
-        tutorAndButton = new HashMap<>();
         tutorOrder = new ArrayList<>();
         unlockStatus = new HashMap<>();
-        converted = new HashMap<>();
 
         generateLockingStatus();
         generateTutorOrder();
@@ -285,7 +287,8 @@ public class StageMapController {
      * generates a hashmap that has the name of the tutor and its associative button
      */
 
-    private void generateTutorAndButtonNames() {
+    public void generateTutorAndButtonNames() {
+        tutorAndButton = new HashMap<>();
         tutorAndButton.put("musicalTermsTutor", musicalTermsTutorButton);
         tutorAndButton.put("pitchTutor", pitchTutorButton);
         tutorAndButton.put("basicScaleTutor", basicScaleRecognitionTutorButton);
@@ -421,6 +424,25 @@ public class StageMapController {
         }
 
         setDescription();
+    }
+
+    public void loadStudentMap(HashMap<String, Boolean> unlockStatus) {
+
+        Image padlock = new Image(getClass().getResourceAsStream
+                ("/images/lock.png"), 10, 10, true, true);
+
+        //If in competitive mode, relevant stages should be locked
+        for (String tutor: unlockStatus.keySet()) {
+            tutorAndButton.get(tutor).setDisable(false);
+            tutorAndButton.get(tutor).setGraphic(null);
+            if (!unlockStatus.get(tutor)) {
+                tutorAndButton.get(tutor).setDisable(true);
+                ImageView iv1 = new ImageView();
+                iv1.setImage(padlock);
+                tutorAndButton.get(tutor).setGraphic(iv1);
+
+            }
+        }
     }
 
 

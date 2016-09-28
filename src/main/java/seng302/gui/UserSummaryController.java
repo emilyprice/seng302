@@ -1,6 +1,8 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -29,6 +31,7 @@ import seng302.managers.BadgeManager;
 import seng302.utility.ImageCache;
 import seng302.utility.LevelCalculator;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -222,50 +225,64 @@ public class UserSummaryController {
      * Loads the stage map into the summary page
      */
     public void loadStageMap() {
-        //if (env.getStageMapController() == null) {
-            loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
+        loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
 
-            try {
-                noteMap = loader.load();
-                stageMap.getChildren().clear();
-                stageMap.getChildren().add(noteMap);
-            } catch (LoadException e) {
-                // It's all fine.
-            } catch (Exception e) {
-                System.err.println("Failed to load stage map");
-                e.printStackTrace();
-            }
-
-
-            StageMapController controller = loader.getController();
-            env.setStageMapController(controller);
-            env.setStagePane(noteMap);
-            env.getStageMapController().setEnvironment(env);
-            env.getStageMapController().create();
-            env.getStageMapController().setDescription();
-
-
-            user.getProjectHandler().getCurrentProject().loadStageMapData();
-
-
-            env.getStageMapController().visualiseLockedTutors();
-
+        try {
+            noteMap = loader.load();
+            stageMap.getChildren().clear();
+            stageMap.getChildren().add(noteMap);
+        } catch (LoadException e) {
+            // It's all fine.
+        } catch (Exception e) {
+            System.err.println("Failed to load stage map");
+            e.printStackTrace();
         }
-//    else {
-//            System.out.println("stage map not null.");
-//            try {
-//                stageMap.getChildren().clear();
-//                stageMap.getChildren().add(env.getStagePane());
-//                env.getStageMapController().visualiseLockedTutors();
-//
-//            } catch (Exception e) {
-//                System.err.println("Failed to load stage map");
-//                System.out.println(e.getStackTrace());
-//                e.printStackTrace();
-//            }
-//        }
-//
-//    }
+
+
+        StageMapController controller = loader.getController();
+        env.setStageMapController(controller);
+        env.setStagePane(noteMap);
+        env.getStageMapController().setEnvironment(env);
+        env.getStageMapController().create();
+        env.getStageMapController().setDescription();
+
+
+        user.getProjectHandler().getCurrentProject().loadStageMapData();
+
+
+        env.getStageMapController().visualiseLockedTutors();
+
+    }
+
+
+    public void showStudentStagemap(String userName, String userProject) {
+
+        loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
+
+        try {
+            noteMap = loader.load();
+            stageMap.getChildren().clear();
+            stageMap.getChildren().add(noteMap);
+        } catch (LoadException e) {
+            // It's all fine.
+        } catch (Exception e) {
+            System.err.println("Failed to load stage map");
+            e.printStackTrace();
+        }
+
+
+        StageMapController controller = loader.getController();
+        controller.setEnvOnly(env);
+        controller.generateTutorAndButtonNames();
+
+        String unlockData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + userName + "/projects/" + userProject + "/unlockMap" ).getValue().toString();
+        Type mapType = new TypeToken<HashMap<String, Boolean>>() {}.getType();
+        HashMap<String, Boolean> unlockStuff = new Gson().fromJson(unlockData, mapType);
+
+        controller.loadStudentMap(unlockStuff);
+
+
+    }
 
     /**
      * Used to create the badgeGrid and display the badges in stackpanes with the correct effect
