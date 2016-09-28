@@ -21,7 +21,7 @@
          <children>
              <Slider fx:id="tutorSlider" HBox.hgrow="ALWAYS">
                <HBox.margin>
-                  <Insets left="20.0" right="20.0" />
+                  <Insets left="40.0" right="40.0" />
                </HBox.margin>
             </Slider>
          </children>

@@ -36,43 +36,37 @@ public class ClassSummaryController {
 
     private ArrayList<String> tutorNames = new ArrayList<>();
 
-    private Map<String, String> converted = new HashMap<>();
+    private Map<String, String> converted;
 
     public void create(Environment env) {
         this.env = env;
+        converted = StageMapController.converted;
         setupBarChart();
         setupTutorSlider();
 
-        converted.put("Musical Terms Tutor", "musicalTermsTutor");
-        converted.put("Pitch Comparison Tutor", "pitchTutor" );
-        converted.put("Scale Recognition Tutor","scaleTutor");
-        converted.put("Chord Recognition Tutor", "chordTutor");
-        converted.put("Interval Recognition Tutor", "intervalTutor");
-        converted.put("Scale Recognition TutorA", "scaleTutorAdvanced");
-        converted.put("Chord Recognition Tutor", "chordTutorAdvanced");
-        converted.put("Chord Spelling Tutor", "chordSpellingTutor");
-        converted.put("Scale Spelling Tutor", "scaleSpellingTutor");
-        converted.put("Key Signature Tutor", "keySignatureTutor");
-        converted.put("Diatonic Chord Tutor", "diatonicChordTutor");
-        converted.put("Scale Modes Tutor", "scaleModesTutor");
     }
 
     private void setupTutorSlider() {
-        tutorNames.add("Musical Terms");
-        tutorNames.add("Pitch Comparison");
-        tutorNames.add("Scale Recognition");
-        tutorNames.add("Chord Recognition");
-        tutorNames.add("Interval Recognition");
-        tutorNames.add("Chord Spelling");
-        tutorNames.add("Key Signature");
-        tutorNames.add("Diatonic Chord");
-        tutorNames.add("Scale Modes");
-        tutorNames.add("Scale Spelling");
+
+        //Done explicitly so they're in the correct order
+        tutorNames.add("Musical Terms Tutor");
+        tutorNames.add("Pitch Comparison Tutor");
+        tutorNames.add("Scale Recognition Tutor (Basic)");
+        tutorNames.add("Chord Recognition Tutor (Basic)");
+        tutorNames.add("Interval Recognition Tutor");
+        tutorNames.add("Scale Recognition Tutor");
+        tutorNames.add("Chord Recognition Tutor");
+        tutorNames.add("Chord Spelling Tutor");
+        tutorNames.add("Scale Spelling Tutor");
+        tutorNames.add("Key Signature Tutor");
+        tutorNames.add("Diatonic Chord Tutor");
+        tutorNames.add("Scale Modes Tutor");
+
 
         tutorSlider.setLabelFormatter(new StringConverterWithFormat<Double>() {
             @Override
             public String toString(Double object) {
-                return tutorNames.get(object.intValue());
+                return tutorNames.get(object.intValue()).replace("Tutor", "");
             }
 
             @Override
@@ -110,7 +104,7 @@ public class ClassSummaryController {
             for (Object child : user.child("/projects").getChildren()) {
                 try {
                     String unlockMap = ((DataSnapshot) child).child("unlockMap").getValue().toString();
-                    String key = converted.get(tutorNames.get(tutor) + " Tutor");
+                    String key = converted.get(tutorNames.get(tutor));
                     if (unlockMap.contains(key + "\":true") && !studentsAtStage.getItems().contains(user.getKey()) ) {
                         studentsAtStage.getItems().add(user.getKey());
                     }

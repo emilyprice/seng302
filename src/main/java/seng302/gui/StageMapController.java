@@ -1,12 +1,9 @@
 package seng302.gui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -20,6 +17,9 @@ import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -96,7 +96,23 @@ public class StageMapController {
     /**
      * stores the convertion of tutor name to a shortened tutor string that is used for manipulations
      */
-    public HashMap<String, String> converted;
+    public static HashMap<String, String> converted;
+
+    static {
+        converted = new HashMap<>();
+        converted.put("Musical Terms Tutor", "musicalTermsTutor");
+        converted.put("Pitch Comparison Tutor", "pitchTutor" );
+        converted.put("Scale Recognition Tutor (Basic)","basicScaleTutor");
+        converted.put("Chord Recognition Tutor (Basic)", "basicChordTutor");
+        converted.put("Interval Recognition Tutor", "intervalTutor");
+        converted.put("Scale Recognition Tutor", "scaleTutor");
+        converted.put("Chord Recognition Tutor", "chordTutor");
+        converted.put("Chord Spelling Tutor", "chordSpellingTutor");
+        converted.put("Scale Spelling Tutor", "scaleSpellingTutor");
+        converted.put("Key Signature Tutor", "keySignatureTutor");
+        converted.put("Diatonic Chord Tutor", "diatonicChordTutor");
+        converted.put("Scale Modes Tutor", "scaleModesTutor");
+    }
 
     public HashMap<String, HashMap<String, Boolean>>  unlockDescriptions;
 
@@ -220,28 +236,8 @@ public class StageMapController {
         generateLockingStatus();
         generateTutorOrder();
         generateTutorAndButtonNames();
-        generateConverted();
         generateDescriptions();
         visualiseLockedTutors();
-    }
-
-    /**
-     * Creates the converted strings
-     *
-     **/
-    private void generateConverted(){
-        converted.put("Musical Terms Tutor", "musicalTermsTutor");
-        converted.put("Pitch Comparison Tutor", "pitchTutor" );
-        converted.put("Scale Recognition Tutor (Basic)","basicScaleTutor");
-        converted.put("Chord Recognition Tutor (Basic)", "basicChordTutor");
-        converted.put("Interval Recognition Tutor", "intervalTutor");
-        converted.put("Scale Recognition Tutor", "scaleTutor");
-        converted.put("Chord Recognition Tutor", "chordTutor");
-        converted.put("Chord Spelling Tutor", "chordSpellingTutor");
-        converted.put("Scale Spelling Tutor", "scaleSpellingTutor");
-        converted.put("Key Signature Tutor", "keySignatureTutor");
-        converted.put("Diatonic Chord Tutor", "diatonicChordTutor");
-        converted.put("Scale Modes Tutor", "scaleModesTutor");
     }
 
 
