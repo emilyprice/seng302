@@ -182,7 +182,6 @@ public class RootController implements Initializable {
      */
     public void showWindow(Boolean show) {
         if (show) {
-            System.out.println("memory before stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 100000);
 
             applyTheme();
             stage.show();
@@ -194,7 +193,6 @@ public class RootController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("memory after stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 100000);
 
 
         } else stage.hide();

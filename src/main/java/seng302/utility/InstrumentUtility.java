@@ -49,7 +49,6 @@ public class InstrumentUtility {
      * @return The first available instrument of the environment's music player
      */
     public static Instrument getDefaultInstrument(Environment env) {
-        System.out.println(env.getPlayer().getAvailableInstruments());
         return env.getPlayer().getAvailableInstruments()[0];
     }
 }
