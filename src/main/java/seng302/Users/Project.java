@@ -12,10 +12,18 @@ package seng302.Users;
 import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.controlsfx.control.Notifications;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.sound.midi.Instrument;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
@@ -23,11 +31,6 @@ import seng302.utility.InstrumentUtility;
 import seng302.utility.LevelCalculator;
 import seng302.utility.OutputTuple;
 import seng302.utility.TutorRecord;
-
-import javax.sound.midi.Instrument;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Project {
 
@@ -427,6 +430,7 @@ public class Project {
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
             env.getUserPageController().getSummaryController().loadStageMap();
             env.getUserPageController().populateUserOptions();
+            env.getStageMapController().hideNextUnlockDescription(false);
 
         } catch (NullPointerException e) {
             // User Page might not exist yet so it doesn't have to load stuff
@@ -441,6 +445,7 @@ public class Project {
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
             env.getUserPageController().getSummaryController().loadStageMap();
             env.getUserPageController().populateUserOptions();
+            env.getStageMapController().hideNextUnlockDescription(true);
 
         } catch (NullPointerException e) {
             // User page might not exist yet
