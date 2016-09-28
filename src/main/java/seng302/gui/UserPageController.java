@@ -169,8 +169,6 @@ public class UserPageController {
     @FXML
     public void onLogoutClick() {
 
-        //env.getRootController().showCloseWindow("logout");
-
         if (logoutPop.isShowing()) {
             logoutPop.hide();
         } else {
@@ -198,7 +196,7 @@ public class UserPageController {
         buttonBox.setPadding(new Insets(10));
 
         yes.setOnAction(e -> {
-            env.getRootController().showCloseWindow("logout");
+            env.getRootController().logOutUser();
         });
 
         no.setOnAction(e -> {
