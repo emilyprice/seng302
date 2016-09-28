@@ -58,8 +58,6 @@ public class UserPageController {
     @FXML
     public JFXListView listView;
 
-    @FXML
-    private JFXButton btnSettings;
 
     @FXML
     Label txtFullName;
@@ -84,17 +82,10 @@ public class UserPageController {
 
     private TutorStatsController statsController;
 
-    @FXML
-    VBox tutors;
-
-    @FXML
-    private ScrollPane scrollPane;
 
     @FXML
     private JFXButton timeSliderButton;
 
-    @FXML
-    AnchorPane summary;
 
     private PopOver timePopover;
 
