@@ -146,36 +146,6 @@ public class TouchPane extends StackPane {
 
     }
 
-    //public pinchZoom (KeyboardPaneController kpc, Environment env, TouchEvent touch1, TouchEvent touch2) {
-
-
-
-
-//        //Event handler for pinch zooming the size of the keyboard
-//        key.setOnZoom(event -> {
-//            System.out.println(event.getZoomFactor());
-//
-//            Integer newTop = Double.valueOf(topNote * event.getZoomFactor()).intValue();
-//            if (topNote.equals(0) && event.getZoomFactor() > 1) {
-//                newTop = 2;
-//            }
-//            System.out.println("newTop: " + newTop.toString());
-//            Integer newBottom = Double.valueOf(bottomNote * event.getZoomFactor()).intValue();
-//            if (bottomNote.equals(0) && event.getZoomFactor() < 1) {
-//                newBottom = 2;
-//            }
-//            System.out.println("newBottom: " + newBottom.toString());
-//
-//            topNote = Integer.min(newTop, 127);
-//            bottomNote = Integer.max(0, newBottom);
-//            System.out.println(topNote);
-//            System.out.println(bottomNote);
-//
-//            resetKeyboard();
-//            event.consume();
-//        });
-    //}
-
 
 
     /**

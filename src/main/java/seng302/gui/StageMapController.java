@@ -371,10 +371,8 @@ public class StageMapController {
      */
     public void fetchTutorFile(String tutorId) {
 
-        System.out.println("need for unlock");
         for(String tutor: unlockDescriptions.get(nextUnlockTutor).keySet()) {
             ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
-            System.out.println(records);
             boolean unlock = true;
 
             int requiredScore = 2; //7
@@ -390,7 +388,6 @@ public class StageMapController {
             } else {
                 for (int i = records.size() - 1; i < records.size(); i++) {
                     TutorRecord record = records.get(i);
-                    System.out.println(record.getStats().get("questionsCorrect").intValue());
                     if (!(record.getStats().get("questionsCorrect").intValue() >= requiredScore)) {
                         unlock = false;
                     }
