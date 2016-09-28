@@ -151,6 +151,8 @@ public class ClassSummaryController {
 
         xAxis.setLabel("Level");
         yAxis.setLabel("Number of Projects");
+        yAxis.setMinorTickVisible(false);
+        yAxis.setTickUnit(10.0);
 
         levelBar.setLegendVisible(false);
 
