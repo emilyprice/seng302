@@ -99,6 +99,7 @@ public class ProjectSettingsController {
         instrumentSelector.valueProperty().addListener((observable, oldValue, newValue) -> {
             env.getPlayer().setInstrument(InstrumentUtility.getInstrumentByName((String) newValue, env));
             projectHandler.getCurrentProject().checkChanges("instrument");
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Instrument master").updateBadgeProgress(env, 1);
         });
     }
 
@@ -160,6 +161,7 @@ public class ProjectSettingsController {
 
             if (newValue.intValue() >= 20 && newValue.intValue() <= 300) {
                 env.getPlayer().setTempo(newValue.intValue());
+                env.getUserPageController().updateCurrentTempo(newValue);
                 projectHandler.getCurrentProject().checkChanges("tempo");
 
             }

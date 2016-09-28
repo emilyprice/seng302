@@ -81,8 +81,16 @@ public class Tempo implements Command {
             // Only change the tempo under valid circumstances
             if (force || inValidRange(tempo)) {
                 env.getPlayer().setTempo(tempo);
-            }
+                env.getUserPageController().updateCurrentTempo(tempo);
 
+            }
+            if (force) {
+                try {
+                    env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Speedster");
+                } catch (NullPointerException e) {
+                    // For Git testing. Badges are not yet generated when testing
+                }
+            }
 
             env.getTranscriptManager().setResult(result);
             //Update project saved state
@@ -95,6 +103,10 @@ public class Tempo implements Command {
         }
 
     }
+
+
+
+
 
     public String getHelp() {
         if (isSetter) {

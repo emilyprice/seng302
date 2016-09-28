@@ -3,10 +3,10 @@ package seng302.utility;
 import java.util.ArrayList;
 
 import seng302.Environment;
+import seng302.command.InstrumentCommand;
 import seng302.command.MusicalTerm;
 import seng302.command.Rhythm;
 import seng302.command.Tempo;
-import seng302.command.InstrumentCommand;
 
 /**
  * Undo/redo history manager for the application Created by team 5 on 24/04/16.

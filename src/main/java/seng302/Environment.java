@@ -29,7 +29,6 @@ public class Environment {
     private MicrophoneInput microphoneInput;
 
 
-
     private AnchorPane stagePane;
 
     public AnchorPane getStagePane() {
@@ -70,6 +69,10 @@ public class Environment {
     //userpage
     private UserPageController userPageController;
 
+
+    private FirebaseUpdater firebaseUpdater;
+
+
     public StageMapController stageMapController;
 
     public StageMapController getStageMapController() {
@@ -89,9 +92,17 @@ public class Environment {
         transcriptManager = new TranscriptManager();
         mttDataManager = new MusicalTermsTutorBackEnd();
         shiftPressed = new SimpleBooleanProperty(false);
+        firebaseUpdater = new FirebaseUpdater(this);
         userHandler = new UserHandler(this);
         themeHandler = new ThemeHandler();
         microphoneInput = new MicrophoneInput();
+
+
+    }
+
+
+    public FirebaseUpdater getFirebase() {
+        return firebaseUpdater;
     }
 
 
@@ -111,6 +122,7 @@ public class Environment {
      * Resets the environment so it clears the existing saved information.
      */
     public void resetEnvironment() {
+        firebaseUpdater = new FirebaseUpdater(this);
         executor = new DslExecutor(this);
         player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();

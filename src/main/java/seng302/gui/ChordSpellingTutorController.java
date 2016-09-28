@@ -97,7 +97,7 @@ public class ChordSpellingTutorController extends TutorController {
             numEnharmonics.setDisable(true);
             allowFalseChords.setDisable(true);
 
-        }else{
+        } else {
             numEnharmonics.getSelectionModel().selectFirst();
         }
         numEnharmonics.getSelectionModel().selectFirst();
@@ -121,7 +121,7 @@ public class ChordSpellingTutorController extends TutorController {
             chordTypes.getCheckModel().checkAll();
             chordTypes.setDisable(true);
 
-        }else{
+        } else {
             chordTypes.getCheckModel().clearChecks();
             chordTypes.getCheckModel().check(0);
             chordTypes.getCheckModel().check(1);
@@ -170,7 +170,6 @@ public class ChordSpellingTutorController extends TutorController {
 
     /**
      * Prepares a new question
-     *
      */
     public void setUpQuestion(int questionNo) {
         //Both questions just need a chord
@@ -281,8 +280,8 @@ public class ChordSpellingTutorController extends TutorController {
             if (((Pair) data.getValue()).getKey().equals("dropdown")) {
 
 
-            //Type A question
-            correctAnswer = correctAnswer(chordAsString(chordNotes));
+                //Type A question
+                correctAnswer = correctAnswer(chordAsString(chordNotes));
 
                 ComboBox<String> note1 = new ComboBox<String>();
                 note1.getItems().addAll(generateOptions(chordNotes.get(0)));
@@ -395,13 +394,10 @@ public class ChordSpellingTutorController extends TutorController {
                 });
                 TextField note4 = new TextField();
                 if (fourNotes) {
-                    note4.focusedProperty().addListener(new ChangeListener<Boolean>()
-                    {
+                    note4.focusedProperty().addListener(new ChangeListener<Boolean>() {
                         @Override
-                        public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
-                        {
-                            if (newPropertyValue)
-                            {
+                        public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                            if (newPropertyValue) {
                                 env.setCurrentFocussed(note4, false, submitButton);
                             }
                         }
@@ -419,41 +415,31 @@ public class ChordSpellingTutorController extends TutorController {
                 note4.setEditable(false);
 
                 // Focus listeners
-                note1.focusedProperty().addListener(new ChangeListener<Boolean>()
-                {
+                note1.focusedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
-                    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
-                    {
-                        if (newPropertyValue)
-                        {
+                    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                        if (newPropertyValue) {
                             env.setCurrentFocussed(note1, false, note2);
                         }
                     }
                 });
 
-                note2.focusedProperty().addListener(new ChangeListener<Boolean>()
-                {
+                note2.focusedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
-                    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
-                    {
-                        if (newPropertyValue)
-                        {
+                    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                        if (newPropertyValue) {
                             env.setCurrentFocussed(note2, false, note3);
                         }
                     }
                 });
 
-                note3.focusedProperty().addListener(new ChangeListener<Boolean>()
-                {
+                note3.focusedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
-                    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
-                    {
-                        if (newPropertyValue)
-                        {
+                    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                        if (newPropertyValue) {
                             if (four) {
                                 env.setCurrentFocussed(note3, false, note4);
-                            }
-                            else {
+                            } else {
                                 env.setCurrentFocussed(note3, false, submitButton);
                             }
                         }
@@ -1034,7 +1020,7 @@ public class ChordSpellingTutorController extends TutorController {
     /**
      * Checks if all inputs to a type 1 question were correct.
      *
-     * @param inputs The HBox containing the combo box inputs
+     * @param inputs     The HBox containing the combo box inputs
      * @param answerForm The string representation of how the questions are to be answered
      * @return 0 if all inputs are wrong, 1 if all are correct, and 2 if some inputs are correct
      */
