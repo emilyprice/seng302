@@ -1,12 +1,6 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.animation.Interpolator;
@@ -23,11 +17,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -42,6 +32,10 @@ import seng302.utility.ImageCache;
 import seng302.utility.LevelCalculator;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * Controller for the GUI page which displays a user's summary information.
@@ -71,6 +65,9 @@ public class UserSummaryController {
 
     @FXML
     private Label overallCorrectLabel;
+
+    @FXML
+    private VBox badgesContainer;
 
     @FXML
     private Line classAverage;
@@ -487,7 +484,7 @@ public class UserSummaryController {
      * Used for displaying the user summary in teacher mode. The teacher does not care about a student's badges
      */
     public void hideBadges() {
-        badges.setVisible(false);
-        badges.setManaged(false);
+        badgesContainer.setVisible(false);
+        badgesContainer.setManaged(false);
     }
 }
