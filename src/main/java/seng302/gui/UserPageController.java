@@ -239,32 +239,49 @@ public class UserPageController {
 
                 } else {
                     //if in competitive mode, lock the relevant tabs
-                    if ((env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())
-                            && (!tutor.equals("Summary") && !env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)))
-                            && ((!tutor.equals("Scale Recognition Tutor") || !tutor.equals("Chord Recognition Tutor"))
-                            || !env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")))){
-                        ImageView lock = new ImageView(lockImg);
-                        StackPane image = new StackPane();
-                        image.setPadding(new Insets(0, 5, 0, 0));
-                        image.getChildren().add(lock);
-                        setGraphic(image);
+                    if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
+                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false ) {
+
+                            if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+                                if(env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")) == true){
+
+                                }else {
+                                    ImageView lock = new ImageView(lockImg);
+                                    StackPane image = new StackPane();
+                                    image.setPadding(new Insets(0, 5, 0, 0));
+                                    image.getChildren().add(lock);
+                                    setGraphic(image);
+                                    setTextFill(Color.GRAY);
+                                    setText(tutor);
+                                    setAlignment(Pos.CENTER_LEFT);
+                                    setPadding(new Insets(0, 0, 0, 10));
+                                    setDisable(true);
+                                }
+                            }else {
+                                ImageView lock = new ImageView(lockImg);
+                                StackPane image = new StackPane();
+                                image.setPadding(new Insets(0, 5, 0, 0));
+                                image.getChildren().add(lock);
+                                setGraphic(image);
+                                setTextFill(Color.GRAY);
+                                setText(tutor);
+                                setAlignment(Pos.CENTER_LEFT);
+                                setPadding(new Insets(0, 0, 0, 10));
+                                setDisable(true);
+
+                            }
+                        }
+
+
+                    } else {
+                        setGraphic(new ImageView(lockImg));
                         setTextFill(Color.GRAY);
                         setText(tutor);
-                        setAlignment(Pos.CENTER_LEFT);
-                        setPadding(new Insets(0, 0, 0, 10));
                         setDisable(true);
-                    } else {
-                        setGraphic(null);
-                        setText(tutor);
-                        setPadding(new Insets(0, 0, 0, 40));
-                        setAlignment(Pos.CENTER_LEFT);
-                        setDisable(false);
-                    }
-                        }
                     }
                 }
-
-        );
+            }
+        });
 
     }
 
