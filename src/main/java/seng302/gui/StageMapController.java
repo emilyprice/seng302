@@ -377,18 +377,18 @@ public class StageMapController {
             System.out.println(records);
             boolean unlock = true;
 
-            int requiredScore = 7; //7
+            int requiredScore = 2; //7
             if(nextUnlockTutor.equals("scaleTutor")||nextUnlockTutor.equals("chordTutor")){
                 if(tutor.equals("basicScaleTutor")|| tutor.equals("basicChordTutor")){
-                    requiredScore = 9; //9
+                    requiredScore = 2; //9
                 }
             }
 
-            if (records.size() < 3) {
+            if (records.size() < 1) {
                 unlock = false;
                 //if there are less than 3 existing files
             } else {
-                for (int i = records.size() - 3; i < records.size(); i++) {
+                for (int i = records.size() - 1; i < records.size(); i++) {
                     TutorRecord record = records.get(i);
                     System.out.println(record.getStats().get("questionsCorrect").intValue());
                     if (!(record.getStats().get("questionsCorrect").intValue() >= requiredScore)) {
