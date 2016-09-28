@@ -27,9 +27,6 @@ public class Teacher extends User {
         this.userPassword = password;
         this.env = env;
 
-
-        createUserFiles();
-
         loadProperties();
         saveProperties();
 

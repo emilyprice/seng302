@@ -28,7 +28,6 @@ public class Student extends User {
         this.userName = userName;
         this.userPassword = password;
         this.env = env;
-        createUserFiles();
 
         loadProperties();
         saveProperties();

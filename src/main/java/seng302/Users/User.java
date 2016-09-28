@@ -115,14 +115,7 @@ public abstract class User {
     }
 
 
-    /**
-     * Creates user directory files.
-     */
-    protected void createUserFiles() {
 
-        env.getFirebase().getUserRef().child("properties");
-
-    }
 
 
     /**

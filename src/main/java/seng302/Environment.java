@@ -108,6 +108,7 @@ public class Environment {
         themeHandler = new ThemeHandler();
 
 
+
     }
 
 
@@ -128,7 +129,7 @@ public class Environment {
         transcriptManager = new TranscriptManager();
         recordLocation = null;
         em = new EditHistory(this);
-        stageMapController = new StageMapController();
+
 
 
 
@@ -138,6 +139,7 @@ public class Environment {
      * Resets the environment so it clears the existing saved information.
      */
     public void resetEnvironment() {
+        firebaseUpdater = new FirebaseUpdater(this);
         executor = new DslExecutor(this);
         player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();
@@ -145,7 +147,7 @@ public class Environment {
         recordLocation = null;
         themeHandler = new ThemeHandler();
         em = new EditHistory(this);
-        stageMapController = new StageMapController();
+
 
 
     }

@@ -204,9 +204,7 @@ public class UserLoginController {
 
 
     /**
-     * Checks if a classroom is selected, and modifies the styling of the classroom hBox to alert
-     * the user.
-     *
+     *  Checks if a classroom is selected, and modifies the styling of the classroom hBox to alert the user.
      * @return classroom selected.
      */
     private Boolean classroomSelected() {
@@ -280,10 +278,8 @@ public class UserLoginController {
      * @param fbClass fireBase classrooms snapshot.
      */
     private void authenticate(DataSnapshot fbClass) {
-        System.out.println(passwordInput.getText());
 
         if (passwordInput.getLength() <= 0 && usernameInput.getLength() <= 0) {
-            System.out.println("doing this thing");
             passwordValidator.setMessage("Please enter a username and password.");
             passwordInput.clear();
             passwordInput.validate();
@@ -307,8 +303,6 @@ public class UserLoginController {
                     stage.close();
                     env.getRootController().showWindow(true);
                 } else {
-                    System.out.println("password is: " + pass);
-                    System.out.println("you wrote: " + passwordInput.getText());
                     passwordValidator.setMessage("Invalid password.");
                     passwordInput.clear();
                     passwordInput.validate();

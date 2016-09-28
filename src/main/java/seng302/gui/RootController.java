@@ -190,6 +190,7 @@ public class RootController implements Initializable {
      */
     public void showWindow(Boolean show) {
         if (show) {
+            System.out.println("memory before stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/100000);
 
             boolean isTeacher = env.getUserHandler().getCurrentTeacher() != null;
 
@@ -220,6 +221,7 @@ public class RootController implements Initializable {
                     e.printStackTrace();
                 }
             }
+            System.out.println("memory after stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/100000);
 
 
         } else stage.hide();
@@ -475,6 +477,7 @@ public class RootController implements Initializable {
             stage.close();
             showLoginWindow();
             env.resetEnvironment();
+            System.gc();
         } catch (Exception e) {
 
         }

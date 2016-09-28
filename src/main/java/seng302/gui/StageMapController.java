@@ -174,11 +174,21 @@ public class StageMapController {
             }
             ImageView image = new ImageView();
 
+            String tickPath = "/images/tick.png";
+
+            Image tick = UserSummaryController.imageCache.retrieve(tickPath, 25);
+
+            String crossPath = "/images/redx.png";
+
+            Image cross = UserSummaryController.imageCache.retrieve(crossPath, 25);
+
+
             if(unlockDescriptions.get(nextUnlockTutor).get(key)){
-                image.setImage(new Image(getClass().getResourceAsStream("/images/tick.png"), 25, 25, false, false));
+                image.setImage(tick);
             }else{
-                image.setImage(new Image(getClass().getResourceAsStream("/images/redx.png"), 25, 25, false, false));
+                image.setImage(cross);
             }
+
             description.getChildren().add(image);
 
             description.setAlignment(Pos.CENTER);

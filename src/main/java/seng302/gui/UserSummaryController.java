@@ -26,6 +26,7 @@ import seng302.Users.Student;
 import seng302.Users.TutorHandler;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
+import seng302.utility.ImageCache;
 import seng302.utility.LevelCalculator;
 
 import java.util.ArrayList;
@@ -88,12 +89,12 @@ public class UserSummaryController {
 
 
     private ColorAdjust blackout;
-    private ImageView lockView;
     @FXML
     private GridPane badgeGrid;
     private int gridX = 0;
     private int gridY = 0;
 
+    public static final ImageCache imageCache = new ImageCache();
 
     /**
      * Initializes the user summary controller and draws its graphs
@@ -277,11 +278,6 @@ public class UserSummaryController {
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
         this.blackout = blackout;
-        Image lockImg = new Image("/images/lock.png", 45, 45, true, false);
-        ImageView lockView = new ImageView(lockImg);
-        lockView.fitHeightProperty().setValue(45);
-        lockView.fitWidthProperty().setValue(45);
-        this.lockView = lockView;
 
         try {
             for (Object tutor : tutorBadgeMap.keySet()) {
@@ -355,13 +351,16 @@ public class UserSummaryController {
      * @param b the Badge to be added
      */
     public void addBadgeToGrid(Badge b) {
-        Image bImage = new Image("/images/"+b.imageName+".png", 70, 70, true, false);
-        ImageView bView = new ImageView(bImage);
+
+        String badgeImagePath = "/images/"+b.imageName+".png";
+
+        Image retrieve = imageCache.retrieve(badgeImagePath, 70);
+        ImageView bView = new ImageView(retrieve);
         bView.fitHeightProperty().setValue(70);
         bView.fitWidthProperty().setValue(70);
         StackPane badgeStack;
-        Image lockImg = new Image("/images/lock.png", 40, 40, true, false);
-        ImageView lockView = new ImageView(lockImg);
+
+        ImageView lockView = new ImageView(imageCache.retrieve("/images/lock.png", 40));
         lockView.fitHeightProperty().setValue(40);
         lockView.fitWidthProperty().setValue(40);
 
@@ -378,7 +377,7 @@ public class UserSummaryController {
         }
 
         ColorAdjust badgeEffect = new ColorAdjust();
-        if (b.currentBadgeType == 0) {
+        if (b.isLocked()) {
             badgeEffect = this.blackout;
             badgeStack = new StackPane(bView, lockView);
         } else {
@@ -404,21 +403,23 @@ public class UserSummaryController {
      * @param b the Badge to be added
      */
     public void addTutorBadgeToGrid(Badge b) {
-        Image ribbonImage = new Image("/images/ribbonAward.png", 70, 70, true, false);
-        ImageView rView = new ImageView(ribbonImage);
+        String ribbonPath = "/images/ribbonAward.png";
+        String lockImagePath = "/images/lock.png";
+        String badgeImagePath = "/images/" + b.imageName + ".png";
+
+        ImageView rView = new ImageView(imageCache.retrieve(ribbonPath, 70));
         rView.fitHeightProperty().setValue(70);
         rView.fitWidthProperty().setValue(70);
-        Image bImage = new Image("/images/"+b.imageName+".png", 26.0, 26.0, true, false);
-        ImageView bView = new ImageView(bImage);
+
+
+        ImageView bView = new ImageView(imageCache.retrieve(badgeImagePath, 26));
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
-        Image lockImg = new Image("/images/lock.png", 40, 40, true, false);
-        ImageView lockView = new ImageView(lockImg);
-        lockView.fitHeightProperty().setValue(40);
-        lockView.fitWidthProperty().setValue(40);
+
+        ImageView lockView = new ImageView(imageCache.retrieve(lockImagePath, 40));
 
         ColorAdjust badgeEffect = new ColorAdjust();
-        if (b.currentBadgeType == 0) {
+        if (b.isLocked()) {
             badgeEffect = this.blackout;
             bView = lockView;
         } else if (b.currentBadgeType == 1) {
