@@ -78,8 +78,11 @@ public class UserSettingsController {
         try {
             txtFName.setText(userHandler.getCurrentUser().getUserFirstName());
             txtLName.setText(userHandler.getCurrentUser().getUserLastName());
-        } catch (Exception e) {
-            txtFName.clear();
+        } catch (NullPointerException e) {
+            txtFName.setText(userHandler.getCurrentTeacher().getUserFirstName());
+            txtLName.setText(userHandler.getCurrentTeacher().getUserLastName());
+        } catch (Exception other) {
+            txtLName.clear();
             txtFName.clear();
         }
     }
