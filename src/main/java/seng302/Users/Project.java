@@ -425,6 +425,8 @@ public class Project {
     private void setToCompetitionMode() {
         try {
             this.isCompetitiveMode = true;
+            env.getRootController().getKeyboardPaneController().displayScalesButton.setDisable(true); //disable display scales
+            env.getRootController().getKeyboardPaneController().disableLabels(true); //disable keyboard labels
             env.getRootController().disallowTranscript();
             env.getRootController().getTranscriptController().hideTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
@@ -440,12 +442,15 @@ public class Project {
 
     private void setToPracticeMode() {
         try {
+            env.getRootController().getKeyboardPaneController().displayScalesButton.setDisable(false); //enable display scales
+            env.getRootController().getKeyboardPaneController().disableLabels(false); //enable keyboard labels
             this.isCompetitiveMode = false;
             env.getRootController().allowTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
             env.getUserPageController().getSummaryController().loadStageMap();
             env.getUserPageController().populateUserOptions();
             env.getStageMapController().hideNextUnlockDescription(true);
+
 
         } catch (NullPointerException e) {
             // User page might not exist yet
