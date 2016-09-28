@@ -139,7 +139,7 @@ public class UserPageController {
         updateProfilePicDisplay();
         updateLevelBadge();
         updateNameDisplay();
-        logoutConfirmPopover();
+        //logoutConfirmPopover();
     }
 
     /**
@@ -166,66 +166,55 @@ public class UserPageController {
         }
     }
 
-    @FXML
-    public void onLogoutClick() {
-
-        if (logoutPop.isShowing()) {
-            logoutPop.hide();
-        } else {
-            logoutPop.show(logoutButton);
-        }
-    }
-
-    private void logoutConfirmPopover() {
-        VBox mainBox = new VBox();
-
-        HBox labelBox = new HBox();
-        HBox buttonBox = new HBox();
-
-        Label confirm = new Label("Are you sure you want to log out?");
-        JFXButton yes = new JFXButton("Yes");
-        yes.getStyleClass().add("primary");
-        JFXButton no = new JFXButton("No");
-        no.getStyleClass().add("primary");
-
-        labelBox.getChildren().add(confirm);
-        buttonBox.getChildren().add(yes);
-        buttonBox.getChildren().add(no);
-
-        buttonBox.setSpacing(10);
-        buttonBox.setPadding(new Insets(10));
-
-        yes.setOnAction(e -> {
-            e.consume();
-            logoutPop.hide();
-            locp();
-        });
-
-        no.setOnAction(e -> {
-            logoutPop.hide();
-        });
-
-
-        mainBox.getChildren().add(labelBox);
-        mainBox.getChildren().add(buttonBox);
-        mainBox.setSpacing(10);
-        mainBox.setPadding(new Insets(10));
-        logoutPop = new PopOver(mainBox);
-        logoutPop.headerAlwaysVisibleProperty().setValue(true);
-        logoutPop.setTitle("Log Out");
-
-
-
-
-
-
-
-    }
-
-    private void locp() {
-
-        env.getRootController().logOutUser();
-    }
+//    @FXML
+//    public void onLogoutClick() {
+//
+//        if (logoutPop.isShowing()) {
+//            logoutPop.hide();
+//        } else {
+//            logoutPop.show(logoutButton);
+//        }
+//    }
+//
+//    private void logoutConfirmPopover() {
+//        VBox mainBox = new VBox();
+//
+//        HBox labelBox = new HBox();
+//        HBox buttonBox = new HBox();
+//
+//        Label confirm = new Label("Are you sure you want to log out?");
+//        JFXButton yes = new JFXButton("Yes");
+//        yes.getStyleClass().add("primary");
+//        JFXButton no = new JFXButton("No");
+//        no.getStyleClass().add("primary");
+//
+//        labelBox.getChildren().add(confirm);
+//        buttonBox.getChildren().add(yes);
+//        buttonBox.getChildren().add(no);
+//
+//        buttonBox.setSpacing(10);
+//        buttonBox.setPadding(new Insets(10));
+//
+//        yes.setOnAction(e -> {
+//            e.consume();
+//            logoutPop.hide();
+//            env.getRootController().logOutUser();
+//        });
+//
+//        no.setOnAction(e -> {
+//            logoutPop.hide();
+//        });
+//
+//
+//        mainBox.getChildren().add(labelBox);
+//        mainBox.getChildren().add(buttonBox);
+//        mainBox.setSpacing(10);
+//        mainBox.setPadding(new Insets(10));
+//        logoutPop = new PopOver(mainBox);
+//        logoutPop.headerAlwaysVisibleProperty().setValue(true);
+//        logoutPop.setTitle("Log Out");
+//
+//    }
 
     /**
      * Refreshes the display of the level indicator badge so that it matches the level of the user's
