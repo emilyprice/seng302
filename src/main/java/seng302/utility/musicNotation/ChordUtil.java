@@ -10,8 +10,6 @@ import java.util.Map;
 import seng302.command.Scale;
 import seng302.data.Note;
 
-import static javax.swing.UIManager.put;
-
 /**
  * Created by Jonty on 24-May-16.
  */

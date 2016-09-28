@@ -1,10 +1,6 @@
 package seng302.gui;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Random;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -19,6 +15,10 @@ import seng302.Environment;
 import seng302.data.Note;
 import seng302.utility.TutorRecord;
 import seng302.utility.musicNotation.ChordUtil;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Random;
 
 
 /**
@@ -44,6 +44,8 @@ public class ChordRecognitionTutorController extends TutorController {
     ComboBox<String> chordTypeBox;
 
     private Random rand;
+
+    private Boolean fullTutor;
 
 
     @FXML
@@ -75,12 +77,13 @@ public class ChordRecognitionTutorController extends TutorController {
 
 
     /**
-     * Initialises certain GUI elements
+     * Initialises the GUI elements that allow the user to choose their tutoring settings.
      */
-    public void create(Environment env) {
+    public void create(Environment env, Boolean advancedTutor) {
         super.create(env);
         initialiseQuestionSelector();
         rand = new Random();
+        fullTutor = advancedTutor;
         playChords.getItems().addAll("Unison", "Arpeggio", "Both");
         octaves.getItems().addAll(1, 2, 3, 4);
         chordTypeBox.getItems().addAll("3 Notes", "4 Notes", "Both");
@@ -90,10 +93,14 @@ public class ChordRecognitionTutorController extends TutorController {
             playChords.setDisable(true);
             octaves.setValue(1);
             octaves.setDisable(true);
-            chordTypeBox.setValue("Both");
+            if (fullTutor == true) {
+                chordTypeBox.setValue("Both");
+            } else {
+                chordTypeBox.setValue("3 Notes");
+            }
             chordTypeBox.setDisable(true);
 
-        }else{
+        } else {
 
             playChords.getSelectionModel().selectFirst();
             octaves.getSelectionModel().selectFirst();
@@ -220,7 +227,7 @@ public class ChordRecognitionTutorController extends TutorController {
             record.addQuestionAnswer(question);
             handleAccordion();
             if (manager.answered == manager.questions) {
-                    finished();
+                finished();
             }
         });
 

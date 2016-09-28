@@ -27,20 +27,20 @@ public class RecentUserController {
 
     }
 
-    public void setUsername(String name){
+    public void setUsername(String name) {
         username.setText(name);
     }
 
-    public void setUserPic(Image image){
+    public void setUserPic(Image image) {
         userPic.setImage(image);
     }
 
-    public void setParentController(UserLoginController parent){
+    public void setParentController(UserLoginController parent) {
         this.parent = parent;
     }
 
     @FXML
-    protected void selectUser(){
+    protected void selectUser() {
         parent.deselectUsers();
 
         String cssBordering = "-fx-border-color:dodgerblue ; \n" //#090a0c
@@ -55,14 +55,13 @@ public class RecentUserController {
         parent.onRecentSelect(username.getText());
 
 
-
     }
 
-    protected String getStyle(){
+    protected String getStyle() {
         return userPane.getStyle();
     }
 
-    protected void deselect(){
+    protected void deselect() {
         userPane.setStyle("");
     }
 
