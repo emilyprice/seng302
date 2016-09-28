@@ -362,7 +362,9 @@ public class UserPageController {
      */
     @FXML
     public void openSettings() {
-        env.getRootController().launchSettings();
+        if (env.getRootController().getBaseSettingsController() == null) {
+            env.getRootController().launchSettings();
+        }
     }
 
     /**
