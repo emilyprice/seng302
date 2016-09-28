@@ -639,6 +639,7 @@ public class KeyboardPaneController {
 
     /**
      * Compares one scale against another to check to see if they are identical
+     *
      * @param scale1Note The start note of the first scale
      * @param scale2Note The start note of the second scale
      * @param scale1Type The type of the first scale (major minor etc)
@@ -1029,5 +1030,16 @@ public class KeyboardPaneController {
             }
         }
 
+    }
+
+    public void hideWholeKeyboard() {
+        keyPane.setVisible(false);
+        keyPane.setManaged(false);
+
+    }
+
+    public void showWholeKeyboard() {
+        keyPane.setVisible(true);
+        keyPane.setManaged(true);
     }
 }

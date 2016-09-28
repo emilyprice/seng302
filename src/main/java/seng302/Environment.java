@@ -9,6 +9,7 @@ import javafx.util.Pair;
 import seng302.Users.UserHandler;
 import seng302.gui.RootController;
 import seng302.gui.StageMapController;
+import seng302.gui.TeacherPageController;
 import seng302.gui.UserPageController;
 import seng302.managers.ThemeHandler;
 import seng302.managers.TranscriptManager;
@@ -46,6 +47,14 @@ public class Environment {
         return userPageController;
     }
 
+    public TeacherPageController getTeacherPageController() {
+        return teacherPageController;
+    }
+
+    public void setTeacherPageController(TeacherPageController teacherPageController) {
+        this.teacherPageController = teacherPageController;
+    }
+
     public void setRootController(RootController rootController) {
         this.rootController = rootController;
     }
@@ -67,6 +76,8 @@ public class Environment {
 
     //userpage
     private UserPageController userPageController;
+
+    private TeacherPageController teacherPageController;
 
 
     private FirebaseUpdater firebaseUpdater;

@@ -24,6 +24,11 @@ public class FirebaseUpdater {
 
     private DataSnapshot classroomsSnapshot;
 
+
+    private DatabaseReference classroomRef;
+
+    private DataSnapshot teacherSnapshot;
+
     public Cloudinary getImageCloud() {
         return imageCloud;
     }
@@ -37,6 +42,7 @@ public class FirebaseUpdater {
 
         initializeFirebase();
         createClassroomSnapshot(true);
+        createTeacherSnapshot(true);
 
         // Where profile pictures are stored
         imageCloud = new Cloudinary(ObjectUtils.asMap(
@@ -65,6 +71,30 @@ public class FirebaseUpdater {
 
             }
 
+        });
+        while (!done.get() && blocking) ;
+    }
+
+    /**
+     * Creates a snapshot of the current data in the teacher object in Firebase
+     *
+     * @param blocking Whether or not the function is blocking
+     */
+    public void createTeacherSnapshot(Boolean blocking) {
+        final AtomicBoolean done = new AtomicBoolean(false);
+
+
+        firebase.child("teachers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                teacherSnapshot = dataSnapshot;
+                done.set(true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         });
         while (!done.get() && blocking) ;
     }
@@ -163,6 +193,10 @@ public class FirebaseUpdater {
 
     public DatabaseReference getUserRef() {
         return userRef;
+    }
+
+    public DataSnapshot getTeacherSnapshot() {
+        return teacherSnapshot;
     }
 
 

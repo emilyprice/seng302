@@ -21,6 +21,7 @@ import java.util.HashMap;
  */
 public class UserHandler {
 
+
     private Student currentUser;
     private Teacher currentTeacher;
 
@@ -56,10 +57,11 @@ public class UserHandler {
     public void loadRecentUsers() {
         Path userDirectory = Paths.get("UserData");
         try {
-            localData = (JSONObject) parser.parse(new FileReader(userDirectory+ "/local_data.json"));
+            localData = (JSONObject) parser.parse(new FileReader(userDirectory + "/local_data.json"));
             recentUsers = new ArrayList<>();
             try {
                 recentClassrooms = (HashMap<String, Object>) localData.get("recentUsers");
+
 
                 if (recentClassrooms.containsKey(this.classroom)) {
                     recentUsers = (ArrayList<String>) recentClassrooms.get(this.classroom);
@@ -198,7 +200,13 @@ public class UserHandler {
         return currentUser;
     }
 
+    public Teacher getCurrentTeacher() {
+        return currentTeacher;
+    }
 
+    public Path getCurrentUserPath() {
+        return Paths.get("UserData/classrooms/group5/users/" + getCurrentUser().getUserName());
+    }
 
 
     /**
@@ -208,6 +216,17 @@ public class UserHandler {
         this.classroom = classroom;
         this.currentUser = new Student(userName, password, env);
         updateRecentUsers(userName);
+    }
+
+    public void setCurrentTeacher(String userName, String classroom, String password) {
+        this.classroom = classroom;
+        this.currentTeacher = new Teacher(userName, password, env);
+        updateRecentUsers(userName);
+
+    }
+
+    public void removeCurrentTeacher() {
+        this.currentTeacher = null;
     }
 
 
@@ -223,7 +242,6 @@ public class UserHandler {
 
         this.env.getRootController().logOutUser();
         env.getFirebase().getFirebase().child("classrooms/" + classroom + "/users/" + username).removeValue();
-
 
     }
 

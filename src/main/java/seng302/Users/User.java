@@ -1,12 +1,11 @@
 package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
+import javafx.scene.image.Image;
+import seng302.Environment;
 
 import java.nio.file.Path;
 import java.util.HashMap;
-
-import javafx.scene.image.Image;
-import seng302.Environment;
 
 
 /**
@@ -77,10 +76,10 @@ public abstract class User {
         try {
             //profile pic
             profilePicUrl = (properties.get("profilePicUrl")).toString();
-            displayImage = new Image(this.profilePicUrl);
+            displayImage = new Image(this.profilePicUrl, 100, 100, true, true);
         } catch (NullPointerException e) {
             profilePicUrl = "http://res.cloudinary.com/allegro123/image/upload/v1474434800/testDP_qmwncc.jpg";
-            displayImage = new Image(this.profilePicUrl);
+            displayImage = new Image(this.profilePicUrl, 100, 100, true, true);
         }
 
 
@@ -135,7 +134,7 @@ public abstract class User {
 
     public void setUserPicture(String imageUrl) {
         this.profilePicUrl = imageUrl;
-        displayImage = new Image(this.profilePicUrl);
+        displayImage = new Image(this.profilePicUrl, 100, 100, true, true);
     }
 
     public Image getUserPicture() {

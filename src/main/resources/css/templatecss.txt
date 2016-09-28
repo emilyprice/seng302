@@ -598,7 +598,7 @@
     -fx-border-width: 0px;
 }
 
-#errorMessage {
+.errorMessage {
     -fx-text-fill: red;
 }
 
@@ -613,4 +613,8 @@
 
 .jfx-rippler{
     -fx-rippler-fill:{0};
+}
+
+.default-color0.chart-bar {
+    -fx-bar-fill: {0};
 }
