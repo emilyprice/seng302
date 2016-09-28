@@ -262,10 +262,11 @@ public class UserPageController {
 
 
                     } else {
-                        setGraphic(new ImageView(lockImg));
-                        setTextFill(Color.GRAY);
+                        setGraphic(null);
                         setText(tutor);
-                        setDisable(true);
+                        setPadding(new Insets(0, 0, 0, 40));
+                        setAlignment(Pos.CENTER_LEFT);
+                        setDisable(false);
                     }
                 }
             }
@@ -351,24 +352,21 @@ public class UserPageController {
         timeSlider.valueProperty().addListener(((observable1, oldValue1, newValue1) -> {
             String result = convert.toString(timeSlider.getValue());
             if (result != null) {
-                updateGraphs();
+                updateGraphs(result);
             }
         }));
 
         timeSlider.setOnMouseReleased(e -> {
-            updateGraphs();
+            updateGraphs(convert.toString(timeSlider.getValue()));
         });
     }
 
     /**
      * Updates the data in the summary stats graphs
+     *
+     * @param timePeriod The time period to display data from in the summary stats graphs
      */
-    public void updateGraphs() {
-        statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), convert.toString(timeSlider.getValue()));
-        basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", convert.toString(timeSlider.getValue()));
-    }
-
-    private void updateGraphs(String timePeriod) {
+    public void updateGraphs(String timePeriod) {
         if (env.getRootController().getHeader().equals("Summary")) {
             summaryController.updateGraphs();
         } else {

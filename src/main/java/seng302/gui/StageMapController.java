@@ -137,7 +137,7 @@ public class StageMapController {
      */
     private void setNextLockedStage() {
         for (String tutor : tutorOrder) {
-            if (unlockStatus.get(tutor) == false) {
+            if (!unlockStatus.get(tutor)) {
                 nextUnlockTutor = tutor;
                 break;
             }

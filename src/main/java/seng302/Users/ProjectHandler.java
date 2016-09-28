@@ -76,7 +76,7 @@ public class ProjectHandler {
         //updateProjectList(projName);
         try {
             env.getUserPageController().updateLevelBadge();
-            env.getUserPageController().updateGraphs();
+            env.getUserPageController().updateGraphs(env.getUserPageController().getTimePeriod());
             env.getUserPageController().getSummaryController().updateProgressBar();
 
 
