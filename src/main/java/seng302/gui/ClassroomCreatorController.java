@@ -67,9 +67,9 @@ public class ClassroomCreatorController {
 
     public static boolean isEmpty(String potentialName) {
         if (potentialName.length() == 0) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 

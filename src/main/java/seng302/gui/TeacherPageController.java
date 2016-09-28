@@ -252,6 +252,7 @@ public class TeacherPageController {
     public void updateDisplay() {
         populateUserOptions();
         showPage("Summary");
+        env.getRootController().setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
 
     }
 
