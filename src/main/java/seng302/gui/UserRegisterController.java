@@ -1,15 +1,7 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXRadioButton;
-import com.jfoenix.controls.JFXTextField;
-
-import java.io.IOException;
-
+import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleGroup;
@@ -21,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import seng302.Environment;
+
+import java.io.IOException;
 
 /**
  * Created by jmw280 on 21/07/16.
@@ -193,7 +187,6 @@ public class UserRegisterController {
 
             txtPassword.clear();
             txtPasswordConfirm.clear();
-            //txtPassword.validate();
             txtPassword.requestFocus();
             lblValidator.setText("Password must contain at least 1 character.");
             valid = false;

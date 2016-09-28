@@ -1,10 +1,6 @@
 package seng302.gui;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Random;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -19,6 +15,10 @@ import seng302.Environment;
 import seng302.data.Note;
 import seng302.utility.TutorRecord;
 import seng302.utility.musicNotation.ChordUtil;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Random;
 
 
 /**
@@ -77,7 +77,7 @@ public class ChordRecognitionTutorController extends TutorController {
 
 
     /**
-     * Initialises certain GUI elements
+     * Initialises the GUI elements that allow the user to choose their tutoring settings.
      */
     public void create(Environment env, Boolean advancedTutor) {
         super.create(env);

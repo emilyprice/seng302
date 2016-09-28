@@ -1,15 +1,6 @@
 package seng302.gui;
 
 
-import org.json.simple.JSONArray;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,14 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -34,10 +18,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
 import seng302.Environment;
 import seng302.Users.Student;
 import seng302.managers.TranscriptManager;
 import seng302.utility.OutputTuple;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 
 public class RootController implements Initializable {
@@ -386,7 +378,6 @@ public class RootController implements Initializable {
         loginStage.show();
         UserLoginController userLoginController = loginLoader.getController();
         userLoginController.setEnv(env);
-        //userLoginController.displayRecentUsers();
 
     }
 
@@ -493,7 +484,6 @@ public class RootController implements Initializable {
 
         if (file != null) {
             fileDir = file.getParentFile();
-            //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
             path = file.getAbsolutePath();
             env.getTranscriptManager().saveCommandsOnly(path);
         }
@@ -526,8 +516,6 @@ public class RootController implements Initializable {
         FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(textFilter);
 
-        //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
-
         fileChooser.setInitialDirectory(fileDir);
         File file = fileChooser.showSaveDialog(stage);
         return file;
@@ -546,7 +534,6 @@ public class RootController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(textFilter);
-        //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
 
         fileChooser.setInitialDirectory(fileDir);
 

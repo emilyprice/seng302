@@ -12,18 +12,10 @@ package seng302.Users;
 import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.controlsfx.control.Notifications;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.sound.midi.Instrument;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
@@ -31,6 +23,11 @@ import seng302.utility.InstrumentUtility;
 import seng302.utility.LevelCalculator;
 import seng302.utility.OutputTuple;
 import seng302.utility.TutorRecord;
+
+import javax.sound.midi.Instrument;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Project {
 
@@ -65,7 +62,6 @@ public class Project {
      */
     public Project(Environment env, String projectName, ProjectHandler projectH) {
         this.projectName = projectName;
-        //this.projectDirectory = Paths.get(projectH.projectsDirectory + "/" + projectName);
         this.env = env;
         projectSettings = new HashMap<>();
         tutorHandler = new TutorHandler(env);
@@ -99,7 +95,7 @@ public class Project {
         projectSettings.put("transcript", transcriptString);
 
         projectSettings.put("rhythm", gson.toJson(env.getPlayer().getRhythmHandler().getRhythmTimings()));
-        try { //HACK. Sometimes runs a null pointer exception
+        try {
             projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
         } catch (NullPointerException e) {
             projectSettings.put("instrument", "Acoustic Grand Piano");
@@ -277,26 +273,6 @@ public class Project {
         } catch (Exception e) {
             System.err.println("failed to import badge data");
         }
-
-            /*//100tutorMap
-            HashMap<String, Boolean> tutor100Map;
-            try {
-
-                Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
-                }.getType();
-                tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
-                if (tutor100Map != null) {
-
-                    badgeManager.replaceTutor100AllMap(tutor100Map);
-                }
-
-                env.getTranscriptManager().unsavedChanges = false;
-            } catch (Exception e) {
-                System.err.println("failed to import 100 tutor map");
-            }
-
-            */
-
 
     }
 
@@ -520,7 +496,7 @@ public class Project {
         checkChanges("visualiserOn");
     }
 
-    public void setRecentPracticeTutorRecordMap(String tutor, TutorRecord record) {
+    public void addRecentPracticeTutorRecordMap(String tutor, TutorRecord record) {
         recentPracticeTutorRecordMap.put(tutor, record);
     }
 

@@ -4,42 +4,30 @@ import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
-
-import javafx.fxml.FXML;
-import org.controlsfx.control.PopOver;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+import org.controlsfx.control.PopOver;
 import seng302.Environment;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -397,10 +385,6 @@ public class UserPageController {
         env.getRootController().launchSettings();
     }
 
-    public void closeSettings() {
-
-    }
-
     /**
      * Hides and shows the metronome popover when the metronome button is selected
      */
@@ -599,14 +583,12 @@ public class UserPageController {
 
         try {
             FlowPane summaryPage = summaryLoader.load();
-            //currentPage.setContent(summaryPage);
 
             scrollPaneAnchorPage.getChildren().setAll(summaryPage);
             AnchorPane.setLeftAnchor(summaryPage, 0.0);
             AnchorPane.setTopAnchor(summaryPage, 0.0);
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
             AnchorPane.setRightAnchor(summaryPage, 0.0);
-            //summaryPage.setMinWidth(currentPage.getWidth());
 
             summaryController = summaryLoader.getController();
             summaryController.create(env);
@@ -634,12 +616,10 @@ public class UserPageController {
         VBox all = new VBox();
 
         if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
-            System.out.println("making basic");
             FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
             try {
                 VBox stats = tutorbasicStatsLoader.load();
                 all.getChildren().add(stats);
-                //scrollPaneAnchorPage.getChildren().setAll(all);
                 AnchorPane.setLeftAnchor(stats, 0.0);
                 AnchorPane.setTopAnchor(stats, 0.0);
                 AnchorPane.setBottomAnchor(stats, 0.0);
@@ -659,10 +639,8 @@ public class UserPageController {
         if((Boolean)(env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))) {
             try {
                 VBox stats = tutorStatsLoader.load();
-                //currentPage.setContent(stats);
                 all.getChildren().add(stats);
                 scrollPaneAnchorPage.getChildren().clear();
-                //scrollPaneAnchorPage.getChildren().setAll(all);
                 AnchorPane.setLeftAnchor(stats, 0.0);
                 AnchorPane.setTopAnchor(stats, 0.0);
                 AnchorPane.setBottomAnchor(stats, 0.0);

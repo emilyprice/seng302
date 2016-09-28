@@ -1,9 +1,11 @@
 package seng302.utility;
 
 import com.google.gson.Gson;
-
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Window;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import seng302.Environment;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,10 +14,6 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Window;
-import seng302.Environment;
-
 /**
  * Utility class used to import local user profiles from previous versions of the application before
  * cloud storage.
@@ -23,7 +21,10 @@ import seng302.Environment;
 public class UserImporter {
 
     /**
-     * Imports locally stored user data, fo
+     * Imports locally stored user data into firebase
+     * @param classroom The classroom to import the user into
+     * @param env The environment the application runs in
+     * @param stage The stage on which to show the directory chooser
      */
     public static void importUser(Environment env, String classroom, Window stage) {
         DirectoryChooser dirChooser = new DirectoryChooser();

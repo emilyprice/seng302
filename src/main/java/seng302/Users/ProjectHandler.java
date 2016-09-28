@@ -9,27 +9,18 @@ package seng302.Users;
  * Created by Jonty on 12-Apr-16.
  */
 
+import javafx.scene.control.TextInputDialog;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import seng302.Environment;
 
 import java.util.Optional;
-
-import javafx.scene.control.TextInputDialog;
-import seng302.Environment;
 
 public class ProjectHandler {
 
     private Project currentProject;
     Environment env;
     String lastOpened;
-    //    public Path projectsDirectory;
     String userName;
-
-    //JSONArray projectList;
-
-    JSONObject projectsInfo = new JSONObject();
-    JSONParser parser = new JSONParser(); //parser for reading project
 
 
     /**
@@ -43,7 +34,6 @@ public class ProjectHandler {
 
         this.env = env;
 
-        //loadProjectList();
         loadDefaultProject();
 
     }
@@ -73,7 +63,6 @@ public class ProjectHandler {
     public void setCurrentProject(String projName) {
 
         this.currentProject = new Project(env, projName, this);
-        //updateProjectList(projName);
         try {
             env.getUserPageController().updateLevelBadge();
             env.getUserPageController().updateGraphs(env.getUserPageController().getTimePeriod());
@@ -81,7 +70,6 @@ public class ProjectHandler {
 
 
         } catch (Exception e) {
-            //e.printStackTrace();
             System.err.println("Root controller not initialised asdsad");
         }
 

@@ -2,15 +2,14 @@ package seng302.Users;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import seng302.Environment;
+import seng302.data.Term;
 
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-import seng302.Environment;
-import seng302.data.Term;
 
 /**
  * Created by Jonty on 23-Sep-16.
@@ -79,6 +78,9 @@ public class Student extends User {
     }
 
 
+    /**
+     * Updates local properties variable for a student user
+     */
     public void updateProperties() {
         super.updateProperties();
         Gson gson = new Gson();

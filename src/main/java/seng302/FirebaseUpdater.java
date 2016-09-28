@@ -1,15 +1,10 @@
 package seng302;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,13 +38,18 @@ public class FirebaseUpdater {
         initializeFirebase();
         createClassroomSnapshot(true);
 
-
+        // Where profile pictures are stored
         imageCloud = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", "allegro123",
                 "api_key", "732823974447246",
                 "api_secret", "nGNnDUmFxWEG_lPZoJQCKyfz7hw"));
     }
 
+    /**
+     * Creates a snapshot of the current data in the classroom object in Firebase
+     *
+     * @param blocking Whether or not the function is blocking (waits for the snapshot to be retrieved)
+     */
     public void createClassroomSnapshot(Boolean blocking) {
 
         final AtomicBoolean done = new AtomicBoolean(false);
@@ -69,6 +69,10 @@ public class FirebaseUpdater {
         while (!done.get() && blocking) ;
     }
 
+    /**
+     * Connects to the firebase database containing user information.
+     * Uses credentials from local JSON file.
+     */
     private void initializeFirebase() {
 
         try {

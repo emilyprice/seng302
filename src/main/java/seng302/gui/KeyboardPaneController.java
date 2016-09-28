@@ -1,14 +1,6 @@
 package seng302.gui;
 
 import com.jfoenix.controls.JFXButton;
-
-import org.controlsfx.control.PopOver;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,28 +9,23 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import org.controlsfx.control.PopOver;
 import seng302.Environment;
 import seng302.data.Note;
 import seng302.utility.NoteRangeSlider;
 import seng302.utility.musicNotation.OctaveUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static seng302.utility.musicNotation.Checker.isValidNormalNote;
 
@@ -605,10 +592,14 @@ public class KeyboardPaneController {
 
     }
 
+
     /**
      * Compares one scale against another to check to see if they are identical
-     *
-     * @return boolean
+     * @param scale1Note The start note of the first scale
+     * @param scale2Note The start note of the second scale
+     * @param scale1Type The type of the first scale (major minor etc)
+     * @param scale2Type The type of the second scale (major minor etc)
+     * @return boolean true if the scales are different to each other, false otherwise
      */
 
     private boolean scaleIsUnique(String scale1Note, String scale1Type, String scale2Note, String scale2Type) {

@@ -1,10 +1,6 @@
 package seng302.gui;
 
 import com.jfoenix.controls.JFXListView;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +8,9 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import seng302.Environment;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -74,12 +73,9 @@ public class BaseSettingsController {
     }
 
     public void closeWindow() {
-        System.out.println("inside settings close window ");
         if(settingsWindow.getScene().getWindow().isShowing()){
-            System.out.println("Settings window is opened");
             ((Stage) settingsWindow.getScene().getWindow()).close();
         }
-        System.out.println("settings window is not opened");
 
     }
 
