@@ -196,6 +196,8 @@ public class UserPageController {
         buttonBox.setPadding(new Insets(10));
 
         yes.setOnAction(e -> {
+            e.consume();
+            logoutPop.hide();
             locp();
         });
 
@@ -221,6 +223,7 @@ public class UserPageController {
     }
 
     private void locp() {
+
         env.getRootController().logOutUser();
     }
 
