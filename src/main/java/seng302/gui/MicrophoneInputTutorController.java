@@ -130,12 +130,7 @@ public class MicrophoneInputTutorController extends TutorController {
      * @return
      */
     private int generateRangesliderDefault(){
-        int num = rand.nextInt(95);
-        if (num + 24 > 95) {
-            return 84;
-        } else {
-            return num + 16;
-        }
+        return 48;
     }
 
     /**

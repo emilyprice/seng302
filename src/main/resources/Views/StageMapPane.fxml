@@ -27,17 +27,50 @@
                         <Image url="@../images/musicNote.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="musicalTermsTutorButton" layoutX="426.0" layoutY="17.0" mnemonicParsing="false" onAction="#launchMusicalTermsTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="1" />
-                  <Button fx:id="diatonicChordsTutorButton" layoutX="523.0" layoutY="113.0" mnemonicParsing="false" onAction="#launchDiatonicChordsTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="12" />
-                  <Button fx:id="keySignaturesTutorButton" layoutX="426.0" layoutY="164.0" mnemonicParsing="false" onAction="#launchKeySignaturesTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="11" />
-                  <Button fx:id="chordSpellingTutorButton" layoutX="426.0" layoutY="335.0" mnemonicParsing="false" onAction="#launchChordSpellingTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="9" />
-                  <Button fx:id="chordRecognitionTutorButton" layoutX="371.0" layoutY="419.0" mnemonicParsing="false" onAction="#launchChordRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="8" />
-                  <Button fx:id="scaleRecognitionTutorButton" layoutX="240.0" layoutY="421.0" mnemonicParsing="false" onAction="#launchScaleRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="7" />
-                  <Button fx:id="intervalRecognitionButton" layoutX="211.0" layoutY="330.0" mnemonicParsing="false" onAction="#launchIntervalRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="6" />
-                  <Button fx:id="basicChordRecognitionTutorButton" layoutX="310.0" layoutY="263.0" mnemonicParsing="false" onAction="#launchBasicChordRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="5" />
-                  <Button fx:id="basicScaleRecognitionTutorButton" layoutX="367.0" layoutY="211.0" mnemonicParsing="false" onAction="#launchBasicScaleRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="4" />
-                  <Button fx:id="pitchTutorButton" layoutX="370.0" layoutY="140.0" mnemonicParsing="false" onAction="#launchPitchTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="3" />
-                  <Button fx:id="majorModesTutorButton" layoutX="601.0" layoutY="35.0" mnemonicParsing="false" onAction="#launchMajorModesTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="13" />
+                  <Button fx:id="musicalTermsTutorButton" layoutX="426.0" layoutY="17.0" mnemonicParsing="false" onAction="#launchMusicalTermsTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="1">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="diatonicChordsTutorButton" layoutX="523.0" layoutY="113.0" mnemonicParsing="false" onAction="#launchDiatonicChordsTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="12">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="keySignaturesTutorButton" layoutX="426.0" layoutY="164.0" mnemonicParsing="false" onAction="#launchKeySignaturesTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="11">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="chordSpellingTutorButton" layoutX="426.0" layoutY="335.0" mnemonicParsing="false" onAction="#launchChordSpellingTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="9">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="chordRecognitionTutorButton" layoutX="371.0" layoutY="419.0" mnemonicParsing="false" onAction="#launchChordRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="8">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="scaleRecognitionTutorButton" layoutX="240.0" layoutY="421.0" mnemonicParsing="false" onAction="#launchScaleRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="7">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="intervalRecognitionButton" layoutX="211.0" layoutY="330.0" mnemonicParsing="false" onAction="#launchIntervalRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="6">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="basicChordRecognitionTutorButton" layoutX="310.0" layoutY="263.0" mnemonicParsing="false" onAction="#launchBasicChordRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="5">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="basicScaleRecognitionTutorButton" layoutX="367.0" layoutY="211.0" mnemonicParsing="false" onAction="#launchBasicScaleRecognitionTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="4">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="pitchTutorButton" layoutX="370.0" layoutY="140.0" mnemonicParsing="false" onAction="#launchPitchTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="3">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
+                  <Button fx:id="majorModesTutorButton" layoutX="601.0" layoutY="35.0" mnemonicParsing="false" onAction="#launchMajorModesTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="13">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
                   <Label layoutX="289.0" layoutY="28.0" prefHeight="15.0" prefWidth="139.0" text="Musical Terms Tutor" />
                   <Label layoutX="296.0" layoutY="151.0" prefHeight="15.0" prefWidth="76.0" text="Pitch Tutor" />
                   <Label layoutX="152.0" layoutY="222.0" prefHeight="15.0" prefWidth="205.0" text="Scale Recognition Tutor (Basic)" />
@@ -49,10 +82,16 @@
                   <Label layoutX="-5.0" layoutY="433.0" prefHeight="15.0" prefWidth="242.0" text="Scale Recognition Tutor (Advanced)" />
                   <Label layoutX="94.0" layoutY="277.0" prefHeight="15.0" prefWidth="214.0" text="Chord Recognition Tutor (Basic)" />
                   <Label layoutX="38.0" layoutY="341.0" prefHeight="15.0" prefWidth="173.0" text="Interval Recognition Tutor" />
-                  <Button fx:id="scaleSpellingTutorButton" layoutX="426.0" layoutY="245.0" mnemonicParsing="false" onAction="#launchScaleSpellingTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="10" />
+                  <Button fx:id="scaleSpellingTutorButton" layoutX="426.0" layoutY="245.0" mnemonicParsing="false" onAction="#launchScaleSpellingTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="10">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
                   <Label layoutX="474.0" layoutY="257.0" prefHeight="15.0" prefWidth="242.0" text="Scale Spelling Tutor" />
                   <Label layoutX="218.0" layoutY="80.0" prefHeight="15.0" prefWidth="153.0" text="Microphone Input Tutor" />
-                  <Button fx:id="microphoneInputTutorButton" layoutX="374.0" layoutY="69.0" mnemonicParsing="false" onAction="#launchMicrophoneInputTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="2" />
+                  <Button fx:id="microphoneInputTutorButton" layoutX="374.0" layoutY="69.0" mnemonicParsing="false" onAction="#launchMicrophoneInputTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="2">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
                </children>
             </AnchorPane>
             <VBox fx:id="descriptionVbox">

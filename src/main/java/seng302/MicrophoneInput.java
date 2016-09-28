@@ -115,6 +115,11 @@ public class MicrophoneInput implements PitchDetectionHandler {
      * @throws UnsupportedAudioFileException
      */
     public void startRecording(Boolean singleNote) throws LineUnavailableException, UnsupportedAudioFileException {
+        try {
+            stopRecording();
+        } catch (Exception e) {
+            // Not recording
+        }
         lastRecorded.clear();
         float sampleRate = 44100;
         int bufferSize = 1024;
