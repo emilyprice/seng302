@@ -48,12 +48,9 @@ public class MicrophoneInputPopoverController {
         currentNoteText.setText("");
         microphoneInput.addPopover(this);
         allNotesTextArea.setFocusTraversable(false);
-        allNotesTextArea.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (allNotesTextArea.isFocused()) {
-                    env.getRootController().getTranscriptController().giveFocus();
-                }
+        allNotesTextArea.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (allNotesTextArea.isFocused()) {
+                env.getRootController().getTranscriptController().giveFocus();
             }
         });
     }
