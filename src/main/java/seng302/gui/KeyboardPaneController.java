@@ -200,9 +200,6 @@ public class KeyboardPaneController {
 
 
         // Style settings button.
-        //Image cog = new Image(getClass().getResourceAsStream
-        // ("/images/settings (1).png"), 10, 10, true, true);
-        //settingsButton.setGraphic(new ImageView(cog));
         settingsButton.setText("Settings");
 
 

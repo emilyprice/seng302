@@ -96,7 +96,7 @@ public class StageMapController {
     private ArrayList<String> tutorOrder; //the order in which the tutors unlock
 
     /**
-     * stores the convertion of tutor name to a shortened tutor string that is used for
+     * stores the conversion of tutor name to a shortened tutor string that is used for
      * manipulations
      */
     public BidiMap<String, String> converted;
@@ -260,7 +260,7 @@ public class StageMapController {
 
 
     /**
-     * Generates the unlockDescriptions HashMap which stores the requirments to unlock each tutor
+     * Generates the unlockDescriptions HashMap which stores the requirements to unlock each tutor
      * and weather or not they have been completed.
      */
     private void generateDescriptions() {
