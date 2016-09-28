@@ -49,6 +49,7 @@ public class RootController implements Initializable {
     Environment env;
     TranscriptManager tm;
     Stage stage;
+    public Stage settingsStage;
 
     String path;
     File fileDir;
@@ -811,10 +812,10 @@ public class RootController implements Initializable {
         try {
             AnchorPane settingsPage = loader.load();
 
-            Stage stage = new Stage();
-            stage.setTitle("Settings");
-            stage.setScene(new Scene(settingsPage, 1000, 700));
-            stage.show();
+            settingsStage = new Stage();
+            settingsStage.setTitle("Settings");
+            settingsStage.setScene(new Scene(settingsPage, 1000, 700));
+            settingsStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

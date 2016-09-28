@@ -364,6 +364,8 @@ public class UserPageController {
     public void openSettings() {
         if (env.getRootController().getBaseSettingsController() == null) {
             env.getRootController().launchSettings();
+        } else {
+            env.getRootController().settingsStage.toFront();
         }
     }
 
