@@ -155,6 +155,7 @@ public class UserHandler {
      */
     public void createUser(String user, String password) {
         this.currentUser = new Student(user, password, env);
+        updateRecentUsers(user);
 
     }
 
