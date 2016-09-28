@@ -41,6 +41,10 @@ public class BaseSettingsController {
 
 
     @FXML
+    AnchorPane settingsWindow;
+
+
+    @FXML
     private void initialize() {
         //Load user settings controller.
         userSettingsLoader = new FXMLLoader();
@@ -70,7 +74,13 @@ public class BaseSettingsController {
     }
 
     public void closeWindow() {
-        ((Stage) settingsOptions.getScene().getWindow()).close();
+        System.out.println("inside settings close window ");
+        if(settingsWindow.getScene().getWindow().isShowing()){
+            System.out.println("Settings window is opened");
+            ((Stage) settingsWindow.getScene().getWindow()).close();
+        }
+        System.out.println("settings window is not opened");
+
     }
 
     /**
