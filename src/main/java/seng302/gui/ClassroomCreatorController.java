@@ -27,14 +27,27 @@ public class ClassroomCreatorController {
 
         String newClassroom = nameInput.getText();
 
-        if (isValidClassName(newClassroom)) {
+        if (isEmpty(newClassroom)) {
+            errorMessage.setText("Classroom name cannot be empty");
+            errorMessage.setVisible(true);
+        }
+
+        if (containsInvalidCharacters(newClassroom)) {
+            errorMessage.setText("Cannot contain '.', '#', '$', '[', or ']'");
+            errorMessage.setVisible(true);
+        }
+
+        if (alreadyExists(newClassroom)) {
+            errorMessage.setText("A classroom by this name already exists.");
+            errorMessage.setVisible(true);
+        }
+
+        if (!errorMessage.isVisible()) {
             env.getUserHandler().setClassRoom(newClassroom);
             env.getFirebase().getFirebase().child("classrooms/" + newClassroom + "/users/").setValue("none");
             env.getFirebase().getUserRef().child("classrooms").push().setValue(newClassroom);
             env.getTeacherPageController().updateDisplay();
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
-        } else {
-            errorMessage.setVisible(true);
         }
 
     }
@@ -52,20 +65,35 @@ public class ClassroomCreatorController {
         env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
-    private boolean isValidClassName(String potentialName) {
+    private boolean isEmpty(String potentialName) {
+        if (potentialName.length() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean containsInvalidCharacters(String potentialName) {
         CharSequence[] invalidChars = {".", "#", "$", "[", "]"};
 
         for (CharSequence invalidChar : invalidChars) {
             if (potentialName.contains(invalidChar)) {
-                return false;
+                return true;
             }
         }
 
-        if (potentialName.length() == 0) {
-            return false;
-        }
+        return false;
+    }
 
-        return true;
+    private boolean alreadyExists(String potentialName) {
+        final boolean[] alreadyExists = {false};
+        env.getFirebase().getClassroomsSnapshot().getChildren().forEach(classroom -> {
+            if (classroom.getKey().equalsIgnoreCase(potentialName)) {
+                alreadyExists[0] = true;
+            }
+        });
+
+        return alreadyExists[0];
     }
 
 }
