@@ -38,18 +38,6 @@ import seng302.data.Note;
 public class MicInputSettingsController {
 
     @FXML
-    private ToggleButton recordButton;
-
-    @FXML
-    private ToggleGroup MIC;
-
-    @FXML
-    private ToggleButton stopButton;
-
-    @FXML
-    private TextArea textArea;
-
-    @FXML
     private VBox inputDevices;
 
     @FXML
@@ -71,18 +59,11 @@ public class MicInputSettingsController {
      * @param env Current environment
      */
     public void create(Environment env) {
-        microphoneInput = env.getMicrophoneInput();
-        recordButton.setOnAction(event -> {
-            try {
-                microphoneInput.startRecording(false);
-            } catch (LineUnavailableException e) {
-                e.printStackTrace();
-            } catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            }
-        });
-        stopButton.setOnAction(event -> textArea.appendText(microphoneInput.stopRecording().toString() + "\n"));
         this.env = env;
+        microphoneInput = env.getMicrophoneInput();
+        thresholdSlider.setValue(env.getUserHandler().getCurrentUser()
+                .getProjectHandler().getCurrentProject().getInputVolumeThreshold());
+        updateThreshold(thresholdSlider.getValue());
 
         // Populate input fields
         for (Mixer.Info info : microphoneInput.getMixerInfo(false, true)) {
@@ -98,6 +79,10 @@ public class MicInputSettingsController {
                     }
                 }
             });
+            Mixer currentMixer = microphoneInput.getMixer();
+            if (currentMixer.getMixerInfo() == info) {
+                radio.setSelected(true);
+            }
             radio.setPadding(new Insets(5, 0, 5, 15));
             inputDevices.getChildren().add(radio);
         }
@@ -105,9 +90,14 @@ public class MicInputSettingsController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 thresholdSlider.setValue(Math.round(thresholdSlider.getValue()));
-                thresholdText.setText(String.valueOf(thresholdSlider.getValue()));
-                microphoneInput.setThreshold(thresholdSlider.getValue());
+                updateThreshold(thresholdSlider.getValue());
             }
         });
+    }
+
+    private void updateThreshold(double threshold) {
+        microphoneInput.setThreshold(threshold);
+        thresholdText.setText(String.valueOf(threshold));
+        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().setInputVolumeThreshold(threshold);
     }
 }

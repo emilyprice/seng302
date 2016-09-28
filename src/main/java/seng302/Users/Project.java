@@ -44,6 +44,7 @@ public class Project {
     public TutorHandler tutorHandler;
     private BadgeManager badgeManager;
 
+    private double inputVolumeThreshold;
 
     private Boolean isCompetitiveMode, visualiserOn;
     Boolean saved = true;
@@ -74,6 +75,7 @@ public class Project {
         recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
         loadProject(projectName);
         loadProperties();
+        saveProperties();
     }
 
 
@@ -127,6 +129,12 @@ public class Project {
             System.err.println("cant save unlock map descriptions");
         }
 
+        System.out.println(inputVolumeThreshold);
+
+        projectSettings.put("inputVolumeThreshold", gson.toJson(inputVolumeThreshold));
+
+
+
     }
 
 
@@ -152,6 +160,12 @@ public class Project {
 
         env.getPlayer().setTempo(tempo);
 
+
+        try {
+            inputVolumeThreshold = Double.valueOf(projectSettings.get("inputVolumeThreshold").toString());
+        } catch (Exception e) {
+            inputVolumeThreshold = -60.0;
+        }
 
         //Transcript
         ArrayList<OutputTuple> transcript;
@@ -399,7 +413,6 @@ public class Project {
 
         }
         this.projectName = pName;
-        loadProperties();
         env.getRootController().setWindowTitle("Allegro - " + pName);
 
 
@@ -508,6 +521,14 @@ public class Project {
 
     public BadgeManager getBadgeManager() {
         return badgeManager;
+    }
+
+    public void setInputVolumeThreshold(double threshold) {
+        this.inputVolumeThreshold = threshold;
+    }
+
+    public double getInputVolumeThreshold() {
+        return inputVolumeThreshold;
     }
 
 }
