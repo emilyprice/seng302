@@ -216,7 +216,6 @@ public class UserSettingsController {
             JFXPopup popup = new JFXPopup();
             popup.setContent(modal);
 
-            popup.setPopupContainer(env.getRootController().paneMain);
             popup.setSource(btnDeleteUser);
             popup.show(JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT);
             Label header = (Label) modal.lookup("#lblHeader");
@@ -231,7 +230,7 @@ public class UserSettingsController {
                     });
 
 
-            header.setText("Are you sure you wish to delete user: " + userHandler.getCurrentUser().getUserName());
+            header.setText("Are you sure you wish to delete this user?");
         } catch (IOException e) {
             e.printStackTrace();
         }
