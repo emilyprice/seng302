@@ -104,8 +104,6 @@ public class UserSummaryController {
 
         updateProgressBar();
         updateGraphs();
-        updateBadgesDisplay();
-
 
     }
 
@@ -311,7 +309,7 @@ public class UserSummaryController {
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
         badgeGrid.add(badgeBox, gridX, gridY);
-        if (gridX < 5) {
+        if (gridX < 4) {
             gridX++;
         } else {
             gridX = 0;
@@ -374,7 +372,7 @@ public class UserSummaryController {
         badgeBox.setSpacing(4);
 
         badgeGrid.add(badgeBox, gridX, gridY);
-        if (gridX < 5) {
+        if (gridX < 4) {
             gridX++;
         } else {
             gridX = 0;
