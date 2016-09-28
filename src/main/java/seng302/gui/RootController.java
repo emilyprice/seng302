@@ -691,6 +691,7 @@ public class RootController implements Initializable {
 
     @FXML
     public void newClassroom() {
+        CharSequence[] invalidChars = {".", "#", "$", "[", "]"};
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("New Classroom");
         dialog.setHeaderText("New Classroom");

@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import seng302.Environment;
@@ -73,18 +74,11 @@ public class TeacherPageController {
     }
 
     public void load() {
-        String fullName = env.getUserHandler().getCurrentTeacher().getUserFirstName() + " " + env.getUserHandler().getCurrentTeacher().getUserLastName();
-
-        if (fullName.length() > 1) {
-            txtFullName.setText(env.getUserHandler().getCurrentTeacher().getUserName());
-        } else {
-            txtFullName.setText(fullName);
-        }
-
+        updateNameDisplay();
 
         env.getRootController().setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
 
-        imageDP2.setImage(env.getUserHandler().getCurrentTeacher().getUserPicture());
+        updateProfilePicDisplay();
 
         env.getFirebase().getTeacherSnapshot().child(env.getUserHandler().getCurrentTeacher().getUserName() + "/classrooms").getChildren().forEach(classroomName -> {
             teacherClasses.add(classroomName.getValue().toString());
@@ -94,6 +88,26 @@ public class TeacherPageController {
         env.getRootController().updateClassroomsList(teacherClasses);
         populateUserOptions();
         showPage("Summary");
+    }
+
+    /**
+     * Sets name under profile pic to display the user's name or username if they have no name.
+     */
+    public void updateNameDisplay() {
+        try {
+
+            txtFullName.setText(env.getUserHandler().getCurrentTeacher().getUserFirstName() + " "
+                    + env.getUserHandler().getCurrentTeacher().getUserLastName());
+        } catch (NullPointerException e) {
+            txtFullName.setText(env.getUserHandler().getCurrentTeacher().getUserName());
+            //txtFullName not initialized yet.
+        }
+    }
+
+    public void updateProfilePicDisplay() {
+        Circle imageClip = new Circle(50, 50, 50);
+        imageDP2.setClip(imageClip);
+        imageDP2.setImage(env.getUserHandler().getCurrentTeacher().getUserPicture());
     }
 
 
