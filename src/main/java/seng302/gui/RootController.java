@@ -236,6 +236,9 @@ public class RootController implements Initializable {
         env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
+    /**
+     * Apply the logged in teacher's theme to the main window
+     */
     private void applyTeacherTheme() {
         env.getThemeHandler().setBaseNode(paneMain);
         String[] themeColours = env.getUserHandler().getCurrentTeacher().getThemeColours();
@@ -684,6 +687,9 @@ public class RootController implements Initializable {
         }
     }
 
+    /**
+     * Launches a classroom creator window, that allows the teacher to name and create a classroom.
+     */
     @FXML
     public void newClassroom() {
         //launch the clasroom creator
@@ -744,6 +750,11 @@ public class RootController implements Initializable {
 
     }
 
+    /**
+     * Generates a list of menu items, where each menu item is a classroom belonging to the current teacher
+     *
+     * @param classes A list of classrooms belonging to the current teacher
+     */
     public void updateClassroomsList(List<String> classes) {
         menuOpenClassroom.getItems().clear();
         for (String className : classes) {
@@ -853,6 +864,9 @@ public class RootController implements Initializable {
 
     }
 
+    /**
+     * Launches a new window containing all user settings for a teacher.
+     */
     @FXML
     public void launchTeacherSettings() {
         showUserBar(true);
@@ -919,6 +933,10 @@ public class RootController implements Initializable {
         menuTranscript.setDisable(false);
     }
 
+    /**
+     * Adds a single classroom to the menu of available teacher classrooms
+     * @param newClassroom The name of the classroom to be added
+     */
     public void addClassroomToMenu(String newClassroom) {
         MenuItem classMenuItem = new MenuItem(newClassroom);
         classMenuItem.setOnAction(clickEvent -> {

@@ -250,6 +250,14 @@ public class TutorHandler {
         ref.getRef().child(String.valueOf(currentRecord.getDate().getTime())).setValue(currentRecord);
     }
 
+    /**
+     * Gets the total number of questions answered correctly or incorrectly in all tutors for a provided student name and project
+     *
+     * @param userName    The name of the user to get information on
+     * @param projectName The name of the project to get tutor information about
+     * @param timePeriod  The time period to get tutor data from
+     * @return Pair consisting of total correct and incorrect
+     */
     public Pair<Integer, Integer> getTotalsForStudent(String userName, String projectName, String timePeriod) {
         DataSnapshot projectSnap = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + userName + "/projects/" + projectName);
         return getTotalsForAllTutorsInProject(projectSnap, timePeriod);

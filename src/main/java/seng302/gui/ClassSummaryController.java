@@ -46,6 +46,9 @@ public class ClassSummaryController {
 
     }
 
+    /**
+     * Sets up the GUI slider object used for displaying all tutors.
+     */
     private void setupTutorSlider() {
 
         //Done explicitly so they're in the correct order
@@ -96,6 +99,11 @@ public class ClassSummaryController {
 
     }
 
+    /**
+     * Populates a list with the names of all students who have unlocked a given tutor
+     *
+     * @param tutor Find students that have unlocked this tutor
+     */
     private void populateStageUsers(int tutor) {
         DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
         studentsAtStage.getItems().clear();
@@ -119,6 +127,10 @@ public class ClassSummaryController {
 
     }
 
+    /**
+     * Creates a bar chart containing the number of projects at each level.
+     * Displays from level 1 to the maximum level of any student in the class
+     */
     private void setupBarChart() {
 
         Map<String, Integer> numLevels = new HashMap<>();

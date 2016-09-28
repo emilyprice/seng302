@@ -143,10 +143,16 @@ public class UserSummaryController {
 
         displayClassAverage(env.getUserPageController().getTimePeriod());
 
-        // TutorStatsController statsController = statsLoader.getController();
-
     }
 
+    /**
+     * Generates the user summary controller when there is no current user (ie a teacher is logged in)
+     *
+     * @param env        The environment
+     * @param userName   The name of the user whose summary page is to be created
+     * @param timePeriod The time period of the data to be displayed
+     * @param project    The name of the project to be summarised
+     */
     public void createStudent(Environment env, String userName, String timePeriod, String project) {
 
         this.env = env;
@@ -176,8 +182,6 @@ public class UserSummaryController {
 
         displayClassAverage(timePeriod);
 
-        // TutorStatsController statsController = statsLoader.getController();
-
     }
 
     /**
@@ -201,6 +205,11 @@ public class UserSummaryController {
         highXp.setText(Integer.toString(maxXp - userXp) + "XP to level " + Integer.toString(userLevel + 1));
     }
 
+    /**
+     * Updates the progress bar GUI element for a given student and project, when a teacher is logged in.
+     * @param studentName The name of the student to display info about
+     * @param studentProject The name of student's project to display info about
+     */
     public void updateProgressBarStudent(String studentName, String studentProject) {
         DataSnapshot currentProject = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + studentName + "/projects/" + studentProject);
         int userXp = Integer.parseInt(currentProject.child("experience").getValue().toString());
@@ -250,6 +259,11 @@ public class UserSummaryController {
     }
 
 
+    /**
+     * Shows the stage map for a provided user and project, when a teacher is logged in
+     * @param userName The user whose stagemap is to be displayed
+     * @param userProject The project for which the stagemap will be displayed
+     */
     public void showStudentStagemap(String userName, String userProject) {
 
         loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));

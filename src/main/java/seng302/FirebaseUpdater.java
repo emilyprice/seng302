@@ -75,6 +75,11 @@ public class FirebaseUpdater {
         while (!done.get() && blocking) ;
     }
 
+    /**
+     * Creates a snapshot of the current data in the teacher object in Firebase
+     *
+     * @param blocking Whether or not the function is blocking
+     */
     public void createTeacherSnapshot(Boolean blocking) {
         final AtomicBoolean done = new AtomicBoolean(false);
 

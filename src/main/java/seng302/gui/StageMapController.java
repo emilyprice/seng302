@@ -452,6 +452,11 @@ public class StageMapController {
 
     }
 
+    /**
+     * Load a stage map for a specific student, given their unlock data
+     *
+     * @param unlockStatus A collection of tutors and whether or not the student has unlocked them
+     */
     public void loadStudentMap(HashMap<String, Boolean> unlockStatus) {
 
         Image padlock = new Image(getClass().getResourceAsStream

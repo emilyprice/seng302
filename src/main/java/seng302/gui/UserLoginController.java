@@ -332,6 +332,10 @@ public class UserLoginController {
 
     }
 
+    /**
+     * Authenticates the username and password inputs of a teacher account.
+     * If the inputs are valid, logs in the teacher.
+     */
     private void authenticateTeacher() {
         DataSnapshot teacher = env.getFirebase().getTeacherSnapshot().child(usernameInput.getText());
         String pass = teacher.child("/properties/password").getValue().toString();

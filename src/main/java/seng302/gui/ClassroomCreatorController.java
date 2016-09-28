@@ -22,6 +22,11 @@ public class ClassroomCreatorController {
 
     private Environment env;
 
+    /**
+     * Button click function that creates a new classroom if the text entered is a valid classroom name
+     *
+     * @param event The click event
+     */
     @FXML
     void submitClassroom(ActionEvent event) {
 
@@ -60,6 +65,9 @@ public class ClassroomCreatorController {
         applyTheme();
     }
 
+    /**
+     * Applies the teacher's theme to this GUI element
+     */
     private void applyTheme() {
         //Apply user theme
         env.getThemeHandler().setBaseNode(dialogBox);
@@ -67,6 +75,11 @@ public class ClassroomCreatorController {
         env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
+    /**
+     * Checks whether or not a potential classroom name is empty
+     * @param potentialName The name of a classroom a teacher is attempting to create
+     * @return true if the string is empty, false otherwise
+     */
     public static boolean isEmpty(String potentialName) {
         if (potentialName.length() == 0) {
             return true;
@@ -75,6 +88,11 @@ public class ClassroomCreatorController {
         }
     }
 
+    /**
+     * Checks whether or not a potential classroom name contains characters that are illegal in Firebase
+     * @param potentialName The name of a classroom a teacher is attempting to create
+     * @return true if any of the illegal characters are present in potentialName, false otherwise
+     */
     public static boolean containsInvalidCharacters(String potentialName) {
         CharSequence[] invalidChars = {".", "#", "$", "[", "]"};
 
@@ -87,6 +105,11 @@ public class ClassroomCreatorController {
         return false;
     }
 
+    /**
+     * Checks whether or not a potential classroom name already belongs to an existing classroom
+     * @param potentialName The name of a classroom a teacher is attempting to create
+     * @return true if the given name already belongs to a classroom, false otherwise
+     */
     private boolean alreadyExists(String potentialName) {
         final boolean[] alreadyExists = {false};
         env.getFirebase().getClassroomsSnapshot().getChildren().forEach(classroom -> {

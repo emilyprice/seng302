@@ -26,9 +26,6 @@ public class TeacherPageController {
     @FXML
     private VBox studentInfo;
 
-//    @FXML
-//    private JFXButton btnSettings;
-
     @FXML
     private Label txtFullName;
 
@@ -103,6 +100,10 @@ public class TeacherPageController {
         }
     }
 
+    /**
+     * Updates the view of the teacher's profile picture.
+     * Displays their picture in a circle
+     */
     public void updateProfilePicDisplay() {
         Circle imageClip = new Circle(50, 50, 50);
         imageDP2.setClip(imageClip);
@@ -110,6 +111,10 @@ public class TeacherPageController {
     }
 
 
+    /**
+     * Creates the treeview of all students in the current class.
+     * Also creates a custom tree cell object for this treeview.
+     */
     private void populateUserOptions() {
 
         DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
@@ -185,6 +190,11 @@ public class TeacherPageController {
 
     }
 
+    /**
+     * Displays either the summary page, or an overview of a student's project
+     *
+     * @param pageName The name of the page to be displayed
+     */
     public void showPage(String pageName) {
 
         if (pageName.equals("Summary")) {
@@ -196,6 +206,9 @@ public class TeacherPageController {
 
     }
 
+    /**
+     * Displays a page containing a summary of all data about students in the current classroom
+     */
     public void showSummaryPage() {
         env.getRootController().setHeader("Summary");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ClassSummary.fxml"));
@@ -218,6 +231,11 @@ public class TeacherPageController {
 
     }
 
+    /**
+     * Shows the summary page of a specific student's project
+     *
+     * @param userInfo A string of the form studentname/projectname
+     */
     public void showUserPage(String userInfo) {
 
         String project = userInfo.substring(userInfo.lastIndexOf('/') + 1);
@@ -247,6 +265,9 @@ public class TeacherPageController {
 
     }
 
+    /**
+     * Used whenever the current classroom is changed. Repopulates the list of students and changes the window title.
+     */
     public void updateDisplay() {
         populateUserOptions();
         showPage("Summary");
@@ -256,7 +277,6 @@ public class TeacherPageController {
 
     @FXML
     public void onLogoutClick() {
-        //env.getRootController().showCloseWindow("logout");
         env.getRootController().logOutUser();
     }
 }

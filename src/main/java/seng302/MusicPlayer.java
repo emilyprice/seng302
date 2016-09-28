@@ -114,10 +114,6 @@ public class MusicPlayer {
         }
     }
 
-    public void playTempo(int tempo) {
-
-    }
-
     /**
      * Plays an array of notes as a blues scale directly after each other.
      *
