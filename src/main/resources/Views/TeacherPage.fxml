@@ -77,7 +77,8 @@
             </VBox>
             <AnchorPane>
                <children>
-                  <ScrollPane fx:id="currentPage" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ScrollPane fx:id="currentPage" fitToWidth="true" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                </children>
             </AnchorPane>
          </items>
