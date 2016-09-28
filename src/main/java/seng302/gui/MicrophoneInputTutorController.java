@@ -165,7 +165,11 @@ public class MicrophoneInputTutorController extends TutorController {
      */
     private int questionResponse(HBox row, String m1, String m2) {
         Integer correctChoice = 0;
-        disableButtons(row, 1, row.getChildren().size() - 1);
+        if (isCompMode) {
+            disableButtons(row, 1, row.getChildren().size() - 2);
+        } else {
+            disableButtons(row, 1, row.getChildren().size() - 1);
+        }
 
         Note note1 = null;
         Note note2 = null;
@@ -223,12 +227,14 @@ public class MicrophoneInputTutorController extends TutorController {
                 env.getMicrophoneInput().recordSingleNoteTutorInput();
                 recordButton.setText("Stop");
             } else {
-                try {
-                    String recordedNote = env.getMicrophoneInput().stopRecording().get(0);
-                    answerLabel.setText(recordedNote);
-                    questionResponse(rowPane, noteMidi, recordedNote);
+                env.getMicrophoneInput().stopRecording();
+                ArrayList<String> recordedNote = env.getMicrophoneInput().getLastRecorded();
+                if (recordedNote.size() > 0) {
+                    String singleRecordedNote = env.getMicrophoneInput().stopRecording().get(0);
+                    answerLabel.setText(singleRecordedNote);
+                    questionResponse(rowPane, noteMidi, singleRecordedNote);
                     recordButton.setDisable(true);
-                } catch (Exception e) {
+                } else {
                     recordButton.setText("Record");
                     answerLabel.setText("Note not recognised, try again.");
                 }
