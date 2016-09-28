@@ -75,6 +75,7 @@ public class MicrophoneInputPopoverController {
                 microphoneInput.startRecording(false);
                 recordButton.setText("Stop Recording");
                 recording = true;
+                transcriptButton.setDisable(true);
             } catch (LineUnavailableException e) {
                 e.printStackTrace();
             } catch (UnsupportedAudioFileException e) {
@@ -111,8 +112,8 @@ public class MicrophoneInputPopoverController {
         transcriptButton.setDisable(true);
         String prevTxt = env.getRootController().getTranscriptController().txtCommand.getText();
         String newTxt = prevTxt + " " + allNotesTextArea.getText();
+        env.getRootController().getTranscriptController().txtCommand.setText(newTxt);
         allNotesTextArea.clear();
-        env.getRootController();
     }
 
 }

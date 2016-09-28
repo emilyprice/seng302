@@ -40,6 +40,7 @@ public class TutorHandler {
         add("diatonicChordTutor");
         add("scaleModesTutor");
         add("scaleSpellingTutor");
+        add("microphoneInputTutor");
     }};
 
     /**
@@ -141,6 +142,8 @@ public class TutorHandler {
             filename = projectAddress + "/ScaleModesTutor.json";
         } else if (id.equals("scaleSpellingTutor")) {
             filename = projectAddress + "/ScaleSpellingTutor.json";
+        } else if (id.equals("microphoneInputTutor")) {
+            filename = projectAddress + "/MicrophoneInputTutor.json";
         }
         Gson gson = new Gson();
         ArrayList<TutorRecord> records = new ArrayList<>();

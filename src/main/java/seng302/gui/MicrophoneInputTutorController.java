@@ -174,11 +174,11 @@ public class MicrophoneInputTutorController extends TutorController {
         Note note1 = Note.lookup(m1);
         Note note2 = Note.lookup(m2);
 
-        disableButtons(row, 1, 5);
+        disableButtons(row, 1, row.getChildren().size() - 1);
 
         Integer correctChoice = 0;
 
-        if (note1.equals(note2)) {
+        if (note1.getNote().equals(note2.getNote())) {
             correctChoice = 1;
         }
 
@@ -221,12 +221,17 @@ public class MicrophoneInputTutorController extends TutorController {
                 env.getMicrophoneInput().recordSingleNoteTutorInput();
                 recordButton.setText("Stop");
             } else {
-                String recordedNote = env.getMicrophoneInput().stopRecording().get(0);
+                try {
+                    String recordedNote = env.getMicrophoneInput().stopRecording().get(0);
+                    answerLabel.setText(recordedNote);
+                    int responseValue = questionResponse(rowPane, noteMidi, recordedNote);
+                    recordButton.setDisable(true);
+                } catch (Exception e) {
+                    recordButton.setText("Record");
+                    answerLabel.setText("Note not recognised, try again.");
+                }
 //                correctAnswer = Note.lookup(recordedNote);
-                answerLabel.setText(recordedNote);
 
-                int responseValue = questionResponse(rowPane, noteMidi, String.valueOf(Note.lookup(recordedNote)));
-                recordButton.setDisable(true);
 //                if (responseValue == 0) {
 //                    correctAnswer.setVisible(true);
 //                }
@@ -274,16 +279,6 @@ public class MicrophoneInputTutorController extends TutorController {
             return note1.getMidi() < note2.getMidi();
         } else {
             return note1.getMidi() > note2.getMidi();
-        }
-    }
-
-    private String getAnswer(Note note1, Note note2) {
-        if (note1.getMidi().equals(note2.getMidi())) {
-            return "Same";
-        } else if (note1.getMidi() < note2.getMidi()) {
-            return "Higher";
-        } else {
-            return "Lower";
         }
     }
 
