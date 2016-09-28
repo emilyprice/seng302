@@ -60,11 +60,21 @@
 
 .noDivider {
     -fx-border-width: 0;
+
 }
 
 .noDivider .split-pane *.split-pane-divider{
     -fx-padding: 0 1 0 1;
-    fx-box-border: transparent;
+    -fx-box-border: transparent;
+
+}
+
+.keyboardSplitpane .split-pane *.split-pane-divider{
+    -fx-border-color: derive({0}, 90%);
+    -fx-border-width: 10px 0px 0px 0px;
+    -fx-padding: 0 0 0 0;
+    -fx-box-border: none;
+
 
 }
 
@@ -85,7 +95,20 @@
     -fx-accent: derive({0}, 80%);
     -fx-border-style: none;
      -fx-border-width: 0;
+     -fx-background-color: blue;
 }
+
+#menuFileBar{
+    -fx-background-color: {0};
+    -fx-border-color: derive({0}, 90%);
+    -fx-border-width: 0px 0px 1px 0px;
+
+}
+#menuFileBar > .container > .menu > .label{
+    -fx-text-fill: {2};
+
+}
+
 
 .text-area {
     -fx-border-color: {0};
@@ -104,6 +127,10 @@
 .secondary{
     -fx-background-color: {1};
     -fx-text-fill: {3} ;
+}
+
+.color-picker .color-picker-label .text {
+    -fx-fill: {0};
 }
 
 #keyPane > .title {
@@ -262,7 +289,17 @@
 
 
 #userSplitPane *.split-pane-divider {
-    -fx-padding: 0 1 0 1;
+    -fx-padding: 0 0 0 0;
+}
+
+#userSideBar{
+    -fx-background-color: {0};
+}
+
+.listView{
+    -fx-border-color: derive({0}, 90%);
+    -fx-background-color: {0};
+    -fx-border-width: 1px 0px 0px 0px;
 }
 
 .primaryText {
@@ -388,22 +425,34 @@
 	-fx-background-insets: 0.0;
 }
 
-.scroll-bar:vertical>.thumb, .scroll-bar:horizontal>.thumb {
-	-fx-background-color: {0};
+.scroll-bar:vertical>.thumb , .scroll-bar:horizontal>.thumb {
+	-fx-background-color: derive({0}, 95%);
 	-fx-background-insets: 0.0;
 	-fx-background-radius: 2.0;
+	-fx-pref-width: 0;
+
+}
+
+.scroll-bar:vertical>.track , .scroll-bar:horizontal>.track {
+	-fx-background-color: {1};
+	-fx-padding: 0px;
+	-fx-pref-width: 0;
 }
 
 .scroll-bar>.increment-button, .scroll-bar>.decrement-button,
 	.scroll-bar:hover>.increment-button, .scroll-bar:hover>.decrement-button
 	{
 	-fx-background-color: transparent;
+	-fx-padding: 0px;
 }
 
 .scroll-bar>.increment-button>.increment-arrow, .scroll-bar>.decrement-button>.decrement-arrow
 	{
 	-fx-background-color: {0};
 }
+
+
+
 
 .scroll-bar>.track-background {
 	-fx-background-color: transparent;

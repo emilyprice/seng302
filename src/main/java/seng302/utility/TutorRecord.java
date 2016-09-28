@@ -18,11 +18,10 @@ public class TutorRecord {
 
     /**
      * Adds a question and answer to the record
-
-     * @param questionSet A list of strings containing information about a single question.
-     *                    The third string has one of the following values:
-     *                    2 for skip, 1 for correct, 0 for incorrect
      *
+     * @param questionSet A list of strings containing information about a single question. The
+     *                    third string has one of the following values: 2 for skip, 1 for correct, 0
+     *                    for incorrect
      */
     public Map<String, String> addQuestionAnswer(String[] questionSet) {
         Map<String, String> question = new HashMap<>();
@@ -31,6 +30,10 @@ public class TutorRecord {
         question.put("correct", questionSet[2]);
         questions.add(question);
         return question;
+    }
+
+    public void setQuestions(List<Map<String, String>> questions) {
+        this.questions = questions;
     }
 
     public List getQuestions() {
@@ -43,6 +46,10 @@ public class TutorRecord {
 
     public Date getDate() {
         return date;
+    }
+
+    public void setStats(Map<String, Number> stats) {
+        this.stats = stats;
     }
 
     /**
@@ -59,8 +66,12 @@ public class TutorRecord {
     }
 
 
-    public void setDate() {
+    public void updateDate() {
         date = new Date();
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public void setFinished() {

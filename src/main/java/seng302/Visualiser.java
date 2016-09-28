@@ -24,7 +24,6 @@ public class Visualiser implements MetaEventListener {
     }
 
 
-
     @Override
     public void meta(MetaMessage meta) {
         Project currentProject = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject();

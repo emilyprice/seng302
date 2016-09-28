@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import seng302.Environment;
-import seng302.gui.RootController;
 import seng302.gui.UserPageController;
 import seng302.managers.TranscriptManager;
 
@@ -31,7 +30,6 @@ public class CrotchetDurationTest {
         env = new Environment();
         env.setTranscriptManager(transcriptManager);
         env.setUserPageController(userPageController);
-        //env.getUserHandler().setCurrentUser("test");
     }
 
 

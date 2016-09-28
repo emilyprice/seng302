@@ -28,7 +28,6 @@ public class Environment {
     private Pair currentFocussed;
 
 
-
     private AnchorPane stagePane;
 
     public AnchorPane getStagePane() {
@@ -69,6 +68,10 @@ public class Environment {
     //userpage
     private UserPageController userPageController;
 
+
+    private FirebaseUpdater firebaseUpdater;
+
+
     public StageMapController stageMapController;
 
     public StageMapController getStageMapController() {
@@ -88,8 +91,16 @@ public class Environment {
         transcriptManager = new TranscriptManager();
         mttDataManager = new MusicalTermsTutorBackEnd();
         shiftPressed = new SimpleBooleanProperty(false);
+        firebaseUpdater = new FirebaseUpdater(this);
         userHandler = new UserHandler(this);
         themeHandler = new ThemeHandler();
+
+
+    }
+
+
+    public FirebaseUpdater getFirebase() {
+        return firebaseUpdater;
     }
 
 
@@ -102,12 +113,15 @@ public class Environment {
         transcriptManager = new TranscriptManager();
         recordLocation = null;
         em = new EditHistory(this);
+
+
     }
 
     /**
      * Resets the environment so it clears the existing saved information.
      */
     public void resetEnvironment() {
+        firebaseUpdater = new FirebaseUpdater(this);
         executor = new DslExecutor(this);
         player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();
@@ -115,6 +129,8 @@ public class Environment {
         recordLocation = null;
         themeHandler = new ThemeHandler();
         em = new EditHistory(this);
+
+
     }
 
     /**

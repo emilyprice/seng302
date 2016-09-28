@@ -9,64 +9,48 @@ package seng302.Users;
  * Created by Jonty on 12-Apr-16.
  */
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.controlsfx.control.Notifications;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.sound.midi.Instrument;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 import seng302.utility.InstrumentUtility;
 import seng302.utility.LevelCalculator;
 import seng302.utility.OutputTuple;
+import seng302.utility.TutorRecord;
+
+import javax.sound.midi.Instrument;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Project {
 
-    JSONObject projectSettings;
-
-    JSONParser parser = new JSONParser(); //parser for reading project
+    HashMap<String, Object> projectSettings;
 
     ProjectHandler projectHandler;
 
-    // Levels variables, will be updated as the user gains experience
 
-    private Integer experience;
-    private Integer level;
+    private Integer experience, level;
 
-    Path projectDirectory;
-    public String currentProjectPath, projectName;
+    public String projectName;
 
-    private seng302.managers.BadgeManager badgeManager;
-    boolean saved = true;
-
-    Environment env;
+    private Environment env;
     public TutorHandler tutorHandler;
+    private BadgeManager badgeManager;
 
-    private Boolean isCompetitiveMode;
 
-    private Boolean visualiserOn;
+    private Boolean isCompetitiveMode, visualiserOn;
+    Boolean saved = true;
 
     public Boolean isUserMapData = true;
+
+    public HashMap<String, TutorRecord> recentPracticeTutorRecordMap;
 
 
     /**
@@ -78,9 +62,8 @@ public class Project {
      */
     public Project(Environment env, String projectName, ProjectHandler projectH) {
         this.projectName = projectName;
-        this.projectDirectory = Paths.get(projectH.projectsDirectory + "/" + projectName);
         this.env = env;
-        projectSettings = new JSONObject();
+        projectSettings = new HashMap<>();
         tutorHandler = new TutorHandler(env);
         projectHandler = projectH;
         isCompetitiveMode = true;
@@ -88,6 +71,7 @@ public class Project {
         this.level = 1;
         this.visualiserOn = false;
         badgeManager = new BadgeManager(env);
+        recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
         loadProject(projectName);
         loadProperties();
 
@@ -111,25 +95,39 @@ public class Project {
         projectSettings.put("transcript", transcriptString);
 
         projectSettings.put("rhythm", gson.toJson(env.getPlayer().getRhythmHandler().getRhythmTimings()));
+        try {
+            projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
+        } catch (NullPointerException e) {
+            projectSettings.put("instrument", "Acoustic Grand Piano");
+        }
 
-        projectSettings.put("instrument", gson.toJson(env.getPlayer().getInstrument().getName()));
 
-        // User level for current project
         projectSettings.put("level", this.level);
         projectSettings.put("experience", this.experience);
 
         projectSettings.put("competitionMode", gson.toJson(isCompetitiveMode.toString()));
+
         projectSettings.put("visualiserOn", gson.toJson(visualiserOn.toString()));
 
         projectSettings.put("overallBadges", gson.toJson(badgeManager.getOverallBadges()));
         projectSettings.put("tutorBadges", gson.toJson(badgeManager.getTutorBadges()));
         projectSettings.put("tutor100Map", gson.toJson(badgeManager.get100TutorBadges()));
 
+        projectSettings.put("tutorPracticeMap", gson.toJson(recentPracticeTutorRecordMap));
+
+
         try {
-            projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().getUnlockStatus()));
+            projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().unlockStatus));
         } catch (Exception e) {
             System.err.println("cant save unlock map");
         }
+
+        try {
+            projectSettings.put("unlockMapDescriptions", gson.toJson(env.getStageMapController().getUnlockDescriptions()));
+        } catch (Exception e) {
+            System.err.println("cant save unlock map descriptions");
+        }
+
     }
 
 
@@ -138,6 +136,12 @@ public class Project {
      * working transcript and rhythm setting.
      */
     private void loadProperties() {
+
+
+        DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/" + projectName);
+
+        projectSettings = (HashMap<String, Object>) projectSnapshot.getValue();
+
         int tempo;
         Gson gson = new Gson();
 
@@ -154,11 +158,12 @@ public class Project {
         ArrayList<OutputTuple> transcript;
         Type transcriptType = new TypeToken<ArrayList<OutputTuple>>() {
         }.getType();
-        transcript = gson.fromJson((String) projectSettings.get("transcript"), transcriptType);
-
-        env.getTranscriptManager().setTranscriptContent(transcript);
-        env.getRootController().setTranscriptPaneText(env.getTranscriptManager().convertToText());
-
+        try {
+            transcript = gson.fromJson((String) projectSettings.get("transcript"), transcriptType);
+            env.getTranscriptManager().setTranscriptContent(transcript);
+            env.getRootController().setTranscriptPaneText(env.getTranscriptManager().convertToText());
+        } catch (NullPointerException np) {
+        }
 
         //Rhythm
         int[] rhythms;
@@ -230,30 +235,45 @@ public class Project {
         }
 
 
+        try {
+            HashMap<String, TutorRecord> practiceMap;
+            Type mapType = new TypeToken<HashMap<String, TutorRecord>>() {
+            }.getType();
+            practiceMap = gson.fromJson((String) projectSettings.get("tutorPracticeMap"), mapType);
+            if (practiceMap != null) {
+                recentPracticeTutorRecordMap = practiceMap;
+
+            }
+
+        } catch (Exception e) {
+            System.err.println("failed to load tutorPracticeMap");
+
+        }
+
+
         //badges
         //overallBadges
-        ArrayList<Badge> overallBadges;
-        Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
-        }.getType();
-        overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
+        try {
+            ArrayList<Badge> overallBadges;
+            Type overallBadgeType = new TypeToken<ArrayList<Badge>>() {
+            }.getType();
+            overallBadges = gson.fromJson((String) projectSettings.get("overallBadges"), overallBadgeType);
 
-        //tutorBadges
-        HashMap<String, ArrayList<Badge>> tutorBadges;
-        Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
-        }.getType();
-        tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
 
-        badgeManager.replaceBadges(tutorBadges, overallBadges);
+            //tutorBadges
 
-        //100tutorMap
-        HashMap<String, Boolean> tutor100Map;
-        Type tutor100BadgeType = new TypeToken<HashMap<String, Boolean>>() {
-        }.getType();
-        tutor100Map = gson.fromJson((String) projectSettings.get("tutor100Map"), tutor100BadgeType);
+            HashMap<String, ArrayList<Badge>> tutorBadges;
+            Type tutorBadgeType = new TypeToken<HashMap<String, ArrayList<Badge>>>() {
+            }.getType();
+            tutorBadges = gson.fromJson((String) projectSettings.get("tutorBadges"), tutorBadgeType);
+            if (tutorBadges != null && overallBadges != null) {
+                badgeManager.replaceBadges(tutorBadges, overallBadges);
+            }
 
-        badgeManager.replaceTutor100AllMap(tutor100Map);
+        } catch (Exception e) {
+            System.err.println("failed to import badge data");
+        }
 
-        env.getTranscriptManager().unsavedChanges = false;
     }
 
 
@@ -269,10 +289,29 @@ public class Project {
             unlockMap = gson.fromJson((String) projectSettings.get("unlockMap"), mapType);
             if (unlockMap != null) {
                 env.getStageMapController().unlockStatus = unlockMap;
+                env.getStageMapController().setDescription();
             }
         } catch (Exception e) {
-            System.out.println("failed to load stageMap");
+            e.printStackTrace();
+
         }
+
+        try {
+            Gson gson = new Gson();
+            HashMap<String, HashMap<String, Boolean>> unlockMapDescriptions;
+            Type mapType = new TypeToken<HashMap<String, HashMap<String, Boolean>>>() {
+            }.getType();
+            unlockMapDescriptions = gson.fromJson((String) projectSettings.get("unlockMapDescriptions"), mapType);
+            if (unlockMapDescriptions != null) {
+                env.getStageMapController().unlockDescriptions = unlockMapDescriptions;
+                env.getStageMapController().setDescription();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+
     }
 
 
@@ -281,8 +320,8 @@ public class Project {
      * project dialog.
      */
     public void saveCurrentProject() {
-        if (currentProjectPath != null) {
-            saveProject(currentProjectPath);
+        if (projectName != null) {
+            saveProject(projectName);
         } else {
             projectHandler.createNewProject();
         }
@@ -294,29 +333,12 @@ public class Project {
     /**
      * Handles Saving a .json Project file, for the specified project address
      *
-     * @param projectAddress Project directory address.
+     * @param projectName Project directory address.
      */
-    public void saveProject(String projectAddress) {
-
-        //Add all settings such as tempo speed to the project here.
-
-        try {
-            Gson gson = new Gson();
-            saveProperties();
-
-            FileWriter file = new FileWriter(projectAddress + "/" + projectName + ".json");
-            file.write(projectSettings.toJSONString());
-            file.flush();
-            file.close();
-
-            projectSettings.put("tempo", env.getPlayer().getTempo());
-            env.getRootController().removeUnsavedChangesIndicator();
-            currentProjectPath = projectAddress;
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-
+    public void saveProject(String projectName) {
+        saveProperties();
+        env.getFirebase().getUserRef().child("projects/" + projectName).updateChildren(projectSettings);
+        env.getRootController().removeUnsavedChangesIndicator();
     }
 
 
@@ -347,16 +369,14 @@ public class Project {
             case "unlockMap":
                 currentValue = env.getStageMapController().getUnlockStatus();
                 break;
+            case "unlockMapDescriptions":
+                currentValue = env.getStageMapController().getUnlockDescriptions();
         }
 
         try {
-            if (projectSettings.containsKey(propName) && !(projectSettings.get(propName).equals(currentValue))) {
-                env.getRootController().addUnsavedChangesIndicator();
-                saved = false;
-            } else if (!projectSettings.containsKey(propName)) {
-                env.getRootController().addUnsavedChangesIndicator();
-                saved = false;
-            }
+
+            env.getUserHandler().getCurrentUser().saveAll();
+
         } catch (Exception e) {
             System.err.println("Invalid property being checked for save");
         }
@@ -371,58 +391,20 @@ public class Project {
      * @param pName project name string
      */
     public void loadProject(String pName) {
-        try {
+        DataSnapshot project = env.getFirebase().getUserSnapshot().child("projects/" + pName);
+        env.resetProjectEnvironment();
+        if (project.exists()) {
 
-            env.resetProjectEnvironment();
-            String path = projectDirectory.toString();
-
-            try {
-
-                projectSettings = (JSONObject) parser.parse(new FileReader(path + "/" + pName + ".json"));
-
-            } catch (FileNotFoundException f) {
-                //Project doesn't exist? Create it.
-                System.err.println("Tried to load project but the path didn't exist");
-
-                if (!Paths.get(path).toFile().isDirectory()) {
-                    //If the Project directory folder doesn't exist.
-                    System.err.println("Project directory missing - Might have been moved, renamed or deleted.\n Will remove the project from the projects json");
-
-                    try {
-                        Files.createDirectories(projectDirectory);
-                        saveProject(path);
-
-                    } catch (IOException eIO3) {
-                        //Failed to create the directory.
-                        System.err.println("Well UserData directory failed to create.. lost cause.");
-                    }
-
-                    return;
-                } else {
-                    //.json project files are corrupt.
-                    saveProject(path);
-                }
-
-            }
-
-            this.projectName = pName;
-            loadProperties();
-            currentProjectPath = path;
-            env.getRootController().setWindowTitle("Allegro - " + pName);
-            //ignore
-
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found, printing exception..");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("IOException when trying to parse project .json");
-            e.printStackTrace();
-        } catch (ParseException e) {
-            System.err.println("Parse exception. Project json is corrupt, cannot open.");
-            env.getRootController().errorAlert("Project Corrupt - Cannot open.");
-
+        } else {
+            System.err.println("Tried to load project but it didn't exist");
+            saveProject(pName);
 
         }
+        this.projectName = pName;
+        loadProperties();
+        env.getRootController().setWindowTitle("Allegro - " + pName);
+
+
     }
 
 
@@ -431,14 +413,6 @@ public class Project {
      */
     public boolean isSaved() {
         return saved;
-    }
-
-    public Boolean isProject() {
-        return currentProjectPath != null;
-    }
-
-    public String getCurrentProjectPath() {
-        return currentProjectPath;
     }
 
     public boolean getIsCompetitiveMode() {
@@ -451,8 +425,9 @@ public class Project {
             env.getRootController().disallowTranscript();
             env.getRootController().getTranscriptController().hideTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
-            env.getUserPageController().populateUserOptions();
             env.getUserPageController().getSummaryController().loadStageMap();
+            env.getUserPageController().populateUserOptions();
+
         } catch (NullPointerException e) {
             // User Page might not exist yet so it doesn't have to load stuff
         }
@@ -464,8 +439,9 @@ public class Project {
             this.isCompetitiveMode = false;
             env.getRootController().allowTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
-            env.getUserPageController().populateUserOptions();
             env.getUserPageController().getSummaryController().loadStageMap();
+            env.getUserPageController().populateUserOptions();
+
         } catch (NullPointerException e) {
             // User page might not exist yet
         }
@@ -520,8 +496,16 @@ public class Project {
         checkChanges("visualiserOn");
     }
 
+    public void addRecentPracticeTutorRecordMap(String tutor, TutorRecord record) {
+        recentPracticeTutorRecordMap.put(tutor, record);
+    }
+
     public boolean getVisualiserOn() {
         return visualiserOn;
+    }
+
+    public HashMap<String, TutorRecord> getRecentPracticeTutorRecordMap() {
+        return recentPracticeTutorRecordMap;
     }
 
     public BadgeManager getBadgeManager() {

@@ -1,26 +1,21 @@
 package seng302.gui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-
+import com.google.firebase.database.DataSnapshot;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -29,7 +24,13 @@ import javafx.util.Pair;
 import seng302.Environment;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
+import seng302.utility.ImageCache;
 import seng302.utility.LevelCalculator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * Controller for the GUI page which displays a user's summary information.
@@ -68,18 +69,25 @@ public class UserSummaryController {
     FXMLLoader loader = new FXMLLoader();
 
     AnchorPane noteMap;
-    
+
+    @FXML
+    private Label summaryAverageLabel;
+
+    @FXML
+    private Label summaryAverageNumber;
+
+
     @FXML
     StackPane stageMap;
 
-    
+
     private ColorAdjust blackout;
-    private ImageView lockView;
     @FXML
     private GridPane badgeGrid;
     private int gridX = 0;
     private int gridY = 0;
 
+    public static final ImageCache imageCache = new ImageCache();
 
     /**
      * Initializes the user summary controller and draws its graphs
@@ -113,10 +121,18 @@ public class UserSummaryController {
                 new KeyFrame(Duration.millis(800), new KeyValue(overallIncorrect.widthProperty(), overallWidthIncorrect, Interpolator.EASE_OUT)));
         overallIncorrectAnim.play();
         overallIncorrect.setWidth(overallWidthIncorrect);
-        overallIncorrect.setFill(Color.GRAY);
+        overallIncorrect.setFill(Color.LIGHTGRAY);
+        overallIncorrect.setStyle("-fx-border-radius: 10 10 0 0;\n" +
+                "  -fx-background-radius: 10 10 0 0;");
         overallCorrectLabel.setText(correctIncorrectOverall.getKey() + " \ncorrect");
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
         classAverage.setVisible(false);
+
+        updateBadgesDisplay();
+
+        displayClassAverage(env.getUserPageController().getTimePeriod());
+
+
     }
 
     /**
@@ -144,43 +160,32 @@ public class UserSummaryController {
      * Loads the stage map into the summary page
      */
     public void loadStageMap() {
-        if (env.getStageMapController() == null) {
-            loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
 
-            try {
-                noteMap = loader.load();
-                stageMap.getChildren().add(noteMap);
-            } catch (Exception e) {
-                System.err.println("Failed to load stage map");
-                System.out.println(e.getStackTrace());
-                e.printStackTrace();
-            }
+        loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
 
-
-            StageMapController controller = loader.getController();
-            env.setStageMapController(controller);
-            env.setStagePane(noteMap);
-            env.getStageMapController().setEnvironment(env);
-            env.getStageMapController().create();
-
-            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().loadStageMapData();
-
-            env.getStageMapController().visualiseLockedTutors();
-
-        } else {
-
-            try {
-                stageMap.getChildren().clear();
-                stageMap.getChildren().add(env.getStagePane());
-                env.getStageMapController().visualiseLockedTutors();
-
-            } catch (Exception e) {
-                System.err.println("Failed to load stage map");
-                //e.printStackTrace();
-            }
+        try {
+            noteMap = loader.load();
+            stageMap.getChildren().clear();
+            stageMap.getChildren().add(noteMap);
+        } catch (LoadException e) {
+        } catch (Exception e) {
+            System.err.println("Failed to load stage map");
+            e.printStackTrace();
         }
-        
+
+
+        StageMapController controller = loader.getController();
+        env.setStageMapController(controller);
+        env.setStagePane(noteMap);
+        env.getStageMapController().setEnvironment(env);
+        env.getStageMapController().create();
+        env.getStageMapController().setDescription();
+        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().loadStageMapData();
+        env.getStageMapController().visualiseLockedTutors();
+
+
     }
+
 
     /**
      * Used to create the badgeGrid and display the badges in stackpanes with the correct effect
@@ -195,11 +200,21 @@ public class UserSummaryController {
         ColorAdjust blackout = new ColorAdjust();
         blackout.setBrightness(-1.0);
         this.blackout = blackout;
-        Image lockImg = new Image("/images/lock.png");
-        ImageView lockView = new ImageView(lockImg);
-        lockView.fitHeightProperty().setValue(45);
-        lockView.fitWidthProperty().setValue(45);
-        this.lockView = lockView;
+
+        try {
+            for (Object tutor : tutorBadgeMap.keySet()) {
+                for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {
+                    tutorBadges.add((Badge) b);
+                }
+            }
+            Collections.sort(generalBadges, new badgeComparator());
+            generalBadges.forEach(this::addBadgeToGrid);
+            Collections.sort(tutorBadges, new badgeComparator());
+            tutorBadges.forEach(this::addTutorBadgeToGrid);
+        } catch (NullPointerException e) {
+            // Retrieving badges from json file
+        }
+
 
         for (Object tutor : tutorBadgeMap.keySet()) {
             for (Object b : (ArrayList) tutorBadgeMap.get(tutor)) {
@@ -207,10 +222,6 @@ public class UserSummaryController {
             }
         }
 
-        Collections.sort(generalBadges, new badgeComparator());
-        generalBadges.forEach(this::addBadgeToGrid);
-        Collections.sort(tutorBadges, new badgeComparator());
-        tutorBadges.forEach(this::addTutorBadgeToGrid);
     }
 
     /**
@@ -219,27 +230,71 @@ public class UserSummaryController {
     public static class badgeComparator implements Comparator<Badge> {
         @Override
         public int compare(Badge b1, Badge b2) {
-            return (b1.currentBadgeType > b2.currentBadgeType) ? -1: (b1.currentBadgeType < b2.currentBadgeType) ? 1:0;
+            return (b1.currentBadgeType > b2.currentBadgeType) ? -1 : (b1.currentBadgeType < b2.currentBadgeType) ? 1 : 0;
         }
+    }
+
+    private void displayClassAverage(String timePeriod) {
+        DataSnapshot users = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom()).child("users");
+        ArrayList<Pair<Integer, Integer>> data = new ArrayList<>();
+        users.getChildren().forEach(user -> {
+            user.child("projects").getChildren().forEach(project -> {
+                Pair<Integer, Integer> totals = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getTutorHandler().getTotalsForAllTutorsInProject(project, timePeriod);
+                data.add(totals);
+            });
+        });
+
+        Integer classTotalIncorrect = 0;
+        Integer classTotalCorrect = 0;
+        for (Pair<Integer, Integer> score : data) {
+            classTotalCorrect += score.getKey();
+            classTotalIncorrect += score.getValue();
+        }
+
+        float averageClassScore = 0;
+        if (classTotalCorrect + classTotalIncorrect != 0) {
+            averageClassScore = classTotalCorrect.floatValue() / (classTotalCorrect + classTotalIncorrect);
+        }
+        StackPane.setMargin(classAverage, new Insets(0, 0, 0, 500 * averageClassScore - 30));
+        HBox.setMargin(summaryAverageLabel, new Insets(0, 0, 0, 500 * averageClassScore - 50));
+        summaryAverageNumber.setText(String.format("%.2f", averageClassScore));
+
+
     }
 
     /**
      * Used to add a non-tutor badge to the badgeGrid
+     *
      * @param b the Badge to be added
      */
     public void addBadgeToGrid(Badge b) {
-        Image bImage = new Image("/images/"+b.imageName+".png");
-        ImageView bView = new ImageView(bImage);
+
+        String badgeImagePath = "/images/" + b.imageName + ".png";
+
+        Image retrieve = imageCache.retrieve(badgeImagePath, 70);
+        ImageView bView = new ImageView(retrieve);
         bView.fitHeightProperty().setValue(70);
         bView.fitWidthProperty().setValue(70);
         StackPane badgeStack;
-        Image lockImg = new Image("/images/lock.png");
-        ImageView lockView = new ImageView(lockImg);
+
+        ImageView lockView = new ImageView(imageCache.retrieve("/images/lock.png", 40));
         lockView.fitHeightProperty().setValue(40);
         lockView.fitWidthProperty().setValue(40);
 
+        VBox badgeBox = new VBox();
+        Label badgeName = new Label(b.name);
+        badgeName.setFont(javafx.scene.text.Font.font(16));
+        Label description = new Label(b.description);
+        ProgressBar progressBar = new ProgressBar();
+
+        try {
+            progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
+        } catch (NullPointerException n) {
+            progressBar.setProgress(b.badgeProgress);
+        }
+
         ColorAdjust badgeEffect = new ColorAdjust();
-        if (b.currentBadgeType == 0) {
+        if (b.isLocked()) {
             badgeEffect = this.blackout;
             badgeStack = new StackPane(bView, lockView);
         } else {
@@ -247,16 +302,7 @@ public class UserSummaryController {
         }
         bView.setEffect(badgeEffect);
 
-        VBox badgeBox = new VBox();
-        Label badgeName = new Label(b.name);
-        badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label description = new Label(b.description);
-        ProgressBar progressBar = new ProgressBar();
-        if (b.badgeLevels != null) {
-            progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
-        } else {
-            progressBar.setProgress(b.badgeProgress);
-        }
+
         badgeBox.getChildren().addAll(badgeStack, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
@@ -271,24 +317,27 @@ public class UserSummaryController {
 
     /**
      * Used to add a tutor badge to the badgeGrid
+     *
      * @param b the Badge to be added
      */
     public void addTutorBadgeToGrid(Badge b) {
-        Image ribbonImage = new Image("/images/ribbonAward.png");
-        ImageView rView = new ImageView(ribbonImage);
+        String ribbonPath = "/images/ribbonAward.png";
+        String lockImagePath = "/images/lock.png";
+        String badgeImagePath = "/images/" + b.imageName + ".png";
+
+        ImageView rView = new ImageView(imageCache.retrieve(ribbonPath, 70));
         rView.fitHeightProperty().setValue(70);
         rView.fitWidthProperty().setValue(70);
-        Image bImage = new Image("/images/"+b.imageName+".png");
-        ImageView bView = new ImageView(bImage);
+
+
+        ImageView bView = new ImageView(imageCache.retrieve(badgeImagePath, 26));
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
-        Image lockImg = new Image("/images/lock.png");
-        ImageView lockView = new ImageView(lockImg);
-        lockView.fitHeightProperty().setValue(40);
-        lockView.fitWidthProperty().setValue(40);
+
+        ImageView lockView = new ImageView(imageCache.retrieve(lockImagePath, 40));
 
         ColorAdjust badgeEffect = new ColorAdjust();
-        if (b.currentBadgeType == 0) {
+        if (b.isLocked()) {
             badgeEffect = this.blackout;
             bView = lockView;
         } else if (b.currentBadgeType == 1) {
@@ -299,7 +348,7 @@ public class UserSummaryController {
             badgeEffect.setHue(0);
             badgeEffect.setSaturation(-1);
             badgeEffect.setBrightness(0.32);
-        } else if ( b.currentBadgeType == 3) {
+        } else if (b.currentBadgeType == 3) {
             badgeEffect.setHue(-0.687);
             badgeEffect.setSaturation(1);
             badgeEffect.setBrightness(0.1);
@@ -315,7 +364,7 @@ public class UserSummaryController {
         Label tutorName = new Label(b.tutorName);
         Label description = new Label(b.description);
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
+        progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
         badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
