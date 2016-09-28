@@ -346,6 +346,7 @@ public class RootController implements Initializable {
     }
 
 
+
     public void setHeader(String text) {
         txtHeader.setText(text);
     }

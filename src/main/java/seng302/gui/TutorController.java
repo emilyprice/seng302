@@ -105,7 +105,8 @@ public abstract class TutorController {
         try {
             String tutorName = env.getRootController().getHeader();
             env.getUserPageController().showPage(tutorName);
-            env.getRootController().showUserPage();
+            env.getRootController().showUserPage(); //have to go back to summary page to get list of tutors
+            env.getUserPageController().listView.getSelectionModel().select(tutorName); //select tutor summary page
 
 
         } catch (Exception e) {
