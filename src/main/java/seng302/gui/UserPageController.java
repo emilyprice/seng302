@@ -56,7 +56,7 @@ public class UserPageController {
     SplitPane userView;
 
     @FXML
-    JFXListView listView;
+    public JFXListView listView;
 
     @FXML
     private JFXButton btnSettings;
