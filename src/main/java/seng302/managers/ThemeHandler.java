@@ -94,6 +94,7 @@ public class ThemeHandler {
                 col = java.awt.Color.decode(colString);
             } catch (Exception e) {
                 col = Color.decode("#1E88E5"); //Default blue
+                return "black";
             }
         }
 
