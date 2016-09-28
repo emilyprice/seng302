@@ -195,9 +195,11 @@ public class UserSummaryController {
             env.setStagePane(noteMap);
             env.getStageMapController().setEnvironment(env);
             env.getStageMapController().create();
+            env.getStageMapController().setDescription();
 
 
             env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().loadStageMapData();
+
 
             env.getStageMapController().visualiseLockedTutors();
 
