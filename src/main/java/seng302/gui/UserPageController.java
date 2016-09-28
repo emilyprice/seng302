@@ -5,8 +5,15 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -96,6 +103,9 @@ public class UserPageController {
     @FXML
     AnchorPane summary;
 
+    @FXML
+    JFXButton logoutButton;
+
     private PopOver timePopover;
 
     private Environment env;
@@ -109,6 +119,9 @@ public class UserPageController {
     private TextField tempoInput = new TextField();
 
     private UserSummaryController summaryController;
+
+    private PopOver logoutPop;
+
 
 
     public void setEnvironment(Environment env) {
@@ -126,6 +139,7 @@ public class UserPageController {
         updateProfilePicDisplay();
         updateLevelBadge();
         updateNameDisplay();
+        logoutConfirmPopover();
     }
 
     /**
@@ -154,7 +168,58 @@ public class UserPageController {
 
     @FXML
     public void onLogoutClick() {
-        env.getRootController().showCloseWindow("logout");
+
+        //env.getRootController().showCloseWindow("logout");
+
+        if (logoutPop.isShowing()) {
+            logoutPop.hide();
+        } else {
+            logoutPop.show(logoutButton);
+        }
+    }
+
+    private void logoutConfirmPopover() {
+        VBox mainBox = new VBox();
+
+        HBox labelBox = new HBox();
+        HBox buttonBox = new HBox();
+
+        Label confirm = new Label("Are you sure you want to log out?");
+        JFXButton yes = new JFXButton("Yes");
+        yes.getStyleClass().add("primary");
+        JFXButton no = new JFXButton("No");
+        no.getStyleClass().add("primary");
+
+        labelBox.getChildren().add(confirm);
+        buttonBox.getChildren().add(yes);
+        buttonBox.getChildren().add(no);
+
+        buttonBox.setSpacing(10);
+        buttonBox.setPadding(new Insets(10));
+
+        yes.setOnAction(e -> {
+            env.getRootController().showCloseWindow("logout");
+        });
+
+        no.setOnAction(e -> {
+            logoutPop.hide();
+        });
+
+
+        mainBox.getChildren().add(labelBox);
+        mainBox.getChildren().add(buttonBox);
+        mainBox.setSpacing(10);
+        mainBox.setPadding(new Insets(10));
+        logoutPop = new PopOver(mainBox);
+        logoutPop.headerAlwaysVisibleProperty().setValue(true);
+        logoutPop.setTitle("Log Out");
+
+
+
+
+
+
+
     }
 
     /**
