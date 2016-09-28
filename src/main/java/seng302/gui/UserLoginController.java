@@ -241,7 +241,6 @@ public class UserLoginController {
 
     @FXML
     protected void logIn() {
-
         if(classroomSelected()){
             authenticate(env.getFirebase().getClassroomsSnapshot().child(ddClassroom.getValue().toString()));
         }
@@ -277,8 +276,6 @@ public class UserLoginController {
         }
         else if (fbClass.exists()) {
 
-
-
             DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
 
             if (userfb.exists()) {
@@ -289,7 +286,6 @@ public class UserLoginController {
 
                 if (pass.equals(passwordInput.getText())) {
                     env.getUserHandler().setCurrentUser(usernameInput.getText(), ddClassroom.getValue().toString(), passwordInput.getText());
-
                     Stage stage = (Stage) btnLogin.getScene().getWindow();
                     stage.close();
                     env.getRootController().showWindow(true);

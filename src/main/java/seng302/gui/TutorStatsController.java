@@ -157,7 +157,9 @@ public class TutorStatsController {
         correctIncorrectOverall = handler.getTutorTotals(handler.getTutorData(tutorNameNoSpaces), timePeriod);
         dateAndTime = handler.getTimeAndScores(tutorNameNoSpaces, timePeriod);
         */
+
         try {
+            /*
             switch (tutor) {
 
                 case "Pitch Comparison Tutor":
@@ -306,7 +308,7 @@ public class TutorStatsController {
                     dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("scaleSpellingTutor", timePeriod);
                     break;
 
-            }
+            }*/
 
 
             latestAttempt.setVisible(true);
@@ -538,16 +540,22 @@ public class TutorStatsController {
      * @param b the Badge to be added
      */
     public void addTutorBadgeToGrid(Badge b) {
-        Image ribbonImage = new Image("/images/ribbonAward.png", 70, 70, true, false);
-        ImageView rView = new ImageView(ribbonImage);
+        String ribbonPath = "/images/ribbonAward.png";
+        String lockImagePath = "/images/lock.png";
+        String badgeImagePath = "/images/" + b.imageName + ".png";
+
+
+        ImageView rView = new ImageView(UserSummaryController.imageCache.retrieve(ribbonPath, 70));
         rView.fitHeightProperty().setValue(70);
         rView.fitWidthProperty().setValue(70);
-        Image bImage = new Image("/images/"+b.imageName+".png", 26.0, 26.0, true, false);
-        ImageView bView = new ImageView(bImage);
+
+
+        ImageView bView = new ImageView(UserSummaryController.imageCache.retrieve(badgeImagePath, 26));
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
-        Image lockImg = new Image("/images/lock.png", 40, 40, true, false);
-        ImageView lockView = new ImageView(lockImg);
+
+        ImageView lockView = new ImageView(UserSummaryController.imageCache.retrieve(lockImagePath, 40));
+
         lockView.fitHeightProperty().setValue(40);
         lockView.fitWidthProperty().setValue(40);
 
