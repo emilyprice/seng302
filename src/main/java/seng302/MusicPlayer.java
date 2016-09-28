@@ -42,6 +42,7 @@ public class MusicPlayer {
      * Music Player constructor opens the sequencers and synthesizer. It also sets the receiver.
      */
     public MusicPlayer(Visualiser visualiser) {
+
         rh = new RhythmHandler();
         try {
             this.seq = MidiSystem.getSequencer();
@@ -331,6 +332,7 @@ public class MusicPlayer {
      */
     public void setTempo(int tempo) {
         this.tempo = tempo;
+
     }
 
     public void stop() {

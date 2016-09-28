@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXColorPicker?>
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="450.0" prefWidth="700.0"  xmlns="http://javafx.com/javafx/8"
+<AnchorPane prefHeight="450.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UISkinnerController">
    <children>
        <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox fx:id="settings" alignment="CENTER_LEFT" minWidth="400.0" prefHeight="10.0" spacing="5.0">
                <children>
-                  <VBox minHeight="-Infinity" prefHeight="100.0" prefWidth="746.0" spacing="10.0">
+                  <VBox minHeight="-Infinity" prefHeight="800.0" prefWidth="860.0" spacing="10.0">
                      <children>
                         <Label text="Generates a theme based on the selected colour. ">
                            <VBox.margin>
@@ -30,26 +23,38 @@
                                <Font size="14.0" />
                            </font>
                         </Label>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                           <VBox.margin>
-                               <Insets left="5.0" />
-                           </VBox.margin>
-                           <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="718.0" styleClass="primary">
+                              <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="1060.0" styleClass="primary">
                                  <children>
-                                     <Label text="Select a colour:" styleClass="primaryText">
+                                     <Label text="Select a primary colour:    " styleClass="primaryText">
                                        <HBox.margin>
                                            <Insets left="20.0" right="10.0" />
                                        </HBox.margin>
                                     </Label>
-                                     <JFXColorPicker fx:id="jfxColourPicker" onAction="#changeColour" promptText="Select a colour" styleClass="primary" />
+                                     <JFXColorPicker fx:id="primaryColour" onAction="#changeColour" promptText="Primary" styleClass="secondary" />
                                  </children>
                                  <HBox.margin>
                                      <Insets />
                                  </HBox.margin>
                               </HBox>
-                           </children>
-                        </HBox>
+                               <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="1060.0" styleClass="primary">
+                                   <children>
+                                       <Label text="Select a secondary colour:" styleClass="primaryText">
+                                           <HBox.margin>
+                                               <Insets left="20.0" right="10.0" />
+                                           </HBox.margin>
+                                       </Label>
+                                       <JFXColorPicker fx:id="secondaryColour" onAction="#changeColour" promptText="Secondary" styleClass="color-picker" />
+                                       <Label text="Or generate a complimentary colour:" styleClass="primaryText">
+                                           <HBox.margin>
+                                               <Insets left="20.0" right="10.0" />
+                                           </HBox.margin>
+                                       </Label>
+                                       <JFXButton fx:id="generateSecondaryColour" onAction="#generateSecondaryColour" text="Generate" />
+                                   </children>
+                                   <HBox.margin>
+                                       <Insets />
+                                   </HBox.margin>
+                               </HBox>
                      </children>
                   </VBox>
                </children>

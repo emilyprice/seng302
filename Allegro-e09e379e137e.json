@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "allegro-8ce55",
+  "private_key_id": "e09e379e137e3871da9a3664a22f14cbc6e846b6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDHSeorEwESV1ZA\nS95pTNIklcqseAKv/6sYx35RlabumwgIl1VZPHKOzYyGMbN6jIvGlBXNgT0F7DaS\nOr/p2S8zqA7LdrokZg9MxenLDg4gib6ekrSHypd/ZglXHzr3wcumrTIOLVX7D9yA\ncqlWJVuj6oHq1cDDPOKnvXeygIUqr8O8vdmpEAHPzYaAJAoKST31RjmUf/PkQ3le\ni2RAsQdVWKGIr8ipFu6J68QmAODe25XjvprduCwb8GZH/41fMiWEpzmiNOx1Fxw2\nB32Lfwbmr8oOsn2BzF/Cc2z6ogmNBs9UyHV5+JRos1uMXM2NN4/pbcT134OPPnlg\nHRMFQM8nAgMBAAECggEBAKBDKaRQGRmF0J/OI2Ls20V+jEkcDZU5dn9r1oKHZYIW\nfGRkRseHW9zJIcu85keUBMfByLLFzqwXpF7+Dd1hwZq5+IPYy6J/zKgBtJyNhgDW\npMti0Pkui5xxEuvT+pjJaRt1xn4uKSnIPJuzGchkLIjqCmYuVWDscp1QOZT705tZ\n5+UDoFV0fXpq9Nu/vaVnBhhVNFlBKQLXPDA3Op8S4fsuTZsTEo2eTAbqMfqoPc6c\nyp9TOqzCgXNJb1CPyba663MkMqutE6Gknlq9KYWHz2vGwLLWbJORrmTaGyRAn9yT\n/l46xpqfYaJLPKgAQhqAlZ3iPhUKyHcnrsnBlJ3G1ikCgYEA642IG4lu5pcDqA/H\n8ipMfPAl9gwYxhONYta4U95jFU2H2uvkwHEHQKRxWp1ef56o/2Q+rmOdkhoZhT6c\nAq/5kpUTyf6wfP3UCCb50jqxsanh9fE30j2vB6/kNAs28vvr67xXtWIXkrnSJEDq\nqTSQEnqiSVIlQhkRgC8pdhPo/a0CgYEA2JaFBgq9C+Wr28YL3wmn4MkmcGm9mIhU\ncHuTsK/NTnFCPvUx0450sheYiJZ9zSTs2pG3OHEpGZVKmpg0s03wR8Co8NTz0HXA\nCkE7lwIgAZwJmzykylqATKF2RRnudgiI61jIjIA02B1wmiHRe5EtNEIuJFdA0Cwu\nmxOo3sw5sqMCgYAPs/q74ziadLzQqmSo9zrsJVJSidHo+oq1aR0Wsj+mvulspcc1\nMRPLsmrAILeZCGm5xOQM2iU6BTVoVZku8K5RoFCWab04R++nr3l+E12fO3UN4UvY\nXzZY69fpxEmgfzzmFUM/m094/5xLwGwkZZWpNbW175z+QA+TnRFFhuREbQKBgHMS\nDVy3adcfT9506yu1kpbP5/dDhrK6g7o7Pa1aycZKUDroxG80uXVBKg4vfmj2nExH\nrMN1A7QO6FMYWK+G0gkdJ+TED0GKvdv06ncBbwXL5CKw5pCH4rBT/GUcMOBPCoeX\nZP2Yw/qqMYACRazT5eNk4eT24n13a8+Cc27jrCfnAoGAMoKBaprtlDsHVhg40CEV\nZjNck/1y4NpP0AQua/PSG7fhiawfr3XaEhRJF2u8f+4kI3vwIJ0dADhayYtcxss0\nb9BR/hnntTi2H9TnOQGQOoF3S15YwF09J0bFWPPyspdfbNS2alOQfYRlwzVZcm9+\nv2z3cNTmswaax8STTokTnXE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "allegro@allegro-8ce55.iam.gserviceaccount.com",
+  "client_id": "110522692553636250694",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/allegro%40allegro-8ce55.iam.gserviceaccount.com"
+}

@@ -147,7 +147,8 @@ public class ColourUtils {
      *
      * @param p temporary variable used to store part of the formula
      * @param q temporary variable used to store part of the formula
-     * @param t temporary variable used to determine part of the formula, red, green, or blue - outcome.
+     * @param t temporary variable used to determine part of the formula, red, green, or blue -
+     *          outcome.
      * @return Float representation of specific rgb value
      */
     public static float hueToRGB(float p, float q, float t) {

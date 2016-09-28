@@ -1,9 +1,7 @@
 package seng302.utility.musicNotation;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by isabelle on 2/03/16.

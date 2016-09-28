@@ -5,86 +5,63 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
-import java.awt.*;
-import java.io.IOException;
-import java.awt.*;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
-import java.awt.image.ImageProducer;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import org.controlsfx.control.PopOver;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javafx.animation.Interpolator;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContextMenu;
-
-import javafx.geometry.*;
 import javafx.geometry.Insets;
-import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.StackedBarChart;
-import javafx.scene.chart.XYChart;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.SepiaTone;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.*;
-import javafx.scene.paint.Color;
-import javafx.util.StringConverter;
-import javafx.scene.layout.HBox;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.*;
-import javafx.util.Pair;
+import javafx.util.Duration;
+import javafx.util.StringConverter;
 import seng302.Environment;
-import seng302.data.Badge;
-import seng302.managers.BadgeManager;
 
-import javax.swing.*;
+import static javafx.scene.paint.Color.RED;
 
 /**
  * Handles and Creates Users.
  */
 public class UserPageController {
 
+    private PopOver metronomePop;
 
     @FXML
-    AnchorPane contentPane;
+    private Button metroButton;
+
 
     @FXML
-    VBox summaryPage;
+    AnchorPane scrollPaneAnchorPage;
 
     @FXML
     SplitPane userView;
 
     @FXML
-    JFXListView listView;
+    public JFXListView listView;
 
-    @FXML
-    private JFXButton btnSettings;
 
     @FXML
     Label txtFullName;
@@ -95,14 +72,13 @@ public class UserPageController {
     @FXML
     JFXBadge levelBadge;
 
-    @FXML
-    Label latestAttempt;
-
-    @FXML
-    StackPane stageMap;
 
     @FXML
     ScrollPane currentPage;
+
+
+    private Circle ball; //bouncing ball for metronome
+
 
     @FXML
     private Slider timeSlider;
@@ -111,6 +87,8 @@ public class UserPageController {
 
     private TutorStatsController statsController;
 
+    private TutorStatsController basicStatsController;
+
     @FXML
     VBox tutors;
 
@@ -118,15 +96,27 @@ public class UserPageController {
     private ScrollPane scrollPane;
 
     @FXML
-    AnchorPane summary;
+    private JFXButton timeSliderButton;
+
+
+    private PopOver timePopover;
 
     private Environment env;
+
+    public Label tempoLabel = new Label();
+
+    private TranslateTransition anim;
+
+    private Boolean mute;
+
+    private TextField tempoInput = new TextField();
+
+    private UserSummaryController summaryController;
 
 
     public void setEnvironment(Environment env) {
         this.env = env;
         this.env.setUserPageController(this);
-
     }
 
 
@@ -135,19 +125,39 @@ public class UserPageController {
      */
     protected void load() {
         populateUserOptions();
-
-
-        imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
+        setupMetronomePopOver();
+        updateProfilePicDisplay();
         updateLevelBadge();
+        updateNameDisplay();
+    }
 
+    /**
+     * Sets profile pic to user picture (in a circle)
+     */
+    public void updateProfilePicDisplay() {
+        Circle imageClip = new Circle(50, 50, 50);
+        imageDP2.setClip(imageClip);
+        imageDP2.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
+    }
+
+
+    /**
+     * Sets name under profile pic to display the user's name or username if they have no name.
+     */
+    public void updateNameDisplay() {
         try {
 
             txtFullName.setText(env.getUserHandler().getCurrentUser().getUserFirstName() + " "
                     + env.getUserHandler().getCurrentUser().getUserLastName());
         } catch (NullPointerException e) {
+            txtFullName.setText(env.getUserHandler().getCurrentUser().getUserName());
             //txtFullName not initialized yet.
         }
+    }
 
+    @FXML
+    public void onLogoutClick() {
+        env.getRootController().logOutUser();
     }
 
     /**
@@ -179,26 +189,27 @@ public class UserPageController {
         options.add("Scale Modes Tutor");
         options.add("Scale Spelling Tutor");
 
-        Image lockImg = new Image(getClass().getResourceAsStream("/images/lock.png"), 20, 20, false, false);
-
+        Image lockImg = new Image(getClass().getResourceAsStream("/images/lock-blocked-medium.png"), 20, 20, true, true);
+        listView.getItems().clear();
         listView.getItems().addAll(FXCollections.observableArrayList(options));
 
 
-        listView.setMaxWidth(200);
-        listView.setMinWidth(200);
-        listView.setDepthProperty(1);
-
-
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            showPage((String) newValue);
+            if (newValue != null) {
+                if (((String) newValue).equals("Scale Recognition Tutor (Basic)")) {
+                    showPage("Scale Recognition Tutor");
+                } else if (((String) newValue).equals("Chord Recognition Tutor (Basic)")) {
+                    showPage("Chord Recognition Tutor");
+                } else {
+                    showPage((String) newValue);
+                }
+            }
         });
 
         // Set after the listener so it loads user summary correctly
         listView.getSelectionModel().selectFirst();
 
 
-        // This allows images to be displayed in the listview. Still trying to
-        // make the text centered and the height and width the same as the others.
         listView.setCellFactory(listView -> new JFXListCell<String>() {
 
             @Override
@@ -213,20 +224,58 @@ public class UserPageController {
                     //if in competitive mode, lock the relevant tabs
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
                         if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
-                            setGraphic(new ImageView(lockImg));
-                            setTextFill(Color.GRAY);
-                            setText(tutor);
-                            setDisable(true);
+
+                            if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
+                                if (env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")) == true) {
+
+                                } else {
+                                    ImageView lock = new ImageView(lockImg);
+                                    StackPane image = new StackPane();
+                                    image.setPadding(new Insets(0, 5, 0, 0));
+                                    image.getChildren().add(lock);
+                                    setGraphic(image);
+                                    setTextFill(Color.GRAY);
+                                    setText(tutor);
+                                    setAlignment(Pos.CENTER_LEFT);
+                                    setPadding(new Insets(0, 0, 0, 10));
+                                    setDisable(true);
+                                }
+                            } else {
+                                ImageView lock = new ImageView(lockImg);
+                                StackPane image = new StackPane();
+                                image.setPadding(new Insets(0, 5, 0, 0));
+                                image.getChildren().add(lock);
+                                setGraphic(image);
+                                setTextFill(Color.GRAY);
+                                setText(tutor);
+                                setAlignment(Pos.CENTER_LEFT);
+                                setPadding(new Insets(0, 0, 0, 10));
+                                setDisable(true);
+
+                            }
                         }
 
 
                     } else {
+                        setGraphic(null);
+                        setText(tutor);
+                        setPadding(new Insets(0, 0, 0, 40));
+                        setAlignment(Pos.CENTER_LEFT);
                         setDisable(false);
                     }
                 }
             }
         });
 
+    }
+
+    @FXML
+    private void showTimeSlider() {
+        if (timePopover.isShowing()) {
+            timePopover.hide();
+        } else {
+            timePopover.show(timeSliderButton);
+        }
     }
 
 
@@ -236,6 +285,24 @@ public class UserPageController {
      * tutor results from.
      */
     private void setupTimeSlider() {
+        timePopover = new PopOver();
+        timePopover.setTitle("Time Range");
+        timeSlider = new Slider(0, 5, 5);
+        timeSlider.setShowTickLabels(true);
+        timeSlider.setMajorTickUnit(1.0);
+        timeSlider.setShowTickMarks(true);
+        timeSlider.minorTickCountProperty().setValue(0);
+        timeSlider.snapToTicksProperty().setValue(true);
+        timeSlider.blockIncrementProperty().setValue(1.0);
+        timeSlider.setOrientation(Orientation.VERTICAL);
+        VBox timeContent = new VBox();
+        timeContent.setPadding(new Insets(20));
+        timeContent.setSpacing(10);
+        Label timeLabel = new Label("Adjust the time range displayed on the graphs:");
+        timeContent.getChildren().add(timeLabel);
+        timeContent.getChildren().add(timeSlider);
+        timePopover.setContentNode(timeContent);
+
         timeSlider.setMaxWidth(200);
 
         convert = new StringConverter<Double>() {
@@ -295,8 +362,13 @@ public class UserPageController {
      *
      * @param timePeriod The time period to display data from in the summary stats graphs
      */
-    private void updateGraphs(String timePeriod) {
-        statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
+    public void updateGraphs(String timePeriod) {
+        if (env.getRootController().getHeader().equals("Summary")) {
+            summaryController.updateGraphs();
+        } else {
+            statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
+            basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", timePeriod);
+        }
     }
 
     /**
@@ -317,30 +389,200 @@ public class UserPageController {
     }
 
     /**
-     *  OnClick action for the UserPage settings button.
-     *  Opens a context menu with settings/logout options
+     * OnClick action for the UserPage settings button. Opens a context menu with settings/logout
+     * options
      */
     @FXML
-    void openSettings(MouseEvent e) {
+    public void openSettings() {
+        env.getRootController().launchSettings();
+    }
 
-        MenuItem menuItemSettings = new MenuItem("Settings");
+    /**
+     * Hides and shows the metronome popover when the metronome button is selected
+     */
+    @FXML
+    public void openMetronome() {
+        if (metronomePop.isShowing()) {
+            metronomePop.hide();
+        } else {
+            metronomePop.show(metroButton);
+        }
+    }
 
-        MenuItem menuItemLogout = new MenuItem("Logout");
 
-        menuItemLogout.setOnAction(k -> env.getRootController().showCloseWindow("logout"));
+    /**
+     * OnClick action for the UserPage metronome button. Opens a popover that contains the
+     * metronome
+     */
+    public void setupMetronomePopOver() {
 
-        menuItemSettings.setOnAction(e2 -> env.getRootController().launchSettings());
-        ContextMenu settingsDropDown = new ContextMenu();
-        settingsDropDown.getItems().addAll(menuItemSettings,menuItemLogout);
+        //Goes inside metronome popover
+        VBox metronomeVBox = new VBox();
+        metronomeVBox.setMinSize(270, 145);
+        metronomeVBox.setMaxSize(270, 175);
 
-        settingsDropDown.setId("flatDropDown");
+        //Hbox to contain label stating current BPM
+        HBox tempoLabelBox = new HBox();
 
-        btnSettings.setContextMenu(settingsDropDown);
 
-        settingsDropDown.show(btnSettings, e.getScreenX(), e.getScreenY());
+        //HBox to contain metronome
+        HBox metronome = new HBox();
 
+        //Hbox to contain text box that allows user to change tempo
+        HBox changeTempo = new HBox();
+        JFXButton setTempo = new JFXButton("Set tempo");
+        setTempo.getStyleClass().add("primary");
+        JFXButton muteMetronome = new JFXButton("Mute");
+        muteMetronome.getStyleClass().add("primary");
+        muteMetronome.setMinSize(80, 30);
+        setTempo.setMinSize(80, 30);
+
+        //HBox that will contain error message for if the tempo range is exceeded
+        HBox errorLabelBox = new HBox();
+        Label errorLabel = new Label("Tempo is outside of appropriate range");
+        errorLabel.setTextFill(RED);
+        errorLabelBox.getChildren().add(errorLabel);
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+
+        muteMetronome.setOnAction(e -> {
+            if (muteMetronome.getText().equals("Mute")) {
+                mute = true;
+                muteMetronome.setText("Unmute");
+            } else {
+                mute = false;
+                muteMetronome.setText("Mute");
+            }
+        });
+
+        tempoInput.setPrefColumnCount(3); //setting col size (user can input 3 characters)
+        changeTempo.getChildren().add(tempoInput);
+        changeTempo.getChildren().add(setTempo);
+        changeTempo.getChildren().add(muteMetronome);
+        changeTempo.setSpacing(10);
+        changeTempo.setPadding(new Insets(5));
+
+        Integer currentTempo = env.getPlayer().getTempo();
+        tempoLabel.setText("The current tempo is set to " + currentTempo + " BPM");
+        tempoInput.setText(((Integer) currentTempo).toString());
+        tempoLabelBox.getChildren().add(tempoLabel);
+
+        metronome.getChildren().add(metronomeAnimation()); //adds AnchorPane with animation to HBox metronome
+        metronomeVBox.getChildren().add(tempoLabelBox);
+        metronomeVBox.getChildren().add(metronome);
+        metronomeVBox.getChildren().add(changeTempo);
+        metronomeVBox.getChildren().add(errorLabelBox);
+
+
+        setTempo.setOnAction(event -> {
+            if (Integer.valueOf(tempoInput.getText()) >= 20 && Integer.valueOf(tempoInput.getText()) <= 300) {
+                env.getPlayer().setTempo(Integer.valueOf(tempoInput.getText()));
+                tempoLabel.setText("The current tempo is set to " + tempoInput.getText() + " BPM");
+                anim.setDuration(Duration.millis((60 / Float.valueOf(tempoInput.getText())) * 1000));
+                anim.playFromStart();
+                tempoInput.setStyle("-fx-border-color: lightgray;");
+                errorLabel.setVisible(false);
+                errorLabel.setManaged(false);
+
+                //else if the user tries to input a tempo value outside of appropriate range
+            } else {
+                tempoInput.setStyle("-fx-border-color: red;"); //text border will set red
+                errorLabel.setVisible(true); //label will display
+                errorLabel.setManaged(true);
+                errorLabel.setStyle("-fx-text-color: red;");
+            }
+        });
+
+
+        // used the spacing etc from settings to see if it will come out nicely. Subject to change
+        metronomeVBox.setSpacing(10);
+        metronomeVBox.setPadding(new Insets(10));
+
+        //Declaring the popover
+        metronomePop = new PopOver(metronomeVBox);
+        metronomePop.headerAlwaysVisibleProperty().setValue(true);
+        metronomePop.setTitle("Metronome");
+
+        //ensures the metronome stops playing when the popout is not showing
+        metronomePop.showingProperty().addListener((o, old, newValue) -> {
+            if (newValue) {
+                anim.playFromStart();
+
+            } else {
+                anim.pause();
+
+            }
+        });
+    }
+
+
+    /**
+     * Creates the metronome animation of a bouncing ball in an AnchorPane, and plays back the sound
+     * when the animation makes contact with "start point"
+     *
+     * @return AnchorPane containing animation
+     */
+    private AnchorPane metronomeAnimation() {
+        ball = new Circle();
+        AnchorPane animationPane = new AnchorPane(); //pane to contain animation
+        animationPane.setPrefSize(250, 50);
+        animationPane.setMinSize(250, 50);
+        ball.getStyleClass().add("primary"); //make the ball match the theme
+
+        ball.setCenterX(20);
+        ball.setCenterY(25);
+        ball.setRadius(4);
+
+        anim = new TranslateTransition(Duration.millis((60 / Float.valueOf(tempoInput.getText())) * 1000), ball);
+        anim.setFromX(10);
+        anim.setToX(200);
+        anim.setInterpolator(Interpolator.LINEAR);
+        anim.setAutoReverse(true);
+        anim.setCycleCount(Timeline.INDEFINITE);
+        animationPane.getChildren().add(ball);
+
+        mute = false;
+        initializeTickSound();
+
+        return animationPane;
+    }
+
+    /**
+     * Toggles the ticking sound of the metronome
+     */
+    private void initializeTickSound() {
+
+        final AudioClip tickSound = new AudioClip("http://www.denhaku.com/r_box/sr16/sr16perc/losticks.wav"); //metronome tick sound
+        ChangeListener<Number> tick = (observable, oldValue, newValue) -> {
+
+            //if not on mute, play tick sound
+            if (!mute) {
+                if (newValue.equals(10.0) || newValue.equals(200.0)) {
+                    tickSound.play();
+                }
+            }
+        };
+        ball.translateXProperty().addListener(tick);
+    }
+
+    /**
+     * Updates the tempo to the current set tempo
+     */
+    public void updateCurrentTempo(Number newValue) {
+        tempoLabel.setText("The current tempo is set to " + String.valueOf(newValue.intValue()) + " BPM");
+        tempoInput.setText(String.valueOf(newValue.intValue()));
+        updateMetronome();
+    }
+
+    /**
+     * Updates the metronome animation to be in sync with the current tempo
+     */
+    public void updateMetronome() {
+        anim.setDuration(Duration.millis((60 / Float.valueOf(tempoInput.getText())) * 1000));
+        anim.playFromStart();
 
     }
+
 
     /**
      * Displays the page containing summary information about the user's current project
@@ -352,17 +594,20 @@ public class UserPageController {
         FXMLLoader summaryLoader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
 
         try {
-            VBox summaryPage = summaryLoader.load();
-            currentPage.setContent(summaryPage);
+            GridPane summaryPage = summaryLoader.load();
 
+            currentPage.setContent(summaryPage);
             AnchorPane.setLeftAnchor(summaryPage, 0.0);
             AnchorPane.setTopAnchor(summaryPage, 0.0);
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
             AnchorPane.setRightAnchor(summaryPage, 0.0);
 
-            UserSummaryController summaryController = summaryLoader.getController();
+            summaryController = summaryLoader.getController();
             summaryController.create(env);
             summaryController.loadStageMap();
+            if (!env.getFirebase().getUserSnapshot().child("projects/" + env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/unlockMap").exists()) {
+                env.getUserHandler().getCurrentUser().saveAll();
+            }
 
 
         } catch (IOException e) {
@@ -373,40 +618,79 @@ public class UserPageController {
 
     /**
      * Shows a page showing summary stats of the user's current project
+     *
      * @param tutor The name of the tutor whose stats are to be displayed
      */
     private void showTutorStats(String tutor) {
 
         env.getRootController().setHeader(tutor);
         FXMLLoader tutorStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
+        VBox all = new VBox();
 
-        try {
-            VBox stats = tutorStatsLoader.load();
-            currentPage.setContent(stats);
-            AnchorPane.setLeftAnchor(stats, 0.0);
-            AnchorPane.setTopAnchor(stats, 0.0);
-            AnchorPane.setBottomAnchor(stats, 0.0);
-            AnchorPane.setRightAnchor(stats, 0.0);
-            statsController = tutorStatsLoader.getController();
+        if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+            FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
+            try {
+                VBox stats = tutorbasicStatsLoader.load();
+                all.getChildren().add(stats);
+                AnchorPane.setLeftAnchor(stats, 0.0);
+                AnchorPane.setTopAnchor(stats, 0.0);
+                AnchorPane.setBottomAnchor(stats, 0.0);
+                AnchorPane.setRightAnchor(stats, 0.0);
+                basicStatsController = tutorbasicStatsLoader.getController();
 
-            statsController.create(env);
-            statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
-            statsController.updateBadgesDisplay();
-            listView.getSelectionModel().select(tutor);
+                basicStatsController.create(env);
+                basicStatsController.displayGraphs( tutor + " (Basic)", convert.toString(timeSlider.getValue()));
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+
+        if((Boolean)(env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))) {
+            try {
+                VBox stats = tutorStatsLoader.load();
+                all.getChildren().add(stats);
+                currentPage.setContent(null);
+                AnchorPane.setLeftAnchor(stats, 0.0);
+                AnchorPane.setTopAnchor(stats, 0.0);
+                AnchorPane.setBottomAnchor(stats, 0.0);
+                AnchorPane.setRightAnchor(stats, 0.0);
+                statsController = tutorStatsLoader.getController();
+
+                statsController.create(env);
+                statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
+                statsController.updateBadgesDisplay();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        currentPage.setContent(all);
+
+        listView.getSelectionModel().select(tutor);
 
     }
 
     /**
      * Converts the selected time period on the slider to textual form
+     *
      * @return A string containing the currently selected time slider value
      */
     public String getTimePeriod() {
         return convert.toString(timeSlider.getValue());
+    }
+
+    public TutorStatsController getStatsController() {
+        return statsController;
+    }
+
+    public UserSummaryController getSummaryController() {
+        return summaryController;
     }
 
 }

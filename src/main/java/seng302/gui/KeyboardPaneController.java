@@ -17,31 +17,24 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import org.controlsfx.control.PopOver;
 import seng302.Environment;
 import seng302.Users.UserHandler;
 import seng302.data.Note;
 import seng302.utility.NoteRangeSlider;
 import seng302.utility.musicNotation.OctaveUtil;
 
-import javax.swing.event.DocumentListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static seng302.utility.musicNotation.Checker.isValidNormalNote;
 
@@ -161,7 +154,6 @@ public class KeyboardPaneController {
         playMode = "play";
         HBox.setHgrow(rightStack, Priority.ALWAYS);
 
-
         // Picking is computed by intersecting with the geometric
         // shape of the node, instead of the bounds.
         keyboardStack.setPickOnBounds(false);
@@ -173,9 +165,6 @@ public class KeyboardPaneController {
 
         createSettingsPop();
         createDisplayScalesPop();
-
-
-
 
         keyPane.expandedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -214,7 +203,7 @@ public class KeyboardPaneController {
 
         // Style settings button.
         Image cog = new Image(getClass().getResourceAsStream
-                ("/images/gear-1119298_960_720.png"), 10, 10, true, true);
+                ("/images/settings (1).png"), 10, 10, true, true);
         settingsButton.setGraphic(new ImageView(cog));
         settingsButton.setText(null);
 
@@ -222,7 +211,6 @@ public class KeyboardPaneController {
         // Select whether to show note names.
         settings.getChildren().add(new Label("Note names:"));
         ToggleGroup notenames = new ToggleGroup();
-
         noteLabelsOff = new RadioButton("Never show");
         noteLabelsOff.setOnAction(event -> stopShowingNotesOnKeyboard());
         noteLabelsOff.setToggleGroup(notenames);
@@ -419,8 +407,6 @@ public class KeyboardPaneController {
         otherNoteKey.getChildren().add(otherKey);
 
 
-
-
         //OK button for display scale 1. Contains all of the error handling and toggles to Hide when clicked.
         //OK displays the given scale on the keyboard. Hide removes them but doesnt clear the input fields
         JFXButton okScale1 = new JFXButton("OK");
@@ -474,7 +460,7 @@ public class KeyboardPaneController {
 
             }
 
-                });
+        });
 
 
         //OK button for display scale 2. Contains all of the error handling and toggles to Hide when clicked.
@@ -508,7 +494,8 @@ public class KeyboardPaneController {
 
                     //Listener for changes in the drop down menu
                     typeScale2.valueProperty().addListener(new ChangeListener<String>() {
-                        @Override public void changed(ObservableValue ov, String t, String t1) {
+                        @Override
+                        public void changed(ObservableValue ov, String t, String t1) {
                             clearScaleIndicators("secondScale");
                             okScale2.setText("OK");
                         }
@@ -530,16 +517,14 @@ public class KeyboardPaneController {
                 clearScaleIndicators("secondScale");
                 okScale2.setText("OK");
 
-        }
-
-
+            }
         });
 
 
         //Clears all inputs and removes all scale indicators back to default. resets the input text borders to default
         //and resets the button back to the OK state
         Button cancelButton = new Button("Reset Scales");
-        cancelButton.setOnAction(event->{
+        cancelButton.setOnAction(event -> {
             scale1NoteInput.clear();
             typeScale1.setValue("Major");
             scale1NoteInput.setStyle("-fx-border-color: lightgray;");
@@ -602,6 +587,8 @@ public class KeyboardPaneController {
         displayScales.getChildren().add(otherNoteKey);
 
 
+
+
         // used the spacing etc from settings to see if it will come out nicely. Subject to change
         displayScales.setSpacing(10);
         displayScales.setPadding(new Insets(10));
@@ -615,8 +602,6 @@ public class KeyboardPaneController {
 
 
     }
-
-
 
     /**
      * Clear scale images of either the first or second scale from the keyboard
@@ -641,8 +626,8 @@ public class KeyboardPaneController {
     }
 
     /**
-     * Takes the scale note specified in the text input field and option from drop down menu in Display Scales
-     * and fetches the notes of the relevant scale
+     * Takes the scale note specified in the text input field and option from drop down menu in
+     * Display Scales and fetches the notes of the relevant scale
      */
     private ArrayList<Note> fetchScaleNotes(String scaleNote, String scaleType) {
         scaleNote = OctaveUtil.addDefaultOctave(scaleNote);
@@ -654,11 +639,11 @@ public class KeyboardPaneController {
 
     /**
      * Compares one scale against another to check to see if they are identical
-     * @param scale1Note
-     * @param scale1Type
-     * @param scale2Note
-     * @param scale2Type
-     * @return boolean
+     * @param scale1Note The start note of the first scale
+     * @param scale2Note The start note of the second scale
+     * @param scale1Type The type of the first scale (major minor etc)
+     * @param scale2Type The type of the second scale (major minor etc)
+     * @return boolean true if the scales are different to each other, false otherwise
      */
 
     private boolean scaleIsUnique(String scale1Note, String scale1Type, String scale2Note, String scale2Type) {
@@ -710,15 +695,13 @@ public class KeyboardPaneController {
      */
     @FXML
     private void toggleDisplayScales() {
-
-            if (displayScalesPop.isShowing()) {
-                displayScalesPop.hide();
-                displayScalesButton.setText("Display Scales");
-            } else {
-                displayScalesPop.show(displayScalesButton);
-                displayScalesButton.setText("Hide Display Scales");
-            }
-
+        if (displayScalesPop.isShowing()) {
+            displayScalesPop.hide();
+            displayScalesButton.setText("Display Scales");
+        } else {
+            displayScalesPop.show(displayScalesButton);
+            displayScalesButton.setText("Hide Display Scales");
+        }
     }
 
     /**
@@ -886,21 +869,20 @@ public class KeyboardPaneController {
      */
     public void toggleShowKeyboardNotesAlways() {
         ObservableList<Node> keys = keyboardBox.getChildren();
-        if (!(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())) {
-            for (Node key : keys) {
-                if (key instanceof TouchPane) {
-                    ((TouchPane) key).toggleDisplayLabel();
-                }
+        for (Node key : keys) {
+            if (key instanceof TouchPane) {
+                ((TouchPane) key).toggleDisplayLabel();
             }
         }
     }
 
     /**
      * Adds a relevant image to a key, if it is equal to the given note.
-     * @param key The key we are potentially altering
+     *
+     * @param key               The key we are potentially altering
      * @param currentNoteString The note we are looking for
-     * @param isFirstScale Whether this is scale 1 or scale 2
-     * @param isStartNote whether or not "currentNoteString" is the first note in the scale
+     * @param isFirstScale      Whether this is scale 1 or scale 2
+     * @param isStartNote       whether or not "currentNoteString" is the first note in the scale
      */
     private void addVisual(Node key, String currentNoteString, boolean isFirstScale, boolean isStartNote) {
         String firstScaleImage = "";
@@ -930,7 +912,8 @@ public class KeyboardPaneController {
     }
     /**
      * Show/Hide scale visualizations on the keyboard
-     * @param scaleNotes: an array that contains all of the notes of a scale
+     *
+     * @param scaleNotes:   an array that contains all of the notes of a scale
      * @param isFirstScale: determines whether the scale is scale 1 or scale 2
      */
     public void toggleScaleKeys(ArrayList<Note> scaleNotes, Boolean isFirstScale) {
@@ -970,12 +953,9 @@ public class KeyboardPaneController {
      */
     public void toggleShowKeyboardNotesAction() {
         ObservableList<Node> keys = keyboardBox.getChildren();
-        //if in practice mode, show labels
-        if (!(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())) {
-            for (Node key : keys) {
-                if (key instanceof TouchPane) {
-                    ((TouchPane) key).toggleDisplayLabelOnAction();
-                }
+        for (Node key : keys) {
+            if (key instanceof TouchPane) {
+                ((TouchPane) key).toggleDisplayLabelOnAction();
             }
         }
     }

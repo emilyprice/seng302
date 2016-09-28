@@ -73,6 +73,12 @@ public class PitchComparisonTutorController extends TutorController {
      */
     @FXML
     private void goAction() {
+
+        for (int x = 0; x < 12; x++) {
+            int num = generateRangesliderDefault();
+
+        }
+
         paneInit.setVisible(false);
         paneQuestions.setVisible(true);
         record = new TutorRecord();
@@ -118,16 +124,16 @@ public class PitchComparisonTutorController extends TutorController {
 
     /**
      * Generates default rangeslider value for competitive mode
-     * @return
+     *
+     * @return int the lower bound of the note range
      */
-    private int generateRangesliderDefault(){
-        int num = rand.nextInt(127);
-        if(num + 24 > 127){
-            return 103;
-        }else{
-            return num;
+    private int generateRangesliderDefault() {
+        int num = rand.nextInt(95);
+        if (num + 24 > 95) {
+            return 84;
+        } else {
+            return num + 16;
         }
-
     }
 
     /**
@@ -141,9 +147,9 @@ public class PitchComparisonTutorController extends TutorController {
 
         if (currentProject.getIsCompetitiveMode()) {
             int lowValue = generateRangesliderDefault();
-            rangeSlider = new NoteRangeSlider(notes, 12, lowValue, lowValue+24);
+            rangeSlider = new NoteRangeSlider(notes, 12, lowValue, lowValue + 24);
             rangeSlider.setDisable(true);
-        }else{
+        } else {
             rangeSlider = new NoteRangeSlider(notes, 12, 60, 72);
 
         }
@@ -218,7 +224,7 @@ public class PitchComparisonTutorController extends TutorController {
         }
 
 
-            manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
+        manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
 
 
         handleAccordion();

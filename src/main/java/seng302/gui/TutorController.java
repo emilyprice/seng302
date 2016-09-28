@@ -1,28 +1,14 @@
 package seng302.gui;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
-
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import seng302.Environment;
@@ -33,6 +19,12 @@ import seng302.managers.TutorManager;
 import seng302.utility.ExperienceCalculator;
 import seng302.utility.TutorRecord;
 import seng302.utility.musicNotation.OctaveUtil;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public abstract class TutorController {
 
@@ -76,6 +68,9 @@ public abstract class TutorController {
     VBox paneInit;
 
     @FXML
+    private JFXButton back;
+
+    @FXML
     JFXSlider numQuestions;
 
     @FXML
@@ -88,6 +83,7 @@ public abstract class TutorController {
     public TutorController() {
     }
 
+
     /**
      * The method called to initialise a tutor. Sets up the environment and tutor manager
      */
@@ -97,6 +93,20 @@ public abstract class TutorController {
         currentProject = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject();
         tutorHandler = currentProject.getTutorHandler();
         isCompMode = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode();
+    }
+
+    @FXML
+    public void backAction() {
+        try {
+            String tutorName = env.getRootController().getHeader();
+            env.getUserPageController().showPage(tutorName);
+            env.getRootController().showUserPage(); //have to go back to summary page to get list of tutors
+            env.getUserPageController().listView.getSelectionModel().select(tutorName); //select tutor summary page
+
+
+        } catch (Exception e) {
+
+        }
     }
 
     /**
@@ -110,6 +120,8 @@ public abstract class TutorController {
 
         } else {
             selectedQuestions = (int) numQuestions.getValue();
+            numQuestions.setValue(selectedQuestions);
+            questions.setText(Integer.toString(selectedQuestions));
 
         }
         questions.setText(Integer.toString(selectedQuestions));
@@ -176,13 +188,19 @@ public abstract class TutorController {
 
         record.setStats(manager.correct, manager.getTempIncorrectResponses().size(), userScore);
         record.setFinished();
-        record.setDate();
+        record.updateDate();
+
 
         if (currentProject != null) {
+
+            if (isCompMode) {
+                String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
+                tutorHandler.saveTutorRecordsToFile(tutorNameNoSpaces, record);
+            } else {
+                currentProject.addRecentPracticeTutorRecordMap(tutorName, record);
+            }
             currentProject.saveCurrentProject();
-            String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
-            String tutorFileName = currentProject.getCurrentProjectPath() + "/" + tutorNameNoSpaces + ".json";
-            tutorHandler.saveTutorRecordsToFile(tutorFileName, record);
+
         }
 
         questionRows.getChildren().clear();
@@ -195,7 +213,6 @@ public abstract class TutorController {
         }
 
         env.getStageMapController().fetchTutorFile(tutorName);
-        env.getUserPageController();
 
         // Clear the current session
         manager.resetStats();
@@ -249,7 +266,6 @@ public abstract class TutorController {
     public void formatQuestionRow(HBox questionRow) {
         questionRow.setPadding(new Insets(10, 10, 10, 10));
         questionRow.setSpacing(10);
-//        questionRow.setStyle("-fx-border-color: #336699; -fx-border-width: 2px;");
     }
 
     /**
@@ -334,6 +350,7 @@ public abstract class TutorController {
 
     /**
      * Consistently styles all skip buttons
+     *
      * @param skip the button to be styled
      */
     public void styleSkipButton(Button skip) {
