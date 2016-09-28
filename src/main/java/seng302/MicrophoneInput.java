@@ -7,6 +7,9 @@ import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.scene.control.Label;
 import seng302.data.Note;
 import seng302.gui.MicrophoneInputPopoverController;
@@ -16,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Observable;
 import java.util.Vector;
 
 /**
@@ -38,6 +42,7 @@ public class MicrophoneInput implements PitchDetectionHandler {
     private Boolean noteFound;
     private Boolean singleNote;
 
+
     private Thread recordingThread = null;
 
     private MicrophoneInputPopoverController microphoneInputPopoverController = null;
@@ -54,6 +59,7 @@ public class MicrophoneInput implements PitchDetectionHandler {
         try {
             this.mixer = AudioSystem.getMixer(getMixerInfo(false, true).get(0));
             resetNoteFrequencies();
+
         } catch (ArrayIndexOutOfBoundsException a) {
             // For GitLab testings inability to use a microphone
         }
@@ -154,9 +160,6 @@ public class MicrophoneInput implements PitchDetectionHandler {
      */
     public ArrayList<String> stopRecording() {
         dispatcher.stop();
-        if (tutorAnswer != null && tutorAnswer.getText().equals("")) {
-            tutorAnswer.setText(lastRecorded.get(0));
-        }
         return lastRecorded;
     }
 
@@ -191,6 +194,9 @@ public class MicrophoneInput implements PitchDetectionHandler {
                         if (noteCount >= 5 && !noteFound) {
                             noteFound = true;
                             lastRecorded.add(latestNote);
+                            if (singleNote) {
+                                stopRecording();
+                            }
                             microphoneInputPopoverController.update(lastRecorded, latestNote);
                         }
                     } else {
@@ -243,7 +249,7 @@ public class MicrophoneInput implements PitchDetectionHandler {
                             try {
                                 hasNoteBeenFound();
                             } catch (Exception e) {
-                                System.err.println("Notes played too quickly, can't keep up..");
+//                                System.err.println("Notes played too quickly, can't keep up..");
                             }
                         }
                     }
@@ -255,10 +261,9 @@ public class MicrophoneInput implements PitchDetectionHandler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (noteFound && singleNote) {
-                stopRecording();
+            if (singleNote && noteFound) {
+                Thread.currentThread().interrupt();
             }
-
         }
     }
 
@@ -335,26 +340,15 @@ public class MicrophoneInput implements PitchDetectionHandler {
         this.microphoneInputPopoverController = m;
     }
 
-    public void recordSingleNoteTutorInput(Label answerLabel) {
-        tutorAnswer = answerLabel;
-        Thread recording = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    startRecording(true);
-                } catch (LineUnavailableException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedAudioFileException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        recording.start();
+    public void recordSingleNoteTutorInput() {
         try {
-            recording.join();
-        } catch (InterruptedException e) {
+            startRecording(true);
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         }
     }
+
 
 }

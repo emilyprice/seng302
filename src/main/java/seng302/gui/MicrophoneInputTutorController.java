@@ -248,7 +248,6 @@ public class MicrophoneInputTutorController extends TutorController {
         final HBox rowPane = new HBox();
         formatQuestionRow(rowPane);
         final Note correctAnswer = Note.lookup(noteMidi);
-
 //        ToggleGroup group = new ToggleGroup();
         Button recordButton = new Button("Record");
 //        recordButton.setToggleGroup(group);
@@ -260,7 +259,13 @@ public class MicrophoneInputTutorController extends TutorController {
         microphoneInput = env.getMicrophoneInput();
         recordButton.setOnAction(event -> {
             // TODO microphone input
-            env.getMicrophoneInput().recordSingleNoteTutorInput(answerLabel);
+            if (recordButton.getText().equals("Record")) {
+                env.getMicrophoneInput().recordSingleNoteTutorInput();
+                recordButton.setText("Stop");
+            } else {
+                answerLabel.setText(env.getMicrophoneInput().stopRecording().get(0));
+                recordButton.setDisable(true);
+            }
 //            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
 //            if (responseValue == 0) {
 //                correctAnswer.setVisible(true);
