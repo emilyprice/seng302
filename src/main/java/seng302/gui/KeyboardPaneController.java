@@ -1,6 +1,14 @@
 package seng302.gui;
 
 import com.jfoenix.controls.JFXButton;
+
+import org.controlsfx.control.PopOver;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -9,23 +17,26 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import org.controlsfx.control.PopOver;
 import seng302.Environment;
 import seng302.data.Note;
 import seng302.utility.NoteRangeSlider;
 import seng302.utility.musicNotation.OctaveUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static seng302.utility.musicNotation.Checker.isValidNormalNote;
 
@@ -189,10 +200,7 @@ public class KeyboardPaneController {
 
 
         // Style settings button.
-        Image cog = new Image(getClass().getResourceAsStream
-                ("/images/settings (1).png"), 10, 10, true, true);
-        settingsButton.setGraphic(new ImageView(cog));
-        settingsButton.setText(null);
+        settingsButton.setText("Settings");
 
 
         // Select whether to show note names.

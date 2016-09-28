@@ -1,5 +1,7 @@
 package seng302.gui;
 
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.controlsfx.control.Notifications;
 
 import java.util.ArrayList;
@@ -16,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import jdk.nashorn.internal.parser.JSONParser;
 import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
@@ -98,21 +99,19 @@ public class StageMapController {
     private ArrayList<String> tutorOrder; //the order in which the tutors unlock
 
     /**
-     * stores the convertion of tutor name to a shortened tutor string that is used for
+     * stores the conversion of tutor name to a shortened tutor string that is used for
      * manipulations
      */
-    public HashMap<String, String> converted;
+    public BidiMap<String, String> converted;
 
     public HashMap<String, HashMap<String, Boolean>> unlockDescriptions;
 
 
-    UserPageController userPageController; //creates an insance of user page controller so we can access its methods
+    UserPageController userPageController; //reference to user page controller so we can access its methods
 
     Environment env; //declare the environment
 
     private String nextUnlockTutor = "basicScaleTutor";
-
-    private JSONParser parser; //used to parser the tutor records
 
 
     /**
@@ -147,6 +146,16 @@ public class StageMapController {
         }
     }
 
+    public void hideNextUnlockDescription(Boolean hide) {
+        if (hide) {
+            descriptionVbox.setVisible(false);
+            descriptionVbox.setManaged(false);
+        } else {
+            descriptionVbox.setVisible(true);
+            descriptionVbox.setManaged(true);
+        }
+    }
+
 
     /**
      * sets the description of what the user needs to do to unlock the next tutor
@@ -167,12 +176,6 @@ public class StageMapController {
 
         for (String key : unlockDescriptions.get(nextUnlockTutor).keySet()) {
             HBox description = new HBox();
-            if (unlockDescriptions.get(nextUnlockTutor).keySet().size() > 1 && (key.equals("basicScaleTutor") || key.equals("basicChordTutor"))) {
-                description.getChildren().add(new Label("Get 3 consecutive scores of 9 or higher in the " + key));
-            } else {
-
-                description.getChildren().add(new Label("Get 3 consecutive scores of 7 or higher in the " + key));
-            }
             ImageView image = new ImageView();
 
             String tickPath = "/images/tick.png";
@@ -191,8 +194,17 @@ public class StageMapController {
             }
 
             description.getChildren().add(image);
+            String fulltutorName = converted.getKey(key);
+            if (unlockDescriptions.get(nextUnlockTutor).keySet().size() > 1 && (key.equals("basicScaleTutor") || key.equals("basicChordTutor"))) {
+                description.getChildren().add(new Label("Get 3 consecutive scores of 9 or higher in the " + fulltutorName));
+            } else {
+
+                description.getChildren().add(new Label("Get 3 consecutive scores of 7 or higher in the " + fulltutorName));
+            }
+
 
             description.setAlignment(Pos.CENTER);
+            description.setSpacing(10);
             description.setHgrow(description.getChildren().get(0), Priority.ALWAYS);
             description.setHgrow(description.getChildren().get(1), Priority.ALWAYS);
 
@@ -216,7 +228,7 @@ public class StageMapController {
         tutorAndButton = new HashMap<>();
         tutorOrder = new ArrayList<>();
         unlockStatus = new HashMap<>();
-        converted = new HashMap<>();
+        converted = new DualHashBidiMap<>();
 
         generateLockingStatus();
         generateTutorOrder();
@@ -224,6 +236,11 @@ public class StageMapController {
         generateConverted();
         generateDescriptions();
         visualiseLockedTutors();
+        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
+            hideNextUnlockDescription(false);
+        } else {
+            hideNextUnlockDescription(true);
+        }
     }
 
     /**
@@ -247,7 +264,7 @@ public class StageMapController {
 
 
     /**
-     * Generates the unlockDescriptions HashMap which stores the requirments to unlock each tutor
+     * Generates the unlockDescriptions HashMap which stores the requirements to unlock each tutor
      * and weather or not they have been completed.
      */
     private void generateDescriptions() {

@@ -4,6 +4,12 @@ import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
+
+import org.controlsfx.control.PopOver;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -14,20 +20,25 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import org.controlsfx.control.PopOver;
 import seng302.Environment;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -179,7 +190,7 @@ public class UserPageController {
         options.add("Scale Modes Tutor");
         options.add("Scale Spelling Tutor");
 
-        Image lockImg = new Image(getClass().getResourceAsStream("/images/lock-blocked-medium.png"), 20, 20, true, true);
+        Image lockImg = new Image("/images/lock.png", 20, 20, true, true);
         listView.getItems().clear();
         listView.getItems().addAll(FXCollections.observableArrayList(options));
 
@@ -588,9 +599,9 @@ public class UserPageController {
         FXMLLoader summaryLoader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
 
         try {
-            FlowPane summaryPage = summaryLoader.load();
+            GridPane summaryPage = summaryLoader.load();
 
-            scrollPaneAnchorPage.getChildren().setAll(summaryPage);
+            currentPage.setContent(summaryPage);
             AnchorPane.setLeftAnchor(summaryPage, 0.0);
             AnchorPane.setTopAnchor(summaryPage, 0.0);
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
@@ -646,7 +657,7 @@ public class UserPageController {
             try {
                 VBox stats = tutorStatsLoader.load();
                 all.getChildren().add(stats);
-                scrollPaneAnchorPage.getChildren().clear();
+                currentPage.setContent(null);
                 AnchorPane.setLeftAnchor(stats, 0.0);
                 AnchorPane.setTopAnchor(stats, 0.0);
                 AnchorPane.setBottomAnchor(stats, 0.0);
@@ -664,7 +675,7 @@ public class UserPageController {
         }
 
 
-        scrollPaneAnchorPage.getChildren().setAll(all);
+        currentPage.setContent(all);
 
         listView.getSelectionModel().select(tutor);
 

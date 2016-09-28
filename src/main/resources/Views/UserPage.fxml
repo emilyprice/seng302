@@ -131,10 +131,9 @@
                 </VBox>
                 <AnchorPane SplitPane.resizableWithParent="false">
                     <children>
-                        <ScrollPane fx:id="currentPage" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <content>
-                                <AnchorPane fx:id="scrollPaneAnchorPage" prefHeight="200.0" prefWidth="200.0" />
-                            </content>
+                        <ScrollPane fx:id="currentPage" fitToWidth="true" hbarPolicy="NEVER"
+                                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         </ScrollPane>
                     </children>
                 </AnchorPane>
