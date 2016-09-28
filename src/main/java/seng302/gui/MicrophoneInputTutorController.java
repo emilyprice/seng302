@@ -178,44 +178,8 @@ public class MicrophoneInputTutorController extends TutorController {
 
         Integer correctChoice = 0;
 
-
-        if (((ToggleButton) row.getChildren().get(1)).isSelected()) { //Higher\
-            if (noteComparison(true, note1, note2)) correctChoice = 1;
-            String[] question = new String[]{
-                    String.format("Is %s higher or lower than %s", note2.getNote(), note1.getNote()),
-                    "Higher",
-                    correctChoice.toString()
-            };
-
-            record.addQuestionAnswer(question);
-        } else if (((ToggleButton) row.getChildren().get(2)).isSelected()) { //Same
-            if (note1 == note2) correctChoice = 1;
-            String[] question = new String[]{
-                    String.format("Is %s higher or lower than %s", note2.getNote(), note1.getNote()),
-                    "Same",
-                    correctChoice.toString()
-            };
-
-            record.addQuestionAnswer(question);
-        } else if (((ToggleButton) row.getChildren().get(3)).isSelected()) { //Lower
-            if (noteComparison(false, note1, note2)) {
-                correctChoice = 1;
-            }
-            String[] question = new String[]{
-                    String.format("Is %s higher or lower than %s", note2.getNote(), note1.getNote()),
-                    "Lower",
-                    correctChoice.toString()
-            };
-            record.addQuestionAnswer(question);
-        } else if (((ToggleButton) row.getChildren().get(4)).isSelected()) { //Skip
-            correctChoice = 2;
-
-            String[] question = new String[]{
-                    String.format("Is %s higher or lower than %s", note2.getNote(), note1.getNote()),
-                    getAnswer(note1, note2),
-                    correctChoice.toString()
-            };
-            record.addQuestionAnswer(question);
+        if (note1.equals(note2)) {
+            correctChoice = 1;
         }
 
         if (correctChoice == 1) {
@@ -227,7 +191,6 @@ public class MicrophoneInputTutorController extends TutorController {
 
 
         manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
-
 
         handleAccordion();
         if (manager.answered == manager.questions) {
@@ -247,14 +210,9 @@ public class MicrophoneInputTutorController extends TutorController {
         Label answerLabel = new Label();
         final HBox rowPane = new HBox();
         formatQuestionRow(rowPane);
-        final Note correctAnswer = Note.lookup(noteMidi);
-//        ToggleGroup group = new ToggleGroup();
+        Note correctAnswer = Note.lookup(noteMidi);
         Button recordButton = new Button("Record");
-//        recordButton.setToggleGroup(group);
 
-//
-//        ToggleButton stopButton = new ToggleButton("Stop");
-//        stopButton.setToggleGroup(group);
 
         microphoneInput = env.getMicrophoneInput();
         recordButton.setOnAction(event -> {
@@ -263,28 +221,26 @@ public class MicrophoneInputTutorController extends TutorController {
                 env.getMicrophoneInput().recordSingleNoteTutorInput();
                 recordButton.setText("Stop");
             } else {
-                answerLabel.setText(env.getMicrophoneInput().stopRecording().get(0));
-                recordButton.setDisable(true);
-            }
-//            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
-//            if (responseValue == 0) {
-//                correctAnswer.setVisible(true);
-//            }
+                String recordedNote = env.getMicrophoneInput().stopRecording().get(0);
+//                correctAnswer = Note.lookup(recordedNote);
+                answerLabel.setText(recordedNote);
 
+                int responseValue = questionResponse(rowPane, noteMidi, String.valueOf(Note.lookup(recordedNote)));
+                recordButton.setDisable(true);
+//                if (responseValue == 0) {
+//                    correctAnswer.setVisible(true);
+//                }
+            }
         });
 
-//        stopButton.setOnAction(event ->
-//                answerLabel.setText(microphoneInput.stopRecording().toString() + "\n"));
-
-        String recordedAnswer = answerLabel.getText();
 
         JFXButton skip = new JFXButton("Skip");
 
         skip.setOnAction(event -> {
-//            int responseValue = questionResponse(rowPane, midiOne, midiTwo);
-//            if (responseValue == 0) {
+            int responseValue = 0;
+            if (responseValue == 0) {
 //                correctAnswer.setVisible(true);
-//            }
+            }
         });
 
         if (isCompMode) {
