@@ -3,7 +3,6 @@ package seng302;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Observable;
 
 import javax.sound.midi.Instrument;
 import javax.sound.midi.InvalidMidiDataException;
@@ -43,6 +42,7 @@ public class MusicPlayer {
      * Music Player constructor opens the sequencers and synthesizer. It also sets the receiver.
      */
     public MusicPlayer(Visualiser visualiser) {
+
         rh = new RhythmHandler();
         try {
             this.seq = MidiSystem.getSequencer();
@@ -79,8 +79,6 @@ public class MusicPlayer {
     public Instrument[] getAvailableInstruments() {
         return availableInstruments;
     }
-
-
 
 
     /**

@@ -1,12 +1,8 @@
 package seng302.gui;
 
 import com.jfoenix.controls.JFXColorPicker;
-
-import java.util.ArrayList;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -31,15 +27,10 @@ public class UISkinnerController {
 
     // RGB colour values
     private String baseRGB;
-    private String compRGB;
     private int[] lighterRGB;
     private int[] darkerRGB;
-    private String lighterRGBString;
-    private String darkerRGBString;
 
-    private AnchorPane baseNode;
     private Environment env;
-    private ArrayList<String> rules = new ArrayList<String>();
     private String lighterOrDarker;
 
 
@@ -70,12 +61,8 @@ public class UISkinnerController {
         Color base = primaryColour.getValue();
         this.baseRGB = ColourUtils.toRGBString(base);
         Color comp_colour = ColourUtils.getComplementaryColourString(base);
-//        Color comp_colour = secondaryColour.getValue();
         setDarkerRGB(base);
         setLighterRGB(base);
-        String complementary_rgb = ColourUtils.toRGBString(comp_colour);
-        String styleString = "";
-//        String lighterOrDarker;
         double luma = 0.2126 * (base.getRed() * 255) + 0.7152 * (base.getGreen() * 255) + 0.0722 * (base.getBlue() * 255);
         if (luma < 126) {
             lighterOrDarker = floatToRGBString(lighterRGB);

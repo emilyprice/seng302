@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
@@ -11,95 +12,100 @@
 <?import com.jfoenix.validation.*?>
 <?import com.jfoenix.controls.*?>
 
-<AnchorPane minHeight="400.0" minWidth="600.0" onKeyPressed="#handleKeyPressed" prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="seng302.gui.UserLoginController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="458.0" minWidth="500.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="472.0" prefWidth="500.0" style="-fx-background-color: #EEEEEE;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.UserLoginController">
    <children>
-       <StackPane layoutX="178.0" layoutY="232.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500"
-                  minWidth="500.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="500.0" prefWidth="500.0"
-                  style="-fx-background-color: white;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0"
-                  AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0">
-           <children>
-               <HBox alignment="CENTER" layoutY="221.0" prefHeight="114.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0"
-                     AnchorPane.rightAnchor="0.0"/>
-               <VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
-                     StackPane.alignment="CENTER">
-                   <children>
-                       <HBox alignment="TOP_CENTER" prefHeight="46.0" prefWidth="600.0">
-                           <children>
-                               <Label text="Allegro" textAlignment="CENTER" textFill="#f28b15">
-                                   <font>
-                                       <Font name="System Bold" size="32.0"/>
-                                   </font>
-                               </Label>
-                           </children>
-                           <VBox.margin>
-                               <Insets bottom="10.0"/>
-                           </VBox.margin>
-                       </HBox>
-
-                       <HBox fx:id="recentUsersHbox" alignment="CENTER" maxHeight="191.0" maxWidth="450.0"
-                             minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="450.0">
-                           <VBox.margin>
-                               <Insets bottom="30.0"/>
-                           </VBox.margin>
-                       </HBox>
-                       <JFXTextField fx:id="usernameInput" focusColor="#d98921" labelFloat="true" maxWidth="300.0"
-                                     promptText="Username">
+      <HBox alignment="CENTER" layoutY="221.0" prefHeight="114.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="481.0" prefWidth="500.0" StackPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" minHeight="71.0" prefHeight="71.0" prefWidth="500.0">
+               <children>
+                  <Label text="Allegro" textAlignment="CENTER" textFill="#e1940f">
+                     <font>
+                        <Font name="Lato Regular" size="32.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox fx:id="hbClassroom" alignment="CENTER" prefHeight="41.0" prefWidth="460.0" style="-fx-background-color: rgba(255, 255, 255, 1);">
+               <children>
+                  <JFXComboBox fx:id="ddClassroom" onAction="#onClassroomChange" prefHeight="25.0" prefWidth="283.0" promptText="Select a classroom" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="20.0" right="20.0" top="5.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </HBox>
+            <VBox alignment="CENTER" onKeyPressed="#handleKeyPressed" prefHeight="329.0" prefWidth="460.0" style="-fx-background-color: rgba(255, 255, 255, 1);">
+               <children>
+                  <HBox fx:id="recentUsersHbox" alignment="CENTER" maxHeight="191.0" maxWidth="460.0" minHeight="95.0" minWidth="336.0" prefHeight="114.0" prefWidth="460.0">
+                     <VBox.margin>
+                        <Insets bottom="30.0" />
+                     </VBox.margin>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </HBox>
+                  <JFXTextField fx:id="usernameInput" focusColor="#d98921" labelFloat="true" maxWidth="300.0" promptText="Username">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </JFXTextField>
+                  <JFXPasswordField fx:id="passwordInput" focusColor="#d98921" labelFloat="true" maxWidth="300.0" promptText="Password">
+                     <VBox.margin>
+                        <Insets bottom="30.0" />
+                     </VBox.margin>
+                  </JFXPasswordField>
+                  <HBox alignment="CENTER" prefHeight="19.0" prefWidth="188.0">
+                     <children>
+                        <JFXButton fx:id="btnLogin" buttonType="RAISED" onAction="#logIn" prefHeight="25.0" prefWidth="100.0" ripplerFill="#00bfa5" style="-fx-background-color: #1DE9B6;" text="Sign in">
                            <font>
-                               <Font size="14.0"/>
+                              <Font size="14.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets right="30.0" />
+                           </HBox.margin>
                            <VBox.margin>
-                               <Insets bottom="20.0"/>
+                              <Insets bottom="20.0" top="30.0" />
                            </VBox.margin>
-                       </JFXTextField>
-                       <JFXPasswordField fx:id="passwordInput" focusColor="#d98921" labelFloat="true" maxWidth="300.0"
-                                         promptText="Password">
+                        </JFXButton>
+                        <JFXButton fx:id="btnRegister" buttonType="RAISED" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="100.0" ripplerFill="#fb8c00" style="-fx-background-color: #FFB74D;" text="Register">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="30.0" />
+                           </HBox.margin>
                            <VBox.margin>
-                               <Insets bottom="30.0"/>
+                              <Insets bottom="20.0" top="30.0" />
                            </VBox.margin>
-                       </JFXPasswordField>
-                       <HBox alignment="CENTER" prefHeight="19.0" prefWidth="188.0">
-                           <children>
-
-
-                           <JFXButton fx:id="btnLogin" buttonType="RAISED" onAction="#logIn" prefHeight="25.0"
-                                          prefWidth="100.0" ripplerFill="#00bfa5" style="-fx-background-color: #1DE9B6;"
-                                          text="Sign in">
-                                   <VBox.margin>
-                                       <Insets bottom="20.0" top="30.0"/>
-                                   </VBox.margin>
-                                   <font>
-                                       <Font size="14.0"/>
-                                   </font>
-                                   <HBox.margin>
-                                       <Insets right="30.0"/>
-                                   </HBox.margin>
-                               </JFXButton>
-                               <JFXButton fx:id="btnRegister" buttonType="RAISED" mnemonicParsing="false"
-                                          onAction="#register" prefHeight="25.0" prefWidth="100.0" ripplerFill="#fb8c00"
-                                          style="-fx-background-color: #FFB74D;" text="Register">
-                                   <VBox.margin>
-                                       <Insets bottom="20.0" top="30.0"/>
-                                   </VBox.margin>
-                                   <font>
-                                       <Font size="14.0"/>
-                                   </font>
-                                   <HBox.margin>
-                                       <Insets left="30.0"/>
-                                   </HBox.margin>
-
-                               </JFXButton>
-
-                           </children>
-                       </HBox>
-                   </children>
-               </VBox>
-           </children>
-           <effect>
-               <DropShadow/>
-           </effect>
-
-       </StackPane>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+                  <Label onMouseClicked="#importUser" style="-fx-border-color: #FFB74D;" text="Or import a local user profile by clicking here">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" />
+               </VBox.margin>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </VBox>
+         </children>
+      </VBox>
    </children>
-</AnchorPane>
+</StackPane>

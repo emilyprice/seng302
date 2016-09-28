@@ -36,6 +36,7 @@ public class App extends Application {
             Parent root = loader.load();
 
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
 
             primaryStage = new Stage();
             primaryStage.setScene(scene);
