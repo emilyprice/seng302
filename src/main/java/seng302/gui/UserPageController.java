@@ -411,6 +411,10 @@ public class UserPageController {
         env.getRootController().launchSettings();
     }
 
+    public void closeSettings(){
+        
+    }
+
     /**
      * Hides and shows the metronome popover when the metronome button is selected
      */

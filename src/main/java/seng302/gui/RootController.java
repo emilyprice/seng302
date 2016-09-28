@@ -230,6 +230,8 @@ public class RootController implements Initializable {
      * @param option close option either 'close' or 'logout'.
      */
     protected void showCloseWindow(String option) {
+
+        getBaseSettingsController().closeWindow();
         if (env.getUserHandler().getCurrentUser() != null && !((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
 
             String closeText = option.equals("close") ? "Quit" : "Logout";
@@ -406,6 +408,7 @@ public class RootController implements Initializable {
         try {
 
             stage.close();
+            getBaseSettingsController().closeWindow();
             showLoginWindow();
             env.resetEnvironment();
             System.gc();
@@ -414,6 +417,7 @@ public class RootController implements Initializable {
         }
 
     }
+
 
 
     /**
