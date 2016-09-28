@@ -430,6 +430,8 @@ public class StageMapController {
                 tutorAndButton.get(tutor).setGraphic(iv1);
             }
         }
+        unlockHeader.setVisible(false);
+        unlockHeader.setManaged(false);
 
     }
 
