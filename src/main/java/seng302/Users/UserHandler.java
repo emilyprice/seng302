@@ -6,10 +6,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -55,8 +53,9 @@ public class UserHandler {
     }
 
     public void loadRecentUsers() {
+        Path userDirectory = Paths.get("UserData");
         try {
-            localData = (JSONObject) parser.parse(new FileReader("UserData/local_data.json"));
+            localData = (JSONObject) parser.parse(new FileReader(userDirectory+ "/local_data.json"));
             recentUsers = new ArrayList<>();
             try {
                 recentClassrooms = (HashMap<String, Object>) localData.get("recentUsers");
@@ -80,20 +79,32 @@ public class UserHandler {
         } catch (FileNotFoundException e) {
             try {
                 System.err.println("local_data.json Does not exist! - Creating new one");
+                if (!Files.isDirectory(userDirectory)) {
+                    //Create Projects path doesn't exist.
+                    try {
+                        Files.createDirectories(userDirectory);
 
-                //UsersInfo.put("users", userList);
+
+                    } catch (IOException eIO3) {
+                        //Failed to create the directory.
+                        System.err.println("Well UserData directory failed to create.. lost cause.");
+                    }
+                }
+
+
                 recentClassrooms = new HashMap<>();
                 recentClassrooms.put(classroom, recentUsers);
                 localData.put("recentUsers", recentClassrooms);
 
 
-                FileWriter file = new FileWriter("UserData/local_data.json");
+                FileWriter file = new FileWriter(userDirectory + "/local_data.json");
                 file.write(localData.toJSONString());
                 file.flush();
                 file.close();
 
             } catch (IOException e2) {
                 System.err.println("Failed to create local_data.json file.");
+                e2.printStackTrace();
 
             }
         } catch (IOException e) {
@@ -189,9 +200,7 @@ public class UserHandler {
         return currentUser;
     }
 
-    public Path getCurrentUserPath() {
-        return Paths.get("UserData/classrooms/group5/users/" + getCurrentUser().getUserName());
-    }
+
 
 
     /**

@@ -52,14 +52,6 @@ public class BadgeManager {
         }
     }
 
-    /**
-     * Used for updating 100% tutor session badges
-     *
-     * @param map the hashmap of 100% tutor session badges
-     */
-    public void replaceTutor100AllMap(HashMap<String, Boolean> map) {
-        tutor100AllMap = map;
-    }
 
     /**
      * Used to populate the list of tutors used to create all badges
@@ -256,9 +248,9 @@ public class BadgeManager {
     public void updateTutorBadges(String tutorName, int correct, int answered) {
         ArrayList badges = tutorBadgeMap.get(tutorName);
 
-        for (Object badg : badges) {
+        for (Object badge : badges) {
 
-            Badge b = (Badge) badg;
+            Badge b = (Badge) badge;
             if (b.name.equals("Correct Questions")) {
                 b.updateBadgeProgress(env, correct);
             } else if (b.name.equals("Completed Sessions")) {
