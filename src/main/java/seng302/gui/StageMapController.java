@@ -443,6 +443,9 @@ public class StageMapController {
 
             }
         }
+
+        unlockHeader.setVisible(false);
+        unlockHeader.setManaged(false);
     }
 
 
