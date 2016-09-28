@@ -169,27 +169,36 @@ public class MicrophoneInputTutorController extends TutorController {
      * @return correctChoice What the answer is.
      */
     private int questionResponse(HBox row, String m1, String m2) {
-
-        Note note1 = Note.lookup(m1);
-        Note note2 = Note.lookup(m2);
-
+        Integer correctChoice = 0;
         disableButtons(row, 1, row.getChildren().size() - 1);
 
-        Integer correctChoice = 0;
+        Note note1 = null;
+        Note note2 = null;
 
-        if (note1.getNote().equals(note2.getNote())) {
-            correctChoice = 1;
+        if (m2.equals("Skipped")) {
+            correctChoice = 2;
+            note1 = Note.lookup(m1);
+        } else {
+            note1 = Note.lookup(m1);
+            note2 = Note.lookup(m2);
+            if (note1.getNote().equals(note2.getNote())) {
+                correctChoice = 1;
+            }
         }
 
         if (correctChoice == 1) {
             formatCorrectQuestion(row);
-        } else if (correctChoice == 2) formatSkippedQuestion(row);
+            manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
+        } else if (correctChoice == 2) {
+            formatSkippedQuestion(row);
+            manager.add(new Pair<>(note1.getNote(), "Skipped"), correctChoice);
+        }
         else {
             formatIncorrectQuestion(row);
+            manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
         }
 
 
-        manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
 
         handleAccordion();
         if (manager.answered == manager.questions) {
@@ -237,7 +246,7 @@ public class MicrophoneInputTutorController extends TutorController {
         skip.setOnAction(event -> {
             int responseValue = 0;
             if (responseValue == 0) {
-//                correctAnswer.setVisible(true);
+                questionResponse(rowPane, noteMidi, "Skipped");
             }
         });
 
