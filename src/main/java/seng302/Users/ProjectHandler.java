@@ -23,7 +23,7 @@ public class ProjectHandler {
     private Project currentProject;
     Environment env;
     String lastOpened;
-//    public Path projectsDirectory;
+    //    public Path projectsDirectory;
     String userName;
 
     //JSONArray projectList;
@@ -38,7 +38,7 @@ public class ProjectHandler {
      * @param env  The environment in which the project handler is created
      * @param user The user whose projects are being loaded
      */
-    public ProjectHandler(Environment env, String user){
+    public ProjectHandler(Environment env, String user) {
         this.userName = user;
 
         this.env = env;
@@ -52,25 +52,25 @@ public class ProjectHandler {
     /**
      * Loads last opened project, or if there are no projects, the default project.
      */
-    public void loadDefaultProject(){
+    public void loadDefaultProject() {
 
-        if(lastOpened == null){
+        if (lastOpened == null) {
             setCurrentProject("default");
-        }
-        else{
+        } else {
             setCurrentProject(lastOpened);
         }
     }
 
-    public Project getCurrentProject(){
+    public Project getCurrentProject() {
         return currentProject;
     }
 
     /**
      * Given the name of a project, changes the user over to that project.
+     *
      * @param projName The name of the project to be loaded
      */
-    public void setCurrentProject(String projName){
+    public void setCurrentProject(String projName) {
 
         this.currentProject = new Project(env, projName, this);
         //updateProjectList(projName);
@@ -80,8 +80,7 @@ public class ProjectHandler {
             env.getUserPageController().getSummaryController().updateProgressBar();
 
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //e.printStackTrace();
             System.err.println("Root controller not initialised asdsad");
         }
@@ -89,10 +88,8 @@ public class ProjectHandler {
     }
 
 
-
     /**
      * Updates the json list of project names, used to fill the quick load list.
-     *
      */
     public void updateProjectList(String projectName) {
         //TODO: FIX THIS to work with firebase
@@ -118,7 +115,7 @@ public class ProjectHandler {
     /**
      * Loads the JSON file containing the list of projects.
      */
-    private void loadProjectList(){
+    private void loadProjectList() {
         //TODO: Fix this to work with firebase
 //        JSONObject projectsInfo = new JSONObject();
 //
@@ -209,7 +206,6 @@ public class ProjectHandler {
         return projects;
 
     }
-
 
 
 }

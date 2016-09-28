@@ -16,8 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -86,7 +84,7 @@ public class UserLoginController {
     public void setEnv(Environment env) {
         this.env = env;
 
-        for(DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()){
+        for (DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()) {
             ddClassroom.getItems().add(classroom.getKey());
         }
 
@@ -180,7 +178,6 @@ public class UserLoginController {
         registerStage.setScene(scene1);
 
 
-
         registerStage.setOnCloseRequest(event -> {
             System.exit(0);
             event.consume();
@@ -190,7 +187,6 @@ public class UserLoginController {
         UserRegisterController userRegisterController = loader1.getController();
 
         userRegisterController.create(env);
-
 
 
     }
@@ -208,11 +204,13 @@ public class UserLoginController {
 
 
     /**
-     *  Checks if a classroom is selected, and modifies the styling of the classroom hBox to alert the user.
+     * Checks if a classroom is selected, and modifies the styling of the classroom hBox to alert
+     * the user.
+     *
      * @return classroom selected.
      */
-    private Boolean classroomSelected(){
-        if(ddClassroom.getValue() != null){
+    private Boolean classroomSelected() {
+        if (ddClassroom.getValue() != null) {
 
             hbClassroom.setStyle("-fx-border-style: none;-fx-background-color: rgba(255, 255, 255, 1)");
 
@@ -229,7 +227,6 @@ public class UserLoginController {
     }
 
 
-
     @FXML
     public void handleKeyPressed(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
@@ -238,24 +235,22 @@ public class UserLoginController {
     }
 
 
-
     @FXML
     protected void logIn() {
-        if(classroomSelected()){
+        if (classroomSelected()) {
             authenticate(env.getFirebase().getClassroomsSnapshot().child(ddClassroom.getValue().toString()));
         }
-
 
 
     }
 
     /**
-     *  Imports a user from local files, to allow compatibility with previous versions.
+     * Imports a user from local files, to allow compatibility with previous versions.
      */
     @FXML
     void importUser() {
-        if(classroomSelected()) {
-            UserImporter.importUser(this.env, ddClassroom.getValue().toString(),  btnLogin.getScene().getWindow());
+        if (classroomSelected()) {
+            UserImporter.importUser(this.env, ddClassroom.getValue().toString(), btnLogin.getScene().getWindow());
         }
 
     }
@@ -263,18 +258,18 @@ public class UserLoginController {
 
     /**
      * Authenticates a user against the login screen username/password inputs.
+     *
      * @param fbClass fireBase classrooms snapshot.
      */
     private void authenticate(DataSnapshot fbClass) {
 
-        if(passwordInput.getLength() <= 0  && usernameInput.getLength() <= 0){
+        if (passwordInput.getLength() <= 0 && usernameInput.getLength() <= 0) {
             passwordValidator.setMessage("Please enter a username and password.");
             passwordInput.clear();
             passwordInput.validate();
             usernameInput.requestFocus();
 
-        }
-        else if (fbClass.exists()) {
+        } else if (fbClass.exists()) {
 
             DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
 
@@ -303,8 +298,7 @@ public class UserLoginController {
                 usernameInput.requestFocus();
             }
 
-        }
-        else{
+        } else {
 
             //Handle classroom doesn't exist
             passwordValidator.setMessage("Classroom doesn't exist.");
@@ -315,9 +309,7 @@ public class UserLoginController {
         }
 
 
-
     }
-
 
 
 }

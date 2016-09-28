@@ -1,7 +1,5 @@
 package seng302.utility.musicNotation;
 
-import java.util.Arrays;
-
 /**
  * Created by jonty on 5/13/16.
  *
@@ -26,15 +24,12 @@ public class RhythmHandler {
      *
      * @return next note play duration.
      */
-    public int getNextTickTiming(){
+    public int getNextTickTiming() {
         //Below line is bugged. Needs to add one to rIndex regardless.
         //return rIndex < rhythmTimings.length ? rhythmTimings[rIndex++] : rhythmTimings[rIndex = 0];
 
         if (rIndex >= rhythmTimings.length) rIndex = 0;
         return rhythmTimings[rIndex++];
-
-
-
 
 
     }
@@ -95,8 +90,6 @@ public class RhythmHandler {
     public void resetIndex() {
         rIndex = 0;
     }
-
-
 
 
 }

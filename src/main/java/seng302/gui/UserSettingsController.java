@@ -87,7 +87,6 @@ public class UserSettingsController {
         String css = this.getClass().getResource("/css/user_settings.css").toExternalForm();
 
 
-
         ImageView imgUpload = new ImageView(new Image(getClass().getResourceAsStream("/images/file_upload_white_36dp.png"), 25, 25, false, false));
 
 
@@ -200,7 +199,7 @@ public class UserSettingsController {
 
             ((JFXButton) modal.lookup("#btnDelete")).
                     setOnAction((event) -> {
-                        env.getUserHandler().deleteUser(env.getUserHandler().getClassRoom(),env.getUserHandler().getCurrentUser().getUserName());
+                        env.getUserHandler().deleteUser(env.getUserHandler().getClassRoom(), env.getUserHandler().getCurrentUser().getUserName());
                         popup.close();
                     });
 

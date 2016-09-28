@@ -17,9 +17,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContextMenu;
-
-
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -28,14 +25,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
-
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
-
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -44,9 +38,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import javafx.scene.paint.Color;
-import javafx.util.StringConverter;
-
 import seng302.Environment;
 
 import static javafx.scene.paint.Color.RED;
@@ -209,7 +200,7 @@ public class UserPageController {
 
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) {
+            if (newValue != null) {
                 if (((String) newValue).equals("Scale Recognition Tutor (Basic)")) {
                     showPage("Scale Recognition Tutor");
                 } else if (((String) newValue).equals("Chord Recognition Tutor (Basic)")) {
@@ -237,12 +228,12 @@ public class UserPageController {
                 } else {
                     //if in competitive mode, lock the relevant tabs
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false ) {
+                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
 
-                            if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
-                                if(env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")) == true){
+                            if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
+                                if (env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")) == true) {
 
-                                }else {
+                                } else {
                                     ImageView lock = new ImageView(lockImg);
                                     StackPane image = new StackPane();
                                     image.setPadding(new Insets(0, 5, 0, 0));
@@ -254,7 +245,7 @@ public class UserPageController {
                                     setPadding(new Insets(0, 0, 0, 10));
                                     setDisable(true);
                                 }
-                            }else {
+                            } else {
                                 ImageView lock = new ImageView(lockImg);
                                 StackPane image = new StackPane();
                                 image.setPadding(new Insets(0, 5, 0, 0));
@@ -376,6 +367,7 @@ public class UserPageController {
         statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), convert.toString(timeSlider.getValue()));
         basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", convert.toString(timeSlider.getValue()));
     }
+
     private void updateGraphs(String timePeriod) {
         if (env.getRootController().getHeader().equals("Summary")) {
             summaryController.updateGraphs();
@@ -411,8 +403,8 @@ public class UserPageController {
         env.getRootController().launchSettings();
     }
 
-    public void closeSettings(){
-        
+    public void closeSettings() {
+
     }
 
     /**
@@ -625,7 +617,7 @@ public class UserPageController {
             summaryController = summaryLoader.getController();
             summaryController.create(env);
             summaryController.loadStageMap();
-            if(!env.getFirebase().getUserSnapshot().child("projects/"+env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName+"/unlockMap").exists()){
+            if (!env.getFirebase().getUserSnapshot().child("projects/" + env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/unlockMap").exists()) {
                 env.getUserHandler().getCurrentUser().saveAll();
             }
 
@@ -668,7 +660,7 @@ public class UserPageController {
             e.printStackTrace();
         }
 
-        if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+        if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
             FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
             try {
                 VBox stats = tutorbasicStatsLoader.load();
@@ -681,7 +673,7 @@ public class UserPageController {
                 basicStatsController = tutorbasicStatsLoader.getController();
 
                 basicStatsController.create(env);
-                basicStatsController.displayGraphs( tutor + " (Basic)", convert.toString(timeSlider.getValue()));
+                basicStatsController.displayGraphs(tutor + " (Basic)", convert.toString(timeSlider.getValue()));
 
 
             } catch (IOException e) {

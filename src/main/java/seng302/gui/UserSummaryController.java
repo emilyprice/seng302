@@ -166,7 +166,7 @@ public class UserSummaryController {
      */
     public void loadStageMap() {
 
-            loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
+        loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
 
         try {
             noteMap = loader.load();
@@ -180,18 +180,17 @@ public class UserSummaryController {
         }
 
 
-            StageMapController controller = loader.getController();
-            env.setStageMapController(controller);
-            env.setStagePane(noteMap);
-            env.getStageMapController().setEnvironment(env);
-            env.getStageMapController().create();
-            env.getStageMapController().setDescription();
-            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().loadStageMapData();
-            env.getStageMapController().visualiseLockedTutors();
+        StageMapController controller = loader.getController();
+        env.setStageMapController(controller);
+        env.setStagePane(noteMap);
+        env.getStageMapController().setEnvironment(env);
+        env.getStageMapController().create();
+        env.getStageMapController().setDescription();
+        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().loadStageMapData();
+        env.getStageMapController().visualiseLockedTutors();
 
 
-
-        }
+    }
 
 
     /**

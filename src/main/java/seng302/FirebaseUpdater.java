@@ -16,18 +16,18 @@ import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- *  Handles any communication to the application's Firebase database.
- *  The database contains information for all classrooms/teachers and users.
+ * Handles any communication to the application's Firebase database.
+ * The database contains information for all classrooms/teachers and users.
  */
 public class FirebaseUpdater {
 
 
-    private  DatabaseReference firebase;
+    private DatabaseReference firebase;
     private DatabaseReference userRef;
 
     private DataSnapshot userSnapshot;
 
-    private  DataSnapshot classroomsSnapshot;
+    private DataSnapshot classroomsSnapshot;
 
     public Cloudinary getImageCloud() {
         return imageCloud;
@@ -44,14 +44,13 @@ public class FirebaseUpdater {
         createClassroomSnapshot(true);
 
 
-
         imageCloud = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", "allegro123",
                 "api_key", "732823974447246",
                 "api_secret", "nGNnDUmFxWEG_lPZoJQCKyfz7hw"));
     }
 
-    public void createClassroomSnapshot(Boolean blocking){
+    public void createClassroomSnapshot(Boolean blocking) {
 
         final AtomicBoolean done = new AtomicBoolean(false);
         firebase.child("classrooms").addValueEventListener(new ValueEventListener() {
@@ -94,9 +93,10 @@ public class FirebaseUpdater {
 
     /**
      * Creates a snapshot for the given address.
-     * @param address address for the student/teacher firebase location.
-     * @param blocking Whether or not the function is asynchronous or not.
-     *                 If true, the caller is blocked until the snapshot is loaded.
+     *
+     * @param address  address for the student/teacher firebase location.
+     * @param blocking Whether or not the function is asynchronous or not. If true, the caller is
+     *                 blocked until the snapshot is loaded.
      */
     private void createUserSnapshot(String address, Boolean blocking) {
         final AtomicBoolean done = new AtomicBoolean(false);
@@ -121,9 +121,10 @@ public class FirebaseUpdater {
 
     /**
      * Loads a firebase snapshot of a given user/classroom.
+     *
      * @param classroom the classroom the user belongs too.
-     * @param user The user's username.
-     * @param blocking False for an asynchronous call.
+     * @param user      The user's username.
+     * @param blocking  False for an asynchronous call.
      */
     public void createStudentSnapshot(String classroom, String user, Boolean blocking) {
         String address = "classrooms/" + classroom + "/users/" + user;
@@ -133,17 +134,14 @@ public class FirebaseUpdater {
 
     /**
      * Loads a firebase snapshot of the given teacher's account.
-     * @param user The teacher's username.
+     *
+     * @param user     The teacher's username.
      * @param blocking False for an asynchronous call.
      */
     public void createTeacherSnapshot(String user, Boolean blocking) {
         String address = "teachers/" + user;
         createUserSnapshot(address, blocking);
     }
-
-
-
-
 
 
     public DataSnapshot getUserSnapshot() {

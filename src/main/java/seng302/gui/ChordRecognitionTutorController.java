@@ -93,14 +93,14 @@ public class ChordRecognitionTutorController extends TutorController {
             playChords.setDisable(true);
             octaves.setValue(1);
             octaves.setDisable(true);
-            if(fullTutor == true) {
+            if (fullTutor == true) {
                 chordTypeBox.setValue("Both");
-            }else{
+            } else {
                 chordTypeBox.setValue("3 Notes");
             }
             chordTypeBox.setDisable(true);
 
-        }else{
+        } else {
 
             playChords.getSelectionModel().selectFirst();
             octaves.getSelectionModel().selectFirst();
@@ -227,7 +227,7 @@ public class ChordRecognitionTutorController extends TutorController {
             record.addQuestionAnswer(question);
             handleAccordion();
             if (manager.answered == manager.questions) {
-                    finished();
+                finished();
             }
         });
 

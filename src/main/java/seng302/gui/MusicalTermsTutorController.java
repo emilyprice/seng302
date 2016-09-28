@@ -336,7 +336,7 @@ public class MusicalTermsTutorController extends TutorController {
             record.addQuestionAnswer(question);
 
             formatSkippedQuestion(rowPane);
-                manager.add(new Pair(currentTerm.getMusicalTermName(), currentTerm), 2);
+            manager.add(new Pair(currentTerm.getMusicalTermName(), currentTerm), 2);
 
 
             ((HBox) ((VBox) (rowPane.getChildren().get(0))).getChildren().get(0)).getChildren().get(1).setDisable(true);

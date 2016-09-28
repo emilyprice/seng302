@@ -182,7 +182,7 @@ public class RootController implements Initializable {
      */
     public void showWindow(Boolean show) {
         if (show) {
-            System.out.println("memory before stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/100000);
+            System.out.println("memory before stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 100000);
 
             applyTheme();
             stage.show();
@@ -194,7 +194,7 @@ public class RootController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("memory after stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/100000);
+            System.out.println("memory after stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 100000);
 
 
         } else stage.hide();
@@ -232,7 +232,7 @@ public class RootController implements Initializable {
     protected void showCloseWindow(String option) {
 
         getBaseSettingsController().closeWindow();
-        if (env.getUserHandler().getCurrentUser() != null && !((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
+        if (env.getUserHandler().getCurrentUser() != null && !((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
 
             String closeText = option.equals("close") ? "Quit" : "Logout";
 
@@ -253,7 +253,7 @@ public class RootController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == btnSaveProject) {
-                ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+                ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
                 if (option.equals("close")) {
                     System.exit(0);
                 } else if (option.equals("logout")) {
@@ -270,7 +270,7 @@ public class RootController implements Initializable {
 
 
         } else if (env.getTranscriptManager().unsavedChanges) {
-            ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+            ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             if (option.equals("close")) System.exit(0);
             else if (option.equals("logout")) logOutUser();
@@ -304,7 +304,6 @@ public class RootController implements Initializable {
     private void stopShowingNotesOnKeyboard() {
         keyboardPaneController.stopShowingNotesOnKeyboard();
     }
-
 
 
     /**
@@ -385,7 +384,6 @@ public class RootController implements Initializable {
         });
 
 
-
         loginStage.show();
         UserLoginController userLoginController = loginLoader.getController();
         userLoginController.setEnv(env);
@@ -419,14 +417,13 @@ public class RootController implements Initializable {
     }
 
 
-
     /**
      * Displays a dialog to ask the user whether or not they want to save project changes.
      *
      * @return a boolean - true for save, false for cancel
      */
     public Boolean saveChangesDialog() {
-        if (!((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
+        if (!((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("Unsaved project changes");
 
@@ -444,7 +441,7 @@ public class RootController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == btnSaveProject) {
-                ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+                ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             } else if (result.get() == btnCancel) {
                 return false;
@@ -453,7 +450,7 @@ public class RootController implements Initializable {
 
         } else if (env.getTranscriptManager().unsavedChanges) {
 
-            ((Student)env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+            ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
         }
         return true;
     }

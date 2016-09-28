@@ -1,11 +1,12 @@
 package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
-import javafx.scene.image.Image;
-import seng302.Environment;
 
 import java.nio.file.Path;
 import java.util.HashMap;
+
+import javafx.scene.image.Image;
+import seng302.Environment;
 
 
 /**
@@ -14,7 +15,7 @@ import java.util.HashMap;
  */
 public abstract class User {
 
-    String  userPassword, themePrimary, themeSecondary, userFirstName, userLastName,  profilePicUrl, userName;
+    String userPassword, themePrimary, themeSecondary, userFirstName, userLastName, profilePicUrl, userName;
 
 
     Environment env;
@@ -28,7 +29,7 @@ public abstract class User {
     private Image displayImage;
 
 
-    public User(){
+    public User() {
 
     }
 
@@ -36,7 +37,7 @@ public abstract class User {
     /**
      * Loads the basic properties of a user from firebase.
      */
-    public void loadProperties(){
+    public void loadProperties() {
         /**
          * Theme Primary/Secondary.
          * User name
@@ -44,7 +45,7 @@ public abstract class User {
          * Profile picture
          */
 
-        properties = (HashMap<String,String>) userSnapshot.child("properties").getValue();
+        properties = (HashMap<String, String>) userSnapshot.child("properties").getValue();
 
         try {
             userFirstName = (properties.get("firstName")).toString();
@@ -88,13 +89,10 @@ public abstract class User {
     }
 
 
-
-
-
     /**
      * Updates the properties to be saved to firebase.
      */
-    public  void updateProperties(){
+    public void updateProperties() {
 
         properties.put("userName", userName);
         properties.put("password", this.userPassword);
@@ -104,6 +102,7 @@ public abstract class User {
         properties.put("lastName", this.userLastName);
         properties.put("profilePicUrl", profilePicUrl);
     }
+
     /**
      * Writes JSON properties to disc
      */
@@ -114,9 +113,6 @@ public abstract class User {
         env.getFirebase().getUserRef().child("properties").updateChildren(properties);
 
     }
-
-
-
 
 
     /**
@@ -161,7 +157,6 @@ public abstract class User {
     public String getUserLastName() {
         return userLastName;
     }
-
 
 
 }

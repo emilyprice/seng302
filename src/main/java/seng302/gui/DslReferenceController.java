@@ -2,8 +2,6 @@ package seng302.gui;
 
 import org.controlsfx.control.PopOver;
 
-import java.util.Map;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;

@@ -196,14 +196,13 @@ public abstract class TutorController {
         record.updateDate();
 
 
-
         if (currentProject != null) {
 
-            if(isCompMode){
+            if (isCompMode) {
                 String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
                 //String tutorFileName = currentProject.getCurrentProjectPath() + "/" + tutorNameNoSpaces + ".json";
                 tutorHandler.saveTutorRecordsToFile(tutorNameNoSpaces, record);
-            }else{
+            } else {
                 currentProject.setRecentPracticeTutorRecordMap(tutorName, record);
             }
             currentProject.saveCurrentProject();
@@ -359,6 +358,7 @@ public abstract class TutorController {
 
     /**
      * Consistently styles all skip buttons
+     *
      * @param skip the button to be styled
      */
     public void styleSkipButton(Button skip) {

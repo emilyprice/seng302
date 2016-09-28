@@ -69,8 +69,8 @@ public class BaseSettingsController {
 
     }
 
-    public void closeWindow(){
-        ((Stage)settingsOptions.getScene().getWindow()).close();
+    public void closeWindow() {
+        ((Stage) settingsOptions.getScene().getWindow()).close();
     }
 
     /**

@@ -1,20 +1,17 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.jfoenix.controls.*;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXRadioButton;
+import com.jfoenix.controls.JFXTextField;
 
 import java.io.IOException;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -65,9 +62,6 @@ public class UserRegisterController {
     private JFXComboBox cbClassroom;
 
 
-
-
-
     private Environment env;
     private String classroom;
 
@@ -77,7 +71,6 @@ public class UserRegisterController {
 
     public void create(Environment env) {
         this.env = env;
-
 
 
     }
@@ -107,25 +100,22 @@ public class UserRegisterController {
         hbClassroom.managedProperty().bind(hbClassroom.visibleProperty());
 
         accountType.selectedToggleProperty().addListener((ov, oldVal, newVal) -> {
-            if(accountType.getSelectedToggle() != null){
+            if (accountType.getSelectedToggle() != null) {
 
-                String radioButtonText = ((JFXRadioButton)accountType.getSelectedToggle()).getText();
-                if(radioButtonText.equals("Student")){
+                String radioButtonText = ((JFXRadioButton) accountType.getSelectedToggle()).getText();
+                if (radioButtonText.equals("Student")) {
                     hbClassroom.setVisible(true);
                     cbClassroom.getItems().clear();
-                    for(DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()){
+                    for (DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()) {
                         cbClassroom.getItems().add(classroom.getKey());
                     }
 
-                }
-                else{
+                } else {
                     hbClassroom.setVisible(false);
                 }
                 hbClassroom.managedProperty().bind(hbClassroom.visibleProperty());
             }
         });
-
-
 
 
     }
@@ -136,14 +126,13 @@ public class UserRegisterController {
     @FXML
     void classroomSelected() {
 
-        if(cbClassroom.getValue() != null){
+        if (cbClassroom.getValue() != null) {
             this.classroom = cbClassroom.getValue().toString();
             env.getUserHandler().setClassRoom(this.classroom);
             env.getUserHandler().populateUsers();
         }
 
     }
-
 
 
     /**
@@ -168,6 +157,7 @@ public class UserRegisterController {
 
     /**
      * Validates credentials (input lengths + validity.
+     *
      * @return True if username/passwords are valid, false otherwise
      */
     private Boolean validCredentials(DataSnapshot dss) {
@@ -176,7 +166,7 @@ public class UserRegisterController {
 
         //Validating username
         if (txtUsername.getText().length() > 0) {
-            if (dss.child("classrooms/" + this.classroom  + "/users/" + txtUsername.getText()).exists()) {
+            if (dss.child("classrooms/" + this.classroom + "/users/" + txtUsername.getText()).exists()) {
                 //If the User already exists!
                 lblValidator.setText("User already exists!");
 
@@ -230,21 +220,19 @@ public class UserRegisterController {
     @FXML
     protected void register() {
 
-        String selectedType = ((JFXRadioButton)accountType.getSelectedToggle()).getText();
+        String selectedType = ((JFXRadioButton) accountType.getSelectedToggle()).getText();
         hbClassroom.setStyle("-fx-border-color: none;");
-        if(selectedType != null){
-            if(selectedType.equals("Student")){
-                if(cbClassroom.getValue() != null){
+        if (selectedType != null) {
+            if (selectedType.equals("Student")) {
+                if (cbClassroom.getValue() != null) {
                     env.getUserHandler().setClassRoom(this.classroom);
-                    registerUser(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/"+txtUsername.getText()));
-                }
-                else{
+                    registerUser(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/" + txtUsername.getText()));
+                } else {
                     //TODO: Classroom not selected.
                     hbClassroom.setStyle("-fx-border-color: red;");
 
                 }
-            }
-            else if(selectedType.equals("Teacher")){
+            } else if (selectedType.equals("Teacher")) {
 
                 env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
                 //TODO: add action for registering and logging in as a teacher.
@@ -256,9 +244,10 @@ public class UserRegisterController {
 
     /**
      * Registers a user, given a firebase snapshot containing the user's classroom and username.
+     *
      * @param dataSnapShot snapshot with the address of the user and their classroom.
      */
-    private void registerUser(DataSnapshot dataSnapShot){
+    private void registerUser(DataSnapshot dataSnapShot) {
         if (validCredentials(dataSnapShot)) {
             env.getThemeHandler().setDefaultTheme();
             env.getUserHandler().createUser(txtUsername.getText(), txtPassword.getText());
@@ -282,7 +271,6 @@ public class UserRegisterController {
     }
 
 
-
     /**
      * Replaces the registration window with a log in window.
      */
@@ -296,9 +284,6 @@ public class UserRegisterController {
             e.printStackTrace();
         }
     }
-
-
-
 
 
 }

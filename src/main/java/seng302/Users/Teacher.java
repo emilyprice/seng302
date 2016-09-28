@@ -7,8 +7,9 @@ import seng302.Environment;
 
 
 /**
- * Handles functionality for representing and manipulating a teacher's information. Also handles saving
- * and loading teachers. Inherits User, which handles the basic information a teacher shares with all users types.
+ * Handles functionality for representing and manipulating a teacher's information. Also handles
+ * saving and loading teachers. Inherits User, which handles the basic information a teacher shares
+ * with all users types.
  */
 
 
@@ -46,11 +47,6 @@ public class Teacher extends User {
 
         super.updateProperties();
     }
-
-
-
-
-
 
 
 }

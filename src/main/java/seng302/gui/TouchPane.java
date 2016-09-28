@@ -2,11 +2,8 @@ package seng302.gui;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -149,8 +146,6 @@ public class TouchPane extends StackPane {
     //public pinchZoom (KeyboardPaneController kpc, Environment env, TouchEvent touch1, TouchEvent touch2) {
 
 
-
-
 //        //Event handler for pinch zooming the size of the keyboard
 //        key.setOnZoom(event -> {
 //            System.out.println(event.getZoomFactor());
@@ -175,7 +170,6 @@ public class TouchPane extends StackPane {
 //            event.consume();
 //        });
     //}
-
 
 
     /**
@@ -219,8 +213,10 @@ public class TouchPane extends StackPane {
     /**
      * displays a shape corresponding to a particular scale on the keys. Used by
      * toggleScaleKeys() in KeyBoardPaneController
+     *
      * @param imageType: Detemines whether it is a circle or rectangle
-     * @param imageId: gives the image an ID so it can be associated with a scale/startnote/other note
+     * @param imageId:   gives the image an ID so it can be associated with a scale/startnote/other
+     *                   note
      */
     public void toggleScaleNotes(String imageType, String imageId) {
         Circle blueCircle = new Circle();

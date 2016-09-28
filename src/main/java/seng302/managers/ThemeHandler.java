@@ -69,10 +69,11 @@ public class ThemeHandler {
 
     /**
      * Returns a suitable font colour (black or white) depending on the given background colour.
+     *
      * @param colString background colour to determine suitable font colour from.
      * @return colour string (either 'black' or 'white'
      */
-    private static String generateComplementFontColor(String colString){
+    private static String generateComplementFontColor(String colString) {
 
 
         Function<Integer, Integer> validateRGB = i -> i > 255 ? 255 : i;
@@ -84,9 +85,9 @@ public class ThemeHandler {
         java.awt.Color col;
 
         if (m.matches()) {
-            int r  = validateRGB.apply(Integer.valueOf(m.group(1)));
-            int g  = validateRGB.apply(Integer.valueOf(m.group(2)));
-            int b  = validateRGB.apply(Integer.valueOf(m.group(3)));
+            int r = validateRGB.apply(Integer.valueOf(m.group(1)));
+            int g = validateRGB.apply(Integer.valueOf(m.group(2)));
+            int b = validateRGB.apply(Integer.valueOf(m.group(3)));
 
             col = new Color(r, g, b);
         } else {
@@ -96,7 +97,6 @@ public class ThemeHandler {
                 col = Color.decode("#1E88E5"); //Default blue
             }
         }
-
 
 
         if ((float) ((float) ((float) col.getRed() * 0.299f) + (float) (col.getGreen() * 0.587f) + (float) (col.getBlue() * 0.144f)) > 186) {
