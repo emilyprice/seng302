@@ -234,7 +234,8 @@ public class UserRegisterController {
 
                 }
             } else if(selectedType.equals("Teacher")) {
-                if(!classRoomExists(txtClassRoomName.getText())) {
+                String name = txtClassRoomName.getText();
+                if (!classRoomExists(name) && !ClassroomCreatorController.containsInvalidCharacters(name) && !ClassroomCreatorController.isEmpty(name)) {
                     env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
                     env.getUserHandler().setCurrentTeacher(txtUsername.getText(), txtClassRoomName.getText(), txtPassword.getText());
 

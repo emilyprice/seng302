@@ -65,7 +65,7 @@ public class ClassroomCreatorController {
         env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
-    private boolean isEmpty(String potentialName) {
+    public static boolean isEmpty(String potentialName) {
         if (potentialName.length() == 0) {
             return false;
         } else {
@@ -73,7 +73,7 @@ public class ClassroomCreatorController {
         }
     }
 
-    private boolean containsInvalidCharacters(String potentialName) {
+    public static boolean containsInvalidCharacters(String potentialName) {
         CharSequence[] invalidChars = {".", "#", "$", "[", "]"};
 
         for (CharSequence invalidChar : invalidChars) {
