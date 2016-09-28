@@ -140,7 +140,7 @@ public class UserLoginController {
 
             try {
                 String dpUrl = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + user + "/properties/profilePicUrl").getValue().toString();
-                Image img = new Image(dpUrl);
+                Image img = new Image(dpUrl, 100, 100, true, true);
                 recentUsersHbox.getChildren().add(generateRecentUser(user, img));
             } catch (NullPointerException e) {
                 System.err.println("The user " + user + " has no profile picture. They may have been deleted from firebase.");

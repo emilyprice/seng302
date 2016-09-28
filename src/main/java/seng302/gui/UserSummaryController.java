@@ -274,7 +274,12 @@ public class UserSummaryController {
         Type mapType = new TypeToken<HashMap<String, Boolean>>() {}.getType();
         HashMap<String, Boolean> unlockStuff = new Gson().fromJson(unlockData, mapType);
 
-        controller.loadStudentMap(unlockStuff);
+        if (unlockStuff != null) {
+            controller.loadStudentMap(unlockStuff);
+        } else {
+            //create the standard unlock map
+            controller.loadStudentMap();
+        }
 
 
     }

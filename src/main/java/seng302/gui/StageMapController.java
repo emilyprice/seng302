@@ -1,10 +1,5 @@
 package seng302.gui;
 
-import org.controlsfx.control.Notifications;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -17,6 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import jdk.nashorn.internal.parser.JSONParser;
+import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
@@ -95,7 +91,7 @@ public class StageMapController {
     /**
      * stores the unlock order of the tutors
      */
-    private ArrayList<String> tutorOrder; //the order in which the tutors unlock
+    private static ArrayList<String> tutorOrder; //the order in which the tutors unlock
 
     /**
      * stores the convertion of tutor name to a shortened tutor string that is used for
@@ -117,6 +113,20 @@ public class StageMapController {
         converted.put("Key Signature Tutor", "keySignatureTutor");
         converted.put("Diatonic Chord Tutor", "diatonicChordTutor");
         converted.put("Scale Modes Tutor", "scaleModesTutor");
+
+        tutorOrder = new ArrayList<>();
+        tutorOrder.add("musicalTermsTutor");
+        tutorOrder.add("pitchTutor");
+        tutorOrder.add("basicScaleTutor");
+        tutorOrder.add("basicChordTutor");
+        tutorOrder.add("intervalTutor");
+        tutorOrder.add("scaleTutor");
+        tutorOrder.add("chordTutor");
+        tutorOrder.add("chordSpellingTutor");
+        tutorOrder.add("scaleSpellingTutor");
+        tutorOrder.add("keySignatureTutor");
+        tutorOrder.add("diatonicChordTutor");
+        tutorOrder.add("scaleModesTutor");
     }
 
     public HashMap<String, HashMap<String, Boolean>> unlockDescriptions;
@@ -233,11 +243,9 @@ public class StageMapController {
      * button, the order of the tutors, and whether the tutor is unlocked or locked)
      */
     public void create() {
-        tutorOrder = new ArrayList<>();
         unlockStatus = new HashMap<>();
 
         generateLockingStatus();
-        generateTutorOrder();
         generateTutorAndButtonNames();
         generateDescriptions();
         visualiseLockedTutors();
@@ -261,27 +269,6 @@ public class StageMapController {
 
         }
 
-    }
-
-
-    /**
-     * generates an array list with the chronological order of the tutors in the stage map.
-     * This will be the order the tutors unlock in
-     */
-    private void generateTutorOrder() {
-        //pitch tutor and musical terms tutor are unlocked by default
-        tutorOrder.add("musicalTermsTutor");
-        tutorOrder.add("pitchTutor");
-        tutorOrder.add("basicScaleTutor");
-        tutorOrder.add("basicChordTutor");
-        tutorOrder.add("intervalTutor");
-        tutorOrder.add("scaleTutor");
-        tutorOrder.add("chordTutor");
-        tutorOrder.add("chordSpellingTutor");
-        tutorOrder.add("scaleSpellingTutor");
-        tutorOrder.add("keySignatureTutor");
-        tutorOrder.add("diatonicChordTutor");
-        tutorOrder.add("scaleModesTutor");
     }
 
     /**
@@ -425,12 +412,32 @@ public class StageMapController {
         setDescription();
     }
 
+    /**
+     * Load a student map when no unlock data is available
+     */
+    public void loadStudentMap() {
+
+        Image padlock = new Image(getClass().getResourceAsStream
+                ("/images/lock.png"), 10, 10, true, true);
+
+        for (String tutor : tutorOrder) {
+            if (tutor.equals("musicalTermsTutor") || tutor.equals("pitchTutor")) {
+                tutorAndButton.get(tutor).setDisable(false);
+            } else {
+                tutorAndButton.get(tutor).setDisable(true);
+                ImageView iv1 = new ImageView();
+                iv1.setImage(padlock);
+                tutorAndButton.get(tutor).setGraphic(iv1);
+            }
+        }
+
+    }
+
     public void loadStudentMap(HashMap<String, Boolean> unlockStatus) {
 
         Image padlock = new Image(getClass().getResourceAsStream
                 ("/images/lock.png"), 10, 10, true, true);
 
-        //If in competitive mode, relevant stages should be locked
         for (String tutor: unlockStatus.keySet()) {
             tutorAndButton.get(tutor).setDisable(false);
             tutorAndButton.get(tutor).setGraphic(null);

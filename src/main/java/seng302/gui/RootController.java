@@ -698,6 +698,7 @@ public class RootController implements Initializable {
         if (result.isPresent()) {
             String newClassroom = result.get();
             env.getUserHandler().setClassRoom(newClassroom);
+            env.getFirebase().getFirebase().child("classrooms/" + newClassroom + "/users/").setValue("none");
             env.getFirebase().getUserRef().child("classrooms").push().setValue(newClassroom);
             env.getTeacherPageController().updateDisplay();
 
