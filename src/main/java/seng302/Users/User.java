@@ -1,14 +1,10 @@
 package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import javafx.scene.image.Image;
 import seng302.Environment;
 
 import java.nio.file.Path;
-
-import java.util.Date;
 import java.util.HashMap;
 
 
@@ -28,6 +24,8 @@ public abstract class User {
     Path userDirectory;
 
     DataSnapshot userSnapshot;
+
+    private Image displayImage;
 
 
     public User(){
@@ -78,8 +76,10 @@ public abstract class User {
         try {
             //profile pic
             profilePicUrl = (properties.get("profilePicUrl")).toString();
+            displayImage = new Image(this.profilePicUrl);
         } catch (NullPointerException e) {
             profilePicUrl = "http://res.cloudinary.com/allegro123/image/upload/v1474434800/testDP_qmwncc.jpg";
+            displayImage = new Image(this.profilePicUrl);
         }
 
         env.getThemeHandler().setTheme(themePrimary, themeSecondary);
@@ -145,10 +145,11 @@ public abstract class User {
 
     public void setUserPicture(String imageUrl) {
         this.profilePicUrl = imageUrl;
+        displayImage = new Image(this.profilePicUrl);
     }
 
     public Image getUserPicture() {
-        return new Image(this.profilePicUrl);
+        return displayImage;
     }
 
     public void setUserFirstName(String name) {

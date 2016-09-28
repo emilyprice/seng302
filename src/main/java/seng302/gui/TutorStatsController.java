@@ -3,15 +3,6 @@ package seng302.gui;
 import com.google.firebase.database.DataSnapshot;
 
 import com.jfoenix.controls.JFXButton;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -30,7 +21,6 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -48,6 +38,9 @@ import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Controller for the tutor stats pane,  used in the user page for all tutors.
@@ -545,15 +538,15 @@ public class TutorStatsController {
      * @param b the Badge to be added
      */
     public void addTutorBadgeToGrid(Badge b) {
-        Image ribbonImage = new Image("/images/ribbonAward.png");
+        Image ribbonImage = new Image("/images/ribbonAward.png", 70, 70, true, false);
         ImageView rView = new ImageView(ribbonImage);
         rView.fitHeightProperty().setValue(70);
         rView.fitWidthProperty().setValue(70);
-        Image bImage = new Image("/images/"+b.imageName+".png");
+        Image bImage = new Image("/images/"+b.imageName+".png", 26.0, 26.0, true, false);
         ImageView bView = new ImageView(bImage);
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
-        Image lockImg = new Image("/images/lock.png");
+        Image lockImg = new Image("/images/lock.png", 40, 40, true, false);
         ImageView lockView = new ImageView(lockImg);
         lockView.fitHeightProperty().setValue(40);
         lockView.fitWidthProperty().setValue(40);
