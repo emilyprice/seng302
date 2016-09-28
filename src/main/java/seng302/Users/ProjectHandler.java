@@ -70,7 +70,7 @@ public class ProjectHandler {
 
 
         } catch (Exception e) {
-            System.err.println("Root controller not initialised asdsad");
+            System.err.println("Root controller not initialised. (updating level badge, update graphs and progress bar failed");
         }
 
     }
@@ -94,7 +94,7 @@ public class ProjectHandler {
             String newProject = result.get();
             JSONArray projects = getProjectList();
             if (!projects.contains(newProject)) {
-                new Project(env, newProject, this);
+                //new Project(env, newProject, this);
                 setCurrentProject(newProject);
             } else {
                 env.getRootController().errorAlert("The project: " + newProject + " already exists.");

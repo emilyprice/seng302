@@ -113,6 +113,9 @@ public class Environment {
         transcriptManager = new TranscriptManager();
         recordLocation = null;
         em = new EditHistory(this);
+        stageMapController.generateLockingStatus();
+        System.out.println("after reset project");
+        System.out.println(stageMapController.getUnlockStatus());
 
 
     }

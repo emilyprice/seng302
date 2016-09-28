@@ -306,7 +306,7 @@ public class StageMapController {
      * Generates the hash map that stores the locking status of each tutor (whether it is unlocked
      * or locked)
      */
-    private void generateLockingStatus() {
+    public static void generateLockingStatus() {
         //pitch tutor and musical terms tutor are unlocked by default
         unlockStatus.put("musicalTermsTutor", true);
         unlockStatus.put("pitchTutor", true);

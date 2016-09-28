@@ -31,7 +31,7 @@ import java.util.HashMap;
 
 public class Project {
 
-    HashMap<String, Object> projectSettings;
+    HashMap<String, Object> projectSettings = new HashMap<>();
 
     ProjectHandler projectHandler;
 
@@ -72,6 +72,7 @@ public class Project {
         this.visualiserOn = false;
         badgeManager = new BadgeManager(env);
         recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
+        System.out.println("project created with this name." + projectName);
         loadProject(projectName);
         loadProperties();
 
@@ -89,6 +90,8 @@ public class Project {
      */
     private void saveProperties() {
         Gson gson = new Gson();
+        System.out.println("save properties");
+        System.out.println(projectSettings);
         projectSettings.put("tempo", env.getPlayer().getTempo());
         String transcriptString = gson.toJson(env.getTranscriptManager().getTranscriptTuples());
 
@@ -115,6 +118,8 @@ public class Project {
 
         projectSettings.put("tutorPracticeMap", gson.toJson(recentPracticeTutorRecordMap));
 
+        System.out.println("in save properties");
+        System.out.println(env.getStageMapController().unlockStatus);
 
         try {
             projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().unlockStatus));
@@ -137,10 +142,30 @@ public class Project {
      */
     private void loadProperties() {
 
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(env.getFirebase().getUserSnapshot());
 
+        while(env.getFirebase().getUserRef().child("projects/"+projectName) == null){
+
+        }
+        System.out.println("beyong the UserRef issue");
+        while(env.getFirebase().getUserSnapshot().child("projects/" + projectName) == null){
+
+        }System.out.println(env.getFirebase().getUserSnapshot().child("projects/"+projectName));
+
+        System.out.println("beyong the snapshot issue");
         DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/" + projectName);
+        System.out.println(projectSnapshot.exists());
+
+
 
         projectSettings = (HashMap<String, Object>) projectSnapshot.getValue();
+        System.out.println("IMPORTANT OUTPUT BELOW");
+        System.out.println(projectSettings);
 
         int tempo;
         Gson gson = new Gson();
@@ -210,8 +235,12 @@ public class Project {
             //If level has never been set, (ie old account), default to 1
             level = 1;
         }
+
+
         try {
             String mode = gson.fromJson((String) projectSettings.get("competitionMode"), String.class);
+            System.out.println("mode");
+            System.out.println(mode);
             if (mode.equals("true")) {
                 setToCompetitionMode();
             } else {
@@ -248,6 +277,7 @@ public class Project {
         } catch (Exception e) {
             System.err.println("failed to load tutorPracticeMap");
 
+
         }
 
 
@@ -274,6 +304,8 @@ public class Project {
             System.err.println("failed to import badge data");
         }
 
+
+
     }
 
 
@@ -292,8 +324,8 @@ public class Project {
                 env.getStageMapController().setDescription();
             }
         } catch (Exception e) {
-            e.printStackTrace();
 
+            env.getStageMapController().generateLockingStatus();
         }
 
         try {
@@ -301,11 +333,15 @@ public class Project {
             HashMap<String, HashMap<String, Boolean>> unlockMapDescriptions;
             Type mapType = new TypeToken<HashMap<String, HashMap<String, Boolean>>>() {
             }.getType();
-            unlockMapDescriptions = gson.fromJson((String) projectSettings.get("unlockMapDescriptions"), mapType);
-            if (unlockMapDescriptions != null) {
-                env.getStageMapController().unlockDescriptions = unlockMapDescriptions;
-                env.getStageMapController().setDescription();
+            System.out.println(projectSettings);
+            if (projectSettings != null) { //HACK
+                unlockMapDescriptions = gson.fromJson((String) projectSettings.get("unlockMapDescriptions"), mapType);
+                if (unlockMapDescriptions != null) {
+                    env.getStageMapController().unlockDescriptions = unlockMapDescriptions;
+                    env.getStageMapController().setDescription();
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -330,6 +366,7 @@ public class Project {
     }
 
 
+
     /**
      * Handles Saving a .json Project file, for the specified project address
      *
@@ -338,6 +375,7 @@ public class Project {
     public void saveProject(String projectName) {
         saveProperties();
         env.getFirebase().getUserRef().child("projects/" + projectName).updateChildren(projectSettings);
+
         env.getRootController().removeUnsavedChangesIndicator();
     }
 
@@ -392,16 +430,16 @@ public class Project {
      */
     public void loadProject(String pName) {
         DataSnapshot project = env.getFirebase().getUserSnapshot().child("projects/" + pName);
-        env.resetProjectEnvironment();
+        //env.resetProjectEnvironment();
         if (project.exists()) {
 
         } else {
-            System.err.println("Tried to load project but it didn't exist");
+
             saveProject(pName);
 
         }
         this.projectName = pName;
-        loadProperties();
+        //loadProperties();
         env.getRootController().setWindowTitle("Allegro - " + pName);
 
 
