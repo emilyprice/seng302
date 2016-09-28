@@ -255,8 +255,6 @@ public class UserLoginController {
             } else {
                 authenticateTeacher();
             }
-        } else {
-            //TODO: Handle having not have selected a classroom.
         }
 
     }

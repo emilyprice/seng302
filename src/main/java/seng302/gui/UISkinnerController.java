@@ -9,8 +9,6 @@ import javafx.scene.paint.Color;
 import seng302.Environment;
 import seng302.utility.ColourUtils;
 
-import java.util.ArrayList;
-
 /**
  * Controller for the themeSettings Page. (UISKinner.fxml)
  */
@@ -176,9 +174,12 @@ public class UISkinnerController {
     }
 
     public void generateSecondaryColour(ActionEvent actionEvent) {
-        //TODO: make this work for teachers
         env.getThemeHandler().setTheme(baseRGB, lighterOrDarker);
-        env.getUserHandler().getCurrentUser().saveProperties();
-        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
+        try {
+            env.getUserHandler().getCurrentUser().saveProperties();
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
+        } catch (NullPointerException e) {
+            env.getUserHandler().getCurrentTeacher().saveProperties();
+        }
     }
 }

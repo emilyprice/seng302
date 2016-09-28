@@ -229,7 +229,6 @@ public class UserRegisterController {
                     env.getUserHandler().setClassRoom(this.classroom);
                     registerUser(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/" + txtUsername.getText()));
                 } else {
-                    //TODO: Classroom not selected.
                     hbClassroom.setStyle("-fx-border-color: red;");
 
                 }
