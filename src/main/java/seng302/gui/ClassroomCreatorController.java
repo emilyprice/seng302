@@ -47,6 +47,8 @@ public class ClassroomCreatorController {
             env.getFirebase().getFirebase().child("classrooms/" + newClassroom + "/users/").setValue("none");
             env.getFirebase().getUserRef().child("classrooms").push().setValue(newClassroom);
             env.getTeacherPageController().updateDisplay();
+            env.getRootController().addClassroomToMenu(newClassroom);
+
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
         }
 

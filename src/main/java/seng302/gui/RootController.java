@@ -920,4 +920,16 @@ public class RootController implements Initializable {
         menuTranscript.setDisable(false);
     }
 
+    public void addClassroomToMenu(String newClassroom) {
+        MenuItem classMenuItem = new MenuItem(newClassroom);
+        classMenuItem.setOnAction(clickEvent -> {
+            env.getUserHandler().setClassRoom(classMenuItem.getText());
+            env.getRootController().setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
+            env.getTeacherPageController().updateDisplay();
+        });
+
+        menuOpenClassroom.getItems().add(classMenuItem);
+
+    }
+
 }
