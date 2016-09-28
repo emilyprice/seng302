@@ -373,10 +373,10 @@ public class StageMapController {
             ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
             boolean unlock = true;
 
-            int requiredScore = 2; //7
-            if (nextUnlockTutor.equals("scaleTutor") || nextUnlockTutor.equals("chordTutor")) {
-                if (tutor.equals("basicScaleTutor") || tutor.equals("basicChordTutor")) {
-                    requiredScore = 2; //9
+            int requiredScore = 7; //7
+            if(nextUnlockTutor.equals("scaleTutor")||nextUnlockTutor.equals("chordTutor")){
+                if(tutor.equals("basicScaleTutor")|| tutor.equals("basicChordTutor")){
+                    requiredScore = 9; //9
                 }
             }
 
