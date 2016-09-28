@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -64,7 +63,7 @@ public class TeacherPageController {
 
 
     @FXML
-    void openSettings(MouseEvent event) {
+    void openSettings() {
         env.getRootController().launchTeacherSettings();
     }
 
@@ -239,5 +238,11 @@ public class TeacherPageController {
         populateUserOptions();
         showPage("Summary");
 
+    }
+
+    @FXML
+    public void onLogoutClick() {
+        //env.getRootController().showCloseWindow("logout");
+        env.getRootController().logOutUser();
     }
 }
