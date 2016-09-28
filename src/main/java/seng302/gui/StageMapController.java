@@ -1,12 +1,5 @@
 package seng302.gui;
 
-import org.apache.commons.collections4.BidiMap;
-import org.apache.commons.collections4.bidimap.DualHashBidiMap;
-import org.controlsfx.control.Notifications;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -18,7 +11,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import jdk.nashorn.internal.parser.JSONParser;
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.Users.Project;
@@ -107,7 +101,7 @@ public class StageMapController {
     public static BidiMap<String, String> converted;
 
     static {
-        converted = new BidiMap<>();
+        converted = new DualHashBidiMap<>();
         converted.put("Musical Terms Tutor", "musicalTermsTutor");
         converted.put("Pitch Comparison Tutor", "pitchTutor");
         converted.put("Scale Recognition Tutor (Basic)", "basicScaleTutor");
