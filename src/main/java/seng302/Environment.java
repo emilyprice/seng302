@@ -47,7 +47,9 @@ public class Environment {
         return userPageController;
     }
 
-    public TeacherPageController getTeacherPageController() { return teacherPageController;}
+    public TeacherPageController getTeacherPageController() {
+        return teacherPageController;
+    }
 
     public void setTeacherPageController(TeacherPageController teacherPageController) {
         this.teacherPageController = teacherPageController;

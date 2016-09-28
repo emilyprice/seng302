@@ -57,7 +57,7 @@ public class UserHandler {
     public void loadRecentUsers() {
         Path userDirectory = Paths.get("UserData");
         try {
-            localData = (JSONObject) parser.parse(new FileReader(userDirectory+ "/local_data.json"));
+            localData = (JSONObject) parser.parse(new FileReader(userDirectory + "/local_data.json"));
             recentUsers = new ArrayList<>();
             try {
                 recentClassrooms = (HashMap<String, Object>) localData.get("recentUsers");

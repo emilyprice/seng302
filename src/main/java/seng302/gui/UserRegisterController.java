@@ -97,13 +97,11 @@ public class UserRegisterController {
         btnReturn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/back_32dp.png"))));
 
 
-
-
         accountType.selectedToggleProperty().addListener((ov, oldVal, newVal) -> {
             if (accountType.getSelectedToggle() != null) {
 
-                String radioButtonText = ((JFXRadioButton)accountType.getSelectedToggle()).getText();
-                if(radioButtonText.equals("Student")){
+                String radioButtonText = ((JFXRadioButton) accountType.getSelectedToggle()).getText();
+                if (radioButtonText.equals("Student")) {
                     txtClassRoomName.setVisible(false);
                     hbClassroom.setVisible(true);
                     cbClassroom.getItems().clear();
@@ -232,7 +230,7 @@ public class UserRegisterController {
                     hbClassroom.setStyle("-fx-border-color: red;");
 
                 }
-            } else if(selectedType.equals("Teacher")) {
+            } else if (selectedType.equals("Teacher")) {
                 String name = txtClassRoomName.getText();
                 if (!classRoomExists(name) && !ClassroomCreatorController.containsInvalidCharacters(name) && !ClassroomCreatorController.isEmpty(name)) {
                     env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
@@ -248,7 +246,7 @@ public class UserRegisterController {
                     Stage stage = (Stage) btnRegister.getScene().getWindow();
                     stage.close();
                     env.getRootController().showWindow(true);
-                }else{
+                } else {
                     txtClassRoomName.setStyle("-fx-border-color: red;");
                 }
 
@@ -290,15 +288,15 @@ public class UserRegisterController {
     }
 
 
-
-    public boolean classRoomExists(String className){
+    public boolean classRoomExists(String className) {
         DataSnapshot classroom = env.getFirebase().getClassroomsSnapshot().child(className);
-        if(classroom.exists()){
+        if (classroom.exists()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
+
     /**
      * Replaces the registration window with a log in window.
      */

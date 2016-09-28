@@ -409,7 +409,6 @@ public class RootController implements Initializable {
     }
 
 
-
     public void setHeader(String text) {
         txtHeader.setText(text);
     }
@@ -747,7 +746,7 @@ public class RootController implements Initializable {
 
     public void updateClassroomsList(List<String> classes) {
         menuOpenClassroom.getItems().clear();
-        for (String className:classes) {
+        for (String className : classes) {
             MenuItem classMenuItem = new MenuItem(className);
             classMenuItem.setOnAction(event -> {
                 env.getUserHandler().setClassRoom(classMenuItem.getText());

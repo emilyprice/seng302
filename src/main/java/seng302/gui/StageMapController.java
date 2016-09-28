@@ -102,8 +102,8 @@ public class StageMapController {
     static {
         converted = new HashMap<>();
         converted.put("Musical Terms Tutor", "musicalTermsTutor");
-        converted.put("Pitch Comparison Tutor", "pitchTutor" );
-        converted.put("Scale Recognition Tutor (Basic)","basicScaleTutor");
+        converted.put("Pitch Comparison Tutor", "pitchTutor");
+        converted.put("Scale Recognition Tutor (Basic)", "basicScaleTutor");
         converted.put("Chord Recognition Tutor (Basic)", "basicChordTutor");
         converted.put("Interval Recognition Tutor", "intervalTutor");
         converted.put("Scale Recognition Tutor", "scaleTutor");
@@ -359,13 +359,13 @@ public class StageMapController {
      */
     public void fetchTutorFile(String tutorId) {
 
-        for(String tutor: unlockDescriptions.get(nextUnlockTutor).keySet()) {
+        for (String tutor : unlockDescriptions.get(nextUnlockTutor).keySet()) {
             ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
             boolean unlock = true;
 
             int requiredScore = 7; //7
-            if(nextUnlockTutor.equals("scaleTutor")||nextUnlockTutor.equals("chordTutor")){
-                if(tutor.equals("basicScaleTutor")|| tutor.equals("basicChordTutor")){
+            if (nextUnlockTutor.equals("scaleTutor") || nextUnlockTutor.equals("chordTutor")) {
+                if (tutor.equals("basicScaleTutor") || tutor.equals("basicChordTutor")) {
                     requiredScore = 9; //9
                 }
             }
@@ -438,7 +438,7 @@ public class StageMapController {
         Image padlock = new Image(getClass().getResourceAsStream
                 ("/images/lock.png"), 10, 10, true, true);
 
-        for (String tutor: unlockStatus.keySet()) {
+        for (String tutor : unlockStatus.keySet()) {
             tutorAndButton.get(tutor).setDisable(false);
             tutorAndButton.get(tutor).setGraphic(null);
             if (!unlockStatus.get(tutor)) {

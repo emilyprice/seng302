@@ -62,7 +62,6 @@ public class TeacherPageController {
     private List<String> teacherClasses = new ArrayList<>();
 
 
-
     @FXML
     void openSettings() {
         env.getRootController().launchTeacherSettings();
@@ -129,7 +128,7 @@ public class TeacherPageController {
 
             DataSnapshot userProjects = user.child("projects");
 
-            for (DataSnapshot data: userProjects.getChildren()) {
+            for (DataSnapshot data : userProjects.getChildren()) {
                 thisStudent.getChildren().add(new TreeItem<>(user.getKey() + "/" + data.getKey()));
             }
             thisStudent.setExpanded(false);
@@ -178,7 +177,6 @@ public class TeacherPageController {
                         cell.getTreeItem().setExpanded(!cell.getTreeItem().isExpanded());
                     }
                 });
-
 
 
                 return cell;
@@ -240,7 +238,7 @@ public class TeacherPageController {
 
             userSummaryController.hideBadges();
             //change to be the user that was clicked on
-            userSummaryController.createStudent(env, userName,"All Time", project);
+            userSummaryController.createStudent(env, userName, "All Time", project);
             userSummaryController.showStudentStagemap(userName, project);
 
         } catch (IOException e) {

@@ -83,7 +83,7 @@ public class UISkinnerController {
             if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Creative").currentBadgeType == 0) {
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
             }
-        } catch (NullPointerException e ) {
+        } catch (NullPointerException e) {
             env.getUserHandler().getCurrentTeacher().saveProperties();
         }
 

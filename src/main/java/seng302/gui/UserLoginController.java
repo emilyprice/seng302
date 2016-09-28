@@ -244,7 +244,7 @@ public class UserLoginController {
             DataSnapshot teacher = env.getFirebase().getTeacherSnapshot().child(usernameInput.getText());
             final boolean[] teacherHasClassroom = {false};
 
-            teacher.child("/classrooms").getChildren().forEach(e-> {
+            teacher.child("/classrooms").getChildren().forEach(e -> {
                 if (e.getValue().equals(ddClassroom.getValue().toString())) {
                     teacherHasClassroom[0] = true;
                 }

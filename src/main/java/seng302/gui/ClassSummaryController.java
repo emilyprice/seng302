@@ -94,7 +94,6 @@ public class ClassSummaryController {
         });
 
 
-
     }
 
     private void populateStageUsers(int tutor) {
@@ -105,7 +104,7 @@ public class ClassSummaryController {
                 try {
                     String unlockMap = ((DataSnapshot) child).child("unlockMap").getValue().toString();
                     String key = converted.get(tutorNames.get(tutor));
-                    if (unlockMap.contains(key + "\":true") && !studentsAtStage.getItems().contains(user.getKey()) ) {
+                    if (unlockMap.contains(key + "\":true") && !studentsAtStage.getItems().contains(user.getKey())) {
                         studentsAtStage.getItems().add(user.getKey());
                     }
                 } catch (Exception e) {
