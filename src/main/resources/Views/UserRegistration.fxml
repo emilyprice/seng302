@@ -56,12 +56,12 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <JFXRadioButton fx:id="studentRadioBtn" alignment="CENTER_LEFT" graphicTextGap="0.0" prefHeight="15.0" prefWidth="80.0" style="-fx-label-padding: 0;" text="Student">
+                        <RadioButton fx:id="studentRadioBtn" alignment="CENTER_LEFT" graphicTextGap="0.0" prefHeight="15.0" prefWidth="80.0" style="-fx-label-padding: 0;" text=" Student" >
                            <toggleGroup>
                               <ToggleGroup fx:id="accountType" />
                            </toggleGroup>
-                        </JFXRadioButton>
-                        <JFXRadioButton graphicTextGap="2.0" prefHeight="15.0" prefWidth="74.0" style="-fx-label-padding: 0;" text="Teacher" toggleGroup="$accountType" />
+                        </RadioButton>
+                        <RadioButton graphicTextGap="2.0" prefHeight="15.0" prefWidth="80.0" style="-fx-label-padding: 0;" text=" Teacher"  toggleGroup="$accountType" />
                      </children>
                      <opaqueInsets>
                         <Insets top="20.0" />

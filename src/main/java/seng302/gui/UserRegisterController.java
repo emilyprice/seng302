@@ -4,6 +4,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -59,7 +61,7 @@ public class UserRegisterController {
     private JFXComboBox cbClassroom;
 
     @FXML
-    private JFXRadioButton studentRadioBtn;
+    public RadioButton studentRadioBtn;
 
 
     private Environment env;
@@ -71,13 +73,15 @@ public class UserRegisterController {
 
     public void create(Environment env) {
         this.env = env;
-        studentRadioBtn.setSelected(true);
         txtClassRoomName.setVisible(false);
+        studentRadioBtn.setSelected(true);
+
     }
 
 
     @FXML
     public void initialize() {
+
 
         lblValidator.setVisible(false);
 
@@ -100,8 +104,8 @@ public class UserRegisterController {
         accountType.selectedToggleProperty().addListener((ov, oldVal, newVal) -> {
             if (accountType.getSelectedToggle() != null) {
 
-                String radioButtonText = ((JFXRadioButton) accountType.getSelectedToggle()).getText();
-                if (radioButtonText.equals("Student")) {
+                String radioButtonText = ((RadioButton)accountType.getSelectedToggle()).getText();
+                if(radioButtonText.equals(" Student")){
                     txtClassRoomName.setVisible(false);
                     hbClassroom.setVisible(true);
                     cbClassroom.getItems().clear();
@@ -141,6 +145,7 @@ public class UserRegisterController {
      * @return True if the inputted username already exists, else false.
      */
     private Boolean checkUserNameExists() {
+
 
         if (env.getUserHandler().getUserNames().contains(txtUsername.getText())) {
 
@@ -219,10 +224,10 @@ public class UserRegisterController {
     @FXML
     protected void register() {
 
-        String selectedType = ((JFXRadioButton) accountType.getSelectedToggle()).getText();
+        String selectedType = ((RadioButton) accountType.getSelectedToggle()).getText();
         hbClassroom.setStyle("-fx-border-color: none;");
         if (selectedType != null) {
-            if (selectedType.equals("Student")) {
+            if (selectedType.equals(" Student")) {
                 if (cbClassroom.getValue() != null) {
                     env.getUserHandler().setClassRoom(this.classroom);
                     registerUser(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/" + txtUsername.getText()));
@@ -230,7 +235,7 @@ public class UserRegisterController {
                     hbClassroom.setStyle("-fx-border-color: red;");
 
                 }
-            } else if (selectedType.equals("Teacher")) {
+            } else if (selectedType.equals(" Teacher")) {
                 String name = txtClassRoomName.getText();
                 if (!classRoomExists(name) && !ClassroomCreatorController.containsInvalidCharacters(name) && !ClassroomCreatorController.isEmpty(name)) {
                     env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
