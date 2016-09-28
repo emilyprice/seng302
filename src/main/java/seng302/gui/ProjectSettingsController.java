@@ -47,7 +47,6 @@ public class ProjectSettingsController {
 
     private ProjectHandler projectHandler;
 
-    private KeyboardPaneController keyBoardPaneController;
 
     /**
      * Links the project settings controller to the environment, so it has access to the current
@@ -73,16 +72,15 @@ public class ProjectSettingsController {
     @FXML
     private void toggleBetweenModes() {
 
-        keyBoardPaneController = new KeyboardPaneController();
         Project currentProject = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject();
         if (modeToggle.isSelected()) {
             // Competition Mode
             currentProject.setIsCompetitiveMode(true);
-            keyBoardPaneController.initialize();
+
         } else {
             // Practice mode
             currentProject.setIsCompetitiveMode(false);
-            keyBoardPaneController.initialize();
+
         }
     }
 

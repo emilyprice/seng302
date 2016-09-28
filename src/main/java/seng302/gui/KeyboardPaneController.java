@@ -79,7 +79,7 @@ public class KeyboardPaneController {
      * Button to show display scales pop over.
      */
     @FXML
-    private Button displayScalesButton;
+    public Button displayScalesButton;
 
 
     @FXML
@@ -145,6 +145,8 @@ public class KeyboardPaneController {
 
     private String playMode;
 
+    private ToggleButton transcriptInp;
+
 
 
 
@@ -172,18 +174,15 @@ public class KeyboardPaneController {
         createSettingsPop();
         createDisplayScalesPop();
 
+
+
+
         keyPane.expandedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 positionBlackKeys();
             }
         });
-//
-//        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-//            displayScalesButton.setDisable(true);
-//        } else {
-//            displayScalesButton.setDisable(false);
-//        }
 
     }
 
@@ -223,6 +222,7 @@ public class KeyboardPaneController {
         // Select whether to show note names.
         settings.getChildren().add(new Label("Note names:"));
         ToggleGroup notenames = new ToggleGroup();
+
         noteLabelsOff = new RadioButton("Never show");
         noteLabelsOff.setOnAction(event -> stopShowingNotesOnKeyboard());
         noteLabelsOff.setToggleGroup(notenames);
@@ -230,84 +230,98 @@ public class KeyboardPaneController {
         noteLabelsClick = new RadioButton("Show on click");
         noteLabelsClick.setToggleGroup(notenames);
 
-        //if in practice mode, users can see notes on click. If in competition, it is disabled
-        if (!(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())) {
+        {
             noteLabelsClick.setDisable(false);
             noteLabelsClick.setOnAction(event -> toggleShowKeyboardNotesAction());
             noteLabelsAlways = new RadioButton("Always show");
-        } else {
-            noteLabelsClick.setDisable(true);
-        }
 
-        //if in practice mode, users can see notes on keys always. If in competition, it is disabled
-        if (!(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode())) {
+
             noteLabelsAlways.setDisable(false);
             noteLabelsAlways.setToggleGroup(notenames);
             noteLabelsAlways.setOnAction(event -> toggleShowKeyboardNotesAlways());
-        } else {
-            noteLabelsAlways.setDisable(true);
+
+
+            // Generate Keyboard notes based on value of range slider.
+            slider.lowValueProperty().addListener(
+                    (observable, oldValue, newValue) -> {
+                        bottomNote = newValue.intValue();
+                        resetKeyboard();
+                    }
+            );
+
+            slider.highValueProperty().addListener(
+                    (observable, oldValue, newValue) -> {
+                        topNote = newValue.intValue();
+                        resetKeyboard();
+                    }
+            );
+
+            rangeHeading.getChildren().add(notes);
+
+            settings.setSpacing(5);
+            settings.setPadding(new Insets(10));
+
+
+            pop = new PopOver(settings);
+            pop.setTitle("Keyboard Settings");
+
+
+            settings.getChildren().add(noteLabelsOff);
+            settings.getChildren().add(noteLabelsClick);
+            settings.getChildren().add(noteLabelsAlways);
+
+            final ToggleGroup group = new ToggleGroup();
+            HBox modes = new HBox();
+            ToggleButton play = new ToggleButton("Play");
+            play.setUserData("play");
+            play.setToggleGroup(group);
+            play.setSelected(true);
+
+            transcriptInp = new ToggleButton("Transcript Input");
+            transcriptInp.setUserData("transcript");
+            transcriptInp.setToggleGroup(group);
+
+            ToggleButton tutorInp = new ToggleButton("Tutor Input");
+            tutorInp.setUserData("tutor");
+            tutorInp.setToggleGroup(group);
+
+            group.selectedToggleProperty().addListener((observable, newValue, oldValue) -> {
+                if (group.getSelectedToggle() == null) {
+                    play.setSelected(true);
+                } else {
+                    playMode = (String) group.getSelectedToggle().getUserData();
+                }
+            });
+
+
+            settings.getChildren().add(new Label("Keyboard Mode:"));
+            modes.getChildren().add(play);
+            modes.getChildren().add(tutorInp);
+            modes.getChildren().add(transcriptInp);
+            settings.getChildren().add(modes);
+
         }
+    }
 
+    /**
+     * Disables/enables the corresponding elements of the keyboard settings pop up depending on whether the app
+     * is in competitive mode or competition mode. In competition mode, the user cannot view labels on click/always,
+     * and cannot use the keyboard for transcript input as the transcript will be disabled
+     * @param disabled
+     */
+    public void disableLabels(Boolean disabled) {
+        if (disabled) {
+            noteLabelsOff.setSelected(true);
+            noteLabelsAlways.setDisable(true);
+            noteLabelsClick.setDisable(true);
+            transcriptInp.setDisable(true);
 
-        // Generate Keyboard notes based on value of range slider.
-        slider.lowValueProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    bottomNote = newValue.intValue();
-                    resetKeyboard();
-                }
-        );
-
-        slider.highValueProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    topNote = newValue.intValue();
-                    resetKeyboard();
-                }
-        );
-
-        rangeHeading.getChildren().add(notes);
-
-        settings.setSpacing(5);
-        settings.setPadding(new Insets(10));
-
-
-        pop = new PopOver(settings);
-        pop.setTitle("Keyboard Settings");
-
-
-        settings.getChildren().add(noteLabelsOff);
-        settings.getChildren().add(noteLabelsClick);
-        settings.getChildren().add(noteLabelsAlways);
-
-        final ToggleGroup group = new ToggleGroup();
-        HBox modes = new HBox();
-        ToggleButton play = new ToggleButton("Play");
-        play.setUserData("play");
-        play.setToggleGroup(group);
-        play.setSelected(true);
-
-        ToggleButton transcriptInp = new ToggleButton("Transcript Input");
-        transcriptInp.setUserData("transcript");
-        transcriptInp.setToggleGroup(group);
-
-        ToggleButton tutorInp = new ToggleButton("Tutor Input");
-        tutorInp.setUserData("tutor");
-        tutorInp.setToggleGroup(group);
-
-        group.selectedToggleProperty().addListener((observable, newValue, oldValue) -> {
-            if (group.getSelectedToggle() == null) {
-                play.setSelected(true);
-            } else {
-                playMode = (String) group.getSelectedToggle().getUserData();
-            }
-        });
-
-
-        settings.getChildren().add(new Label("Keyboard Mode:"));
-        modes.getChildren().add(play);
-        modes.getChildren().add(tutorInp);
-        modes.getChildren().add(transcriptInp);
-        settings.getChildren().add(modes);
-
+        } else {
+            noteLabelsOff.setSelected(true);
+            noteLabelsAlways.setDisable(false);
+            noteLabelsClick.setDisable(false);
+            transcriptInp.setDisable(false);
+        }
     }
 
 
@@ -517,6 +531,8 @@ public class KeyboardPaneController {
                 okScale2.setText("OK");
 
         }
+
+
         });
 
 
@@ -586,8 +602,6 @@ public class KeyboardPaneController {
         displayScales.getChildren().add(otherNoteKey);
 
 
-
-
         // used the spacing etc from settings to see if it will come out nicely. Subject to change
         displayScales.setSpacing(10);
         displayScales.setPadding(new Insets(10));
@@ -601,6 +615,8 @@ public class KeyboardPaneController {
 
 
     }
+
+
 
     /**
      * Clear scale images of either the first or second scale from the keyboard
@@ -694,13 +710,7 @@ public class KeyboardPaneController {
      */
     @FXML
     private void toggleDisplayScales() {
-        //if in competitive mode, disable display scales
-        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-            displayScalesButton.setDisable(true);
 
-            //in practice mode, display scale should be available
-        } else {
-            displayScalesButton.setDisable(false);
             if (displayScalesPop.isShowing()) {
                 displayScalesPop.hide();
                 displayScalesButton.setText("Display Scales");
@@ -708,7 +718,7 @@ public class KeyboardPaneController {
                 displayScalesPop.show(displayScalesButton);
                 displayScalesButton.setText("Hide Display Scales");
             }
-        }
+
     }
 
     /**

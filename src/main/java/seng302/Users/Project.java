@@ -447,6 +447,9 @@ public class Project {
 
     private void setToCompetitionMode() {
         this.isCompetitiveMode = true;
+        env.getRootController().getKeyboardPaneController().displayScalesButton.setDisable(true);
+        env.getRootController().getKeyboardPaneController().disableLabels(true);
+
         env.getRootController().disallowTranscript();
         env.getRootController().getTranscriptController().hideTranscript();
         env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
@@ -454,6 +457,9 @@ public class Project {
 
     private void setToPracticeMode() {
         this.isCompetitiveMode = false;
+        env.getRootController().getKeyboardPaneController().displayScalesButton.setDisable(false);
+        env.getRootController().getKeyboardPaneController().disableLabels(false);
+
         env.getRootController().allowTranscript();
         env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
     }
