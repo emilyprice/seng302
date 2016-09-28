@@ -161,7 +161,6 @@ public class UserPageController {
 
     @FXML
     public void onLogoutClick() {
-        //env.getRootController().showCloseWindow("logout");
         env.getRootController().logOutUser();
     }
 
