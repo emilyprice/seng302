@@ -3,8 +3,6 @@ package seng302.gui;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,15 +23,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
-import javafx.scene.control.ScrollPane;
-
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -179,16 +168,16 @@ public class UserSummaryController {
 
             loader.setLocation(getClass().getResource("/Views/StageMapPane.fxml"));
 
-            try {
-                noteMap = loader.load();
-                stageMap.getChildren().clear();
-                stageMap.getChildren().add(noteMap);
-            } catch (LoadException e) {
-                // It's all fine.
-            } catch (Exception e) {
-                System.err.println("Failed to load stage map");
-                e.printStackTrace();
-            }
+        try {
+            noteMap = loader.load();
+            stageMap.getChildren().clear();
+            stageMap.getChildren().add(noteMap);
+        } catch (LoadException e) {
+            // It's all fine.
+        } catch (Exception e) {
+            System.err.println("Failed to load stage map");
+            e.printStackTrace();
+        }
 
 
             StageMapController controller = loader.getController();
@@ -230,9 +219,8 @@ public class UserSummaryController {
             Collections.sort(tutorBadges, new badgeComparator());
             tutorBadges.forEach(this::addTutorBadgeToGrid);
         } catch (NullPointerException e) {
-           // Retrieving badges from json file
+            // Retrieving badges from json file
         }
-
 
 
         for (Object tutor : tutorBadgeMap.keySet()) {
@@ -249,7 +237,7 @@ public class UserSummaryController {
     public static class badgeComparator implements Comparator<Badge> {
         @Override
         public int compare(Badge b1, Badge b2) {
-            return (b1.currentBadgeType > b2.currentBadgeType) ? -1: (b1.currentBadgeType < b2.currentBadgeType) ? 1:0;
+            return (b1.currentBadgeType > b2.currentBadgeType) ? -1 : (b1.currentBadgeType < b2.currentBadgeType) ? 1 : 0;
         }
     }
 
@@ -283,11 +271,12 @@ public class UserSummaryController {
 
     /**
      * Used to add a non-tutor badge to the badgeGrid
+     *
      * @param b the Badge to be added
      */
     public void addBadgeToGrid(Badge b) {
 
-        String badgeImagePath = "/images/"+b.imageName+".png";
+        String badgeImagePath = "/images/" + b.imageName + ".png";
 
         Image retrieve = imageCache.retrieve(badgeImagePath, 70);
         ImageView bView = new ImageView(retrieve);
@@ -335,6 +324,7 @@ public class UserSummaryController {
 
     /**
      * Used to add a tutor badge to the badgeGrid
+     *
      * @param b the Badge to be added
      */
     public void addTutorBadgeToGrid(Badge b) {
@@ -365,7 +355,7 @@ public class UserSummaryController {
             badgeEffect.setHue(0);
             badgeEffect.setSaturation(-1);
             badgeEffect.setBrightness(0.32);
-        } else if ( b.currentBadgeType == 3) {
+        } else if (b.currentBadgeType == 3) {
             badgeEffect.setHue(-0.687);
             badgeEffect.setSaturation(1);
             badgeEffect.setBrightness(0.1);
@@ -381,7 +371,7 @@ public class UserSummaryController {
         Label tutorName = new Label(b.tutorName);
         Label description = new Label(b.description);
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
+        progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
         badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
