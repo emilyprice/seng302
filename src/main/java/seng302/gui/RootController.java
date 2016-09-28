@@ -145,34 +145,6 @@ public class RootController implements Initializable {
 
     }
 
-    /**
-     * Loads a new user image into a circular shape
-     */
-    public void updateImage() {
-
-        final Circle clip = new Circle(imageDP.getFitWidth() - 25.0, imageDP.getFitHeight() - 25.0, 50.0);
-        imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
-        clip.setRadius(25.0);
-        imageDP.setClip(clip);
-
-        SnapshotParameters parameters = new SnapshotParameters();
-        parameters.setFill(Color.TRANSPARENT);
-        WritableImage image = imageDP.snapshot(parameters, null);
-
-        imageDP.setClip(null);
-        imageDP.setEffect(new DropShadow(5, Color.BLACK));
-
-        imageDP.setImage(image);
-        imageDP.setOnMouseClicked(event -> {
-
-            try {
-                showUserPage();
-            } catch (Exception e) {
-
-            }
-        });
-    }
-
 
     /**
      * Display or hide the main GUI window.
@@ -267,7 +239,7 @@ public class RootController implements Initializable {
 
 
         } else if (env.getTranscriptManager().unsavedChanges) {
-            ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+            ( env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             if (option.equals("close")) System.exit(0);
             else if (option.equals("logout")) logOutUser();

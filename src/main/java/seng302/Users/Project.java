@@ -74,7 +74,6 @@ public class Project {
         recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
         loadProject(projectName);
         loadProperties();
-
     }
 
 
@@ -242,7 +241,6 @@ public class Project {
             practiceMap = gson.fromJson((String) projectSettings.get("tutorPracticeMap"), mapType);
             if (practiceMap != null) {
                 recentPracticeTutorRecordMap = practiceMap;
-
             }
 
         } catch (Exception e) {

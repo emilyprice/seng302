@@ -168,6 +168,7 @@ public class UserPageController {
         ArrayList<String> options = new ArrayList<>();
         options.add("Summary");
         options.add("Musical Terms Tutor");
+        options.add("Microphone Input Tutor");
         options.add("Pitch Comparison Tutor");
         options.add("Scale Recognition Tutor");
         options.add("Chord Recognition Tutor");
@@ -177,7 +178,6 @@ public class UserPageController {
         options.add("Diatonic Chord Tutor");
         options.add("Scale Modes Tutor");
         options.add("Scale Spelling Tutor");
-        options.add("Microphone Input Tutor");
 
         Image lockImg = new Image(getClass().getResourceAsStream("/images/lock-blocked-medium.png"), 20, 20, true, true);
         listView.getItems().clear();
@@ -213,11 +213,23 @@ public class UserPageController {
                 } else {
                     //if in competitive mode, lock the relevant tabs
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
+                        if (!tutor.equals("Summary")) {
 
-                            if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
-                                if (env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")) == true) {
-
+                            if (env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor))) {
+                                System.out.println("listview init:" + env.stageMapController.converted.get(tutor));
+                                if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
+                                    if (!env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)"))) {
+                                        ImageView lock = new ImageView(lockImg);
+                                        StackPane image = new StackPane();
+                                        image.setPadding(new Insets(0, 5, 0, 0));
+                                        image.getChildren().add(lock);
+                                        setGraphic(image);
+                                        setTextFill(Color.GRAY);
+                                        setText(tutor);
+                                        setAlignment(Pos.CENTER_LEFT);
+                                        setPadding(new Insets(0, 0, 0, 10));
+                                        setDisable(true);
+                                    }
                                 } else {
                                     ImageView lock = new ImageView(lockImg);
                                     StackPane image = new StackPane();
@@ -229,29 +241,22 @@ public class UserPageController {
                                     setAlignment(Pos.CENTER_LEFT);
                                     setPadding(new Insets(0, 0, 0, 10));
                                     setDisable(true);
+
                                 }
-                            } else {
-                                ImageView lock = new ImageView(lockImg);
-                                StackPane image = new StackPane();
-                                image.setPadding(new Insets(0, 5, 0, 0));
-                                image.getChildren().add(lock);
-                                setGraphic(image);
-                                setTextFill(Color.GRAY);
-                                setText(tutor);
-                                setAlignment(Pos.CENTER_LEFT);
-                                setPadding(new Insets(0, 0, 0, 10));
-                                setDisable(true);
-
                             }
+                            setGraphic(null);
+                            setText(tutor);
+                            setPadding(new Insets(0, 0, 0, 40));
+                            setAlignment(Pos.CENTER_LEFT);
+                            setDisable(false);
+
+                        } else {
+                            setGraphic(null);
+                            setText(tutor);
+                            setPadding(new Insets(0, 0, 0, 40));
+                            setAlignment(Pos.CENTER_LEFT);
+                            setDisable(false);
                         }
-
-
-                    } else {
-                        setGraphic(null);
-                        setText(tutor);
-                        setPadding(new Insets(0, 0, 0, 40));
-                        setAlignment(Pos.CENTER_LEFT);
-                        setDisable(false);
                     }
                 }
             }

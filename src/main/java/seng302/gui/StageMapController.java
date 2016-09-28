@@ -58,6 +58,9 @@ public class StageMapController {
     private Button musicalTermsTutorButton;
 
     @FXML
+    private Button microphoneInputTutorButton;
+
+    @FXML
     private Button chordRecognitionTutorButton;
 
     @FXML
@@ -81,7 +84,7 @@ public class StageMapController {
     /**
      * Stores the status of each tutor(if the tutor is unlocked)
      */
-    public static HashMap<String, Boolean> unlockStatus;
+    public HashMap<String, Boolean> unlockStatus;
 
 
     /**
@@ -107,7 +110,7 @@ public class StageMapController {
 
     Environment env; //declare the environment
 
-    private String nextUnlockTutor = "scaleTutor";
+    private String nextUnlockTutor = "basicScaleTutor";
 
     private JSONParser parser; //used to parser the tutor records
 
@@ -239,6 +242,7 @@ public class StageMapController {
         converted.put("Key Signature Tutor", "keySignatureTutor");
         converted.put("Diatonic Chord Tutor", "diatonicChordTutor");
         converted.put("Scale Modes Tutor", "scaleModesTutor");
+        converted.put("Microphone Input Tutor", "microphoneInputTutor");
     }
 
 
@@ -249,7 +253,7 @@ public class StageMapController {
     private void generateDescriptions() {
 
         unlockDescriptions = new HashMap<>();
-        for (String tutor : tutorOrder.subList(2, tutorOrder.size())) {
+        for (String tutor : tutorOrder.subList(3, tutorOrder.size())) {
             HashMap<String, Boolean> temp = new HashMap<>();
             temp.put(tutorOrder.get(tutorOrder.indexOf(tutor) - 1), false);
             if (tutor.equals("scaleTutor") || tutor.equals("chordTutor")) {
@@ -269,6 +273,7 @@ public class StageMapController {
     private void generateTutorOrder() {
         //pitch tutor and musical terms tutor are unlocked by default
         tutorOrder.add("musicalTermsTutor");
+        tutorOrder.add("microphoneInputTutor");
         tutorOrder.add("pitchTutor");
         tutorOrder.add("basicScaleTutor");
         tutorOrder.add("basicChordTutor");
@@ -288,6 +293,7 @@ public class StageMapController {
 
     private void generateTutorAndButtonNames() {
         tutorAndButton.put("musicalTermsTutor", musicalTermsTutorButton);
+        tutorAndButton.put("microphoneInputTutor" , microphoneInputTutorButton);
         tutorAndButton.put("pitchTutor", pitchTutorButton);
         tutorAndButton.put("basicScaleTutor", basicScaleRecognitionTutorButton);
         tutorAndButton.put("basicChordTutor", basicChordRecognitionTutorButton);
@@ -309,6 +315,7 @@ public class StageMapController {
     private void generateLockingStatus() {
         //pitch tutor and musical terms tutor are unlocked by default
         unlockStatus.put("musicalTermsTutor", true);
+        unlockStatus.put("microphoneInputTutor", true);
         unlockStatus.put("pitchTutor", true);
         unlockStatus.put("basicScaleTutor", false);
         unlockStatus.put("basicChordTutor", false);
@@ -342,21 +349,26 @@ public class StageMapController {
         //If in competitive mode, relevant stages should be locked
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             for (String tutor : unlockStatus.keySet()) {
-                tutorAndButton.get(tutor).setDisable(false);
-                tutorAndButton.get(tutor).setGraphic(null);
-                if (unlockStatus.get(tutor) == false) {
-                    tutorAndButton.get(tutor).setDisable(true);
-                    ImageView iv1 = new ImageView();
-                    iv1.setImage(padlock);
-                    tutorAndButton.get(tutor).setGraphic(iv1);
 
-                }
+                    tutorAndButton.get(tutor).setDisable(false);
+                    tutorAndButton.get(tutor).setGraphic(null);
+                    if (unlockStatus.get(tutor) == false) {
+                        tutorAndButton.get(tutor).setDisable(true);
+                        ImageView iv1 = new ImageView();
+                        iv1.setImage(padlock);
+                        tutorAndButton.get(tutor).setGraphic(iv1);
+
+                    }
+
             }
             //else if in practice mode, all of the levels should be unlocked
         } else {
             for (String tutor : unlockStatus.keySet()) {
-                tutorAndButton.get(tutor).setDisable(false);
-                tutorAndButton.get(tutor).setGraphic(null);
+
+                    tutorAndButton.get(tutor).setDisable(false);
+                    tutorAndButton.get(tutor).setGraphic(null);
+
+
             }
 
         }
@@ -487,6 +499,11 @@ public class StageMapController {
     @FXML
     private void launchMajorModesTutor() {
         env.getRootController().getTutorFactory().openTutor("Scale Modes Tutor");
+    }
+
+    @FXML
+    private void launchMicrophoneInputTutor() {
+        env.getRootController().getTutorFactory().openTutor("Microphone Input Tutor");
     }
 
 
