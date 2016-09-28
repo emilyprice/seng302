@@ -1,6 +1,12 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.animation.Interpolator;
@@ -17,7 +23,11 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -32,10 +42,6 @@ import seng302.utility.ImageCache;
 import seng302.utility.LevelCalculator;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 
 /**
  * Controller for the GUI page which displays a user's summary information.
@@ -110,8 +116,6 @@ public class UserSummaryController {
 
         updateProgressBar();
         updateGraphs();
-        updateBadgesDisplay();
-
 
     }
 
@@ -137,7 +141,6 @@ public class UserSummaryController {
                 "  -fx-background-radius: 10 10 0 0;");
         overallCorrectLabel.setText(correctIncorrectOverall.getKey() + " \ncorrect");
         overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
-        classAverage.setVisible(false);
 
         updateBadgesDisplay();
 
@@ -409,7 +412,7 @@ public class UserSummaryController {
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
         badgeGrid.add(badgeBox, gridX, gridY);
-        if (gridX < 5) {
+        if (gridX < 4) {
             gridX++;
         } else {
             gridX = 0;
@@ -472,7 +475,7 @@ public class UserSummaryController {
         badgeBox.setSpacing(4);
 
         badgeGrid.add(badgeBox, gridX, gridY);
-        if (gridX < 5) {
+        if (gridX < 4) {
             gridX++;
         } else {
             gridX = 0;
