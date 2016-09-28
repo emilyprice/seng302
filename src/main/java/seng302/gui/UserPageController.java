@@ -178,7 +178,7 @@ public class UserPageController {
         options.add("Scale Modes Tutor");
         options.add("Scale Spelling Tutor");
 
-        Image lockImg = new Image(getClass().getResourceAsStream("/images/lock-blocked-medium.png"), 20, 20, true, true);
+        Image lockImg = new Image("/images/lock.png", 20, 20, true, true);
         listView.getItems().clear();
         listView.getItems().addAll(FXCollections.observableArrayList(options));
 
@@ -266,6 +266,7 @@ public class UserPageController {
             timePopover.show(timeSliderButton);
         }
     }
+
 
 
     /**
