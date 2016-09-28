@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import com.jfoenix.controls.JFXBadge?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
@@ -127,7 +121,7 @@
                             </children>
                         </HBox>
                         <JFXListView fx:id="listView" maxHeight="1.7976931348623157E308"
-                                     prefHeight="700.0" style="-fx-border-width: 0; -fx-padding: 0;"
+                                     prefHeight="700.0" style="-fx-padding: 0;"
                                      styleClass="listView"/>
                     </children>
                     <styleClass>

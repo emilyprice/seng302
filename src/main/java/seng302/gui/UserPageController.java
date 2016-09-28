@@ -4,12 +4,6 @@ import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
-
-import org.controlsfx.control.PopOver;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -17,37 +11,23 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContextMenu;
-
-
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
-
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
-
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import javafx.scene.paint.Color;
-import javafx.util.StringConverter;
-
+import org.controlsfx.control.PopOver;
 import seng302.Environment;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -72,10 +52,8 @@ public class UserPageController {
     SplitPane userView;
 
     @FXML
-    JFXListView listView;
+    public JFXListView listView;
 
-    @FXML
-    private JFXButton btnSettings;
 
     @FXML
     Label txtFullName;
@@ -112,8 +90,6 @@ public class UserPageController {
     @FXML
     private JFXButton timeSliderButton;
 
-    @FXML
-    AnchorPane summary;
 
     private PopOver timePopover;
 
@@ -173,7 +149,6 @@ public class UserPageController {
 
     @FXML
     public void onLogoutClick() {
-        //env.getRootController().showCloseWindow("logout");
         env.getRootController().logOutUser();
     }
 
@@ -212,7 +187,7 @@ public class UserPageController {
 
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) {
+            if (newValue != null) {
                 if (((String) newValue).equals("Scale Recognition Tutor (Basic)")) {
                     showPage("Scale Recognition Tutor");
                 } else if (((String) newValue).equals("Chord Recognition Tutor (Basic)")) {
@@ -240,12 +215,12 @@ public class UserPageController {
                 } else {
                     //if in competitive mode, lock the relevant tabs
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false ) {
+                        if (!tutor.equals("Summary") && env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor)) == false) {
 
-                            if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
-                                if(env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")) == true){
+                            if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
+                                if (env.stageMapController.unlockStatus.get(env.stageMapController.converted.get(tutor + " (Basic)")) == true) {
 
-                                }else {
+                                } else {
                                     ImageView lock = new ImageView(lockImg);
                                     StackPane image = new StackPane();
                                     image.setPadding(new Insets(0, 5, 0, 0));
@@ -257,7 +232,7 @@ public class UserPageController {
                                     setPadding(new Insets(0, 0, 0, 10));
                                     setDisable(true);
                                 }
-                            }else {
+                            } else {
                                 ImageView lock = new ImageView(lockImg);
                                 StackPane image = new StackPane();
                                 image.setPadding(new Insets(0, 5, 0, 0));
@@ -274,10 +249,11 @@ public class UserPageController {
 
 
                     } else {
-                        setGraphic(new ImageView(lockImg));
-                        setTextFill(Color.GRAY);
+                        setGraphic(null);
                         setText(tutor);
-                        setDisable(true);
+                        setPadding(new Insets(0, 0, 0, 40));
+                        setAlignment(Pos.CENTER_LEFT);
+                        setDisable(false);
                     }
                 }
             }
@@ -363,23 +339,21 @@ public class UserPageController {
         timeSlider.valueProperty().addListener(((observable1, oldValue1, newValue1) -> {
             String result = convert.toString(timeSlider.getValue());
             if (result != null) {
-                updateGraphs();
+                updateGraphs(result);
             }
         }));
 
         timeSlider.setOnMouseReleased(e -> {
-            updateGraphs();
+            updateGraphs(convert.toString(timeSlider.getValue()));
         });
     }
 
     /**
      * Updates the data in the summary stats graphs
+     *
+     * @param timePeriod The time period to display data from in the summary stats graphs
      */
-    public void updateGraphs() {
-        statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), convert.toString(timeSlider.getValue()));
-        basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", convert.toString(timeSlider.getValue()));
-    }
-    private void updateGraphs(String timePeriod) {
+    public void updateGraphs(String timePeriod) {
         if (env.getRootController().getHeader().equals("Summary")) {
             summaryController.updateGraphs();
         } else {
@@ -612,18 +586,19 @@ public class UserPageController {
 
         try {
             FlowPane summaryPage = summaryLoader.load();
-            //currentPage.setContent(summaryPage);
 
             scrollPaneAnchorPage.getChildren().setAll(summaryPage);
             AnchorPane.setLeftAnchor(summaryPage, 0.0);
             AnchorPane.setTopAnchor(summaryPage, 0.0);
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
             AnchorPane.setRightAnchor(summaryPage, 0.0);
-            //summaryPage.setMinWidth(currentPage.getWidth());
 
             summaryController = summaryLoader.getController();
             summaryController.create(env);
             summaryController.loadStageMap();
+            if (!env.getFirebase().getUserSnapshot().child("projects/" + env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/unlockMap").exists()) {
+                env.getUserHandler().getCurrentUser().saveAll();
+            }
 
 
         } catch (IOException e) {
@@ -643,33 +618,11 @@ public class UserPageController {
         FXMLLoader tutorStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
         VBox all = new VBox();
 
-        try {
-            VBox stats = tutorStatsLoader.load();
-            //currentPage.setContent(stats);
-            all.getChildren().setAll(stats);
-            scrollPaneAnchorPage.getChildren().clear();
-            //scrollPaneAnchorPage.getChildren().setAll(all);
-            AnchorPane.setLeftAnchor(stats, 0.0);
-            AnchorPane.setTopAnchor(stats, 0.0);
-            AnchorPane.setBottomAnchor(stats, 0.0);
-            AnchorPane.setRightAnchor(stats, 0.0);
-            statsController = tutorStatsLoader.getController();
-
-            statsController.create(env);
-            statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
-            statsController.updateBadgesDisplay();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
             FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
             try {
                 VBox stats = tutorbasicStatsLoader.load();
                 all.getChildren().add(stats);
-                //scrollPaneAnchorPage.getChildren().setAll(all);
                 AnchorPane.setLeftAnchor(stats, 0.0);
                 AnchorPane.setTopAnchor(stats, 0.0);
                 AnchorPane.setBottomAnchor(stats, 0.0);
@@ -684,6 +637,30 @@ public class UserPageController {
                 e.printStackTrace();
             }
         }
+
+
+        if((Boolean)(env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))) {
+            try {
+                VBox stats = tutorStatsLoader.load();
+                all.getChildren().add(stats);
+                scrollPaneAnchorPage.getChildren().clear();
+                AnchorPane.setLeftAnchor(stats, 0.0);
+                AnchorPane.setTopAnchor(stats, 0.0);
+                AnchorPane.setBottomAnchor(stats, 0.0);
+                AnchorPane.setRightAnchor(stats, 0.0);
+                statsController = tutorStatsLoader.getController();
+
+                statsController.create(env);
+                statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
+                statsController.updateBadgesDisplay();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         scrollPaneAnchorPage.getChildren().setAll(all);
 
         listView.getSelectionModel().select(tutor);

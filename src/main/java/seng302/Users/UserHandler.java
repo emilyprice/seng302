@@ -1,14 +1,11 @@
 package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import seng302.Environment;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -18,9 +15,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import seng302.Environment;
-import seng302.utility.FileHandler;
 
 /**
  * Handles Users.
@@ -61,8 +55,9 @@ public class UserHandler {
     }
 
     public void loadRecentUsers() {
+        Path userDirectory = Paths.get("UserData");
         try {
-            localData = (JSONObject) parser.parse(new FileReader("UserData/local_data.json"));
+            localData = (JSONObject) parser.parse(new FileReader(userDirectory+ "/local_data.json"));
             recentUsers = new ArrayList<>();
             try {
                 recentClassrooms = (HashMap<String, Object>) localData.get("recentUsers");
@@ -78,7 +73,6 @@ public class UserHandler {
                     recentClassrooms.put(classroom, recentUsers);
                 }
             } catch (NullPointerException e) {
-                //TODO: Handle having adding a new HashMap of classrooms.
                 //Classroom hashmap doesn't exist inside localData
                 recentClassrooms = new HashMap<>();
 
@@ -87,24 +81,35 @@ public class UserHandler {
         } catch (FileNotFoundException e) {
             try {
                 System.err.println("local_data.json Does not exist! - Creating new one");
+                if (!Files.isDirectory(userDirectory)) {
+                    //Create Projects path doesn't exist.
+                    try {
+                        Files.createDirectories(userDirectory);
 
-                //UsersInfo.put("users", userList);
+
+                    } catch (IOException eIO3) {
+                        //Failed to create the directory.
+                        System.err.println("Well UserData directory failed to create.. lost cause.");
+                    }
+                }
+
+
                 recentClassrooms = new HashMap<>();
                 recentClassrooms.put(classroom, recentUsers);
                 localData.put("recentUsers", recentClassrooms);
 
 
-                FileWriter file = new FileWriter("UserData/local_data.json");
+                FileWriter file = new FileWriter(userDirectory + "/local_data.json");
                 file.write(localData.toJSONString());
                 file.flush();
                 file.close();
 
             } catch (IOException e2) {
                 System.err.println("Failed to create local_data.json file.");
+                e2.printStackTrace();
 
             }
         } catch (IOException e) {
-            //e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -112,7 +117,6 @@ public class UserHandler {
 
     /**
      * Populates the list of users from the users json file.
-     *
      */
     public void populateUsers() {
 
@@ -126,20 +130,17 @@ public class UserHandler {
     }
 
 
-
-
     /**
      * Checks if the given login credentials are valid.
-     * @param userName
-     * @param password
+     *
      * @return true/false depending on login result.
      */
-    public boolean userPassExists(String userName, String password){
+    public boolean userPassExists(String userName, String password) {
 
-        if(env.getFirebase().getClassroomsSnapshot().child(classroom+"/users/"+userName).exists()){
+        if (env.getFirebase().getClassroomsSnapshot().child(classroom + "/users/" + userName).exists()) {
 
             String fbPass = (String) env.getFirebase().getUserSnapshot().child("properties/password").getValue();
-            if (password.equals(fbPass)){
+            if (password.equals(fbPass)) {
 
                 return true;
             }
@@ -151,16 +152,13 @@ public class UserHandler {
 
     /**
      * Creates a new user for the given username/password.
-     * @param user
-     * @param password
      */
     public void createUser(String user, String password) {
         this.currentUser = new Student(user, password, env);
-        //updateUserList(user);
 
     }
 
-    public void createTeacher(String user, String password, String classroom) {
+    public void createTeacher(String user, String password) {
         this.currentTeacher = new Teacher(user, password, env);
     }
 
@@ -213,7 +211,6 @@ public class UserHandler {
 
     /**
      * Sets the current user and loads user related properties.
-     * @param userName
      */
     public void setCurrentUser(String userName, String classroom, String password) {
         this.classroom = classroom;
@@ -234,7 +231,6 @@ public class UserHandler {
 
     /**
      * Full deletes the specified user incl. project files.
-     * @param username
      */
     public void deleteUser(String classroom, String username) {
 
@@ -244,7 +240,7 @@ public class UserHandler {
         env.getRootController().getStage().close();
 
         this.env.getRootController().logOutUser();
-        env.getFirebase().getFirebase().child("classrooms/"+classroom+"/users/"+username).removeValue();
+        env.getFirebase().getFirebase().child("classrooms/" + classroom + "/users/" + username).removeValue();
 
     }
 

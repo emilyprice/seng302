@@ -43,7 +43,7 @@ public class Student extends User {
 
         super.loadProperties();
 
-        if(properties == null) properties = new HashMap<String, Object>();
+        if (properties == null) properties = new HashMap<String, Object>();
 
         Gson gson = new Gson();
         try {
@@ -62,9 +62,9 @@ public class Student extends User {
         Type termsType = new TypeToken<ArrayList<Term>>() {
         }.getType();
         ArrayList<Term> terms = new ArrayList<>();
-        try{
+        try {
             terms = gson.fromJson((String) properties.get("musicalTerms"), termsType);
-        }catch(NullPointerException n){
+        } catch (NullPointerException n) {
 
         }
 
@@ -78,6 +78,9 @@ public class Student extends User {
     }
 
 
+    /**
+     * Updates local properties variable for a student user
+     */
     public void updateProperties() {
         super.updateProperties();
         Gson gson = new Gson();
@@ -88,11 +91,10 @@ public class Student extends User {
         properties.put("profilePicUrl", profilePicUrl);
     }
 
-    public void saveAll(){
+    public void saveAll() {
         saveProperties();
         getProjectHandler().getCurrentProject().saveCurrentProject();
     }
-
 
 
     /**
@@ -104,7 +106,7 @@ public class Student extends User {
             }.getType();
             if (!properties.get("musicalTerms").equals(new Gson().fromJson((String) properties.get("muscalTerms"), termsType))) {
                 env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + "*");
-               saveAll();
+                saveAll();
             }
         } else {
             if (env.getRootController() != null) {
@@ -117,6 +119,7 @@ public class Student extends User {
 
 
     }
+
     /**
      * This needs to be called to unlock the project folders to allow them to be deleted.
      */

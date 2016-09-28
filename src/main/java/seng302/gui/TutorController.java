@@ -2,21 +2,9 @@ package seng302.gui;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -31,6 +19,12 @@ import seng302.managers.TutorManager;
 import seng302.utility.ExperienceCalculator;
 import seng302.utility.TutorRecord;
 import seng302.utility.musicNotation.OctaveUtil;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public abstract class TutorController {
 
@@ -106,7 +100,8 @@ public abstract class TutorController {
         try {
             String tutorName = env.getRootController().getHeader();
             env.getUserPageController().showPage(tutorName);
-            env.getRootController().showUserPage();
+            env.getRootController().showUserPage(); //have to go back to summary page to get list of tutors
+            env.getUserPageController().listView.getSelectionModel().select(tutorName); //select tutor summary page
 
 
         } catch (Exception e) {
@@ -196,15 +191,13 @@ public abstract class TutorController {
         record.updateDate();
 
 
-
         if (currentProject != null) {
 
-            if(isCompMode){
+            if (isCompMode) {
                 String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
-                //String tutorFileName = currentProject.getCurrentProjectPath() + "/" + tutorNameNoSpaces + ".json";
                 tutorHandler.saveTutorRecordsToFile(tutorNameNoSpaces, record);
-            }else{
-                currentProject.setRecentPracticeTutorRecordMap(tutorName, record);
+            } else {
+                currentProject.addRecentPracticeTutorRecordMap(tutorName, record);
             }
             currentProject.saveCurrentProject();
 
@@ -220,7 +213,6 @@ public abstract class TutorController {
         }
 
         env.getStageMapController().fetchTutorFile(tutorName);
-        //env.getUserPageController(); 27Sept
 
         // Clear the current session
         manager.resetStats();
@@ -274,7 +266,6 @@ public abstract class TutorController {
     public void formatQuestionRow(HBox questionRow) {
         questionRow.setPadding(new Insets(10, 10, 10, 10));
         questionRow.setSpacing(10);
-//        questionRow.setStyle("-fx-border-color: #336699; -fx-border-width: 2px;");
     }
 
     /**
@@ -359,6 +350,7 @@ public abstract class TutorController {
 
     /**
      * Consistently styles all skip buttons
+     *
      * @param skip the button to be styled
      */
     public void styleSkipButton(Button skip) {

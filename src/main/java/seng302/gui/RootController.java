@@ -190,7 +190,6 @@ public class RootController implements Initializable {
      */
     public void showWindow(Boolean show) {
         if (show) {
-            System.out.println("memory before stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/100000);
 
             boolean isTeacher = env.getUserHandler().getCurrentTeacher() != null;
 
@@ -221,7 +220,6 @@ public class RootController implements Initializable {
                     e.printStackTrace();
                 }
             }
-            System.out.println("memory after stage show: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/100000);
 
 
         } else stage.hide();
@@ -337,7 +335,6 @@ public class RootController implements Initializable {
     }
 
 
-
     /**
      * Toggles the visibility of the top User HBox and user image.
      *
@@ -412,6 +409,7 @@ public class RootController implements Initializable {
     }
 
 
+
     public void setHeader(String text) {
         txtHeader.setText(text);
     }
@@ -452,11 +450,9 @@ public class RootController implements Initializable {
         });
 
 
-
         loginStage.show();
         UserLoginController userLoginController = loginLoader.getController();
         userLoginController.setEnv(env);
-        //userLoginController.displayRecentUsers();
 
     }
 
@@ -476,8 +472,9 @@ public class RootController implements Initializable {
 
             stage.close();
             showLoginWindow();
+            settingsController.closeWindow();
             env.resetEnvironment();
-            System.gc();
+
         } catch (Exception e) {
 
         }
@@ -562,7 +559,6 @@ public class RootController implements Initializable {
 
         if (file != null) {
             fileDir = file.getParentFile();
-            //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
             path = file.getAbsolutePath();
             env.getTranscriptManager().saveCommandsOnly(path);
         }
@@ -595,8 +591,6 @@ public class RootController implements Initializable {
         FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(textFilter);
 
-        //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
-
         fileChooser.setInitialDirectory(fileDir);
         File file = fileChooser.showSaveDialog(stage);
         return file;
@@ -615,7 +609,6 @@ public class RootController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(textFilter);
-        //fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
 
         fileChooser.setInitialDirectory(fileDir);
 

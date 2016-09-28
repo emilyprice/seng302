@@ -1,11 +1,11 @@
 package seng302.utility;
 
-import javafx.scene.image.Image;
-
 import java.util.HashMap;
 
+import javafx.scene.image.Image;
+
 /**
- * Created by jat157 on 28/09/16.
+ * Caches stored images to the memory.
  */
 public class ImageCache {
     HashMap<String, Image> cache = new HashMap<>();

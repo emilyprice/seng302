@@ -1,8 +1,6 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-
-import com.jfoenix.controls.JFXButton;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -13,19 +11,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.Image;
-import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -33,10 +27,9 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 import seng302.Environment;
-import seng302.utility.TutorRecord;
+import seng302.Users.TutorHandler;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
-import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
 
 import java.text.SimpleDateFormat;
@@ -49,21 +42,10 @@ public class TutorStatsController {
 
     private Environment env;
 
-    @FXML
-    private VBox stats;
-
-    @FXML
-    private StackedBarChart stackedBar;
-
 
     @FXML
     private LineChart lineChart;
 
-    @FXML
-    private StackedBarChart levelBar;
-
-    @FXML
-    private ImageView imageDP;
 
     @FXML
     private Label latestAttempt;
@@ -99,20 +81,10 @@ public class TutorStatsController {
     @FXML
     private Line classAverage;
 
-    @FXML
-    private Rectangle progressBar;
-
-    @FXML
-    private BorderPane tutorHeader;
 
     @FXML
     private Label tutorName;
 
-    @FXML
-    private JFXButton btnLoadTutor;
-
-    @FXML
-    private Label badgesLabel;
 
     @FXML
     private GridPane badgeGrid;
@@ -141,25 +113,19 @@ public class TutorStatsController {
      */
     public void displayGraphs(String tutor, String timePeriod) {
         currentTutor = tutor;
-        //String tutorNameNoSpaces = tutor.replaceAll("\\s", "");
 
 
         tutorName.setText(tutor);
-        Pair<Integer, Integer> correctIncorrectRecent =  new Pair<>(0, 0);
+        Pair<Integer, Integer> correctIncorrectRecent = new Pair<>(0, 0);
         Pair<Integer, Integer> correctIncorrectOverall = new Pair<>(0, 0);
         List<Pair<Date, Float>> dateAndTime = new ArrayList<>();
         dateAndTime.add(new Pair<>(new Date(0), 0f));
 
         TutorHandler handler = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler;
 
-       /* TutorHandler handler = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler;
-        correctIncorrectRecent = handler.getRecentTutorTotals(tutorNameNoSpaces);
-        correctIncorrectOverall = handler.getTutorTotals(handler.getTutorData(tutorNameNoSpaces), timePeriod);
-        dateAndTime = handler.getTimeAndScores(tutorNameNoSpaces, timePeriod);
-        */
 
         try {
-            /*
+
             switch (tutor) {
 
                 case "Pitch Comparison Tutor":
@@ -169,10 +135,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("pitchTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("pitchTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("pitchTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("pitchTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("pitchTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("pitchTutor", timePeriod);
                     break;
                 case "Interval Recognition Tutor":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -181,10 +147,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("intervalTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("intervalTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("intervalTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("intervalTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("intervalTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("intervalTutor", timePeriod);
                     break;
                 case "Scale Recognition Tutor":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -193,10 +159,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("scaleTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("scaleTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("scaleTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("scaleTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("scaleTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("scaleTutor", timePeriod);
                     break;
                 case "Scale Recognition Tutor (Basic)":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -205,10 +171,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("basicScaleTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("basicScaleTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("basicScaleTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("basicScaleTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("basicScaleTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("basicScaleTutor", timePeriod);
                     break;
 
                 case "Musical Terms Tutor":
@@ -218,10 +184,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("musicalTermTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("musicalTermTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("musicalTermTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("musicalTermTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("musicalTermTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("musicalTermTutor", timePeriod);
                     break;
                 case "Chord Recognition Tutor":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -230,10 +196,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("chordTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("chordTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("chordTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("chordTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("chordTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("chordTutor", timePeriod);
                     break;
                 case "Chord Recognition Tutor (Basic)":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -242,10 +208,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("basicChordTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("basicChordTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("basicChordTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("basicChordTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("basicChordTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("basicChordTutor", timePeriod);
                     break;
                 case "Chord Spelling Tutor":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -254,10 +220,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("chordSpellingTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("chordSpellingTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("chordSpellingTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("chordSpellingTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("chordSpellingTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("chordSpellingTutor", timePeriod);
                     break;
                 case "Key Signature Tutor":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -266,10 +232,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("keySignatureTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("keySignatureTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("keySignatureTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("keySignatureTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("keySignatureTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("keySignatureTutor", timePeriod);
                     break;
                 case "Diatonic Chord Tutor":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -278,10 +244,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("diatonicChordTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("diatonicChordTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("diatonicChordTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("diatonicChordTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("diatonicChordTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("diatonicChordTutor", timePeriod);
                     break;
                 case "Scale Modes Tutor":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -290,10 +256,10 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("scaleModesTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("scaleModesTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("scaleModesTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("scaleModesTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("scaleModesTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("scaleModesTutor", timePeriod);
                     break;
                 case "Scale Spelling Tutor":
                     if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
@@ -302,13 +268,13 @@ public class TutorStatsController {
                             correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
                         }
                     } else {
-                        correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("scaleSpellingTutor");
+                        correctIncorrectRecent = handler.getRecentTutorTotals("scaleSpellingTutor");
                     }
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("scaleSpellingTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("scaleSpellingTutor", timePeriod);
+                    correctIncorrectOverall = handler.getTutorTotals("scaleSpellingTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("scaleSpellingTutor", timePeriod);
                     break;
 
-            }*/
+            }
 
 
             latestAttempt.setVisible(true);
@@ -351,9 +317,8 @@ public class TutorStatsController {
             overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
 
             // Figure out class average
-            //displayClassAverage(handler, tutorNameNoSpaces, timePeriod);
             makeLineGraph(dateAndTime, timePeriod);
-        }catch(IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             System.err.println("There are no records for the " + tutor);
         }
 
@@ -531,12 +496,13 @@ public class TutorStatsController {
     public static class badgeComparator implements Comparator<Badge> {
         @Override
         public int compare(Badge b1, Badge b2) {
-            return (b1.currentBadgeType > b2.currentBadgeType) ? -1: (b1.currentBadgeType < b2.currentBadgeType) ? 1:0;
+            return (b1.currentBadgeType > b2.currentBadgeType) ? -1 : (b1.currentBadgeType < b2.currentBadgeType) ? 1 : 0;
         }
     }
 
     /**
      * Used to add a tutor badge to the badgeGrid
+     *
      * @param b the Badge to be added
      */
     public void addTutorBadgeToGrid(Badge b) {
@@ -571,7 +537,7 @@ public class TutorStatsController {
             badgeEffect.setHue(0);
             badgeEffect.setSaturation(-1);
             badgeEffect.setBrightness(0.32);
-        } else if ( b.currentBadgeType == 3) {
+        } else if (b.currentBadgeType == 3) {
             badgeEffect.setHue(-0.687);
             badgeEffect.setSaturation(1);
             badgeEffect.setBrightness(0.1);
@@ -586,16 +552,15 @@ public class TutorStatsController {
         badgeName.setFont(javafx.scene.text.Font.font(16));
         Label tutorName = new Label(this.tutorName.getText());
         Label description = new Label(b.description);
-        Label progressDesc = new Label((int) b.badgeProgress+" out of "+b.badgeLevels.get(b.currentBadgeType));
+        Label progressDesc = new Label((int) b.badgeProgress + " out of " + b.badgeLevels.get(b.currentBadgeType));
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
+        progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
         badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description, progressDesc);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
         badgeGrid.add(badgeBox, gridCount, 0);
         gridCount++;
     }
-
 
 
     @FXML

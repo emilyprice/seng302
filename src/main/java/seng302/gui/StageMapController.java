@@ -1,5 +1,10 @@
 package seng302.gui;
 
+import org.controlsfx.control.Notifications;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,7 +17,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import jdk.nashorn.internal.parser.JSONParser;
-import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
@@ -80,7 +84,7 @@ public class StageMapController {
     /**
      * Stores the status of each tutor(if the tutor is unlocked)
      */
-    public HashMap<String, Boolean> unlockStatus;
+    public static HashMap<String, Boolean> unlockStatus;
 
 
     /**
@@ -94,7 +98,8 @@ public class StageMapController {
     private ArrayList<String> tutorOrder; //the order in which the tutors unlock
 
     /**
-     * stores the convertion of tutor name to a shortened tutor string that is used for manipulations
+     * stores the convertion of tutor name to a shortened tutor string that is used for
+     * manipulations
      */
     public static HashMap<String, String> converted;
 
@@ -114,8 +119,7 @@ public class StageMapController {
         converted.put("Scale Modes Tutor", "scaleModesTutor");
     }
 
-    public HashMap<String, HashMap<String, Boolean>>  unlockDescriptions;
-
+    public HashMap<String, HashMap<String, Boolean>> unlockDescriptions;
 
 
     UserPageController userPageController; //creates an insance of user page controller so we can access its methods
@@ -129,8 +133,6 @@ public class StageMapController {
 
     /**
      * Initializes the environment and the user page controller instance
-     *
-     * @param env
      */
     public void setEnvironment(Environment env) {
         this.env = env;
@@ -149,16 +151,16 @@ public class StageMapController {
 
     }
 
-    public HashMap<String, HashMap<String, Boolean>>  getUnlockDescriptions(){
+    public HashMap<String, HashMap<String, Boolean>> getUnlockDescriptions() {
         return unlockDescriptions;
     }
 
     /**
      * Finds the next tutor on the stagemap that is still locked
      */
-    private void setNextLockedStage(){
-        for(String tutor : tutorOrder){
-            if(unlockStatus.get(tutor) == false){
+    private void setNextLockedStage() {
+        for (String tutor : tutorOrder) {
+            if (!unlockStatus.get(tutor)) {
                 nextUnlockTutor = tutor;
                 break;
             }
@@ -169,7 +171,7 @@ public class StageMapController {
     /**
      * sets the description of what the user needs to do to unlock the next tutor
      */
-    public void setDescription(){
+    public void setDescription() {
         setNextLockedStage();
         String nextTutorName = null;
         for (String t : converted.keySet()) {
@@ -178,18 +180,18 @@ public class StageMapController {
             }
         }
         unlockHeader.setText("To unlock the " + nextTutorName + ":");
-        if(descriptionVbox.getChildren().size()>1){
+        if (descriptionVbox.getChildren().size() > 1) {
             descriptionVbox.getChildren().remove(1, descriptionVbox.getChildren().size());
 
         }
 
-        for(String key: unlockDescriptions.get(nextUnlockTutor).keySet()){
+        for (String key : unlockDescriptions.get(nextUnlockTutor).keySet()) {
             HBox description = new HBox();
-            if(unlockDescriptions.get(nextUnlockTutor).keySet().size() > 1 && (key.equals("basicScaleTutor")||key.equals("basicChordTutor"))){
-                description.getChildren().add(new Label("Get 3 consecutive scores of 9 or higher in the "+key));
-            }else{
+            if (unlockDescriptions.get(nextUnlockTutor).keySet().size() > 1 && (key.equals("basicScaleTutor") || key.equals("basicChordTutor"))) {
+                description.getChildren().add(new Label("Get 3 consecutive scores of 9 or higher in the " + key));
+            } else {
 
-                description.getChildren().add(new Label("Get 3 consecutive scores of 7 or higher in the "+key));
+                description.getChildren().add(new Label("Get 3 consecutive scores of 7 or higher in the " + key));
             }
             ImageView image = new ImageView();
 
@@ -202,9 +204,9 @@ public class StageMapController {
             Image cross = UserSummaryController.imageCache.retrieve(crossPath, 25);
 
 
-            if(unlockDescriptions.get(nextUnlockTutor).get(key)){
+            if (unlockDescriptions.get(nextUnlockTutor).get(key)) {
                 image.setImage(tick);
-            }else{
+            } else {
                 image.setImage(cross);
             }
 
@@ -221,15 +223,14 @@ public class StageMapController {
 
     /**
      * gets the HashMap that stores what tutors are unlocked
-     * @return
      */
-    public HashMap getUnlockStatus(){
+    public HashMap getUnlockStatus() {
         return this.unlockStatus;
     }
 
     /**
-     *Initiates the required information of the stage map (which tutor is associated with which button,
-     * the order of the tutors, and whether the tutor is unlocked or locked)
+     * Initiates the required information of the stage map (which tutor is associated with which
+     * button, the order of the tutors, and whether the tutor is unlocked or locked)
      */
     public void create() {
         tutorOrder = new ArrayList<>();
@@ -244,17 +245,17 @@ public class StageMapController {
 
 
     /**
-     * Generates the unlockDescriptions HashMap which stores the requirments to unlock each tutor and weather or not
-     * they have been completed.
+     * Generates the unlockDescriptions HashMap which stores the requirments to unlock each tutor
+     * and weather or not they have been completed.
      */
-    private void generateDescriptions(){
+    private void generateDescriptions() {
 
         unlockDescriptions = new HashMap<>();
-        for (String tutor : tutorOrder.subList(2,tutorOrder.size())){
+        for (String tutor : tutorOrder.subList(2, tutorOrder.size())) {
             HashMap<String, Boolean> temp = new HashMap<>();
             temp.put(tutorOrder.get(tutorOrder.indexOf(tutor) - 1), false);
-            if(tutor.equals("scaleTutor")||tutor.equals("chordTutor")){
-                temp.put("basic"+ tutor.substring(0, 1).toUpperCase() + tutor.substring(1), false);
+            if (tutor.equals("scaleTutor") || tutor.equals("chordTutor")) {
+                temp.put("basic" + tutor.substring(0, 1).toUpperCase() + tutor.substring(1), false);
             }
             unlockDescriptions.put(tutor, temp);
 
@@ -298,14 +299,15 @@ public class StageMapController {
         tutorAndButton.put("chordTutor", chordRecognitionTutorButton);
         tutorAndButton.put("chordSpellingTutor", chordSpellingTutorButton);
         tutorAndButton.put("scaleSpellingTutor", scaleSpellingTutorButton);
-        tutorAndButton.put("keySignatureTutor",keySignaturesTutorButton);
+        tutorAndButton.put("keySignatureTutor", keySignaturesTutorButton);
         tutorAndButton.put("diatonicChordTutor", diatonicChordsTutorButton);
         tutorAndButton.put("scaleModesTutor", majorModesTutorButton);
 
     }
 
-    /** Generates the hash map that stores the locking status of each tutor (whether it is unlocked or locked)
-     *
+    /**
+     * Generates the hash map that stores the locking status of each tutor (whether it is unlocked
+     * or locked)
      */
     private void generateLockingStatus() {
         //pitch tutor and musical terms tutor are unlocked by default
@@ -325,14 +327,15 @@ public class StageMapController {
 
     }
 
-    public void unlockTutor(String id){
+    public void unlockTutor(String id) {
 
         unlockStatus.put(id, true);
         this.env.getUserHandler().getCurrentUser().saveAll();
     }
 
     /**
-     * Iterates through the nodes on the stage map, and asserts whether they are locked (disabled) or unlocked
+     * Iterates through the nodes on the stage map, and asserts whether they are locked (disabled)
+     * or unlocked
      */
     public void visualiseLockedTutors() {
         Image padlock = new Image(getClass().getResourceAsStream
@@ -341,7 +344,7 @@ public class StageMapController {
 
         //If in competitive mode, relevant stages should be locked
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
-            for (String tutor: unlockStatus.keySet()) {
+            for (String tutor : unlockStatus.keySet()) {
                 tutorAndButton.get(tutor).setDisable(false);
                 tutorAndButton.get(tutor).setGraphic(null);
                 if (unlockStatus.get(tutor) == false) {
@@ -352,9 +355,9 @@ public class StageMapController {
 
                 }
             }
-        //else if in practice mode, all of the levels should be unlocked
+            //else if in practice mode, all of the levels should be unlocked
         } else {
-            for (String tutor: unlockStatus.keySet()) {
+            for (String tutor : unlockStatus.keySet()) {
                 tutorAndButton.get(tutor).setDisable(false);
                 tutorAndButton.get(tutor).setGraphic(null);
             }
@@ -364,22 +367,19 @@ public class StageMapController {
     }
 
 
-
     /**
      * Fetches 3 most recent tutor score files for tutor of interest and checks scores
      */
     public void fetchTutorFile(String tutorId) {
 
-        System.out.println("need for unlock");
         for(String tutor: unlockDescriptions.get(nextUnlockTutor).keySet()) {
             ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
-            System.out.println(records);
             boolean unlock = true;
 
-            int requiredScore = 2; //7
+            int requiredScore = 7; //7
             if(nextUnlockTutor.equals("scaleTutor")||nextUnlockTutor.equals("chordTutor")){
                 if(tutor.equals("basicScaleTutor")|| tutor.equals("basicChordTutor")){
-                    requiredScore = 2; //9
+                    requiredScore = 9; //9
                 }
             }
 
@@ -389,37 +389,36 @@ public class StageMapController {
             } else {
                 for (int i = records.size() - 1; i < records.size(); i++) {
                     TutorRecord record = records.get(i);
-                    System.out.println(record.getStats().get("questionsCorrect").intValue());
                     if (!(record.getStats().get("questionsCorrect").intValue() >= requiredScore)) {
                         unlock = false;
                     }
                 }
             }
 
-            if(unlock){
+            if (unlock) {
                 unlockDescriptions.get(nextUnlockTutor).put(tutor, true);
             }
 
 
         }
 
-        if(!(unlockDescriptions.get(nextUnlockTutor).values().contains(false))){
+        if (!(unlockDescriptions.get(nextUnlockTutor).values().contains(false))) {
 
-            unlockTutor(tutorOrder.get(tutorOrder.indexOf(converted.get(tutorId)) +1));
+            unlockTutor(tutorOrder.get(tutorOrder.indexOf(converted.get(tutorId)) + 1));
             visualiseLockedTutors();
             String nextTutorName = null;
             for (String t : converted.keySet()) {
-                        if (converted.get(t).equals(nextUnlockTutor)) {
-                            nextTutorName = t;
-                        }
-                    }
+                if (converted.get(t).equals(nextUnlockTutor)) {
+                    nextTutorName = t;
+                }
+            }
             Image unlockImage = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
-                    Notifications.create()
-                            .title("Tutor Unlocked")
-                            .text("Well done! \nYou have unlocked the " + nextTutorName)
-                            .hideAfter(new Duration(10000))
-                            .graphic(new ImageView(unlockImage))
-                            .show();
+            Notifications.create()
+                    .title("Tutor Unlocked")
+                    .text("Well done! \nYou have unlocked the " + nextTutorName)
+                    .hideAfter(new Duration(10000))
+                    .graphic(new ImageView(unlockImage))
+                    .show();
 
         }
 
@@ -503,11 +502,13 @@ public class StageMapController {
     private void launchKeySignaturesTutor() {
         env.getRootController().getTutorFactory().openTutor("Key Signature Tutor");
     }
+
     @FXML
     private void launchDiatonicChordsTutor() {
         env.getRootController().getTutorFactory().openTutor("Diatonic Chord Tutor");
 
     }
+
     @FXML
     private void launchMajorModesTutor() {
         env.getRootController().getTutorFactory().openTutor("Scale Modes Tutor");

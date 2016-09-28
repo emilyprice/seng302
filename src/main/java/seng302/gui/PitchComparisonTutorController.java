@@ -3,8 +3,6 @@ package seng302.gui;
 import org.controlsfx.control.RangeSlider;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import javafx.fxml.FXML;
@@ -126,9 +124,10 @@ public class PitchComparisonTutorController extends TutorController {
 
     /**
      * Generates default rangeslider value for competitive mode
+     *
      * @return int the lower bound of the note range
      */
-    private int generateRangesliderDefault(){
+    private int generateRangesliderDefault() {
         int num = rand.nextInt(95);
         if (num + 24 > 95) {
             return 84;
@@ -148,9 +147,9 @@ public class PitchComparisonTutorController extends TutorController {
 
         if (currentProject.getIsCompetitiveMode()) {
             int lowValue = generateRangesliderDefault();
-            rangeSlider = new NoteRangeSlider(notes, 12, lowValue, lowValue+24);
+            rangeSlider = new NoteRangeSlider(notes, 12, lowValue, lowValue + 24);
             rangeSlider.setDisable(true);
-        }else{
+        } else {
             rangeSlider = new NoteRangeSlider(notes, 12, 60, 72);
 
         }
@@ -225,7 +224,7 @@ public class PitchComparisonTutorController extends TutorController {
         }
 
 
-            manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
+        manager.add(new Pair<>(note1.getNote(), note2.getNote()), correctChoice);
 
 
         handleAccordion();
@@ -324,8 +323,6 @@ public class PitchComparisonTutorController extends TutorController {
 
         return rowPane;
     }
-
-
 
 
     /**

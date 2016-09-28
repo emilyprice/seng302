@@ -92,7 +92,6 @@ public class UserSettingsController {
         String css = this.getClass().getResource("/css/user_settings.css").toExternalForm();
 
 
-
         ImageView imgUpload = new ImageView(new Image(getClass().getResourceAsStream("/images/file_upload_white_36dp.png"), 25, 25, false, false));
 
 
@@ -216,7 +215,9 @@ public class UserSettingsController {
             JFXPopup popup = new JFXPopup();
             popup.setContent(modal);
 
+            popup.setPopupContainer(settingsPane);
             popup.setSource(btnDeleteUser);
+
             popup.show(JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT);
             Label header = (Label) modal.lookup("#lblHeader");
 
@@ -225,7 +226,7 @@ public class UserSettingsController {
 
             ((JFXButton) modal.lookup("#btnDelete")).
                     setOnAction((event) -> {
-                        env.getUserHandler().deleteUser(env.getUserHandler().getClassRoom(),env.getUserHandler().getCurrentUser().getUserName());
+                        env.getUserHandler().deleteUser(env.getUserHandler().getClassRoom(), env.getUserHandler().getCurrentUser().getUserName());
                         popup.close();
                     });
 

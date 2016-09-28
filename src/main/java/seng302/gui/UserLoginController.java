@@ -204,7 +204,9 @@ public class UserLoginController {
 
 
     /**
-     *  Checks if a classroom is selected, and modifies the styling of the classroom hBox to alert the user.
+     * Checks if a classroom is selected, and modifies the styling of the classroom hBox to alert
+     * the user.
+     *
      * @return classroom selected.
      */
     private Boolean classroomSelected() {
@@ -257,7 +259,6 @@ public class UserLoginController {
             //TODO: Handle having not have selected a classroom.
         }
 
-
     }
 
     /**
@@ -286,8 +287,6 @@ public class UserLoginController {
             usernameInput.requestFocus();
 
         } else if (fbClass.exists()) {
-
-
             DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
 
             if (userfb.exists()) {

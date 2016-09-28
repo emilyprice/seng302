@@ -16,8 +16,6 @@ import seng302.managers.TranscriptManager;
 import seng302.utility.EditHistory;
 import seng302.utility.MusicalTermsTutorBackEnd;
 
-import java.io.IOException;
-
 public class Environment {
 
     private DslExecutor executor;
@@ -29,7 +27,6 @@ public class Environment {
     private BooleanProperty shiftPressed;
     private ThemeHandler themeHandler;
     private Pair currentFocussed;
-
 
 
     private AnchorPane stagePane;
@@ -108,16 +105,12 @@ public class Environment {
         themeHandler = new ThemeHandler();
 
 
-
     }
-
-
 
 
     public FirebaseUpdater getFirebase() {
         return firebaseUpdater;
     }
-
 
 
     /**
@@ -129,8 +122,6 @@ public class Environment {
         transcriptManager = new TranscriptManager();
         recordLocation = null;
         em = new EditHistory(this);
-
-
 
 
     }
@@ -147,7 +138,6 @@ public class Environment {
         recordLocation = null;
         themeHandler = new ThemeHandler();
         em = new EditHistory(this);
-
 
 
     }

@@ -18,16 +18,18 @@ public class TutorHandler {
 
 
     private static final List<String> tutorIds = new ArrayList<String>() {{
-        add("pitchTutor");
-        add("scaleTutor");
-        add("intervalTutor");
-        add("musicalTermsTutor");
-        add("chordTutor");
-        add("chordSpellingTutor");
-        add("keySignatureTutor");
-        add("diatonicChordTutor");
-        add("scaleModesTutor");
-        add("scaleSpellingTutor");
+        add("PitchComparisonTutor");
+        add("ScaleRecognitionTutor");
+        add("ScaleRecognitionTutor(Basic)");
+        add("IntervalRecognitionTutor");
+        add("MusicalTermsTutor");
+        add("ChordRecognitionTutor");
+        add("ChordRecognitionTutor(Basic)");
+        add("ChordSpellingTutor");
+        add("KeySignatureTutor");
+        add("DiatonicChordTutor");
+        add("ScaleModesTutor");
+        add("ScaleSpellingTutor");
     }};
 
     /**

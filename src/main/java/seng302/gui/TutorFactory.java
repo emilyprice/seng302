@@ -14,8 +14,6 @@ import java.io.IOException;
 public class TutorFactory {
 
 
-
-
     Environment env;
     AnchorPane parentNode;
 
@@ -32,6 +30,7 @@ public class TutorFactory {
 
     /**
      * opens a tutor given a valid tutor name.
+     *
      * @param tutorName name of the tutor to open
      */
     public void openTutor(String tutorName) {
@@ -98,6 +97,7 @@ public class TutorFactory {
 
     /**
      * loads an fxml node.
+     *
      * @param loader FXMLloader to load.
      */
     private void loadNode(FXMLLoader loader) {
@@ -145,7 +145,6 @@ public class TutorFactory {
     }
 
 
-
     /**
      * opens the musical terms tutor when the musical term tutor menu option is pressed If there is
      * already an open tutor of the same form then it sets focus to the already open tutor
@@ -162,7 +161,6 @@ public class TutorFactory {
     }
 
 
-
     /***
      * Opens the basic scale tutor
      */
@@ -176,6 +174,7 @@ public class TutorFactory {
 
 
     }
+
     /***
      * Opens the scale tutor
      */
@@ -191,8 +190,8 @@ public class TutorFactory {
     }
 
     /**
-     * opens the basic chord tutor when the chord tutor menu option is pressed If there is already an open
-     * tutor of the same form then it sets focus to the already open tutor
+     * opens the basic chord tutor when the chord tutor menu option is pressed If there is already
+     * an open tutor of the same form then it sets focus to the already open tutor
      */
     @FXML
     private void openBasicChordTutor() {
