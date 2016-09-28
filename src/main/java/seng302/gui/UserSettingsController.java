@@ -189,8 +189,9 @@ public class UserSettingsController {
             JFXPopup popup = new JFXPopup();
             popup.setContent(modal);
 
-            popup.setPopupContainer(env.getRootController().paneMain);
+            popup.setPopupContainer(settingsPane);
             popup.setSource(btnDeleteUser);
+
             popup.show(JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT);
             Label header = (Label) modal.lookup("#lblHeader");
 
