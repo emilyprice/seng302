@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<AnchorPane id="userPage" fx:id="teacherPage" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/user_settings.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.TeacherPageController">
+   <children>
+      <SplitPane id="userSplitPane" fx:id="userView" dividerPositions="0.19598765432098766" layoutX="10.0" prefHeight="430.0" prefWidth="650.0" style="-fx-padding: 0; -fx-border-style: none;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <items>
+            <VBox id="userSideBar" maxWidth="-Infinity" prefWidth="60.0" style="-fx-border-color: pink; -fx-border-width: 0; -fx-padding: 0; border-style: none;">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox fx:id="profilepic" alignment="CENTER" maxHeight="-Infinity" minWidth="-Infinity" prefHeight="188.0" prefWidth="200.0" style="-fx-border-color: green; -fx-border-width: 0;">
+                           <children>
+                              <StackPane prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                          <ImageView fx:id="imageDP2" fitHeight="100.0" fitWidth="100.0">
+                                             <image>
+                                                <Image url="images/testDP.jpg" />
+                                             </image>
+                                          </ImageView>
+                                 </children>
+                              </StackPane>
+                              <Label fx:id="txtFullName" styleClass="primaryText" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER" maxWidth="30.0" prefHeight="200.0" prefWidth="30.0" spacing="5.0">
+                           <children>
+                              <JFXButton fx:id="btnSettings" maxHeight="20.0" maxWidth="30.0" onAction="#openSettings">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" styleClass="settingsGear">
+                                       <image>
+                                          <Image url="@../images/settings.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="logoutButton" maxHeight="20.0" maxWidth="30.0" onAction="#onLogoutClick">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" styleClass="settingsGear">
+                                       <image>
+                                          <Image url="@../images/logout.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <VBox.margin>
+                                    <Insets bottom="2.0" />
+                                 </VBox.margin>
+                              </JFXButton>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <VBox fx:id="studentInfo" VBox.vgrow="ALWAYS">
+                     <children>
+                        <TreeView fx:id="studentTree" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children>
+               <styleClass>
+                  <String fx:value="userPagePrimary" />
+                  <String fx:value="sideMenu" />
+               </styleClass>
+            </VBox>
+            <AnchorPane>
+               <children>
+                  <ScrollPane fx:id="currentPage" fitToWidth="true" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

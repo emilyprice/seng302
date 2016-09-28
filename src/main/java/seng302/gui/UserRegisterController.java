@@ -4,6 +4,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,6 +26,9 @@ public class UserRegisterController {
 
     @FXML
     private JFXTextField txtUsername;
+
+    @FXML
+    private JFXTextField txtClassRoomName;
 
     @FXML
     private JFXPasswordField txtPasswordConfirm;
@@ -55,6 +60,9 @@ public class UserRegisterController {
     @FXML
     private JFXComboBox cbClassroom;
 
+    @FXML
+    public RadioButton studentRadioBtn;
+
 
     private Environment env;
     private String classroom;
@@ -65,13 +73,15 @@ public class UserRegisterController {
 
     public void create(Environment env) {
         this.env = env;
-
+        txtClassRoomName.setVisible(false);
+        studentRadioBtn.setSelected(true);
 
     }
 
 
     @FXML
     public void initialize() {
+
 
         lblValidator.setVisible(false);
 
@@ -90,14 +100,13 @@ public class UserRegisterController {
 
         btnReturn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/back_32dp.png"))));
 
-        hbClassroom.setVisible(false);
-        hbClassroom.managedProperty().bind(hbClassroom.visibleProperty());
 
         accountType.selectedToggleProperty().addListener((ov, oldVal, newVal) -> {
             if (accountType.getSelectedToggle() != null) {
 
-                String radioButtonText = ((JFXRadioButton) accountType.getSelectedToggle()).getText();
-                if (radioButtonText.equals("Student")) {
+                String radioButtonText = ((RadioButton)accountType.getSelectedToggle()).getText();
+                if(radioButtonText.equals(" Student")){
+                    txtClassRoomName.setVisible(false);
                     hbClassroom.setVisible(true);
                     cbClassroom.getItems().clear();
                     for (DataSnapshot classroom : env.getFirebase().getClassroomsSnapshot().getChildren()) {
@@ -106,6 +115,7 @@ public class UserRegisterController {
 
                 } else {
                     hbClassroom.setVisible(false);
+                    txtClassRoomName.setVisible(true);
                 }
                 hbClassroom.managedProperty().bind(hbClassroom.visibleProperty());
             }
@@ -135,6 +145,7 @@ public class UserRegisterController {
      * @return True if the inputted username already exists, else false.
      */
     private Boolean checkUserNameExists() {
+
 
         if (env.getUserHandler().getUserNames().contains(txtUsername.getText())) {
 
@@ -213,22 +224,38 @@ public class UserRegisterController {
     @FXML
     protected void register() {
 
-        String selectedType = ((JFXRadioButton) accountType.getSelectedToggle()).getText();
+        String selectedType = ((RadioButton) accountType.getSelectedToggle()).getText();
         hbClassroom.setStyle("-fx-border-color: none;");
         if (selectedType != null) {
-            if (selectedType.equals("Student")) {
+            if (selectedType.equals(" Student")) {
                 if (cbClassroom.getValue() != null) {
                     env.getUserHandler().setClassRoom(this.classroom);
                     registerUser(env.getFirebase().getClassroomsSnapshot().child(this.classroom + "/users/" + txtUsername.getText()));
                 } else {
-                    //TODO: Classroom not selected.
                     hbClassroom.setStyle("-fx-border-color: red;");
 
                 }
-            } else if (selectedType.equals("Teacher")) {
+            } else if (selectedType.equals(" Teacher")) {
+                String name = txtClassRoomName.getText();
+                if (!classRoomExists(name) && !ClassroomCreatorController.containsInvalidCharacters(name) && !ClassroomCreatorController.isEmpty(name)) {
+                    env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
+                    env.getUserHandler().setCurrentTeacher(txtUsername.getText(), txtClassRoomName.getText(), txtPassword.getText());
 
-                env.getUserHandler().createTeacher(txtUsername.getText(), txtPassword.getText());
-                //TODO: add action for registering and logging in as a teacher.
+                    env.getUserHandler().getCurrentTeacher().setUserFirstName(txtfname.getText());
+                    env.getUserHandler().getCurrentTeacher().setUserLastName(txtlname.getText());
+
+                    env.getFirebase().getFirebase().child("teachers/" + txtUsername.getText() + "/classrooms").push().setValue(txtClassRoomName.getText());
+
+                    env.getFirebase().getFirebase().child("classrooms/" + txtClassRoomName.getText() + "/users/").setValue("none");
+
+                    Stage stage = (Stage) btnRegister.getScene().getWindow();
+                    stage.close();
+                    env.getRootController().showWindow(true);
+                } else {
+                    txtClassRoomName.setStyle("-fx-border-color: red;");
+                }
+
+
             }
         }
 
@@ -244,12 +271,14 @@ public class UserRegisterController {
         if (validCredentials(dataSnapShot)) {
             env.getThemeHandler().setDefaultTheme();
             env.getUserHandler().createUser(txtUsername.getText(), txtPassword.getText());
+            env.getUserHandler().removeCurrentTeacher();
 
             //Log in user.
             if (env.getUserHandler().userPassExists(txtUsername.getText(), txtPassword.getText())) {
 
                 env.getUserHandler().getCurrentUser().setUserFirstName(txtfname.getText());
                 env.getUserHandler().getCurrentUser().setUserLastName(txtlname.getText());
+                env.getUserHandler().getCurrentUser().saveProperties();
 
                 ((Stage) btnRegister.getScene().getWindow()).close();
                 env.getRootController().showWindow(true);
@@ -263,6 +292,15 @@ public class UserRegisterController {
         }
     }
 
+
+    public boolean classRoomExists(String className) {
+        DataSnapshot classroom = env.getFirebase().getClassroomsSnapshot().child(className);
+        if (classroom.exists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Replaces the registration window with a log in window.

@@ -1,16 +1,11 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -24,9 +19,12 @@ import javafx.stage.Stage;
 import seng302.Environment;
 import seng302.utility.UserImporter;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 /**
- * Controller for the user login screen.
- * Displays recent users and contains functionality for signing in and registering.
+ * Controller for the user login screen. Displays recent users and contains functionality for
+ * signing in and registering.
  */
 public class UserLoginController {
 
@@ -48,6 +46,7 @@ public class UserLoginController {
 
     @FXML
     private JFXComboBox ddClassroom;
+
 
     @FXML
     JFXButton btnLogin;
@@ -141,10 +140,16 @@ public class UserLoginController {
 
             try {
                 String dpUrl = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + user + "/properties/profilePicUrl").getValue().toString();
-                Image img = new Image(dpUrl);
+                Image img = new Image(dpUrl, 100, 100, true, true);
                 recentUsersHbox.getChildren().add(generateRecentUser(user, img));
             } catch (NullPointerException e) {
-                System.err.println("The user " + user + " has no profile picture. They may have been deleted from firebase.");
+                try {
+                    String dpUrl = env.getFirebase().getTeacherSnapshot().child(user + "/properties/profilePicUrl").getValue().toString();
+                    Image img = new Image(dpUrl, 100, 100, true, true);
+                    recentUsersHbox.getChildren().add(generateRecentUser(user, img));
+                } catch (NullPointerException e2) {
+                    System.err.println("The user " + user + " has no profile picture. They may have been deleted from firebase.");
+                }
             }
 
 
@@ -190,6 +195,7 @@ public class UserLoginController {
 
 
     }
+
 
     /**
      * OnAction handler for the classroom dropdown.
@@ -237,10 +243,25 @@ public class UserLoginController {
 
     @FXML
     protected void logIn() {
-        if (classroomSelected()) {
-            authenticate(env.getFirebase().getClassroomsSnapshot().child(ddClassroom.getValue().toString()));
-        }
 
+        if (classroomSelected()) {
+            //Classroom dropdown value selected.
+            // try to log in as a teacher
+            DataSnapshot teacher = env.getFirebase().getTeacherSnapshot().child(usernameInput.getText());
+            final boolean[] teacherHasClassroom = {false};
+
+            teacher.child("/classrooms").getChildren().forEach(e -> {
+                if (e.getValue().equals(ddClassroom.getValue().toString())) {
+                    teacherHasClassroom[0] = true;
+                }
+            });
+            boolean isTeacher = teacher.exists() && teacherHasClassroom[0];
+            if (!isTeacher) {
+                authenticate(env.getFirebase().getClassroomsSnapshot().child(ddClassroom.getValue().toString()));
+            } else {
+                authenticateTeacher();
+            }
+        }
 
     }
 
@@ -270,7 +291,6 @@ public class UserLoginController {
             usernameInput.requestFocus();
 
         } else if (fbClass.exists()) {
-
             DataSnapshot userfb = fbClass.child("/users/" + usernameInput.getText());
 
             if (userfb.exists()) {
@@ -281,6 +301,7 @@ public class UserLoginController {
 
                 if (pass.equals(passwordInput.getText())) {
                     env.getUserHandler().setCurrentUser(usernameInput.getText(), ddClassroom.getValue().toString(), passwordInput.getText());
+                    env.getUserHandler().removeCurrentTeacher();
                     Stage stage = (Stage) btnLogin.getScene().getWindow();
                     stage.close();
                     env.getRootController().showWindow(true);
@@ -309,6 +330,28 @@ public class UserLoginController {
         }
 
 
+    }
+
+    /**
+     * Authenticates the username and password inputs of a teacher account.
+     * If the inputs are valid, logs in the teacher.
+     */
+    private void authenticateTeacher() {
+        DataSnapshot teacher = env.getFirebase().getTeacherSnapshot().child(usernameInput.getText());
+        String pass = teacher.child("/properties/password").getValue().toString();
+
+        if (pass.equals(passwordInput.getText())) {
+            env.getUserHandler().setCurrentTeacher(usernameInput.getText(), ddClassroom.getValue().toString(), passwordInput.getText());
+            Stage stage = (Stage) btnLogin.getScene().getWindow();
+            stage.close();
+            env.getRootController().showWindow(true);
+
+        } else {
+            passwordValidator.setMessage("Invalid password.");
+            passwordInput.clear();
+            passwordInput.validate();
+            passwordInput.requestFocus();
+        }
     }
 
 

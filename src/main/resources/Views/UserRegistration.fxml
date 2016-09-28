@@ -56,12 +56,12 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <JFXRadioButton alignment="CENTER_LEFT" graphicTextGap="0.0" prefHeight="15.0" prefWidth="80.0" style="-fx-label-padding: 0;" text="Student">
+                        <RadioButton fx:id="studentRadioBtn" alignment="CENTER_LEFT" graphicTextGap="0.0" prefHeight="15.0" prefWidth="80.0" style="-fx-label-padding: 0;" text=" Student" >
                            <toggleGroup>
                               <ToggleGroup fx:id="accountType" />
                            </toggleGroup>
-                        </JFXRadioButton>
-                        <JFXRadioButton graphicTextGap="2.0" prefHeight="15.0" prefWidth="74.0" style="-fx-label-padding: 0;" text="Teacher" toggleGroup="$accountType" />
+                        </RadioButton>
+                        <RadioButton graphicTextGap="2.0" prefHeight="15.0" prefWidth="80.0" style="-fx-label-padding: 0;" text=" Teacher"  toggleGroup="$accountType" />
                      </children>
                      <opaqueInsets>
                         <Insets top="20.0" />
@@ -116,6 +116,11 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </JFXPasswordField>
+                   <JFXTextField fx:id="txtClassRoomName" labelFloat="true" maxWidth="350.0" minWidth="178.0" prefHeight="31.0" prefWidth="178.0" promptText="Class Room Name">
+                       <font>
+                           <Font size="14.0" />
+                       </font>
+                   </JFXTextField>
                   <Label fx:id="lblValidator" textFill="RED" />
                   <JFXButton fx:id="btnRegister" buttonType="RAISED" onAction="#register" prefHeight="25.0" prefWidth="189.0" ripplerFill="#ff0a0a" style="-fx-background-color: #FFB74D;" text="Register">
                      <font>

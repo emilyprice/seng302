@@ -1,12 +1,12 @@
 package seng302.gui;
 
-import java.io.IOException;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import seng302.Environment;
+
+import java.io.IOException;
 
 /**
  * Factory class for generating tutor instances.
@@ -35,49 +35,52 @@ public class TutorFactory {
      */
     public void openTutor(String tutorName) {
 
+        if (env.getUserHandler().getCurrentTeacher() == null) {
+            // Only launch if a student is logged in
+            env.getRootController().showUserBar(true);
+            env.getRootController().setHeader(tutorName);
+            switch (tutorName) {
+                case "Pitch Comparison Tutor":
+                    openPitchTutor();
+                    break;
+                case "Interval Recognition Tutor":
+                    openIntervalTutor();
+                    break;
+                case "Scale Recognition Tutor (Basic)":
+                    openBasicScaleTutor();
+                    break;
+                case "Scale Recognition Tutor":
+                    openScaleTutor();
+                    break;
+                case "Musical Terms Tutor":
+                    openMusicalTermTutor();
+                    break;
+                case "Chord Recognition Tutor (Basic)":
+                    openBasicChordTutor();
+                    break;
+                case "Chord Recognition Tutor":
+                    openChordTutor();
+                    break;
+                case "Chord Spelling Tutor":
+                    openSpellingTutor();
+                    break;
+                case "Key Signature Tutor":
+                    openKeySignatureTutor();
+                    break;
+                case "Diatonic Chord Tutor":
+                    openDiatonicChordTutor();
+                    break;
+                case "Scale Modes Tutor":
+                    openScaleModesTutor();
+                    break;
+                case "Scale Spelling Tutor":
+                    openScaleSpellingTutor();
+                    break;
+                case "Microphone Input Tutor":
+                    openMicrophoneTutor();
+                    break;
 
-        env.getRootController().showUserBar(true);
-        env.getRootController().setHeader(tutorName);
-        switch (tutorName) {
-            case "Pitch Comparison Tutor":
-                openPitchTutor();
-                break;
-            case "Interval Recognition Tutor":
-                openIntervalTutor();
-                break;
-            case "Scale Recognition Tutor (Basic)":
-                openBasicScaleTutor();
-                break;
-            case "Scale Recognition Tutor":
-                openScaleTutor();
-                break;
-            case "Musical Terms Tutor":
-                openMusicalTermTutor();
-                break;
-            case "Chord Recognition Tutor (Basic)":
-                openBasicChordTutor();
-                break;
-            case "Chord Recognition Tutor":
-                openChordTutor();
-                break;
-            case "Chord Spelling Tutor":
-                openSpellingTutor();
-                break;
-            case "Key Signature Tutor":
-                openKeySignatureTutor();
-                break;
-            case "Diatonic Chord Tutor":
-                openDiatonicChordTutor();
-                break;
-            case "Scale Modes Tutor":
-                openScaleModesTutor();
-                break;
-            case "Scale Spelling Tutor":
-                openScaleSpellingTutor();
-                break;
-            case "Microphone Input Tutor":
-                openMicrophoneTutor();
-                break;
+            }
         }
     }
 

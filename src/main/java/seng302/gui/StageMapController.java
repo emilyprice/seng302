@@ -1,12 +1,5 @@
 package seng302.gui;
 
-import org.apache.commons.collections4.BidiMap;
-import org.apache.commons.collections4.bidimap.DualHashBidiMap;
-import org.controlsfx.control.Notifications;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -18,10 +11,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.TutorHandler;
 import seng302.utility.TutorRecord;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -96,13 +95,46 @@ public class StageMapController {
     /**
      * stores the unlock order of the tutors
      */
-    private ArrayList<String> tutorOrder; //the order in which the tutors unlock
+    private static ArrayList<String> tutorOrder; //the order in which the tutors unlock
 
     /**
      * stores the conversion of tutor name to a shortened tutor string that is used for
      * manipulations
      */
-    public BidiMap<String, String> converted;
+    public static BidiMap<String, String> converted;
+
+    static {
+        converted = new DualHashBidiMap<>();
+        converted.put("Musical Terms Tutor", "musicalTermsTutor");
+        converted.put("Pitch Comparison Tutor", "pitchTutor");
+        converted.put("Scale Recognition Tutor (Basic)", "basicScaleTutor");
+        converted.put("Chord Recognition Tutor (Basic)", "basicChordTutor");
+        converted.put("Interval Recognition Tutor", "intervalTutor");
+        converted.put("Scale Recognition Tutor", "scaleTutor");
+        converted.put("Chord Recognition Tutor", "chordTutor");
+        converted.put("Chord Spelling Tutor", "chordSpellingTutor");
+        converted.put("Scale Spelling Tutor", "scaleSpellingTutor");
+        converted.put("Key Signature Tutor", "keySignatureTutor");
+        converted.put("Diatonic Chord Tutor", "diatonicChordTutor");
+        converted.put("Scale Modes Tutor", "scaleModesTutor");
+        converted.put("Microphone Input Tutor", "microphoneInputTutor");
+
+
+        tutorOrder = new ArrayList<>();
+        tutorOrder.add("musicalTermsTutor");
+        tutorOrder.add("microphoneInputTutor");
+        tutorOrder.add("pitchTutor");
+        tutorOrder.add("basicScaleTutor");
+        tutorOrder.add("basicChordTutor");
+        tutorOrder.add("intervalTutor");
+        tutorOrder.add("scaleTutor");
+        tutorOrder.add("chordTutor");
+        tutorOrder.add("chordSpellingTutor");
+        tutorOrder.add("scaleSpellingTutor");
+        tutorOrder.add("keySignatureTutor");
+        tutorOrder.add("diatonicChordTutor");
+        tutorOrder.add("scaleModesTutor");
+    }
 
     public HashMap<String, HashMap<String, Boolean>> unlockDescriptions;
 
@@ -123,6 +155,10 @@ public class StageMapController {
         tutorHandler = currentProject.getTutorHandler();
 
         userPageController = env.getUserPageController();
+    }
+
+    public void setEnvOnly(Environment env) {
+        this.env = env;
     }
 
 
@@ -225,15 +261,10 @@ public class StageMapController {
      * button, the order of the tutors, and whether the tutor is unlocked or locked)
      */
     public void create() {
-        tutorAndButton = new HashMap<>();
-        tutorOrder = new ArrayList<>();
         unlockStatus = new HashMap<>();
-        converted = new DualHashBidiMap<>();
 
         generateLockingStatus();
-        generateTutorOrder();
         generateTutorAndButtonNames();
-        generateConverted();
         generateDescriptions();
         visualiseLockedTutors();
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
@@ -241,25 +272,6 @@ public class StageMapController {
         } else {
             hideNextUnlockDescription(true);
         }
-    }
-
-    /**
-     * Creates the converted strings
-     **/
-    private void generateConverted() {
-        converted.put("Musical Terms Tutor", "musicalTermsTutor");
-        converted.put("Pitch Comparison Tutor", "pitchTutor");
-        converted.put("Scale Recognition Tutor (Basic)", "basicScaleTutor");
-        converted.put("Chord Recognition Tutor (Basic)", "basicChordTutor");
-        converted.put("Interval Recognition Tutor", "intervalTutor");
-        converted.put("Scale Recognition Tutor", "scaleTutor");
-        converted.put("Chord Recognition Tutor", "chordTutor");
-        converted.put("Chord Spelling Tutor", "chordSpellingTutor");
-        converted.put("Scale Spelling Tutor", "scaleSpellingTutor");
-        converted.put("Key Signature Tutor", "keySignatureTutor");
-        converted.put("Diatonic Chord Tutor", "diatonicChordTutor");
-        converted.put("Scale Modes Tutor", "scaleModesTutor");
-        converted.put("Microphone Input Tutor", "microphoneInputTutor");
     }
 
 
@@ -282,33 +294,12 @@ public class StageMapController {
 
     }
 
-
-    /**
-     * generates an array list with the chronological order of the tutors in the stage map.
-     * This will be the order the tutors unlock in
-     */
-    private void generateTutorOrder() {
-        //pitch tutor and musical terms tutor are unlocked by default
-        tutorOrder.add("musicalTermsTutor");
-        tutorOrder.add("microphoneInputTutor");
-        tutorOrder.add("pitchTutor");
-        tutorOrder.add("basicScaleTutor");
-        tutorOrder.add("basicChordTutor");
-        tutorOrder.add("intervalTutor");
-        tutorOrder.add("scaleTutor");
-        tutorOrder.add("chordTutor");
-        tutorOrder.add("chordSpellingTutor");
-        tutorOrder.add("scaleSpellingTutor");
-        tutorOrder.add("keySignatureTutor");
-        tutorOrder.add("diatonicChordTutor");
-        tutorOrder.add("scaleModesTutor");
-    }
-
     /**
      * generates a hashmap that has the name of the tutor and its associative button
      */
 
-    private void generateTutorAndButtonNames() {
+    public void generateTutorAndButtonNames() {
+        tutorAndButton = new HashMap<>();
         tutorAndButton.put("musicalTermsTutor", musicalTermsTutorButton);
         tutorAndButton.put("microphoneInputTutor" , microphoneInputTutorButton);
         tutorAndButton.put("pitchTutor", pitchTutorButton);
@@ -398,13 +389,13 @@ public class StageMapController {
      */
     public void fetchTutorFile(String tutorId) {
 
-        for(String tutor: unlockDescriptions.get(nextUnlockTutor).keySet()) {
+        for (String tutor : unlockDescriptions.get(nextUnlockTutor).keySet()) {
             ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
             boolean unlock = true;
 
             int requiredScore = 7; //7
-            if(nextUnlockTutor.equals("scaleTutor")||nextUnlockTutor.equals("chordTutor")){
-                if(tutor.equals("basicScaleTutor")|| tutor.equals("basicChordTutor")){
+            if (nextUnlockTutor.equals("scaleTutor") || nextUnlockTutor.equals("chordTutor")) {
+                if (tutor.equals("basicScaleTutor") || tutor.equals("basicChordTutor")) {
                     requiredScore = 9; //9
                 }
             }
@@ -449,6 +440,55 @@ public class StageMapController {
         }
 
         setDescription();
+    }
+
+    /**
+     * Load a student map when no unlock data is available
+     */
+    public void loadStudentMap() {
+
+        Image padlock = new Image(getClass().getResourceAsStream
+                ("/images/lock.png"), 10, 10, true, true);
+
+        for (String tutor : tutorOrder) {
+            if (tutor.equals("musicalTermsTutor") || tutor.equals("pitchTutor")) {
+                tutorAndButton.get(tutor).setDisable(false);
+            } else {
+                tutorAndButton.get(tutor).setDisable(true);
+                ImageView iv1 = new ImageView();
+                iv1.setImage(padlock);
+                tutorAndButton.get(tutor).setGraphic(iv1);
+            }
+        }
+        unlockHeader.setVisible(false);
+        unlockHeader.setManaged(false);
+
+    }
+
+    /**
+     * Load a stage map for a specific student, given their unlock data
+     *
+     * @param unlockStatus A collection of tutors and whether or not the student has unlocked them
+     */
+    public void loadStudentMap(HashMap<String, Boolean> unlockStatus) {
+
+        Image padlock = new Image(getClass().getResourceAsStream
+                ("/images/lock.png"), 10, 10, true, true);
+
+        for (String tutor : unlockStatus.keySet()) {
+            tutorAndButton.get(tutor).setDisable(false);
+            tutorAndButton.get(tutor).setGraphic(null);
+            if (!unlockStatus.get(tutor)) {
+                tutorAndButton.get(tutor).setDisable(true);
+                ImageView iv1 = new ImageView();
+                iv1.setImage(padlock);
+                tutorAndButton.get(tutor).setGraphic(iv1);
+
+            }
+        }
+
+        unlockHeader.setVisible(false);
+        unlockHeader.setManaged(false);
     }
 
 

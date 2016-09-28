@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXListView?>
-<?import com.jfoenix.controls.JFXTextArea?>
-<?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <AnchorPane fx:id="termsSettingsAnchor" maxHeight="1.7976931348623157E308"
             maxWidth="1.7976931348623157E308" prefHeight="450.0" prefWidth="700.0"
@@ -85,7 +78,8 @@
                                       layoutX="10.0"
                                       layoutY="363.0" AnchorPane.leftAnchor="10.0"
                                       AnchorPane.rightAnchor="9.0"/>
-                        <Label fx:id="errorMessage" layoutX="10.0" layoutY="416.0" text="Label"
+                        <Label fx:id="errorMessage" styleClass="errorMessage" layoutX="10.0" layoutY="416.0"
+                               text="Label"
                                visible="false" AnchorPane.leftAnchor="10.0"/>
                         <HBox spacing="20.0" AnchorPane.bottomAnchor="10.0"
                               AnchorPane.rightAnchor="10.0">
