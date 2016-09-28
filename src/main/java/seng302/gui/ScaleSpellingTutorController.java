@@ -128,6 +128,7 @@ public class ScaleSpellingTutorController extends TutorController {
     /**
      * Creates a new question and adds it to the already generated questions.
      * Numbers the question according to the input given.
+     *
      * @param questionNumber Number of this question.
      */
     public void createNewQuestion(Integer questionNumber) {
@@ -182,6 +183,7 @@ public class ScaleSpellingTutorController extends TutorController {
 
     /**
      * Checks to see if a type one question is complete
+     *
      * @param question The question that needs to be checked
      * @return Whether or not the question is complete
      */
@@ -201,6 +203,7 @@ public class ScaleSpellingTutorController extends TutorController {
      * 0 - Incorrect
      * 1 - Correct
      * 2 - Partially Correct
+     *
      * @param question The question to be graded
      * @return Grade for the question
      */
@@ -238,8 +241,9 @@ public class ScaleSpellingTutorController extends TutorController {
 
     /**
      * Styles the question dependant on the correctness of the question
+     *
      * @param question Question to be styled
-     * @param score Correctness of the question
+     * @param score    Correctness of the question
      */
     private void styleTypeOneTwoQuestion(HBox question, int score) {
         if (score == 0) {
@@ -255,7 +259,8 @@ public class ScaleSpellingTutorController extends TutorController {
 
     /**
      * Styles the input of a question according to correctness
-     * @param input Input to be styled
+     *
+     * @param input  Input to be styled
      * @param answer Expected answer for the input
      */
     private void styleTypeOneTwoInput(ComboBox input, String answer) {
@@ -270,10 +275,11 @@ public class ScaleSpellingTutorController extends TutorController {
 
     /**
      * Handles the input of a question. Styles and checks for correctness and completeness.
-     * @param input Most recent input of the question
-     * @param scaleInfo Question parameter. Which scale is being tested.
-     * @param questionRow Question to be styled
-     * @param answer Expected answer for input
+     *
+     * @param input        Most recent input of the question
+     * @param scaleInfo    Question parameter. Which scale is being tested.
+     * @param questionRow  Question to be styled
+     * @param answer       Expected answer for input
      * @param questionType Type of question
      */
     private void handleTypeOneTwoInput(ComboBox input, Map scaleInfo, HBox questionRow, String answer, int questionType) {
@@ -332,9 +338,10 @@ public class ScaleSpellingTutorController extends TutorController {
 
     /**
      * Deals with saving data and formatting skipped questions
-     * @param scaleInfo Question parameter, expected results and scale being tested
+     *
+     * @param scaleInfo    Question parameter, expected results and scale being tested
      * @param questionType Question type being tested
-     * @param questionRow Question to skip
+     * @param questionRow  Question to skip
      */
     private void handleSkippedQuestion(Map scaleInfo, int questionType, HBox questionRow) {
         manager.add(new Pair(scaleInfo, questionType), 2);
@@ -471,6 +478,7 @@ public class ScaleSpellingTutorController extends TutorController {
 
     /**
      * Generates a question of type 2. Given a series of notes, determine the scale.
+     *
      * @param scaleInfo Parameter, scale to be tested.
      * @return Returns a question row to be added to the questions
      */
@@ -547,6 +555,7 @@ public class ScaleSpellingTutorController extends TutorController {
 
     /**
      * Generates a type 3 question playback mode
+     *
      * @param scaleInfo Scale to be tested
      * @return Returns a generated question of type 3
      */
@@ -612,7 +621,6 @@ public class ScaleSpellingTutorController extends TutorController {
         }
 
 
-
         Label correctAnswer = correctAnswer(String.join(" ", correctNoteNames));
         correctAnswer.setId("answer");
 
@@ -626,6 +634,7 @@ public class ScaleSpellingTutorController extends TutorController {
 
     /**
      * Determines what type of question is to be generated and generates the appropriate question.
+     *
      * @param data Pair containing question type and scaleMap - scale to be used.
      * @return The generated question
      */
@@ -647,6 +656,7 @@ public class ScaleSpellingTutorController extends TutorController {
 
     /**
      * Go action on the start screen, generates questions and gets tutor running.
+     *
      * @param event Click event for go button
      */
     @FXML

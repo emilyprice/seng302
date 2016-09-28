@@ -1,14 +1,10 @@
 package seng302.gui;
 
+import com.cloudinary.Transformation;
+import com.cloudinary.utils.ObjectUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXTextField;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -21,7 +17,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.Environment;
 import seng302.Users.UserHandler;
-import seng302.utility.FileHandler;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 
 public class UserSettingsController {
@@ -67,15 +66,23 @@ public class UserSettingsController {
     public void create(Environment env) {
         this.env = env;
 
-        this.imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
         env.getRootController().setHeader("User Settings");
         userHandler = env.getUserHandler();
+        try {
+            imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
+        } catch (NullPointerException e) {
+            imageDP.setImage(userHandler.getCurrentTeacher().getUserPicture());
+        }
+
 
         try {
             txtFName.setText(userHandler.getCurrentUser().getUserFirstName());
             txtLName.setText(userHandler.getCurrentUser().getUserLastName());
-        } catch (Exception e) {
-            txtFName.clear();
+        } catch (NullPointerException e) {
+            txtFName.setText(userHandler.getCurrentTeacher().getUserFirstName());
+            txtLName.setText(userHandler.getCurrentTeacher().getUserLastName());
+        } catch (Exception other) {
+            txtLName.clear();
             txtFName.clear();
         }
     }
@@ -83,6 +90,7 @@ public class UserSettingsController {
     @FXML
     public void initialize() {
         String css = this.getClass().getResource("/css/user_settings.css").toExternalForm();
+
 
         ImageView imgUpload = new ImageView(new Image(getClass().getResourceAsStream("/images/file_upload_white_36dp.png"), 25, 25, false, false));
 
@@ -112,14 +120,22 @@ public class UserSettingsController {
         fileChooser.getExtensionFilters().add(imageFilter);
         Stage stage = new Stage();
         File file = fileChooser.showOpenDialog(stage);
-        Path userPath = userHandler.getCurrentUserPath();
-        Path filePath = Paths.get(userPath.toString() + "/profilePicture");
 
         try {
-            FileHandler.copyFolder(file, filePath.toFile());
-            userHandler.getCurrentUser().setUserPicture(filePath);
-            imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
-            env.getUserPageController().updateProfilePicDisplay();
+            Map uploadResult = env.getFirebase().getImageCloud().uploader().upload(file, ObjectUtils.asMap("transformation", new Transformation().crop("limit").width(400).height(400)));
+            String imageURL = (String) uploadResult.get("url");
+
+            try {
+                userHandler.getCurrentUser().setUserPicture(imageURL);
+                env.getUserHandler().getCurrentUser().saveProperties();
+                imageDP.setImage(userHandler.getCurrentUser().getUserPicture());
+                env.getUserPageController().updateProfilePicDisplay();
+            } catch (NullPointerException e) {
+                userHandler.getCurrentTeacher().setUserPicture(imageURL);
+                env.getUserHandler().getCurrentTeacher().saveProperties();
+                imageDP.setImage(userHandler.getCurrentTeacher().getUserPicture());
+                env.getTeacherPageController().updateProfilePicDisplay();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,10 +157,17 @@ public class UserSettingsController {
         } else {
             // Save changes
             txtFName.setDisable(true);
-            userHandler.getCurrentUser().setUserFirstName(txtFName.getText());
-            userHandler.getCurrentUser().updateProperties();
-            userHandler.getCurrentUser().saveProperties();
-            env.getUserPageController().updateNameDisplay();
+            try {
+                userHandler.getCurrentUser().setUserFirstName(txtFName.getText());
+                userHandler.getCurrentUser().updateProperties();
+                userHandler.getCurrentUser().saveProperties();
+                env.getUserPageController().updateNameDisplay();
+            } catch (NullPointerException e) {
+                userHandler.getCurrentTeacher().setUserFirstName(txtFName.getText());
+                userHandler.getCurrentTeacher().updateProperties();
+                userHandler.getCurrentTeacher().saveProperties();
+                env.getTeacherPageController().updateNameDisplay();
+            }
             txtFName.setEditable(false);
             btnEditFName.setText("Edit");
         }
@@ -164,10 +187,17 @@ public class UserSettingsController {
         } else {
             // Save changes
             txtLName.setDisable(true);
-            userHandler.getCurrentUser().setUserLastName(txtLName.getText());
-            userHandler.getCurrentUser().updateProperties();
-            userHandler.getCurrentUser().saveProperties();
-            env.getUserPageController().updateNameDisplay();
+            try {
+                userHandler.getCurrentUser().setUserLastName(txtLName.getText());
+                userHandler.getCurrentUser().updateProperties();
+                userHandler.getCurrentUser().saveProperties();
+                env.getUserPageController().updateNameDisplay();
+            } catch (NullPointerException e) {
+                userHandler.getCurrentTeacher().setUserLastName(txtLName.getText());
+                userHandler.getCurrentTeacher().updateProperties();
+                userHandler.getCurrentTeacher().saveProperties();
+                env.getTeacherPageController().updateNameDisplay();
+            }
             txtLName.setEditable(false);
             btnEditLName.setText("Edit");
         }
@@ -185,8 +215,9 @@ public class UserSettingsController {
             JFXPopup popup = new JFXPopup();
             popup.setContent(modal);
 
-            popup.setPopupContainer(env.getRootController().paneMain);
+            popup.setPopupContainer(settingsPane);
             popup.setSource(btnDeleteUser);
+
             popup.show(JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT);
             Label header = (Label) modal.lookup("#lblHeader");
 
@@ -195,12 +226,12 @@ public class UserSettingsController {
 
             ((JFXButton) modal.lookup("#btnDelete")).
                     setOnAction((event) -> {
-                        env.getUserHandler().deleteUser(env.getUserHandler().getCurrentUser().getUserName());
+                        env.getUserHandler().deleteUser(env.getUserHandler().getClassRoom(), env.getUserHandler().getCurrentUser().getUserName());
                         popup.close();
                     });
 
 
-            header.setText("Are you sure you wish to delete user: " + userHandler.getCurrentUser().getUserName());
+            header.setText("Are you sure you wish to delete this user?");
         } catch (IOException e) {
             e.printStackTrace();
         }

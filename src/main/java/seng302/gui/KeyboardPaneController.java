@@ -25,8 +25,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -36,11 +34,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import seng302.Environment;
+import seng302.Users.UserHandler;
 import seng302.data.Note;
 import seng302.utility.NoteRangeSlider;
 import seng302.utility.musicNotation.OctaveUtil;
-
-import javax.swing.event.DocumentListener;
 
 import static seng302.utility.musicNotation.Checker.isValidNormalNote;
 
@@ -78,7 +75,7 @@ public class KeyboardPaneController {
      * Button to show display scales pop over.
      */
     @FXML
-    private Button displayScalesButton;
+    public Button displayScalesButton;
 
 
     @FXML
@@ -144,12 +141,16 @@ public class KeyboardPaneController {
 
     private String playMode;
 
+    private ToggleButton transcriptInp;
+
+
+
 
     /**
-     * Set up keyboard, by creating settings popOver and TouchPanes(keys) for the keyboard.
+     * Set up keyboard, by creating settings popOver, display scale popover and TouchPanes(keys) for the keyboard.
      */
     @FXML
-    private void initialize() {
+    public void initialize() {
         keyboardBox.setMaxHeight(200);
         keyboardBox.setMinHeight(200);
         blackKeys.setMaxHeight(130);
@@ -204,10 +205,7 @@ public class KeyboardPaneController {
 
 
         // Style settings button.
-        Image cog = new Image(getClass().getResourceAsStream
-                ("/images/settings (1).png"), 10, 10, true, true);
-        settingsButton.setGraphic(new ImageView(cog));
-        settingsButton.setText(null);
+        settingsButton.setText("Settings");
 
 
         // Select whether to show note names.
@@ -219,70 +217,99 @@ public class KeyboardPaneController {
         noteLabelsOff.setSelected(true);
         noteLabelsClick = new RadioButton("Show on click");
         noteLabelsClick.setToggleGroup(notenames);
-        noteLabelsClick.setOnAction(event -> toggleShowKeyboardNotesAction());
-        noteLabelsAlways = new RadioButton("Always show");
-        noteLabelsAlways.setToggleGroup(notenames);
-        noteLabelsAlways.setOnAction(event -> toggleShowKeyboardNotesAlways());
 
-        // Generate Keyboard notes based on value of range slider.
-        slider.lowValueProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    bottomNote = newValue.intValue();
-                    resetKeyboard();
+        {
+            noteLabelsClick.setDisable(false);
+            noteLabelsClick.setOnAction(event -> toggleShowKeyboardNotesAction());
+            noteLabelsAlways = new RadioButton("Always show");
+
+
+            noteLabelsAlways.setDisable(false);
+            noteLabelsAlways.setToggleGroup(notenames);
+            noteLabelsAlways.setOnAction(event -> toggleShowKeyboardNotesAlways());
+
+
+            // Generate Keyboard notes based on value of range slider.
+            slider.lowValueProperty().addListener(
+                    (observable, oldValue, newValue) -> {
+                        bottomNote = newValue.intValue();
+                        resetKeyboard();
+                    }
+            );
+
+            slider.highValueProperty().addListener(
+                    (observable, oldValue, newValue) -> {
+                        topNote = newValue.intValue();
+                        resetKeyboard();
+                    }
+            );
+
+            rangeHeading.getChildren().add(notes);
+
+            settings.setSpacing(5);
+            settings.setPadding(new Insets(10));
+
+
+            pop = new PopOver(settings);
+            pop.setTitle("Keyboard Settings");
+
+
+            settings.getChildren().add(noteLabelsOff);
+            settings.getChildren().add(noteLabelsClick);
+            settings.getChildren().add(noteLabelsAlways);
+
+            final ToggleGroup group = new ToggleGroup();
+            HBox modes = new HBox();
+            ToggleButton play = new ToggleButton("Play");
+            play.setUserData("play");
+            play.setToggleGroup(group);
+            play.setSelected(true);
+
+            transcriptInp = new ToggleButton("Transcript Input");
+            transcriptInp.setUserData("transcript");
+            transcriptInp.setToggleGroup(group);
+
+            ToggleButton tutorInp = new ToggleButton("Tutor Input");
+            tutorInp.setUserData("tutor");
+            tutorInp.setToggleGroup(group);
+
+            group.selectedToggleProperty().addListener((observable, newValue, oldValue) -> {
+                if (group.getSelectedToggle() == null) {
+                    play.setSelected(true);
+                } else {
+                    playMode = (String) group.getSelectedToggle().getUserData();
                 }
-        );
-
-        slider.highValueProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    topNote = newValue.intValue();
-                    resetKeyboard();
-                }
-        );
-
-        rangeHeading.getChildren().add(notes);
-
-        settings.setSpacing(5);
-        settings.setPadding(new Insets(10));
+            });
 
 
-        pop = new PopOver(settings);
-        pop.setTitle("Keyboard Settings");
+            settings.getChildren().add(new Label("Keyboard Mode:"));
+            modes.getChildren().add(play);
+            modes.getChildren().add(tutorInp);
+            modes.getChildren().add(transcriptInp);
+            settings.getChildren().add(modes);
 
+        }
+    }
 
-        settings.getChildren().add(noteLabelsOff);
-        settings.getChildren().add(noteLabelsClick);
-        settings.getChildren().add(noteLabelsAlways);
+    /**
+     * Disables/enables the corresponding elements of the keyboard settings pop up depending on whether the app
+     * is in competitive mode or competition mode. In competition mode, the user cannot view labels on click/always,
+     * and cannot use the keyboard for transcript input as the transcript will be disabled
+     * @param disabled
+     */
+    public void disableLabels(Boolean disabled) {
+        if (disabled) {
+            noteLabelsOff.setSelected(true);
+            noteLabelsAlways.setDisable(true);
+            noteLabelsClick.setDisable(true);
+            transcriptInp.setDisable(true);
 
-        final ToggleGroup group = new ToggleGroup();
-        HBox modes = new HBox();
-        ToggleButton play = new ToggleButton("Play");
-        play.setUserData("play");
-        play.setToggleGroup(group);
-        play.setSelected(true);
-
-        ToggleButton transcriptInp = new ToggleButton("Transcript Input");
-        transcriptInp.setUserData("transcript");
-        transcriptInp.setToggleGroup(group);
-
-        ToggleButton tutorInp = new ToggleButton("Tutor Input");
-        tutorInp.setUserData("tutor");
-        tutorInp.setToggleGroup(group);
-
-        group.selectedToggleProperty().addListener((observable, newValue, oldValue) -> {
-            if (group.getSelectedToggle() == null) {
-                play.setSelected(true);
-            } else {
-                playMode = (String) group.getSelectedToggle().getUserData();
-            }
-        });
-
-
-        settings.getChildren().add(new Label("Keyboard Mode:"));
-        modes.getChildren().add(play);
-        modes.getChildren().add(tutorInp);
-        modes.getChildren().add(transcriptInp);
-        settings.getChildren().add(modes);
-
+        } else {
+            noteLabelsOff.setSelected(true);
+            noteLabelsAlways.setDisable(false);
+            noteLabelsClick.setDisable(false);
+            transcriptInp.setDisable(false);
+        }
     }
 
 
@@ -380,8 +407,6 @@ public class KeyboardPaneController {
         otherNoteKey.getChildren().add(otherKey);
 
 
-
-
         //OK button for display scale 1. Contains all of the error handling and toggles to Hide when clicked.
         //OK displays the given scale on the keyboard. Hide removes them but doesnt clear the input fields
         JFXButton okScale1 = new JFXButton("OK");
@@ -435,7 +460,7 @@ public class KeyboardPaneController {
 
             }
 
-                });
+        });
 
 
         //OK button for display scale 2. Contains all of the error handling and toggles to Hide when clicked.
@@ -469,7 +494,8 @@ public class KeyboardPaneController {
 
                     //Listener for changes in the drop down menu
                     typeScale2.valueProperty().addListener(new ChangeListener<String>() {
-                        @Override public void changed(ObservableValue ov, String t, String t1) {
+                        @Override
+                        public void changed(ObservableValue ov, String t, String t1) {
                             clearScaleIndicators("secondScale");
                             okScale2.setText("OK");
                         }
@@ -491,14 +517,14 @@ public class KeyboardPaneController {
                 clearScaleIndicators("secondScale");
                 okScale2.setText("OK");
 
-        }
+            }
         });
 
 
         //Clears all inputs and removes all scale indicators back to default. resets the input text borders to default
         //and resets the button back to the OK state
         Button cancelButton = new Button("Reset Scales");
-        cancelButton.setOnAction(event->{
+        cancelButton.setOnAction(event -> {
             scale1NoteInput.clear();
             typeScale1.setValue("Major");
             scale1NoteInput.setStyle("-fx-border-color: lightgray;");
@@ -560,6 +586,9 @@ public class KeyboardPaneController {
         displayScales.getChildren().add(startNoteKey);
         displayScales.getChildren().add(otherNoteKey);
 
+
+
+
         // used the spacing etc from settings to see if it will come out nicely. Subject to change
         displayScales.setSpacing(10);
         displayScales.setPadding(new Insets(10));
@@ -597,8 +626,8 @@ public class KeyboardPaneController {
     }
 
     /**
-     * Takes the scale note specified in the text input field and option from drop down menu in Display Scales
-     * and fetches the notes of the relevant scale
+     * Takes the scale note specified in the text input field and option from drop down menu in
+     * Display Scales and fetches the notes of the relevant scale
      */
     private ArrayList<Note> fetchScaleNotes(String scaleNote, String scaleType) {
         scaleNote = OctaveUtil.addDefaultOctave(scaleNote);
@@ -610,11 +639,12 @@ public class KeyboardPaneController {
 
     /**
      * Compares one scale against another to check to see if they are identical
-     * @param scale1Note
-     * @param scale1Type
-     * @param scale2Note
-     * @param scale2Type
-     * @return boolean
+     *
+     * @param scale1Note The start note of the first scale
+     * @param scale2Note The start note of the second scale
+     * @param scale1Type The type of the first scale (major minor etc)
+     * @param scale2Type The type of the second scale (major minor etc)
+     * @return boolean true if the scales are different to each other, false otherwise
      */
 
     private boolean scaleIsUnique(String scale1Note, String scale1Type, String scale2Note, String scale2Type) {
@@ -849,10 +879,11 @@ public class KeyboardPaneController {
 
     /**
      * Adds a relevant image to a key, if it is equal to the given note.
-     * @param key The key we are potentially altering
+     *
+     * @param key               The key we are potentially altering
      * @param currentNoteString The note we are looking for
-     * @param isFirstScale Whether this is scale 1 or scale 2
-     * @param isStartNote whether or not "currentNoteString" is the first note in the scale
+     * @param isFirstScale      Whether this is scale 1 or scale 2
+     * @param isStartNote       whether or not "currentNoteString" is the first note in the scale
      */
     private void addVisual(Node key, String currentNoteString, boolean isFirstScale, boolean isStartNote) {
         String firstScaleImage = "";
@@ -882,7 +913,8 @@ public class KeyboardPaneController {
     }
     /**
      * Show/Hide scale visualizations on the keyboard
-     * @param scaleNotes: an array that contains all of the notes of a scale
+     *
+     * @param scaleNotes:   an array that contains all of the notes of a scale
      * @param isFirstScale: determines whether the scale is scale 1 or scale 2
      */
     public void toggleScaleKeys(ArrayList<Note> scaleNotes, Boolean isFirstScale) {
@@ -998,5 +1030,16 @@ public class KeyboardPaneController {
             }
         }
 
+    }
+
+    public void hideWholeKeyboard() {
+        keyPane.setVisible(false);
+        keyPane.setManaged(false);
+
+    }
+
+    public void showWholeKeyboard() {
+        keyPane.setVisible(true);
+        keyPane.setManaged(true);
     }
 }

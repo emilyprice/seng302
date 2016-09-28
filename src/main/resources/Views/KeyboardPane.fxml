@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <TitledPane fx:id="keyPane" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" maxHeight="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.KeyboardPaneController">
    <content>
-       <StackPane fx:id="keyboardStack" alignment="TOP_LEFT" focusTraversable="true" maxHeight="100.0" prefHeight="0.0" styleClass="noDivider">
+       <StackPane fx:id="keyboardStack" alignment="TOP_LEFT" focusTraversable="true" maxHeight="200.0" minHeight="200.0" prefHeight="0.0" styleClass="noDivider">
           <padding>
               <Insets bottom="0" left="0" right="0" top="0" />
           </padding>
@@ -25,8 +25,7 @@
       </StackPane>
    </content>
    <graphic>
-       <HBox alignment="CENTER" fillHeight="false" maxHeight="24.0"
-             maxWidth="1.7976931348623157E308" prefHeight="24.0" spacing="6.0" styleClass="primary">
+       <HBox alignment="CENTER" fillHeight="false" maxHeight="24.0" maxWidth="1.7976931348623157E308" prefHeight="24.0" spacing="6.0" styleClass="primary">
          <children>
              <StackPane fx:id="titlePaneKeyboard" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="20.0" styleClass="primary" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="13.0">
                <children>
@@ -37,28 +36,32 @@
                    </Label>
                </children>
             </StackPane>
-             <StackPane fx:id="rightStack" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" pickOnBounds="false" prefHeight="48.0" styleClass="primary">
+             <StackPane fx:id="rightStack" alignment="CENTER_LEFT" maxWidth="100.0"
+                        pickOnBounds="false" prefHeight="48.0" prefWidth="100.0"
+                        styleClass="primary">
                <children>
-                   <JFXButton fx:id="settingsButton" focusTraversable="false"
+                   <JFXButton fx:id="settingsButton" focusTraversable="false" minWidth="100.0"
                               mnemonicParsing="false" onAction="#toggleSettings" prefHeight="23.0"
-                              prefWidth="23.0" styleClass="keyboardButton" text="Settings">
+                              prefWidth="100.0" styleClass="keyboardButton" text="Settings"
+                              textAlignment="CENTER">
                        <StackPane.margin>
-                           <Insets right="5.0"/>
+                           <Insets right="5.0" />
                        </StackPane.margin>
                    </JFXButton>
                </children>
             </StackPane>
              <StackPane fx:id="scalesStackPane" alignment="CENTER_LEFT"
                         maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT"
-                        pickOnBounds="false" prefHeight="16.0" styleClass="primary">
+                        pickOnBounds="false" prefHeight="16.0" prefWidth="140.0"
+                        styleClass="primary">
                  <children>
                      <JFXButton fx:id="displayScalesButton" focusTraversable="false"
                                 mnemonicParsing="false" onAction="#toggleDisplayScales"
-                                prefHeight="23.0" prefWidth="150.0" styleClass="keyboardButton"
+                                prefHeight="23.0" prefWidth="140.0" styleClass="keyboardButton"
                                 text="Display Scales"/>
                  </children>
                  <HBox.margin>
-                     <Insets bottom="3.0" top="3.0"/>
+                     <Insets bottom="3.0" top="3.0" />
                  </HBox.margin>
              </StackPane>
          </children>

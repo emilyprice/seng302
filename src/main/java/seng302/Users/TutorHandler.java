@@ -1,24 +1,12 @@
 package seng302.Users;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import javafx.util.Pair;
 import seng302.Environment;
 import seng302.utility.TutorRecord;
+
+import java.util.*;
 
 /**
  * This class manages information relating to the display of tutor graphs.
@@ -30,16 +18,18 @@ public class TutorHandler {
 
 
     private static final List<String> tutorIds = new ArrayList<String>() {{
-        add("pitchTutor");
-        add("scaleTutor");
-        add("intervalTutor");
-        add("musicalTermsTutor");
-        add("chordTutor");
-        add("chordSpellingTutor");
-        add("keySignatureTutor");
-        add("diatonicChordTutor");
-        add("scaleModesTutor");
-        add("scaleSpellingTutor");
+        add("PitchComparisonTutor");
+        add("ScaleRecognitionTutor");
+        add("ScaleRecognitionTutor(Basic)");
+        add("IntervalRecognitionTutor");
+        add("MusicalTermsTutor");
+        add("ChordRecognitionTutor");
+        add("ChordRecognitionTutor(Basic)");
+        add("ChordSpellingTutor");
+        add("KeySignatureTutor");
+        add("DiatonicChordTutor");
+        add("ScaleModesTutor");
+        add("ScaleSpellingTutor");
     }};
 
     /**
@@ -74,6 +64,27 @@ public class TutorHandler {
     /**
      * This method will give the total number of correct and incorrect answers for a given tutor.
      *
+     * @return a pair containing two integers. The number of answers correct and the number of
+     * incorrect answers.
+     */
+    public Pair<Integer, Integer> getTutorTotals(ArrayList<TutorRecord> currentTutorRecords, String timePeriod) {
+        Integer correct = 0;
+        Integer incorrect = 0;
+        for (TutorRecord record : currentTutorRecords) {
+            Date date = record.getDate();
+            Date compare = dates.get(timePeriod);
+            if (date.after(compare)) {
+                Map<String, Number> stats = record.getStats();
+                correct += stats.get("questionsCorrect").intValue();
+                incorrect += stats.get("questionsIncorrect").intValue();
+            }
+        }
+        return new Pair<>(correct, incorrect);
+    }
+
+    /**
+     * This method will give the total number of correct and incorrect answers for a given tutor.
+     *
      * @param tabId The tab ID of the tutor
      * @return a pair containing two integers. The number of answers correct and the number of
      * incorrect answers.
@@ -94,6 +105,7 @@ public class TutorHandler {
         return new Pair<>(correct, incorrect);
     }
 
+
     /**
      * This method will give the total number of correct and incorrect answers for a given tutor.
      *
@@ -102,12 +114,18 @@ public class TutorHandler {
      * incorrect answers.
      */
     public Pair<Integer, Integer> getRecentTutorTotals(String tabId) throws IndexOutOfBoundsException {
+
+
         ArrayList<TutorRecord> records = getTutorData(tabId);
-        TutorRecord lastRecord = records.get(records.size() - 1);
-        Map<String, Number> stats = lastRecord.getStats();
-        Integer correct = stats.get("questionsCorrect").intValue();
-        Integer incorrect = stats.get("questionsIncorrect").intValue();
-        return new Pair<>(correct, incorrect);
+        if (records.size() != 0) {
+            TutorRecord lastRecord = records.get(records.size() - 1);
+            Map<String, Number> stats = lastRecord.getStats();
+            Integer correct = stats.get("questionsCorrect").intValue();
+            Integer incorrect = stats.get("questionsIncorrect").intValue();
+            return new Pair<>(correct, incorrect);
+        } else {
+            return new Pair<>(0, 0);
+        }
 
     }
 
@@ -119,43 +137,61 @@ public class TutorHandler {
      * @return A collection of information about past tutoring sessions
      */
     public ArrayList<TutorRecord> getTutorData(String id) {
-        String projectAddress = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().currentProjectPath;
+        while (env.getFirebase().getUserSnapshot() == null) {
+            continue;
+        }
         String filename = "";
         if (id.equals("pitchTutor")) {
-            filename = projectAddress + "/PitchComparisonTutor.json";
+            filename = "PitchComparisonTutor";
         } else if (id.equals("scaleTutor")) {
-            filename = projectAddress + "/ScaleRecognitionTutor.json";
+            filename = "ScaleRecognitionTutor";
+        } else if (id.equals("basicScaleTutor")) {
+            filename = "ScaleRecognitionTutor(Basic)";
         } else if (id.equals("intervalTutor")) {
-            filename = projectAddress + "/IntervalRecognitionTutor.json";
+            filename = "IntervalRecognitionTutor";
         } else if (id.equals("musicalTermTutor")) {
-            filename = projectAddress + "/MusicalTermsTutor.json";
+            filename = "MusicalTermsTutor";
         } else if (id.equals("chordTutor")) {
-            filename = projectAddress + "/ChordRecognitionTutor.json";
+            filename = "ChordRecognitionTutor";
+        } else if (id.equals("basicChordTutor")) {
+            filename = "ChordRecognitionTutor(Basic)";
         } else if (id.equals("chordSpellingTutor")) {
-            filename = projectAddress + "/ChordSpellingTutor.json";
+            filename = "ChordSpellingTutor";
         } else if (id.equals("keySignatureTutor")) {
-            filename = projectAddress + "/KeySignatureTutor.json";
+            filename = "KeySignatureTutor";
         } else if (id.equals("diatonicChordTutor")) {
-            filename = projectAddress + "/DiatonicChordTutor.json";
+            filename = "DiatonicChordTutor";
         } else if (id.equals("scaleModesTutor")) {
-            filename = projectAddress + "/ScaleModesTutor.json";
+            filename = "ScaleModesTutor";
         } else if (id.equals("scaleSpellingTutor")) {
-            filename = projectAddress + "/ScaleSpellingTutor.json";
+            filename = "ScaleSpellingTutor";
         }
-        Gson gson = new Gson();
+
+        DataSnapshot tutorSnap = env.getFirebase().getUserSnapshot().child("projects/" +
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName);
+        return getTutorDataFromProject(tutorSnap, filename);
+
+    }
+
+    public ArrayList<TutorRecord> getTutorDataFromProject(DataSnapshot project, String tutorId) {
         ArrayList<TutorRecord> records = new ArrayList<>();
-        try {
-            JsonReader jsonReader = new JsonReader(new FileReader(filename));
-            records = gson.fromJson(jsonReader, new TypeToken<ArrayList<TutorRecord>>() {
-            }.getType());
 
-        } catch (FileNotFoundException e) {
-            //System.err.println("File not found.");
-        } catch (JsonSyntaxException e) {
-            System.err.println("File was not of the correct type.");
-        }
+        project.child(tutorId).getChildren().forEach((key) -> {
+
+                    TutorRecord record = new TutorRecord();
+                    HashMap<String, Object> recordMap = (HashMap<String, Object>) key.getValue();
+            HashMap<String, Object> dateMap = (HashMap<String, Object>) recordMap.get("date");
+            Date theDate = new Date((Long) dateMap.get("time"));
+            record.setDate(theDate);
+            record.setStats((Map<String, Number>) recordMap.get("stats"));
+            record.setQuestions((List<Map<String, String>>) recordMap.get("questions"));
+            record.setFinished();
+            records.add(record);
+
+                }
+        );
+
         return records;
-
     }
 
     /**
@@ -186,10 +222,17 @@ public class TutorHandler {
      * @return Pair consisting of total correct and total incorrect.
      */
     public Pair<Integer, Integer> getTotalsForAllTutors(String timePeriod) {
+        String project = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName;
+        DataSnapshot projectSnap = env.getFirebase().getUserSnapshot().child("projects").child(project);
+        return getTotalsForAllTutorsInProject(projectSnap, timePeriod);
+
+    }
+
+    public Pair<Integer, Integer> getTotalsForAllTutorsInProject(DataSnapshot project, String timePeriod) {
         Integer totalCorrect = 0;
         Integer totalIncorrect = 0;
         for (String tutor : tutorIds) {
-            Pair<Integer, Integer> total = getTutorTotals(tutor, timePeriod);
+            Pair<Integer, Integer> total = getTutorTotals(getTutorDataFromProject(project, tutor), timePeriod);
             totalCorrect += total.getKey();
             totalIncorrect += total.getValue();
         }
@@ -200,42 +243,24 @@ public class TutorHandler {
     /**
      * Saves the tutor records to disc.
      */
-    public void saveTutorRecordsToFile(String filename, TutorRecord currentRecord) {
-        Gson gson = new Gson();
-        try {
-            ArrayList<TutorRecord> records;
-            try {
-                JsonReader jsonReader = new JsonReader(new FileReader(filename));
-                records = gson.fromJson(jsonReader, new TypeToken<ArrayList<TutorRecord>>() {
-                }.getType());
+    public void saveTutorRecordsToFile(String tutorName, TutorRecord currentRecord) {
+        DatabaseReference ref = env.getFirebase().getUserRef().child("projects/" +
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + tutorName);
+        currentRecord.updateDate();
+        ref.getRef().child(String.valueOf(currentRecord.getDate().getTime())).setValue(currentRecord);
+    }
 
-                TutorRecord latest = records.get(records.size() - 1);
-                if (!latest.isFinished()) {
-                    records.remove(records.size() - 1);
-                }
-            } catch (FileNotFoundException e) {
-                System.err.println("file not found exception??");
-                records = new ArrayList<>();
-            } catch (JsonSyntaxException e) {
-                System.err.println("File was not of the correct type. Overwriting.");
-                records = new ArrayList<>();
-            }
-            currentRecord.setDate();
-            records.add(currentRecord);
-
-            String json = gson.toJson(records);
-            try {
-                FileWriter writer = new FileWriter(filename, false);
-                writer.write(json);
-                writer.flush();
-                writer.close();
-            } catch (IOException ex) {
-                System.err.println("Problem writing to the selected file " + ex.getMessage());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    /**
+     * Gets the total number of questions answered correctly or incorrectly in all tutors for a provided student name and project
+     *
+     * @param userName    The name of the user to get information on
+     * @param projectName The name of the project to get tutor information about
+     * @param timePeriod  The time period to get tutor data from
+     * @return Pair consisting of total correct and incorrect
+     */
+    public Pair<Integer, Integer> getTotalsForStudent(String userName, String projectName, String timePeriod) {
+        DataSnapshot projectSnap = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + userName + "/projects/" + projectName);
+        return getTotalsForAllTutorsInProject(projectSnap, timePeriod);
 
     }
 

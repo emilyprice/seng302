@@ -1,18 +1,6 @@
 package seng302.gui;
 
 
-import org.json.simple.JSONArray;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,29 +8,29 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
 import seng302.Environment;
+import seng302.Users.Student;
 import seng302.managers.TranscriptManager;
-import seng302.utility.FileHandler;
 import seng302.utility.OutputTuple;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 
 public class RootController implements Initializable {
@@ -106,6 +94,9 @@ public class RootController implements Initializable {
     private Menu menuOpenProjects;
 
     @FXML
+    private Menu menuOpenClassroom;
+
+    @FXML
     private Menu helpMenu;
 
     @FXML
@@ -129,6 +120,18 @@ public class RootController implements Initializable {
     public void showDslRef() {
         dslRefControl.getPopover().show(paneMain);
     }
+
+    @FXML
+    private Menu viewMenu;
+
+    @FXML
+    private Menu editMenu;
+
+    @FXML
+    private Menu fileMenu;
+
+    @FXML
+    private Menu teacherMenu;
 
     private DslReferenceController dslRefControl;
 
@@ -188,15 +191,34 @@ public class RootController implements Initializable {
     public void showWindow(Boolean show) {
         if (show) {
 
-            applyTheme();
-            stage.show();
-            resizeSplitPane(1.0);
-            menuTranscript.setSelected(false);
-            toggleTranscript();
-            try {
-                showUserPage();
-            } catch (IOException e) {
-                e.printStackTrace();
+            boolean isTeacher = env.getUserHandler().getCurrentTeacher() != null;
+
+            if (isTeacher) {
+                applyTeacherTheme();
+                stage.show();
+                resizeSplitPane(1.0);
+                menuTranscript.setSelected(false);
+                toggleTranscript();
+                keyboardPaneController.hideWholeKeyboard();
+                splitPane.setDividerPosition(0, 1.0);
+                try {
+                    showTeacherPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                applyTheme();
+                stage.show();
+                resizeSplitPane(1.0);
+                menuTranscript.setSelected(false);
+                toggleTranscript();
+                keyboardPaneController.showWholeKeyboard();
+                try {
+                    showUserPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 
@@ -211,6 +233,15 @@ public class RootController implements Initializable {
         //Apply user theme
         env.getThemeHandler().setBaseNode(paneMain);
         String[] themeColours = env.getUserHandler().getCurrentUser().getThemeColours();
+        env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
+    }
+
+    /**
+     * Apply the logged in teacher's theme to the main window
+     */
+    private void applyTeacherTheme() {
+        env.getThemeHandler().setBaseNode(paneMain);
+        String[] themeColours = env.getUserHandler().getCurrentTeacher().getThemeColours();
         env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
@@ -233,7 +264,7 @@ public class RootController implements Initializable {
      * @param option close option either 'close' or 'logout'.
      */
     protected void showCloseWindow(String option) {
-        if (env.getUserHandler().getCurrentUser() != null && !env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().isSaved()) {
+        if (env.getUserHandler().getCurrentUser() != null && !((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
 
             String closeText = option.equals("close") ? "Quit" : "Logout";
 
@@ -254,7 +285,7 @@ public class RootController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == btnSaveProject) {
-                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
+                ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
                 if (option.equals("close")) {
                     System.exit(0);
                 } else if (option.equals("logout")) {
@@ -271,7 +302,7 @@ public class RootController implements Initializable {
 
 
         } else if (env.getTranscriptManager().unsavedChanges) {
-            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
+            ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             if (option.equals("close")) System.exit(0);
             else if (option.equals("logout")) logOutUser();
@@ -307,7 +338,6 @@ public class RootController implements Initializable {
     }
 
 
-
     /**
      * Toggles the visibility of the top User HBox and user image.
      *
@@ -323,6 +353,8 @@ public class RootController implements Initializable {
      * Opens the user page.
      */
     public void showUserPage() throws IOException {
+
+
         showUserBar(false);
         setHeader("Summary");
 
@@ -342,6 +374,40 @@ public class RootController implements Initializable {
         UserPageController userPageController = userPageLoader.getController();
         userPageController.setEnvironment(env);
         userPageController.load();
+
+        viewMenu.setVisible(true);
+        editMenu.setVisible(true);
+        fileMenu.setVisible(true);
+        teacherMenu.setVisible(false);
+
+
+    }
+
+    public void showTeacherPage() throws IOException {
+        showUserBar(false);
+        setHeader("Summary");
+
+        FXMLLoader teacherLoader = new FXMLLoader();
+        teacherLoader.setLocation(getClass().getResource("/Views/TeacherPage.fxml"));
+
+
+        AnchorPane teacherPage = teacherLoader.load();
+
+        centerPane.getChildren().add(teacherPage);
+
+        AnchorPane.setRightAnchor(teacherPage, 0.0);
+        AnchorPane.setLeftAnchor(teacherPage, 0.0);
+        AnchorPane.setBottomAnchor(teacherPage, 0.0);
+        AnchorPane.setTopAnchor(teacherPage, 0.0);
+
+        TeacherPageController teacherPageController = teacherLoader.getController();
+        teacherPageController.setEnvironment(env);
+        teacherPageController.load();
+
+        viewMenu.setVisible(false);
+        editMenu.setVisible(false);
+        fileMenu.setVisible(false);
+        teacherMenu.setVisible(true);
 
     }
 
@@ -377,22 +443,18 @@ public class RootController implements Initializable {
 
 
         loginStage.setTitle("Allegro");
-        loginStage.setScene(loginScene);
 
+        loginStage.setScene(loginScene);
 
         loginStage.setOnCloseRequest(event -> {
             System.exit(0);
             event.consume();
         });
 
-        loginStage.setMinWidth(600);
-        Double initialHeight = loginStage.getHeight();
-        loginStage.setMinHeight(initialHeight);
 
         loginStage.show();
         UserLoginController userLoginController = loginLoader.getController();
         userLoginController.setEnv(env);
-        userLoginController.displayRecentUsers();
 
     }
 
@@ -409,8 +471,12 @@ public class RootController implements Initializable {
      */
     public void logOutUser() {
         try {
+
             stage.close();
             showLoginWindow();
+            settingsController.closeWindow();
+            env.resetEnvironment();
+
         } catch (Exception e) {
 
         }
@@ -424,7 +490,7 @@ public class RootController implements Initializable {
      * @return a boolean - true for save, false for cancel
      */
     public Boolean saveChangesDialog() {
-        if (!env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().isSaved()) {
+        if (!((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("Unsaved project changes");
 
@@ -442,8 +508,7 @@ public class RootController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == btnSaveProject) {
-                checkProjectDirectory();
-                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
+                ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             } else if (result.get() == btnCancel) {
                 return false;
@@ -452,7 +517,7 @@ public class RootController implements Initializable {
 
         } else if (env.getTranscriptManager().unsavedChanges) {
 
-            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().saveCurrentProject();
+            ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
         }
         return true;
     }
@@ -496,7 +561,6 @@ public class RootController implements Initializable {
 
         if (file != null) {
             fileDir = file.getParentFile();
-            fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
             path = file.getAbsolutePath();
             env.getTranscriptManager().saveCommandsOnly(path);
         }
@@ -529,9 +593,6 @@ public class RootController implements Initializable {
         FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(textFilter);
 
-        checkProjectDirectory();
-        fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
-
         fileChooser.setInitialDirectory(fileDir);
         File file = fileChooser.showSaveDialog(stage);
         return file;
@@ -550,8 +611,6 @@ public class RootController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(textFilter);
-        checkProjectDirectory();
-        fileDir = Paths.get(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getCurrentProjectPath()).toFile();
 
         fileChooser.setInitialDirectory(fileDir);
 
@@ -614,22 +673,6 @@ public class RootController implements Initializable {
     }
 
 
-    public void checkProjectDirectory() {
-        Path path = Paths.get("UserData/Projects/");
-        if (!Files.isDirectory(path)) {
-            try {
-                Files.createDirectories(path);
-
-            } catch (IOException e) {
-                //Failed to create the directory.
-                e.printStackTrace();
-            }
-
-
-        }
-
-    }
-
     /**
      * Displays a dialog for the user to create a new project
      */
@@ -637,6 +680,34 @@ public class RootController implements Initializable {
     public void newProject() {
         env.resetProjectEnvironment();
         env.getUserHandler().getCurrentUser().getProjectHandler().createNewProject();
+        try {
+            showUserPage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Launches a classroom creator window, that allows the teacher to name and create a classroom.
+     */
+    @FXML
+    public void newClassroom() {
+        //launch the clasroom creator
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/ClassroomCreator.fxml"));
+
+        try {
+            AnchorPane classCreator = loader.load();
+
+            Stage classroomCreatorStage = new Stage();
+            classroomCreatorStage.setTitle("Create New Classroom");
+            classroomCreatorStage.setScene(new Scene(classCreator, 400, 200));
+            classroomCreatorStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ClassroomCreatorController classroomCreatorController = loader.getController();
+        classroomCreatorController.create(env);
     }
 
     /**
@@ -653,30 +724,50 @@ public class RootController implements Initializable {
 
         JSONArray projects = env.getUserHandler().getCurrentUser().getProjectHandler().getProjectList();
         menuOpenProjects.getItems().clear();
-        MenuItem selectItem = new MenuItem("Select Project");
-        selectItem.setOnAction(event -> {
-            if (saveChangesDialog()) selectProjectDirectory();
-        });
-        SeparatorMenuItem divider = new SeparatorMenuItem();
-        divider.setText("Recent Projects..");
-        selectItem.acceleratorProperty().setValue(KeyCombination.keyCombination("Shortcut+O"));
-        menuOpenProjects.getItems().add(selectItem);
-        menuOpenProjects.getItems().add(divider);
 
         for (int i = projects.size() - 1; i >= 0; i--) {
             final String projectName = projects.get(i).toString();
 
-            MenuItem projectItem = new MenuItem(projectName);
+            CheckMenuItem projectItem = new CheckMenuItem(projectName);
             projectItem.setOnAction(event -> {
+                projectItem.setSelected(true);
                 if (saveChangesDialog())
                     env.getUserHandler().getCurrentUser().getProjectHandler().setCurrentProject(projectName);
+                try {
+                    showUserPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
+            if (projectName.equals(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName)) {
+                projectItem.setSelected(true);
+            } else {
+                projectItem.setSelected(false);
+            }
 
             menuOpenProjects.getItems().add(projectItem); //Add to Open projects menu
-            if ((projects.size() - 1) - i >= 5) break; //Only show the 5 latest projects.
-
         }
 
+    }
+
+    /**
+     * Generates a list of menu items, where each menu item is a classroom belonging to the current teacher
+     *
+     * @param classes A list of classrooms belonging to the current teacher
+     */
+    public void updateClassroomsList(List<String> classes) {
+        menuOpenClassroom.getItems().clear();
+        for (String className : classes) {
+            MenuItem classMenuItem = new MenuItem(className);
+            classMenuItem.setOnAction(event -> {
+                env.getUserHandler().setClassRoom(classMenuItem.getText());
+                setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
+                env.getTeacherPageController().updateDisplay();
+            });
+
+            menuOpenClassroom.getItems().add(classMenuItem);
+
+        }
     }
 
 
@@ -690,56 +781,6 @@ public class RootController implements Initializable {
         alert.setContentText(errorMessage);
         alert.showAndWait();
 
-    }
-
-
-    /**
-     * Open Project browser.
-     */
-    private void selectProjectDirectory() {
-        DirectoryChooser dirChooser = new DirectoryChooser();
-
-        dirChooser.setTitle("Select a project directory");
-        Path path = Paths.get(env.getUserHandler().getCurrentUserPath().toString() + "/Projects/");
-        checkProjectDirectory();
-        dirChooser.setInitialDirectory(path.toFile());
-
-
-        File folder = dirChooser.showDialog(stage);
-
-        if (folder != null) {
-            if (folder.isDirectory() && folder.getParent().equals(env.getUserHandler().getCurrentUser().getUserName())) {
-                for (File f : folder.listFiles()) {
-
-                    if (f.getName().endsWith(".json") && f.getName().substring(0, f.getName().length() - 5).equals(folder.getName())) {
-
-                        if (!new File("userData/Projects/" + folder.getName()).isDirectory()) {
-
-                            try {
-
-                                //Copy all files from inside the projects folder.
-                                FileHandler.copyFolder(folder, Paths.get(path.toString() + "/" + folder.getName()).toFile());
-                            } catch (Exception ce) {
-                                ce.printStackTrace();
-                                errorAlert("Could not Import the project! Maybe it already exists in the Projects folder?");
-                            }
-                            //project with said name does not exist in the projects directory.. import it.
-                            env.getUserHandler().getCurrentUser().getProjectHandler().setCurrentProject(folder.getName());
-
-                        }
-
-                        env.getUserHandler().getCurrentUser().getProjectHandler().setCurrentProject(folder.getName());
-                        return;
-                    }
-                }
-                errorAlert("Not a valid Project folder - Try again!");
-                selectProjectDirectory();
-                return;
-            } else {
-
-                errorAlert("Project must be contained in the current user's Projects folder.");
-            }
-        }
     }
 
 
@@ -823,6 +864,33 @@ public class RootController implements Initializable {
 
     }
 
+    /**
+     * Launches a new window containing all user settings for a teacher.
+     */
+    @FXML
+    public void launchTeacherSettings() {
+        showUserBar(true);
+
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/TeacherSettings.fxml"));
+
+        try {
+            AnchorPane settingsPage = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Settings");
+            stage.setScene(new Scene(settingsPage, 1000, 700));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        TeacherSettingsController teacherSettingsController = loader.getController();
+        teacherSettingsController.create(env);
+
+    }
+
     @FXML
     public void toggleTranscript() {
         transcriptSplitPane.setDividerPositions(1.0);
@@ -863,6 +931,22 @@ public class RootController implements Initializable {
 
     public void allowTranscript() {
         menuTranscript.setDisable(false);
+    }
+
+    /**
+     * Adds a single classroom to the menu of available teacher classrooms
+     * @param newClassroom The name of the classroom to be added
+     */
+    public void addClassroomToMenu(String newClassroom) {
+        MenuItem classMenuItem = new MenuItem(newClassroom);
+        classMenuItem.setOnAction(clickEvent -> {
+            env.getUserHandler().setClassRoom(classMenuItem.getText());
+            env.getRootController().setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
+            env.getTeacherPageController().updateDisplay();
+        });
+
+        menuOpenClassroom.getItems().add(classMenuItem);
+
     }
 
 }

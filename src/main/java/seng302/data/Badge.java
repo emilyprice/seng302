@@ -41,6 +41,10 @@ public class Badge {
         this.expWorth = expWorth;
     }
 
+    public boolean isLocked() {
+        return currentBadgeType == 0;
+    }
+
     /**
      * Used to update a badge's progress either after a tutor session or once the badges criteria
      * has been met.

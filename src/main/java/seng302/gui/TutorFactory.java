@@ -1,19 +1,17 @@
 package seng302.gui;
 
-import java.io.IOException;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import seng302.Environment;
 
+import java.io.IOException;
+
 /**
  * Factory class for generating tutor instances.
  */
 public class TutorFactory {
-
-
 
 
     Environment env;
@@ -32,44 +30,54 @@ public class TutorFactory {
 
     /**
      * opens a tutor given a valid tutor name.
+     *
      * @param tutorName name of the tutor to open
      */
     public void openTutor(String tutorName) {
 
+        if (env.getUserHandler().getCurrentTeacher() == null) {
+            // Only launch if a student is logged in
+            env.getRootController().showUserBar(true);
+            env.getRootController().setHeader(tutorName);
+            switch (tutorName) {
+                case "Pitch Comparison Tutor":
+                    openPitchTutor();
+                    break;
+                case "Interval Recognition Tutor":
+                    openIntervalTutor();
+                    break;
+                case "Scale Recognition Tutor (Basic)":
+                    openBasicScaleTutor();
+                    break;
+                case "Scale Recognition Tutor":
+                    openScaleTutor();
+                    break;
+                case "Musical Terms Tutor":
+                    openMusicalTermTutor();
+                    break;
+                case "Chord Recognition Tutor (Basic)":
+                    openBasicChordTutor();
+                    break;
+                case "Chord Recognition Tutor":
+                    openChordTutor();
+                    break;
+                case "Chord Spelling Tutor":
+                    openSpellingTutor();
+                    break;
+                case "Key Signature Tutor":
+                    openKeySignatureTutor();
+                    break;
+                case "Diatonic Chord Tutor":
+                    openDiatonicChordTutor();
+                    break;
+                case "Scale Modes Tutor":
+                    openScaleModesTutor();
+                    break;
+                case "Scale Spelling Tutor":
+                    openScaleSpellingTutor();
+                    break;
 
-        env.getRootController().showUserBar(true);
-        env.getRootController().setHeader(tutorName);
-        switch (tutorName) {
-            case "Pitch Comparison Tutor":
-                openPitchTutor();
-                break;
-            case "Interval Recognition Tutor":
-                openIntervalTutor();
-                break;
-            case "Scale Recognition Tutor":
-                openScaleTutor();
-                break;
-            case "Musical Terms Tutor":
-                openMusicalTermTutor();
-                break;
-            case "Chord Recognition Tutor":
-                openChordTutor();
-                break;
-            case "Chord Spelling Tutor":
-                openSpellingTutor();
-                break;
-            case "Key Signature Tutor":
-                openKeySignatureTutor();
-                break;
-            case "Diatonic Chord Tutor":
-                openDiatonicChordTutor();
-                break;
-            case "Scale Modes Tutor":
-                openScaleModesTutor();
-                break;
-            case "Scale Spelling Tutor":
-                openScaleSpellingTutor();
-                break;
+            }
         }
     }
 
@@ -89,6 +97,7 @@ public class TutorFactory {
 
     /**
      * loads an fxml node.
+     *
      * @param loader FXMLloader to load.
      */
     private void loadNode(FXMLLoader loader) {
@@ -135,6 +144,7 @@ public class TutorFactory {
 
     }
 
+
     /**
      * opens the musical terms tutor when the musical term tutor menu option is pressed If there is
      * already an open tutor of the same form then it sets focus to the already open tutor
@@ -152,6 +162,20 @@ public class TutorFactory {
 
 
     /***
+     * Opens the basic scale tutor
+     */
+    private void openBasicScaleTutor() {
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/ScaleRecognitionPane.fxml"));
+        loadNode(loader);
+        ScaleRecognitionTutorController scaleRecognitionTutorController = loader.getController();
+        scaleRecognitionTutorController.create(env, false);
+
+
+    }
+
+    /***
      * Opens the scale tutor
      */
     private void openScaleTutor() {
@@ -160,8 +184,26 @@ public class TutorFactory {
         loader.setLocation(getClass().getResource("/Views/ScaleRecognitionPane.fxml"));
         loadNode(loader);
         ScaleRecognitionTutorController scaleRecognitionTutorController = loader.getController();
-        scaleRecognitionTutorController.create(env);
+        scaleRecognitionTutorController.create(env, true);
 
+
+    }
+
+    /**
+     * opens the basic chord tutor when the chord tutor menu option is pressed If there is already
+     * an open tutor of the same form then it sets focus to the already open tutor
+     */
+    @FXML
+    private void openBasicChordTutor() {
+
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/ChordRecognitionPane.fxml"));
+
+        loadNode(loader);
+
+        ChordRecognitionTutorController chordRecognitionTabController = loader.getController();
+        chordRecognitionTabController.create(env, false);
 
     }
 
@@ -179,7 +221,7 @@ public class TutorFactory {
         loadNode(loader);
 
         ChordRecognitionTutorController chordRecognitionTabController = loader.getController();
-        chordRecognitionTabController.create(env);
+        chordRecognitionTabController.create(env, true);
 
     }
 

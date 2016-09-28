@@ -1,127 +1,50 @@
 package seng302.Users;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-
+import com.google.firebase.database.DataSnapshot;
 import javafx.scene.image.Image;
 import seng302.Environment;
-import seng302.data.Term;
-import seng302.utility.FileHandler;
+
+import java.nio.file.Path;
+import java.util.HashMap;
+
 
 /**
  * Handles functionality for representing and manipulating a user's information. Also handles saving
  * and loading users.
  */
-public class User {
+public abstract class User {
 
-    private String userFullName, userPassword, themePrimary, themeSecondary;
+    String userPassword, themePrimary, themeSecondary, userFirstName, userLastName, profilePicUrl, userName;
 
-    private String userName;
 
-    private Path profilePicPath;
+    Environment env;
 
-    private ProjectHandler projectHandler;
+    HashMap properties = new HashMap();
 
-    private Environment env;
+    Path userDirectory;
 
-    private JSONObject properties;
+    DataSnapshot userSnapshot;
 
-    private Date lastSignIn;
+    private Image displayImage;
 
-    private Path userDirectory;
 
-    private String userFirstName;
-
-    private String userLastName;
-
-    /**
-     * User constructor used for generating new users.
-     *
-     * @param userName username
-     * @param password password to set for the corresponding user.
-     */
-    public User(String userName, String password, Environment env) {
-        userDirectory = Paths.get("UserData/" + userName);
-        this.userName = userName;
-        this.userPassword = password;
-        this.env = env;
-        properties = new JSONObject();
-
-        createUserFiles();
-        loadBasicProperties();
-        saveProperties();
-
-        Path filePath = Paths.get(this.userDirectory.toString() + "/profilePicture");
-        try {
-            URI defaultPath = getClass().getResource("/images/testDP.jpg").toURI();
-            FileHandler.copyFolder(new File(defaultPath), filePath.toFile());
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-
-        profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
-
-        projectHandler = new ProjectHandler(env, userName);
+    public User() {
 
     }
 
-    /**
-     * Loads basic user properties (Picture, Name, Password etc.) Used when loading a collection of
-     * users (Login screen) This should only load properties which NEED to be loaded before the user
-     * logs in.
-     *
-     * @param user user name
-     */
-    public User(Environment env, String user) {
-        userDirectory = Paths.get("UserData/" + user);
-        this.env = env;
-        this.userName = user;
-        properties = new JSONObject();
-        loadBasicProperties();
-        profilePicPath = Paths.get(userDirectory.toString() + "/profilePicture");
-
-
-    }
 
     /**
-     * loads extensive user properties (after user login) This should load all properties which
-     * aren't neccessary before the user logs in.
+     * Loads the basic properties of a user from firebase.
      */
-    public void loadFullProperties() {
+    public void loadProperties() {
         /**
-         * Current Theme
-         * Musical Terms
+         * Theme Primary/Secondary.
+         * User name
          * Full name
-         * Project Handler
-         * Theme
+         * Profile picture
          */
 
-        //Load musical terms property
-        Gson gson = new Gson();
-        Type termsType = new TypeToken<ArrayList<Term>>() {
-        }.getType();
-        ArrayList<Term> terms = gson.fromJson((String) properties.get("musicalTerms"), termsType);
-
-        if (terms != null) {
-            env.getMttDataManager().setTerms(terms);
-        }
+        properties = (HashMap<String, String>) userSnapshot.child("properties").getValue();
 
         try {
             userFirstName = (properties.get("firstName")).toString();
@@ -138,6 +61,7 @@ public class User {
         try {
             //Theme
             themePrimary = (properties.get("themePrimary")).toString();
+
         } catch (NullPointerException e) {
             themePrimary = "#1E88E5";
         }
@@ -149,169 +73,46 @@ public class User {
             themeSecondary = "white";
         }
 
-
-        projectHandler = new ProjectHandler(env, userName);
-
-    }
-
-    /**
-     * This needs to be called to unlock the project folders to allow them to be deleted.
-     */
-    public void delete() {
-
-        this.projectHandler = null;
-
-    }
-
-
-    public ProjectHandler getProjectHandler() {
-
-        return projectHandler;
-    }
-
-    /**
-     * Loads basic properties which need be read by the login screen.
-     */
-    private void loadBasicProperties() {
-        /**
-         * Basic properties:
-         *  PhotoID - Stored as default 'userPicture.png'
-         *  Last sign in time
-         *  username
-         *  Password
-         *
-         */
-        Gson gson = new Gson();
-        Path userDirectory = Paths.get("UserData/" + userName); //Default user path for now, before user compatibility is set up.
-        JSONParser parser = new JSONParser(); //parser for reading project
         try {
-            properties = (JSONObject) parser.parse(new FileReader(userDirectory + "/user_properties.json"));
-        } catch (Exception e) {
-
-        }
-
-        try {
-            Type dateType = new TypeToken<Date>() {
-            }.getType();
-            lastSignIn = gson.fromJson((String) properties.get("signInTime"), dateType);
-
-            if (lastSignIn == null) lastSignIn = new Date();
-        } catch (Exception e) {
-            lastSignIn = new Date();
-
-        }
-
-        //Password
-        userPassword = (properties.get("password")).toString();
-
-
-        try {
-            //Theme
-            themePrimary = (properties.get("themeColor")).toString();
+            //profile pic
+            profilePicUrl = (properties.get("profilePicUrl")).toString();
+            displayImage = new Image(this.profilePicUrl, 100, 100, true, true);
         } catch (NullPointerException e) {
-            themePrimary = "black";
+            profilePicUrl = "http://res.cloudinary.com/allegro123/image/upload/v1474434800/testDP_qmwncc.jpg";
+            displayImage = new Image(this.profilePicUrl, 100, 100, true, true);
         }
 
+
+        env.getThemeHandler().setTheme(themePrimary, themeSecondary);
 
     }
 
 
     /**
-     * Updates project property JSON files to be written to disc.
+     * Updates the properties to be saved to firebase.
      */
     public void updateProperties() {
-        Gson gson = new Gson();
+
         properties.put("userName", userName);
-        properties.put("fullName", userFullName);
         properties.put("password", this.userPassword);
         properties.put("themePrimary", env.getThemeHandler().getPrimaryColour());
         properties.put("themeSecondary", env.getThemeHandler().getSecondaryColour());
         properties.put("firstName", this.userFirstName);
         properties.put("lastName", this.userLastName);
-        String musicalTermsJSON = gson.toJson(env.getMttDataManager().getTerms());
-        properties.put("musicalTerms", musicalTermsJSON);
-        String lastSignInJSON = gson.toJson(lastSignIn);
-        properties.put("signInTime", lastSignInJSON);
-
-
+        properties.put("profilePicUrl", profilePicUrl);
     }
 
     /**
      * Writes JSON properties to disc
      */
     public void saveProperties() {
-        try {
-            updateProperties();
 
-            FileWriter file = new FileWriter(userDirectory + "/user_properties.json");
-            file.write(properties.toJSONString());
-            file.flush();
-            file.close();
+        updateProperties();
 
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
+        env.getFirebase().getUserRef().child("properties").updateChildren(properties);
 
     }
 
-
-    /**
-     * Creates user directory files.
-     */
-    private void createUserFiles() {
-        //Add all settings to such as tempo speed to the project here.
-
-        try {
-
-            if (!Files.isDirectory(userDirectory)) {
-                try {
-
-                    Files.createDirectories(userDirectory);
-
-                    saveProperties();
-
-
-                } catch (IOException e) {
-                    //Failed to create the directory.
-                    e.printStackTrace();
-                }
-
-            } else {
-                env.getRootController().errorAlert("The user " + userName + " already exists.");
-                //createNewProject();
-            }
-
-        } catch (InvalidPathException invPath) {
-            //invalid path (Poor project naming)
-            env.getRootController().errorAlert("Invalid file name - try again.");
-
-        }
-
-
-    }
-
-
-    /**
-     * Checking functionality specifically for musical saved musical terms.
-     */
-    public void checkMusicTerms() {
-        if (properties.containsKey("musicalTerms")) {
-            Type termsType = new TypeToken<ArrayList<Term>>() {
-            }.getType();
-            if (!properties.get("musicalTerms").equals(new Gson().fromJson((String) properties.get("musicalTerms"), termsType))) {
-                saveProperties();
-            }
-        } else {
-            if (env.getRootController() != null) {
-                saveProperties();
-            }
-
-        }
-
-
-    }
 
     /**
      * Returns the users's persisted theme colours. Used when setting the ThemeHandler colours to
@@ -331,12 +132,13 @@ public class User {
         return userName;
     }
 
-    public void setUserPicture(Path imagePath) {
-        this.profilePicPath = imagePath;
+    public void setUserPicture(String imageUrl) {
+        this.profilePicUrl = imageUrl;
+        displayImage = new Image(this.profilePicUrl, 100, 100, true, true);
     }
 
     public Image getUserPicture() {
-        return new Image(profilePicPath.toUri().toString());
+        return displayImage;
     }
 
     public void setUserFirstName(String name) {
@@ -355,12 +157,5 @@ public class User {
         return userLastName;
     }
 
-    public int getUserExperience() {
-        return getProjectHandler().getCurrentProject().getExperience();
-    }
-
-    public int getUserLevel() {
-        return getProjectHandler().getCurrentProject().getLevel();
-    }
 
 }

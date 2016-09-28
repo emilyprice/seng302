@@ -1,11 +1,11 @@
 package seng302.Users;
 
-import org.json.simple.JSONArray;
+import com.google.firebase.database.DataSnapshot;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import seng302.Environment;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,93 +16,71 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import seng302.Environment;
-import seng302.utility.FileHandler;
-
 /**
- * Created by jmw280 on 22/07/16.
+ * Handles Users.
  */
 public class UserHandler {
 
 
-
-    private User currentUser;
+    private Student currentUser;
+    private Teacher currentTeacher;
 
     Environment env;
-    JSONArray userList;
+
+    ArrayList<String> userList = new ArrayList<>();
     JSONParser parser = new JSONParser(); //parser for reading project
-    JSONObject UsersInfo = new JSONObject();
-    JSONArray recentUsers = new JSONArray();
 
-    final Path userDirectory = Paths.get("UserData"); //Default user path for now, before user compatibility is set up.
+    JSONObject localData = new JSONObject();
+    HashMap<String, Object> recentClassrooms = new HashMap<>();
+    ArrayList<String> recentUsers = new ArrayList<>();
+
+    final Path userDirectory = Paths.get("UserData/classrooms/group5/users/"); //Default user path for now, before user compatibility is set up.
 
 
-    public UserHandler(Environment env){
+    private String classroom;
+
+    public UserHandler(Environment env) {
         this.env = env;
 
         populateUsers();
 
     }
 
-    public JSONArray getUserNames(){
+    public ArrayList<String> getUserNames() {
         return userList;
     }
 
-    /**
-     * Returns a Collection of User Objects, which containing basic information about users.
-     * To be used before logging into a user.
-     *
-     * @return
-     */
-    public HashMap<String, User> getUsers(){
-        ArrayList<String> names = (ArrayList<String>) userList;
-        HashMap<String, User> users = new HashMap<>();
-
-        for(String un : names){
-            users.put(un, new User(env, un));
-        }
-        return users;
+    public ArrayList<String> getRecentUserNames() {
+        return recentUsers;
     }
 
-
-    /**
-     * Returns a collection of recent users to be displayed on the login screen.
-     * @return
-     */
-    public ArrayList<User> getRecentUsers(){
-        ArrayList<User> recentUsersTemp = new ArrayList<User>();
-
-
-        for (Object user: recentUsers) {
-            User tempUser = new User(env, user.toString());
-            recentUsersTemp.add(tempUser);
-        }
-
-        return  recentUsersTemp;
-
-
-    }
-
-    /**
-     * Populates the list of users from the users json file.
-     *
-     */
-    private void populateUsers(){
+    public void loadRecentUsers() {
+        Path userDirectory = Paths.get("UserData");
         try {
-            UsersInfo = (JSONObject) parser.parse(new FileReader(userDirectory + "/user_list.json"));
-            this.userList = (JSONArray) UsersInfo.get("users");
+            localData = (JSONObject) parser.parse(new FileReader(userDirectory + "/local_data.json"));
+            recentUsers = new ArrayList<>();
+            try {
+                recentClassrooms = (HashMap<String, Object>) localData.get("recentUsers");
 
-            this.recentUsers = (JSONArray) UsersInfo.get("recentUsers");
+
+                if (recentClassrooms.containsKey(this.classroom)) {
+                    recentUsers = (ArrayList<String>) recentClassrooms.get(this.classroom);
+
+                } else {
+                    //Classroom doesn't exist inside the classrooms hashmap
+
+                    recentUsers = new ArrayList<>();
+                    recentClassrooms.put(classroom, recentUsers);
+                }
+            } catch (NullPointerException e) {
+                //Classroom hashmap doesn't exist inside localData
+                recentClassrooms = new HashMap<>();
+
+            }
 
         } catch (FileNotFoundException e) {
             try {
-                System.err.println("users.json Does not exist! - Creating new one");
-                userList = new JSONArray();
-
-
-                UsersInfo.put("users", userList);
-                UsersInfo.put("recentUsers", recentUsers);
-
+                System.err.println("local_data.json Does not exist! - Creating new one");
                 if (!Files.isDirectory(userDirectory)) {
                     //Create Projects path doesn't exist.
                     try {
@@ -115,20 +93,38 @@ public class UserHandler {
                     }
                 }
 
-                FileWriter file = new FileWriter(userDirectory + "/user_list.json");
-                file.write(UsersInfo.toJSONString());
+
+                recentClassrooms = new HashMap<>();
+                recentClassrooms.put(classroom, recentUsers);
+                localData.put("recentUsers", recentClassrooms);
+
+
+                FileWriter file = new FileWriter(userDirectory + "/local_data.json");
+                file.write(localData.toJSONString());
                 file.flush();
                 file.close();
 
             } catch (IOException e2) {
-                System.err.println("Failed to create users.json file.");
-
+                System.err.println("Failed to create local_data.json file.");
+                e2.printStackTrace();
 
             }
-        }catch (IOException e) {
-                //e.printStackTrace();
+        } catch (IOException e) {
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Populates the list of users from the users json file.
+     */
+    public void populateUsers() {
+
+        userList.clear();
+        for (DataSnapshot user : env.getFirebase().getClassroomsSnapshot().child(classroom + "/users/").getChildren()) {
+
+            userList.add(user.getKey());
+
         }
 
     }
@@ -136,65 +132,60 @@ public class UserHandler {
 
     /**
      * Checks if the given login credentials are valid.
-     * @param userName
-     * @param password
+     *
      * @return true/false depending on login result.
      */
-    public boolean userPassExists(String userName, String password){
-        if(userList.contains(userName)){
-            User tempUser = new User(env,userName);
-            if (password.equals(tempUser.getUserPassword())){
+    public boolean userPassExists(String userName, String password) {
+
+        if (env.getFirebase().getClassroomsSnapshot().child(classroom + "/users/" + userName).exists()) {
+
+            String fbPass = (String) env.getFirebase().getUserSnapshot().child("properties/password").getValue();
+            if (password.equals(fbPass)) {
+
                 return true;
             }
         }
+
         return false;
     }
 
 
     /**
      * Creates a new user for the given username/password.
-     * @param user
-     * @param password
      */
-    public void createUser(String user, String password){
-        this.currentUser = new User(user, password, env);
-        updateUserList(user);
+    public void createUser(String user, String password) {
+        this.currentUser = new Student(user, password, env);
+        updateRecentUsers(user);
 
     }
 
-    public void logOut() {
-
+    public void createTeacher(String user, String password) {
+        this.currentTeacher = new Teacher(user, password, env);
     }
 
 
-    /**
-     * Updates the json list of user names, used to fill the quick load list.
-     *
-     */
-    public void updateUserList(String username) {
-        if (!userList.contains(username)) {
-            userList.add(username);
-        }
-        if(!recentUsers.contains(username)){
-            if(recentUsers.size() == 4){
-                recentUsers.remove(0);
+    public void updateRecentUsers(String username) {
+        if (!recentUsers.contains(username)) {
+            if (recentUsers.size() >= 4) {
+                recentUsers.remove(recentUsers.size() - 1);
             }
-            recentUsers.add(username);
+            recentUsers.add(0, username);
         }
-        saveUserList();
 
-
+        saveLocalData();
     }
+
 
     /**
      * Writes the currently saved user settings to disc.
      */
-    private void saveUserList() {
+    private void saveLocalData() {
         try { //Save list of projects.
-            UsersInfo.put("users", userList);
-            UsersInfo.put("recentUsers", recentUsers);
-            FileWriter projectsJson = new FileWriter(userDirectory + "/user_list.json");
-            projectsJson.write(UsersInfo.toJSONString());
+            recentClassrooms.put(classroom, recentUsers);
+
+            localData.put("recentUsers", recentClassrooms); // -> RecentUsers -> Classroom -> User
+            FileWriter projectsJson = new FileWriter("UserData/local_data.json");
+            projectsJson.write(localData.toJSONString());
             projectsJson.flush();
             projectsJson.close();
 
@@ -205,64 +196,62 @@ public class UserHandler {
     }
 
 
-
-    public User getCurrentUser(){
+    public Student getCurrentUser() {
 
         return currentUser;
     }
 
-    public Path getCurrentUserPath(){
-        return Paths.get("UserData/"+getCurrentUser().getUserName());
+    public Teacher getCurrentTeacher() {
+        return currentTeacher;
+    }
+
+    public Path getCurrentUserPath() {
+        return Paths.get("UserData/classrooms/group5/users/" + getCurrentUser().getUserName());
     }
 
 
     /**
      * Sets the current user and loads user related properties.
-     * @param userName
      */
-    public void setCurrentUser(String userName){
-        this.currentUser = new User(env, userName);
-        currentUser.loadFullProperties();
-        updateUserList(userName);
+    public void setCurrentUser(String userName, String classroom, String password) {
+        this.classroom = classroom;
+        this.currentUser = new Student(userName, password, env);
+        updateRecentUsers(userName);
+    }
 
+    public void setCurrentTeacher(String userName, String classroom, String password) {
+        this.classroom = classroom;
+        this.currentTeacher = new Teacher(userName, password, env);
+        updateRecentUsers(userName);
+
+    }
+
+    public void removeCurrentTeacher() {
+        this.currentTeacher = null;
     }
 
 
     /**
      * Full deletes the specified user incl. project files.
-     * @param username
      */
-    public void deleteUser(String username) {
+    public void deleteUser(String classroom, String username) {
 
-        //Step 1.For some reason this needs to be called? (all it does is delete the project handler
-        this.getCurrentUser().delete();
-
-        //Step 2. Delete from list of users/recent users.
-        this.userList.remove(username);
         this.recentUsers.remove(username);
-        saveUserList();
+        saveLocalData();
 
-        //Step 3. Close the main window, which helps remove any file locks and request garbage collection.
         env.getRootController().getStage().close();
-        System.gc();
-
-        //Step 4. Delete all user folders and files.
-        File userDir = Paths.get("UserData/" + username).toFile();
-
-        if (userDir.isDirectory()) {
-            Boolean res = FileHandler.deleteDirectory(userDir);
-            if (!res) env.getRootController().errorAlert("Failed to fully remove the deleted user directory.");
-        } else {
-            System.err.println("Could not delete the user directory");
-        }
-
-
-        //Step 5. Open the User login window.
 
         this.env.getRootController().logOutUser();
+        env.getFirebase().getFirebase().child("classrooms/" + classroom + "/users/" + username).removeValue();
 
+    }
 
+    public String getClassRoom() {
+        return classroom;
+    }
 
+    public void setClassRoom(String classRoom) {
+        this.classroom = classRoom;
     }
 
 }
