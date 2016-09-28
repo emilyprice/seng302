@@ -102,7 +102,6 @@ public class MicrophoneInputTutorController extends TutorController {
                 int pitchRange = upperPitchBound - lowerPitchBound;
                 String midiOne = String.valueOf(lowerPitchBound + rand.nextInt(pitchRange + 1));
 
-//                Pair<String, String> midis = new Pair<>(midiOne, midiTwo);
                 HBox rowPane = generateQuestionPane(midiOne);
                 TitledPane qPane = new TitledPane((i + 1) + ". Can you sing or play the note displayed?", rowPane);
                 qPane.setPadding(new Insets(2, 2, 2, 2));
@@ -216,7 +215,6 @@ public class MicrophoneInputTutorController extends TutorController {
 
         microphoneInput = env.getMicrophoneInput();
         recordButton.setOnAction(event -> {
-            // TODO microphone input
             if (recordButton.getText().equals("Record")) {
                 env.getMicrophoneInput().recordSingleNoteTutorInput();
                 recordButton.setText("Stop");
@@ -224,17 +222,12 @@ public class MicrophoneInputTutorController extends TutorController {
                 try {
                     String recordedNote = env.getMicrophoneInput().stopRecording().get(0);
                     answerLabel.setText(recordedNote);
-                    int responseValue = questionResponse(rowPane, noteMidi, recordedNote);
+                    questionResponse(rowPane, noteMidi, recordedNote);
                     recordButton.setDisable(true);
                 } catch (Exception e) {
                     recordButton.setText("Record");
                     answerLabel.setText("Note not recognised, try again.");
                 }
-//                correctAnswer = Note.lookup(recordedNote);
-
-//                if (responseValue == 0) {
-//                    correctAnswer.setVisible(true);
-//                }
             }
         });
 
@@ -255,7 +248,6 @@ public class MicrophoneInputTutorController extends TutorController {
 
         rowPane.getChildren().add(noteLabel);
         rowPane.getChildren().add(recordButton);
-//        rowPane.getChildren().add(stopButton);
         rowPane.getChildren().add(answerLabel);
         rowPane.getChildren().add(skip);
 
@@ -264,23 +256,6 @@ public class MicrophoneInputTutorController extends TutorController {
         return rowPane;
     }
 
-
-
-    /**
-     * Note comparison
-     *
-//     * @param isHigher whether the user thinks the second note is higher or lower.
-     * @param note1    the first note being compared.
-     * @param note2    the second note being compared.
-     * @return boolean if the user was correct or incorrect.
-     */
-    private boolean noteComparison(boolean isHigher, Note note1, Note note2) {
-        if (isHigher) {
-            return note1.getMidi() < note2.getMidi();
-        } else {
-            return note1.getMidi() > note2.getMidi();
-        }
-    }
 
     public void resetInputs() {
         rangeSlider.setLowValue(60);
