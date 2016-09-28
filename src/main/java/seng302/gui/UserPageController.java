@@ -196,7 +196,7 @@ public class UserPageController {
         buttonBox.setPadding(new Insets(10));
 
         yes.setOnAction(e -> {
-            env.getRootController().logOutUser();
+            locp();
         });
 
         no.setOnAction(e -> {
@@ -218,6 +218,10 @@ public class UserPageController {
 
 
 
+    }
+
+    private void locp() {
+        env.getRootController().logOutUser();
     }
 
     /**
