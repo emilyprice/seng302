@@ -143,7 +143,13 @@ public class UserLoginController {
                 Image img = new Image(dpUrl, 100, 100, true, true);
                 recentUsersHbox.getChildren().add(generateRecentUser(user, img));
             } catch (NullPointerException e) {
-                System.err.println("The user " + user + " has no profile picture. They may have been deleted from firebase.");
+                try {
+                    String dpUrl = env.getFirebase().getTeacherSnapshot().child(user + "/properties/profilePicUrl").getValue().toString();
+                    Image img = new Image(dpUrl, 100, 100, true, true);
+                    recentUsersHbox.getChildren().add(generateRecentUser(user, img));
+                } catch (NullPointerException e2) {
+                    System.err.println("The user " + user + " has no profile picture. They may have been deleted from firebase.");
+                }
             }
 
 

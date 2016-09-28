@@ -221,6 +221,7 @@ public class UserHandler {
     public void setCurrentTeacher(String userName, String classroom, String password) {
         this.classroom = classroom;
         this.currentTeacher = new Teacher(userName, password, env);
+        updateRecentUsers(userName);
 
     }
 
