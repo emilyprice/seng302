@@ -526,7 +526,7 @@ public class UserSummaryController {
     }
 
     public void setupFirebaseListener(String student, String project) {
-        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + student + "/projects/" + project + "/feedback").addChildEventListener(new ChildEventListener() {
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 System.out.println(dataSnapshot);
