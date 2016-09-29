@@ -444,6 +444,7 @@ public class UserSummaryController {
         Label description = new Label(b.description);
         description.setWrapText(true);
         description.setMaxHeight(50);
+        description.setMinHeight(45);
         description.setTextAlignment(TextAlignment.CENTER);
         ProgressBar progressBar = new ProgressBar();
 
