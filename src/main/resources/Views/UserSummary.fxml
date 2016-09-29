@@ -203,7 +203,8 @@
                                 <Insets/>
                             </HBox.margin>
                         </JFXTextField>
-                        <JFXButton onAction="#submitFeedback" prefWidth="100.0" text="Submit"/>
+                        <JFXButton fx:id="submitButton" onAction="#submitFeedback" prefWidth="100.0" text="Submit"
+                                   styleClass="primary"/>
                     </children>
                 </HBox>
             </children>

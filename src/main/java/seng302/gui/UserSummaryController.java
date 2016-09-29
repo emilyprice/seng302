@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.Interpolator;
@@ -78,6 +79,9 @@ public class UserSummaryController {
 
     @FXML
     private JFXTextField feedbackInput;
+
+    @FXML
+    private JFXButton submitButton;
 
     private Environment env;
 
@@ -517,6 +521,8 @@ public class UserSummaryController {
     public void displayFeedbackInput(boolean isDisplayed) {
         feedbackInput.setVisible(isDisplayed);
         feedbackInput.setManaged(isDisplayed);
+        submitButton.setVisible(isDisplayed);
+        submitButton.setManaged(isDisplayed);
     }
 
     @FXML
@@ -529,7 +535,7 @@ public class UserSummaryController {
         env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.out.println(dataSnapshot);
+                updateFeedbackView(dataSnapshot);
             }
 
             @Override
@@ -557,7 +563,8 @@ public class UserSummaryController {
         this.secretProject = project;
     }
 
-    private void updateFeedbackView(String student, String project) {
+    private void updateFeedbackView(DataSnapshot newMessage) {
+        feedbackView.appendText("\n" + newMessage.getValue());
 
 
     }
