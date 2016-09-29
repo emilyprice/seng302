@@ -37,6 +37,7 @@ import seng302.utility.ImageCache;
 import seng302.utility.LevelCalculator;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -564,7 +565,10 @@ public class UserSummaryController {
     }
 
     private void updateFeedbackView(DataSnapshot newMessage) {
-        feedbackView.appendText("\n" + newMessage.getValue());
+        Date timestamp = new Date(Long.valueOf(newMessage.getKey()));
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+
+        feedbackView.appendText(DATE_FORMAT.format(timestamp) + "\n" + newMessage.getValue() + "\n\n");
 
 
     }
