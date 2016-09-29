@@ -43,6 +43,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import seng302.Environment;
@@ -441,6 +442,9 @@ public class UserSummaryController {
         Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
         Label description = new Label(b.description);
+        description.setWrapText(true);
+        description.setMaxHeight(50);
+        description.setTextAlignment(TextAlignment.CENTER);
         ProgressBar progressBar = new ProgressBar();
 
         try {
@@ -522,6 +526,10 @@ public class UserSummaryController {
         badgeName.setFont(javafx.scene.text.Font.font(16));
         Label tutorName = getTutorName(b.tutorName);
         Label description = new Label(b.description);
+        description.setWrapText(true);
+        description.setMaxHeight(90);
+        description.setMinHeight(45);
+        description.setTextAlignment(TextAlignment.CENTER);
         Label progressDesc = new Label();
         ProgressBar progressBar = new ProgressBar();
 
