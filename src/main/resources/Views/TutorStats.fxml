@@ -27,14 +27,68 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.layout.GridPane?>
 
-<VBox fx:id="stats" alignment="TOP_CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.TutorStatsController">
-    <children>
-        <BorderPane fx:id="tutorHeader" prefHeight="33.0" prefWidth="600.0">
+<GridPane alignment="TOP_CENTER" hgap="20.0" minWidth="900.0" prefWidth="900.0" vgap="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.TutorStatsController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+        <LineChart fx:id="lineChart" horizontalZeroLineVisible="false" layoutX="9.0" layoutY="9.0" legendVisible="false" maxHeight="-Infinity" maxWidth="900.0" prefHeight="228.0" prefWidth="900.0" style="-fx-background-color: white;" title="Past Results" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+            <xAxis>
+                <CategoryAxis endMargin="10.0" side="BOTTOM" startMargin="10.0" tickLabelGap="1.0" tickLabelsVisible="false" tickMarkVisible="false" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis autoRanging="false" lowerBound="-20.0" minorTickVisible="false" prefHeight="300.0" side="LEFT" tickLabelGap="2.0" tickMarkVisible="false" tickUnit="20.0" upperBound="120.0" />
+            </yAxis>
+            <padding>
+                <Insets bottom="20.0" top="20.0" />
+            </padding>
+         <effect>
+            <DropShadow height="5.0" radius="2.0" width="5.0" />
+         </effect>
+        </LineChart>
+      <VBox maxWidth="900.0" prefWidth="900.0" style="-fx-background-color: white;" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+         <children>
+            <StackPane VBox.vgrow="NEVER">
+               <children>
+                    <Label fx:id="badgesLabel" layoutX="250.0" prefHeight="21.0" prefWidth="138.0" text="Achievements" textAlignment="CENTER" StackPane.alignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </StackPane>
+              <GridPane fx:id="badgeGrid" alignment="CENTER" hgap="10" layoutY="25.0" vgap="20">
+                  <padding>
+                      <Insets bottom="5" left="20" right="20" top="5" />
+                  </padding>
+              </GridPane>
+         </children>
+         <effect>
+            <DropShadow height="5.0" radius="2.0" width="5.0" />
+         </effect>
+         <padding>
+            <Insets bottom="20.0" top="20.0" />
+         </padding>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </VBox>
+        <BorderPane fx:id="tutorHeader" maxWidth="900.0" prefHeight="33.0" prefWidth="900.0" style="-fx-background-color: white;" GridPane.columnSpan="2147483647">
             <center>
                 <Label fx:id="tutorName" BorderPane.alignment="CENTER">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
+               <BorderPane.margin>
+                  <Insets bottom="20.0" top="20.0" />
+               </BorderPane.margin>
                 </Label>
             </center>
             <right>
@@ -51,122 +105,150 @@
                     </BorderPane.margin>
                 </Pane>
             </left>
-            <VBox.margin>
-                <Insets top="20.0" />
-            </VBox.margin>
+         <effect>
+            <DropShadow height="5.0" radius="2.0" width="5.0" />
+         </effect>
         </BorderPane>
-        <Label fx:id="latestAttempt" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="200.0" text="Latest Attempt">
-            <font>
-                <Font size="17.0" />
-            </font>
-        </Label>
-        <StackPane fx:id="rectangleStack" alignment="CENTER_LEFT" maxHeight="40.0" maxWidth="500.0" prefHeight="150.0" prefWidth="500.0">
-            <children>
-                <HBox fx:id="rectangleHBox" alignment="CENTER" maxHeight="70.0" prefHeight="70.0" prefWidth="200.0">
-                    <children>
-                        <Rectangle fx:id="correct" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
-                        <Rectangle fx:id="incorrect" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
-                    </children>
-                </HBox>
-                <Label fx:id="recentCorrectLabel" text="0 Correct">
-                    <padding>
-                        <Insets left="10.0" />
-                    </padding>
-                </Label>
-                <Label fx:id="recentIncorrectLabel" layoutX="10.0" layoutY="22.0" text="0 Incorrect" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
-                    <padding>
-                        <Insets right="10.0" />
-                    </padding>
-                </Label>
-            </children>
-            <VBox.margin>
-                <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
-            </VBox.margin>
-        </StackPane>
-        <Label fx:id="overallStats" alignment="CENTER" contentDisplay="CENTER" text="Overall Stats" textAlignment="CENTER">
-            <font>
-                <Font size="17.0" />
-            </font>
-            <padding>
-                <Insets top="20.0" />
-            </padding>
-            <VBox.margin>
-                <Insets />
-            </VBox.margin>
-        </Label>
-        <StackPane fx:id="overallRectangleStack" alignment="CENTER_LEFT" maxHeight="40.0" maxWidth="500.0" prefHeight="150.0" prefWidth="500.0">
-            <children>
-                <HBox fx:id="OverallRectangleHBox" alignment="CENTER" maxHeight="70.0" prefHeight="70.0" prefWidth="200.0">
-                    <children>
-                        <Rectangle fx:id="overallCorrect" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
-                        <Rectangle fx:id="overallIncorrect" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
-                    </children>
-                </HBox>
-                <Label fx:id="overallCorrectLabel" text="0 Correct">
-                    <padding>
-                        <Insets left="10.0" />
-                    </padding>
-                </Label>
-                <Label fx:id="overallIncorrectLabel" layoutX="10.0" layoutY="22.0" text="0 Incorrect" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
-                    <padding>
-                        <Insets right="10.0" />
-                    </padding>
-                </Label>
-                <Line fx:id="classAverage" endX="50.0" rotate="90.0" strokeWidth="3.0">
-                    <StackPane.margin>
-                        <Insets left="220.0" />
-                    </StackPane.margin>
-                    <effect>
-                        <DropShadow blurType="GAUSSIAN" height="72.61" radius="22.965" width="21.25" />
-                    </effect>
-                </Line>
-            </children>
-            <VBox.margin>
-                <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
-            </VBox.margin>
-        </StackPane>
-        <HBox maxHeight="40.0" maxWidth="500.0" prefHeight="20.0" prefWidth="500.0">
-            <children>
-                <Label fx:id="classAverageLabel" alignment="TOP_LEFT" text="Class Average: ">
-                    <font>
-                        <Font size="9.0" />
-                    </font>
-                    <HBox.margin>
-                        <Insets />
-                    </HBox.margin>
-                </Label>
-                <Label fx:id="classAverageNumber" text="0.5">
-                    <font>
-                        <Font size="9.0" />
-                    </font>
-                    <HBox.margin>
-                        <Insets />
-                    </HBox.margin>
-                </Label>
-            </children>
-            <VBox.margin>
-                <Insets left="10.0" right="10.0" />
-            </VBox.margin>
-        </HBox>
-        <LineChart fx:id="lineChart" horizontalZeroLineVisible="false" legendVisible="false" minHeight="200.0" prefHeight="228.0" prefWidth="379.0" title="Past Results">
-            <xAxis>
-                <CategoryAxis endMargin="10.0" side="BOTTOM" startMargin="10.0" tickLabelGap="1.0" tickLabelsVisible="false" tickMarkVisible="false" />
-            </xAxis>
-            <yAxis>
-                <NumberAxis autoRanging="false" lowerBound="-20.0" minorTickVisible="false" prefHeight="300.0" side="LEFT" tickLabelGap="2.0" tickMarkVisible="false" tickUnit="20.0" upperBound="120.0" />
-            </yAxis>
-            <padding>
-                <Insets top="20.0" />
-            </padding>
-        </LineChart>
-        <Label fx:id="badgesLabel" prefHeight="15.0" prefWidth="101.0" text="Achievements" textAlignment="CENTER" />
-        <GridPane fx:id="badgeGrid" alignment="CENTER" hgap="10" vgap="20">
-            <padding>
-                <Insets bottom="5" left="20" right="20" top="5" />
-            </padding>
-        </GridPane>
-    </children>
-    <padding>
-        <Insets top="20.0" />
-    </padding>
-</VBox>
+      <VBox alignment="TOP_CENTER" maxHeight="200.0" maxWidth="900.0" prefHeight="200.0" prefWidth="900.0" spacing="10.0" style="-fx-background-color: white;" GridPane.rowIndex="1">
+         <children>
+            <StackPane>
+               <children>
+                    <Label fx:id="latestAttempt" alignment="CENTER" contentDisplay="CENTER" layoutX="150.0" prefHeight="20.0" prefWidth="200.0" text="Latest Attempt">
+                        <font>
+                            <Font size="17.0" />
+                        </font>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                    </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </StackPane>
+            <StackPane>
+               <children>
+                    <StackPane fx:id="rectangleStack" alignment="CENTER_LEFT" layoutY="50.0" maxHeight="40.0" maxWidth="500.0" prefHeight="150.0" prefWidth="300.0">
+                        <children>
+                            <HBox fx:id="rectangleHBox" alignment="CENTER" maxHeight="70.0" prefHeight="70.0" prefWidth="200.0">
+                                <children>
+                                    <Rectangle fx:id="correct" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
+                                    <Rectangle fx:id="incorrect" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
+                                </children>
+                            </HBox>
+                            <Label fx:id="recentCorrectLabel" text="0 Correct">
+                                <padding>
+                                    <Insets left="10.0" />
+                                </padding>
+                            </Label>
+                            <Label fx:id="recentIncorrectLabel" layoutX="10.0" layoutY="22.0" text="0 Incorrect" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
+                                <padding>
+                                    <Insets right="10.0" />
+                                </padding>
+                            </Label>
+                        </children>
+                        <VBox.margin>
+                            <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+                        </VBox.margin>
+                    </StackPane>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" top="20.0" />
+               </padding>
+            </StackPane>
+         </children>
+         <effect>
+            <DropShadow height="5.0" radius="2.0" width="5.0" />
+         </effect>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </VBox>
+      <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="900.0" prefHeight="200.0" prefWidth="900.0" spacing="10.0" style="-fx-background-color: white;" GridPane.rowIndex="2">
+         <children>
+            <StackPane>
+               <children>
+                    <Label fx:id="overallStats" alignment="CENTER" contentDisplay="CENTER" layoutX="195.0" text="Overall Stats" textAlignment="CENTER">
+                        <font>
+                            <Font size="17.0" />
+                        </font>
+                        <VBox.margin>
+                            <Insets />
+                        </VBox.margin>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                    </Label>
+               </children>
+            </StackPane>
+            <StackPane>
+               <children>
+                    <StackPane fx:id="overallRectangleStack" alignment="CENTER_LEFT" layoutY="70.0" maxHeight="40.0" maxWidth="500.0" prefHeight="150.0" prefWidth="500.0">
+                        <children>
+                            <HBox fx:id="OverallRectangleHBox" alignment="CENTER" maxHeight="70.0" prefHeight="70.0" prefWidth="200.0">
+                                <children>
+                                    <Rectangle fx:id="overallCorrect" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
+                                    <Rectangle fx:id="overallIncorrect" fill="WHITE" height="40.0" stroke="BLACK" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" width="250.0" />
+                                </children>
+                            </HBox>
+                            <Label fx:id="overallCorrectLabel" text="0 Correct">
+                                <padding>
+                                    <Insets left="10.0" />
+                                </padding>
+                            </Label>
+                            <Label fx:id="overallIncorrectLabel" layoutX="10.0" layoutY="22.0" text="0 Incorrect" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
+                                <padding>
+                                    <Insets right="10.0" />
+                                </padding>
+                            </Label>
+                            <Line fx:id="classAverage" endX="50.0" rotate="90.0" strokeWidth="3.0">
+                                <StackPane.margin>
+                                    <Insets left="220.0" />
+                                </StackPane.margin>
+                                <effect>
+                                    <DropShadow blurType="GAUSSIAN" height="72.61" radius="22.965" width="21.25" />
+                                </effect>
+                            </Line>
+                        </children>
+                        <VBox.margin>
+                            <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+                        </VBox.margin>
+                    </StackPane>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" top="20.0" />
+               </padding>
+            </StackPane>
+              <HBox maxHeight="40.0" maxWidth="500.0" prefHeight="20.0" prefWidth="500.0">
+                  <children>
+                      <Label fx:id="classAverageLabel" alignment="TOP_LEFT" text="Class Average: ">
+                          <font>
+                              <Font size="9.0" />
+                          </font>
+                          <HBox.margin>
+                              <Insets />
+                          </HBox.margin>
+                      </Label>
+                      <Label fx:id="classAverageNumber" text="0.5">
+                          <font>
+                              <Font size="9.0" />
+                          </font>
+                          <HBox.margin>
+                              <Insets />
+                          </HBox.margin>
+                      </Label>
+                  </children>
+              </HBox>
+         </children>
+         <effect>
+            <DropShadow height="5.0" radius="2.0" width="5.0" />
+         </effect>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</GridPane>
