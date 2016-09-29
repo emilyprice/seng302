@@ -76,6 +76,9 @@ public class TutorFactory {
                 case "Scale Spelling Tutor":
                     openScaleSpellingTutor();
                     break;
+                case "Microphone Input Tutor":
+                    openMicrophoneTutor();
+                    break;
 
             }
         }
@@ -270,7 +273,6 @@ public class TutorFactory {
     @FXML
     private void openScaleModesTutor() {
 
-
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/Views/ScaleModesPane.fxml"));
 
@@ -298,12 +300,21 @@ public class TutorFactory {
      */
     @FXML
     private void openSpellingTutor() {
-
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/Views/ChordSpellingPane.fxml"));
         loadNode(loader);
         ChordSpellingTutorController chordSpellingTutorController = loader.getController();
         chordSpellingTutorController.create(env);
+    }
 
+    /**
+     * Opens the microphone input tutor. If this tutor is already open, focus is transferred to it.
+     */
+    private void openMicrophoneTutor() {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/MicrophoneInputPane.fxml"));
+        loadNode(loader);
+        MicrophoneInputTutorController microphoneInputTutorController = loader.getController();
+        microphoneInputTutorController.create(env);
     }
 }

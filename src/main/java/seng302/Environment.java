@@ -27,6 +27,7 @@ public class Environment {
     private BooleanProperty shiftPressed;
     private ThemeHandler themeHandler;
     private Pair currentFocussed;
+    private MicrophoneInput microphoneInput;
 
 
     private AnchorPane stagePane;
@@ -105,6 +106,7 @@ public class Environment {
         firebaseUpdater = new FirebaseUpdater(this);
         userHandler = new UserHandler(this);
         themeHandler = new ThemeHandler();
+        microphoneInput = new MicrophoneInput();
 
 
     }
@@ -124,8 +126,7 @@ public class Environment {
         transcriptManager = new TranscriptManager();
         recordLocation = null;
         em = new EditHistory(this);
-
-
+        microphoneInput = new MicrophoneInput();
     }
 
     /**
@@ -140,8 +141,7 @@ public class Environment {
         recordLocation = null;
         themeHandler = new ThemeHandler();
         em = new EditHistory(this);
-
-
+        microphoneInput = new MicrophoneInput();
     }
 
     /**
@@ -212,6 +212,10 @@ public class Environment {
 
     public void setShiftPressed(boolean shiftPressed) {
         this.shiftPressed.setValue(shiftPressed);
+    }
+
+    public MicrophoneInput getMicrophoneInput() {
+        return microphoneInput;
     }
 
 

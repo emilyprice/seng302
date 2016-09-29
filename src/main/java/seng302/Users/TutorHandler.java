@@ -30,6 +30,7 @@ public class TutorHandler {
         add("DiatonicChordTutor");
         add("ScaleModesTutor");
         add("ScaleSpellingTutor");
+        add("MicrophoneInputTutor");
     }};
 
     /**
@@ -165,6 +166,8 @@ public class TutorHandler {
             filename = "ScaleModesTutor";
         } else if (id.equals("scaleSpellingTutor")) {
             filename = "ScaleSpellingTutor";
+        } else if (id.equals("microphoneInputTutor")) {
+            filename = "MicrophoneInputTutor";
         }
 
         DataSnapshot tutorSnap = env.getFirebase().getUserSnapshot().child("projects/" +

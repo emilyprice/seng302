@@ -103,7 +103,6 @@ public class KeySignaturesTutorController extends TutorController {
 
     }
 
-    @Override
     HBox generateQuestionPane(Pair data) {
         return null;
     }

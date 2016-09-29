@@ -199,6 +199,7 @@ public class UserPageController {
         ArrayList<String> options = new ArrayList<>();
         options.add("Summary");
         options.add("Musical Terms Tutor");
+        options.add("Microphone Input Tutor");
         options.add("Pitch Comparison Tutor");
         options.add("Scale Recognition Tutor");
         options.add("Chord Recognition Tutor");
@@ -286,7 +287,6 @@ public class UserPageController {
                 }
             }
         });
-
     }
 
     @FXML

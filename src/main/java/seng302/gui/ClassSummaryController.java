@@ -10,6 +10,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.apache.commons.collections4.BidiMap;
 import org.controlsfx.control.spreadsheet.StringConverterWithFormat;
 import seng302.Environment;
 
@@ -36,7 +37,7 @@ public class ClassSummaryController {
 
     private ArrayList<String> tutorNames = new ArrayList<>();
 
-    private Map<String, String> converted;
+    private BidiMap<String, String> converted;
 
     public void create(Environment env) {
         this.env = env;
@@ -52,18 +53,10 @@ public class ClassSummaryController {
     private void setupTutorSlider() {
 
         //Done explicitly so they're in the correct order
-        tutorNames.add("Musical Terms Tutor");
-        tutorNames.add("Pitch Comparison Tutor");
-        tutorNames.add("Scale Recognition Tutor (Basic)");
-        tutorNames.add("Chord Recognition Tutor (Basic)");
-        tutorNames.add("Interval Recognition Tutor");
-        tutorNames.add("Scale Recognition Tutor");
-        tutorNames.add("Chord Recognition Tutor");
-        tutorNames.add("Chord Spelling Tutor");
-        tutorNames.add("Scale Spelling Tutor");
-        tutorNames.add("Key Signature Tutor");
-        tutorNames.add("Diatonic Chord Tutor");
-        tutorNames.add("Scale Modes Tutor");
+
+        for (String tutorName : StageMapController.tutorOrder) {
+            tutorNames.add(converted.getKey(tutorName));
+        }
 
 
         tutorSlider.setLabelFormatter(new StringConverterWithFormat<Double>() {
