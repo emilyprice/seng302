@@ -641,11 +641,12 @@ public class UserPageController {
         env.getRootController().setHeader(tutor);
         FXMLLoader tutorStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
         VBox all = new VBox();
+        all.setFillWidth(false);
 
         if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
             FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
             try {
-                VBox stats = tutorbasicStatsLoader.load();
+                GridPane stats = tutorbasicStatsLoader.load();
                 all.getChildren().add(stats);
                 AnchorPane.setLeftAnchor(stats, 0.0);
                 AnchorPane.setTopAnchor(stats, 0.0);
@@ -666,7 +667,7 @@ public class UserPageController {
         if((Boolean)(env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))
          || !env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             try {
-                VBox stats = tutorStatsLoader.load();
+                GridPane stats = tutorStatsLoader.load();
                 all.getChildren().add(stats);
                 currentPage.setContent(null);
                 AnchorPane.setLeftAnchor(stats, 0.0);
@@ -686,7 +687,7 @@ public class UserPageController {
             }
         }
 
-
+        all.setAlignment(Pos.TOP_CENTER);
         currentPage.setContent(all);
 
         listView.getSelectionModel().select(tutor);
