@@ -129,8 +129,6 @@ public class Environment {
         stageMapController.generateLockingStatus();
         stageMapController = new StageMapController();
 
-
-
         microphoneInput = new MicrophoneInput();
     }
 
@@ -138,7 +136,9 @@ public class Environment {
      * Resets the environment so it clears the existing saved information.
      */
     public void resetEnvironment() {
+
         firebaseUpdater = new FirebaseUpdater(this);
+
         executor = new DslExecutor(this);
         player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();

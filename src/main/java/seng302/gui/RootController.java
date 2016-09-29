@@ -451,11 +451,11 @@ public class RootController implements Initializable {
      */
     public void logOutUser() {
         try {
-
+            env.resetEnvironment();
             stage.close();
             showLoginWindow();
             settingsController.closeWindow();
-            env.resetEnvironment();
+
 
         } catch (Exception e) {
 
