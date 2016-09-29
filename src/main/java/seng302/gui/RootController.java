@@ -141,7 +141,12 @@ public class RootController implements Initializable {
     @FXML
     private Menu teacherMenu;
 
+    @FXML
+    private MenuItem menuMicrophone;
+
     private DslReferenceController dslRefControl;
+
+    private PopOver microphonePopover;
 
     public void initialize(URL location, ResourceBundle resources) {
         dslRefControl = new DslReferenceController(transcriptPaneController);
@@ -909,9 +914,23 @@ public class RootController implements Initializable {
         menuTranscript.setSelected(false);
     }
 
+    public void disallowMicrophonePopover() {
+        try {
+            menuMicrophone.setDisable(true);
+            microphonePopover.hide();
+        } catch (Exception e) {
+            menuMicrophone.setDisable(true);
+        }
+    }
+
     public void allowTranscript() {
         menuTranscript.setDisable(false);
     }
+
+    public void allowMicrophonePopover() {
+        menuMicrophone.setDisable(false);
+    }
+
 
     /**
      * Adds a single classroom to the menu of available teacher classrooms
@@ -934,8 +953,11 @@ public class RootController implements Initializable {
      */
     @FXML
     private void openMicrophonePopover() {
-        PopOver microphonePopover = new PopOver();
+        if (microphonePopover == null) {
+            microphonePopover = new PopOver();
+        }
         microphonePopover.setDetachable(true);
+        microphonePopover.setDetached(true);
         microphonePopover.setArrowLocation(PopOver.ArrowLocation.TOP_LEFT);
 
         try {
@@ -947,16 +969,21 @@ public class RootController implements Initializable {
             microphonePopover.setContentNode(loadedPane);
             microphonePopover.show(paneMain);
             microphonePopover.setTitle("Microphone Input");
-            microphonePopover.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent event) {
-                    env.getMicrophoneInput().addPopover(null);
-                    try {
-                        env.getMicrophoneInput().stopRecording();
-                    } catch (Exception e) {
-                        // mic input was not recording.
-                        System.err.println("failed");
-                    }
+            microphonePopover.setOnCloseRequest(event -> {
+                env.getMicrophoneInput().addPopover(null);
+                try {
+                    env.getMicrophoneInput().stopRecording();
+                } catch (Exception e) {
+                    // mic input was not recording.
+                    System.err.println("failed");
+                }
+            });
+            microphonePopover.setOnHidden(event -> {
+                try {
+                    env.getMicrophoneInput().stopRecording();
+                } catch (Exception e) {
+                    // mic input was not recording.
+                    System.err.println("failed");
                 }
             });
         } catch (IOException e) {
