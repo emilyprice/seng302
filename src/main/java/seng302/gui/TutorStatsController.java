@@ -1,6 +1,15 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -31,9 +40,6 @@ import seng302.Users.TutorHandler;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 import seng302.utility.TutorRecord;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Controller for the tutor stats pane,  used in the user page for all tutors.
@@ -280,11 +286,6 @@ public class TutorStatsController {
                     break;
 
             }
-
-//            if (correctIncorrectOverall.getKey() == 0 && correctIncorrectOverall.getValue() == 0) {
-//                correctIncorrectOverall = new Pair<>(0, 1);
-//            }
-//            System.out.println("val:"+correctIncorrectOverall.getValue());
 
             latestAttempt.setVisible(true);
             overallStats.setVisible(true);
