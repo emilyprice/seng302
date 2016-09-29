@@ -38,9 +38,8 @@
 
                                     </items>
                                 </Menu>
-                                <Menu mnemonicParsing="false" text="Save...">
+                                <Menu mnemonicParsing="false" text="Export">
                                     <items>
-                                        <MenuItem fx:id="menuSaveProject" accelerator="Shortcut+S" mnemonicParsing="false" onAction="#saveProject" text="Save Project" />
                                         <MenuItem fx:id="MenuSave" mnemonicParsing="false" onAction="#saveTranscript" text="Export Transcript" />
                                         <MenuItem fx:id="menuSaveCommands" mnemonicParsing="false" onAction="#saveCommands" text="Export Commands Only" />
                                     </items>

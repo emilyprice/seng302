@@ -4,6 +4,24 @@ import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
+
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Alert;
+
+
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Optional;
+
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -24,6 +42,7 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.action.Action;
 import seng302.Environment;
 
 import java.io.IOException;
@@ -88,6 +107,9 @@ public class UserPageController {
     private JFXButton timeSliderButton;
 
 
+    @FXML
+    JFXButton logoutButton;
+
     private PopOver timePopover;
 
     private Environment env;
@@ -146,8 +168,17 @@ public class UserPageController {
 
     @FXML
     public void onLogoutClick() {
-        env.getRootController().logOutUser();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Log Out Confirmation");
+        alert.setContentText("Are you sure you want to log out?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            env.getRootController().logOutUser();
+        } else {
+            alert.close();
+        }
     }
+
 
     /**
      * Refreshes the display of the level indicator badge so that it matches the level of the user's
