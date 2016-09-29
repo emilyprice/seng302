@@ -402,6 +402,12 @@ public class StageMapController {
     }
 
 
+    /**
+     * Helper function to check the last three records for a given tutor name
+     * and verify if that tutor meets unlock criteria.
+     * @param tutor tutor to check unlock criteria for.
+     * @return
+     */
     private Boolean checkLast3Records(String tutor){
         ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
         boolean unlock = true;
@@ -525,9 +531,9 @@ public class StageMapController {
     }
 
 
-    /*
-    //FXML methods below give actions to the buttons on the stage map. When a stage on the stage map is selected,
-    //the corresponding tutor will launch
+    /**
+    *FXML methods below give actions to the buttons on the stage map. When a stage on the stage map is selected,
+    *the corresponding tutor will launch
      */
     @FXML
     private void launchMusicalTermsTutor() {

@@ -452,6 +452,7 @@ public class Project {
         return isCompetitiveMode;
     }
 
+
     private void setToCompetitionMode() {
         try {
             this.isCompetitiveMode = true;
