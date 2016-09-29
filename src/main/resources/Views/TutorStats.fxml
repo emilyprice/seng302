@@ -39,7 +39,7 @@
       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-        <LineChart fx:id="lineChart" horizontalZeroLineVisible="false" layoutX="9.0" layoutY="9.0" legendVisible="false" maxHeight="-Infinity" maxWidth="900.0" prefHeight="228.0" prefWidth="900.0" style="-fx-background-color: white;" title="Past Results" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+        <LineChart fx:id="lineChart" horizontalZeroLineVisible="false" layoutX="9.0" layoutY="9.0" legendVisible="false" maxWidth="900.0" prefHeight="255.0" prefWidth="789.0" style="-fx-background-color: white;" title="Past Results" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
             <xAxis>
                 <CategoryAxis endMargin="10.0" side="BOTTOM" startMargin="10.0" tickLabelGap="1.0" tickLabelsVisible="false" tickMarkVisible="false" />
             </xAxis>
@@ -61,6 +61,9 @@
                      <font>
                         <Font size="18.0" />
                      </font>
+                     <StackPane.margin>
+                        <Insets bottom="10.0" />
+                     </StackPane.margin>
                   </Label>
                </children>
             </StackPane>
@@ -109,7 +112,7 @@
             <DropShadow height="5.0" radius="2.0" width="5.0" />
          </effect>
         </BorderPane>
-      <VBox alignment="TOP_CENTER" maxHeight="200.0" maxWidth="900.0" prefHeight="200.0" prefWidth="900.0" spacing="10.0" style="-fx-background-color: white;" GridPane.rowIndex="1">
+      <VBox alignment="TOP_CENTER" maxWidth="900.0" prefWidth="900.0" style="-fx-background-color: white;" GridPane.rowIndex="1">
          <children>
             <StackPane>
                <children>
@@ -161,10 +164,10 @@
             <DropShadow height="5.0" radius="2.0" width="5.0" />
          </effect>
          <GridPane.margin>
-            <Insets />
+            <Insets bottom="10.0" />
          </GridPane.margin>
       </VBox>
-      <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="900.0" prefHeight="200.0" prefWidth="900.0" spacing="10.0" style="-fx-background-color: white;" GridPane.rowIndex="2">
+      <VBox alignment="TOP_CENTER" maxWidth="900.0" prefWidth="900.0" style="-fx-background-color: white;" GridPane.rowIndex="2">
          <children>
             <StackPane>
                <children>
@@ -244,7 +247,7 @@
             <DropShadow height="5.0" radius="2.0" width="5.0" />
          </effect>
          <GridPane.margin>
-            <Insets />
+            <Insets bottom="10.0" />
          </GridPane.margin>
       </VBox>
    </children>
