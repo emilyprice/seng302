@@ -34,7 +34,7 @@ import seng302.utility.TutorRecord;
 
 public class Project {
 
-    HashMap<String, Object> projectSettings;
+    HashMap<String, Object> projectSettings = new HashMap<>();
 
     ProjectHandler projectHandler;
 
@@ -78,6 +78,7 @@ public class Project {
         recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
         loadProject(projectName);
         loadProperties();
+
     }
 
 
@@ -144,6 +145,22 @@ public class Project {
      */
     private void loadProperties() {
 
+
+        while(!env.getFirebase().getUserSnapshot().child("projects/" + projectName).exists()){
+            //Hack, which keeps looping untill the firebase has been updated.
+            int count = 0;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            count ++;
+
+            if(count > 100){
+                System.err.println("Failed to collect project data from firebase.");
+                return;
+            }
+        }
 
         DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/" + projectName);
 
@@ -226,13 +243,19 @@ public class Project {
         try {
             String mode = gson.fromJson((String) projectSettings.get("competitionMode"), String.class);
             if (mode.equals("true")) {
-                setToCompetitionMode();
+
+                this.isCompetitiveMode = true;
+                env.getRootController().disallowMicrophonePopover();
+                env.getRootController().disallowTranscript();
             } else {
-                setToPracticeMode();
+                env.getRootController().allowMicrophonePopover();
+                env.getRootController().allowTranscript();
+                this.isCompetitiveMode = false;
             }
         } catch (Exception e) {
-            // Defaults to comp mode
-            setToCompetitionMode();
+            env.getRootController().disallowMicrophonePopover();
+            env.getRootController().disallowTranscript();
+            this.isCompetitiveMode = true;
         }
 
         try {
@@ -255,6 +278,7 @@ public class Project {
             practiceMap = gson.fromJson((String) projectSettings.get("tutorPracticeMap"), mapType);
             if (practiceMap != null) {
                 recentPracticeTutorRecordMap = practiceMap;
+
             }
 
         } catch (Exception e) {
@@ -305,8 +329,7 @@ public class Project {
             }
         } catch (Exception e) {
             e.printStackTrace();
-
-        }
+       }
 
         try {
             Gson gson = new Gson();
@@ -404,11 +427,10 @@ public class Project {
      */
     public void loadProject(String pName) {
         DataSnapshot project = env.getFirebase().getUserSnapshot().child("projects/" + pName);
-        env.resetProjectEnvironment();
+
         if (project.exists()) {
 
         } else {
-            System.err.println("Tried to load project but it didn't exist");
             saveProject(pName);
 
         }
@@ -436,6 +458,7 @@ public class Project {
             env.getRootController().getKeyboardPaneController().displayScalesButton.setDisable(true); //disable display scales
             env.getRootController().getKeyboardPaneController().disableLabels(true); //disable keyboard labels
             env.getRootController().disallowTranscript();
+            env.getRootController().disallowMicrophonePopover();
             env.getRootController().getTranscriptController().hideTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
             env.getUserPageController().getSummaryController().loadStageMap();
@@ -454,6 +477,7 @@ public class Project {
             env.getRootController().getKeyboardPaneController().disableLabels(false); //enable keyboard labels
             this.isCompetitiveMode = false;
             env.getRootController().allowTranscript();
+            env.getRootController().allowMicrophonePopover();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
             env.getUserPageController().getSummaryController().loadStageMap();
             env.getUserPageController().populateUserOptions();

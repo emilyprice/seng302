@@ -1,16 +1,18 @@
 package seng302.gui;
 
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXSlider;
-import com.jfoenix.controls.JFXToggleButton;
+import com.jfoenix.controls.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.midi.Instrument;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.ProjectHandler;
@@ -46,6 +48,17 @@ public class ProjectSettingsController {
     private Environment env;
 
     private ProjectHandler projectHandler;
+
+    @FXML
+    private JFXButton btnDeleteProject;
+
+    @FXML
+    private AnchorPane settingsPane;
+
+    @FXML
+    private void initialize(){
+
+    }
 
 
     /**
@@ -252,6 +265,41 @@ public class ProjectSettingsController {
         visualiserLabel.setVisible(isShow);
         visualiserToggle.setManaged(isShow);
         visualiserLabel.setManaged(isShow);
+    }
+
+    /**
+    * Shows a delete project confirmation dialog, and deletes the current project if suitable.
+    */
+    @FXML
+    private void deleteProject() {
+
+        FXMLLoader popupLoader = new FXMLLoader(getClass().getResource("/Views/PopUpModal.fxml"));
+        try {
+            BorderPane modal = (BorderPane) popupLoader.load();
+            JFXPopup popup = new JFXPopup();
+            popup.setContent(modal);
+
+            popup.setPopupContainer(settingsPane);
+            popup.setSource(btnDeleteProject);
+
+            popup.show(JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT);
+            Label header = (Label) modal.lookup("#lblHeader");
+
+            JFXButton btnCancel = (JFXButton) modal.lookup("#btnCancel");
+            btnCancel.setOnAction((e) -> popup.close());
+
+            ((JFXButton) modal.lookup("#btnDelete")).
+                    setOnAction((event) -> {
+                        env.getUserHandler().getCurrentUser().getProjectHandler().deleteProject(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName);
+                        popup.close();
+                    });
+
+
+            header.setText("Are you sure you wish to delete this user?");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
