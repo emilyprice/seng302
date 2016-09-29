@@ -654,6 +654,7 @@ public class UserPageController {
         env.getRootController().setHeader(tutor);
         FXMLLoader tutorStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
         VBox all = new VBox();
+        all.setFillWidth(false);
 
         if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
             FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
