@@ -128,7 +128,14 @@ public class UserSummaryController {
         overallCorrectAnim.play();
         overallCorrect.setWidth(overallWidthCorrect);
         overallCorrect.setFill(Color.web("00b004"));
-        double overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
+        double widthIncorrect;
+        double overallWidthIncorrect;
+        if (correctIncorrectOverall.getValue() != 0) {
+            overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
+        } else {
+            overallWidthIncorrect = 500;
+        }
+
         Timeline overallIncorrectAnim = new Timeline(
                 new KeyFrame(Duration.millis(800), new KeyValue(overallIncorrect.widthProperty(), overallWidthIncorrect, Interpolator.EASE_OUT)));
         overallIncorrectAnim.play();
