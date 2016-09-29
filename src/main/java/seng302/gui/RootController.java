@@ -849,6 +849,8 @@ public class RootController implements Initializable {
             settingsStage = new Stage();
             settingsStage.setTitle("Settings");
             settingsStage.setScene(new Scene(settingsPage, 1000, 700));
+            settingsStage.setMinWidth(605);
+            settingsStage.setMinHeight(505);
             settingsStage.show();
         } catch (IOException e) {
             e.printStackTrace();

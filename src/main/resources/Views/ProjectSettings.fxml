@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXSlider?>
 <?import com.jfoenix.controls.JFXToggleButton?>
@@ -10,20 +15,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import com.jfoenix.controls.JFXButton?>
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.ProjectSettingsController">
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.ProjectSettingsController">
     <children>
         <VBox layoutX="42.0" layoutY="81.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <SplitPane dividerPositions="0.28883495145631066, 0.5, 0.5" orientation="VERTICAL" prefHeight="416.0" prefWidth="700.0" styleClass="noDivider">
+                <SplitPane dividerPositions="0.25301204819277107, 0.43172690763052207, 0.5642570281124498" orientation="VERTICAL" prefHeight="416.0" prefWidth="700.0" styleClass="noDivider" VBox.vgrow="ALWAYS">
                     <items>
-                        <AnchorPane maxHeight="140.0" minHeight="0.0" minWidth="0.0" prefHeight="31.0" prefWidth="118.0">
+                        <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="70.0" prefWidth="118.0">
                             <children>
                                 <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <Label text="Tempo" />
                                         <HBox prefHeight="72.0" prefWidth="200">
                                             <children>
-                                                <JFXSlider fx:id="tempoSlider" majorTickUnit="20.0" max="300.0" min="20.0" minorTickCount="1" value="120.0" prefWidth="320">
+                                                <JFXSlider fx:id="tempoSlider" majorTickUnit="20.0" max="300.0" min="20.0" minorTickCount="1" prefWidth="320" value="120.0">
                                                     <padding>
                                                         <Insets top="5.0" />
                                                     </padding>
@@ -41,7 +47,7 @@
                                 </VBox>
                             </children>
                         </AnchorPane>
-                        <AnchorPane maxHeight="100.0" minHeight="0.0" minWidth="0.0" prefHeight="72.0" prefWidth="698.0">
+                        <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="80.0" prefWidth="698.0">
                             <children>
                                 <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
@@ -64,14 +70,14 @@
                                 </VBox>
                             </children>
                         </AnchorPane>
-                        <AnchorPane maxHeight="100.0" minHeight="0.0" minWidth="0.0" prefHeight="72.0" prefWidth="698.0">
+                        <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="70.0" prefWidth="598.0">
                             <children>
                                 <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <Label text="Instrument" />
                                         <HBox alignment="CENTER_LEFT" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0">
                                             <padding>
-                                                <Insets left="10.0" />
+                                                <Insets bottom="5.0" left="10.0" />
                                             </padding>
                                             <children>
                                                 <JFXComboBox fx:id="instrumentSelector" />
@@ -84,18 +90,26 @@
                                 </VBox>
                             </children>
                         </AnchorPane>
-                        <AnchorPane maxHeight="100.0" minHeight="0.0" minWidth="0.0" prefHeight="72.0" prefWidth="698.0">
+                        <AnchorPane minWidth="0.0" prefHeight="72.0" prefWidth="698.0">
                             <children>
                                 <VBox alignment="CENTER_LEFT" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                                        <HBox>
+                                        <HBox fillHeight="false" prefHeight="78.0" prefWidth="626.0" VBox.vgrow="NEVER">
                                             <children>
-                                                <JFXToggleButton fx:id="modeToggle" layoutX="128.0" />
-                                                <Label layoutX="14.0" text="Competition Mode">
-                                                    <padding>
-                                                        <Insets top="20.0" />
-                                                    </padding>
-                                                </Label>
+                                    <StackPane HBox.hgrow="NEVER">
+                                       <children>
+                                                      <JFXToggleButton fx:id="modeToggle" />
+                                       </children>
+                                    </StackPane>
+                                    <StackPane HBox.hgrow="NEVER">
+                                       <children>
+                                                      <Label text="Competition Mode" StackPane.alignment="CENTER">
+                                             <padding>
+                                                <Insets top="20.0" />
+                                             </padding>
+                                                      </Label>
+                                       </children>
+                                    </StackPane>
                                             </children>
                                             <padding>
                                                 <Insets top="20.0" />
@@ -103,39 +117,41 @@
                                         </HBox>
                                         <HBox>
                                             <children>
-                                                <JFXToggleButton fx:id="visualiserToggle" layoutX="128.0" />
-                                                <Label fx:id="visualiserLabel" layoutX="14.0" text="Keyboard Visualiser Off">
-                                                    <padding>
-                                                        <Insets top="20.0" />
-                                                    </padding>
-                                                </Label>
+                                    <StackPane HBox.hgrow="NEVER">
+                                       <children>
+                                                      <JFXToggleButton fx:id="visualiserToggle" />
+                                       </children>
+                                    </StackPane>
+                                    <StackPane HBox.hgrow="NEVER">
+                                       <children>
+                                                      <Label fx:id="visualiserLabel" text="Keyboard Visualiser Off" HBox.hgrow="ALWAYS" />
+                                       </children>
+                                    </StackPane>
                                             </children>
                                             <padding>
                                                 <Insets bottom="20.0" />
                                             </padding>
                                         </HBox>
-                                        <HBox alignment="CENTER_LEFT" prefHeight="130.0" prefWidth="698.0">
+                                        <HBox alignment="CENTER_LEFT" prefHeight="130.0" prefWidth="698.0" VBox.vgrow="NEVER">
                                             <children>
-                                                <JFXButton fx:id="btnDeleteProject" buttonType="RAISED" onAction="#deleteProject"
-                                                           ripplerFill="#6b3939"
-                                                           style="-fx-background-color: red; -fx-border-color: darkred;"
-                                                           text="Delete Project" textFill="WHITE">
+                                                <JFXButton fx:id="btnDeleteProject" buttonType="RAISED" onAction="#deleteProject" ripplerFill="#6b3939" style="-fx-background-color: red; -fx-border-color: darkred;" text="Delete Project" textFill="WHITE">
                                                     <opaqueInsets>
-                                                        <Insets left="10.0" top="10.0"/>
+                                                        <Insets left="10.0" top="10.0" />
                                                     </opaqueInsets>
                                                     <HBox.margin>
-                                                        <Insets left="20.0"/>
+                                                        <Insets left="20.0" />
                                                     </HBox.margin>
                                                 </JFXButton>
                                             </children>
                                             <padding>
-                                                <Insets bottom="20.0"/>
+                                                <Insets bottom="20.0" />
                                             </padding>
                                         </HBox>
+                              <HBox VBox.vgrow="ALWAYS" />
 
                                     </children>
                                     <padding>
-                                        <Insets left="10.0" top="10.0" />
+                                        <Insets left="10.0" />
                                     </padding>
                                 </VBox>
                             </children>
