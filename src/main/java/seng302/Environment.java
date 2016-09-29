@@ -140,6 +140,8 @@ public class Environment {
         recordLocation = null;
         themeHandler = new ThemeHandler();
         em = new EditHistory(this);
+        getUserHandler().removeCurrentUser();
+        getUserHandler().removeCurrentTeacher();
 
 
     }
