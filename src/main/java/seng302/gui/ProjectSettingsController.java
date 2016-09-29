@@ -15,6 +15,7 @@ import seng302.Environment;
 import seng302.Users.Project;
 import seng302.Users.ProjectHandler;
 import seng302.utility.InstrumentUtility;
+import seng302.gui.KeyboardPaneController;
 
 /**
  * Controller class for the GUI used to change project-based settings.
@@ -46,6 +47,7 @@ public class ProjectSettingsController {
 
     private ProjectHandler projectHandler;
 
+
     /**
      * Links the project settings controller to the environment, so it has access to the current
      * project and settings.
@@ -67,15 +69,21 @@ public class ProjectSettingsController {
         setupRhythmSelector();
     }
 
+    /**
+     * Used by the modes toggle to switch modes
+     */
     @FXML
     private void toggleBetweenModes() {
+
         Project currentProject = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject();
         if (modeToggle.isSelected()) {
             // Competition Mode
             currentProject.setIsCompetitiveMode(true);
+
         } else {
             // Practice mode
             currentProject.setIsCompetitiveMode(false);
+
         }
     }
 
@@ -156,7 +164,7 @@ public class ProjectSettingsController {
         tempoSlider.setValue(env.getPlayer().getTempo());
 
         // The listener for the number of questions selected
-        tempoSlider.valueProperty().addListener((observable, newValue, oldValue) -> {
+        tempoSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             tempoText.setText(Integer.toString(newValue.intValue()));
 
             if (newValue.intValue() >= 20 && newValue.intValue() <= 300) {

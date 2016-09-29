@@ -12,10 +12,18 @@ package seng302.Users;
 import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.controlsfx.control.Notifications;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.sound.midi.Instrument;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
@@ -23,11 +31,6 @@ import seng302.utility.InstrumentUtility;
 import seng302.utility.LevelCalculator;
 import seng302.utility.OutputTuple;
 import seng302.utility.TutorRecord;
-
-import javax.sound.midi.Instrument;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Project {
 
@@ -44,6 +47,7 @@ public class Project {
     public TutorHandler tutorHandler;
     private BadgeManager badgeManager;
 
+    private double inputVolumeThreshold;
 
     private Boolean isCompetitiveMode, visualiserOn;
     Boolean saved = true;
@@ -72,7 +76,6 @@ public class Project {
         this.visualiserOn = false;
         badgeManager = new BadgeManager(env);
         recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
-        System.out.println("project created with this name." + projectName);
         loadProject(projectName);
         loadProperties();
 
@@ -90,8 +93,6 @@ public class Project {
      */
     private void saveProperties() {
         Gson gson = new Gson();
-        System.out.println("save properties");
-        System.out.println(projectSettings);
         projectSettings.put("tempo", env.getPlayer().getTempo());
         String transcriptString = gson.toJson(env.getTranscriptManager().getTranscriptTuples());
 
@@ -118,8 +119,6 @@ public class Project {
 
         projectSettings.put("tutorPracticeMap", gson.toJson(recentPracticeTutorRecordMap));
 
-        System.out.println("in save properties");
-        System.out.println(env.getStageMapController().unlockStatus);
 
         try {
             projectSettings.put("unlockMap", gson.toJson(env.getStageMapController().unlockStatus));
@@ -127,12 +126,15 @@ public class Project {
             System.err.println("cant save unlock map");
         }
 
-
         try {
             projectSettings.put("unlockMapDescriptions", gson.toJson(env.getStageMapController().getUnlockDescriptions()));
         } catch (Exception e) {
             System.err.println("cant save unlock map descriptions");
         }
+
+        projectSettings.put("inputVolumeThreshold", gson.toJson(inputVolumeThreshold));
+
+
 
     }
 
@@ -142,12 +144,6 @@ public class Project {
      * working transcript and rhythm setting.
      */
     private void loadProperties() {
-
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 
 
         while(!env.getFirebase().getUserSnapshot().child("projects/" + projectName).exists()){
@@ -168,11 +164,7 @@ public class Project {
 
         DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/" + projectName);
 
-
-
-
         projectSettings = (HashMap<String, Object>) projectSnapshot.getValue();
-
 
         int tempo;
         Gson gson = new Gson();
@@ -185,6 +177,12 @@ public class Project {
 
         env.getPlayer().setTempo(tempo);
 
+
+        try {
+            inputVolumeThreshold = Double.valueOf(projectSettings.get("inputVolumeThreshold").toString());
+        } catch (Exception e) {
+            inputVolumeThreshold = -60.0;
+        }
 
         //Transcript
         ArrayList<OutputTuple> transcript;
@@ -242,11 +240,8 @@ public class Project {
             //If level has never been set, (ie old account), default to 1
             level = 1;
         }
-
-
         try {
             String mode = gson.fromJson((String) projectSettings.get("competitionMode"), String.class);
-
             if (mode.equals("true")) {
                 //setToCompetitionMode();
                 this.isCompetitiveMode = true;
@@ -286,7 +281,6 @@ public class Project {
         } catch (Exception e) {
             System.err.println("failed to load tutorPracticeMap");
 
-
         }
 
 
@@ -313,8 +307,6 @@ public class Project {
             System.err.println("failed to import badge data");
         }
 
-
-
     }
 
 
@@ -333,7 +325,7 @@ public class Project {
                 env.getStageMapController().setDescription();
             }
         } catch (Exception e) {
-
+            //Remove? Not sure if neccessary
             env.getStageMapController().generateLockingStatus();
         }
 
@@ -342,17 +334,11 @@ public class Project {
             HashMap<String, HashMap<String, Boolean>> unlockMapDescriptions;
             Type mapType = new TypeToken<HashMap<String, HashMap<String, Boolean>>>() {
             }.getType();
-
-            System.out.println("load stage map data: " );
-            System.out.println( projectSettings.get("unlockMapDescriptions"));
-
             unlockMapDescriptions = gson.fromJson((String) projectSettings.get("unlockMapDescriptions"), mapType);
             if (unlockMapDescriptions != null) {
                 env.getStageMapController().unlockDescriptions = unlockMapDescriptions;
                 env.getStageMapController().setDescription();
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -377,7 +363,6 @@ public class Project {
     }
 
 
-
     /**
      * Handles Saving a .json Project file, for the specified project address
      *
@@ -386,7 +371,6 @@ public class Project {
     public void saveProject(String projectName) {
         saveProperties();
         env.getFirebase().getUserRef().child("projects/" + projectName).updateChildren(projectSettings);
-
         env.getRootController().removeUnsavedChangesIndicator();
     }
 
@@ -441,7 +425,7 @@ public class Project {
      */
     public void loadProject(String pName) {
         DataSnapshot project = env.getFirebase().getUserSnapshot().child("projects/" + pName);
-        //env.resetProjectEnvironment();
+
         if (project.exists()) {
 
         } else {
@@ -450,7 +434,7 @@ public class Project {
 
         }
         this.projectName = pName;
-        //loadProperties();
+
         env.getRootController().setWindowTitle("Allegro - " + pName);
 
 
@@ -471,11 +455,14 @@ public class Project {
     private void setToCompetitionMode() {
         try {
             this.isCompetitiveMode = true;
+            env.getRootController().getKeyboardPaneController().displayScalesButton.setDisable(true); //disable display scales
+            env.getRootController().getKeyboardPaneController().disableLabels(true); //disable keyboard labels
             env.getRootController().disallowTranscript();
             env.getRootController().getTranscriptController().hideTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
             env.getUserPageController().getSummaryController().loadStageMap();
             env.getUserPageController().populateUserOptions();
+            env.getStageMapController().hideNextUnlockDescription(false);
 
         } catch (NullPointerException e) {
             // User Page might not exist yet so it doesn't have to load stuff
@@ -485,11 +472,15 @@ public class Project {
 
     private void setToPracticeMode() {
         try {
+            env.getRootController().getKeyboardPaneController().displayScalesButton.setDisable(false); //enable display scales
+            env.getRootController().getKeyboardPaneController().disableLabels(false); //enable keyboard labels
             this.isCompetitiveMode = false;
             env.getRootController().allowTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
             env.getUserPageController().getSummaryController().loadStageMap();
             env.getUserPageController().populateUserOptions();
+            env.getStageMapController().hideNextUnlockDescription(true);
+
 
         } catch (NullPointerException e) {
             // User page might not exist yet
@@ -559,6 +550,14 @@ public class Project {
 
     public BadgeManager getBadgeManager() {
         return badgeManager;
+    }
+
+    public void setInputVolumeThreshold(double threshold) {
+        this.inputVolumeThreshold = threshold;
+    }
+
+    public double getInputVolumeThreshold() {
+        return inputVolumeThreshold;
     }
 
 }

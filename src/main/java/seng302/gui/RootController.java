@@ -1,10 +1,15 @@
 package seng302.gui;
 
 
+import org.controlsfx.control.PopOver;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -19,8 +24,10 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
+import javafx.stage.WindowEvent;
 import seng302.Environment;
 import seng302.Users.Student;
+import seng302.gui.MicrophoneInputPopoverController;
 import seng302.managers.TranscriptManager;
 import seng302.utility.OutputTuple;
 
@@ -28,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -36,6 +44,7 @@ public class RootController implements Initializable {
     Environment env;
     TranscriptManager tm;
     Stage stage;
+    public Stage settingsStage;
 
     String path;
     File fileDir;
@@ -93,6 +102,9 @@ public class RootController implements Initializable {
     private Menu menuOpenProjects;
 
     @FXML
+    private Menu menuOpenClassroom;
+
+    @FXML
     private Menu helpMenu;
 
     @FXML
@@ -117,6 +129,18 @@ public class RootController implements Initializable {
         dslRefControl.getPopover().show(paneMain);
     }
 
+    @FXML
+    private Menu viewMenu;
+
+    @FXML
+    private Menu editMenu;
+
+    @FXML
+    private Menu fileMenu;
+
+    @FXML
+    private Menu teacherMenu;
+
     private DslReferenceController dslRefControl;
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -138,34 +162,6 @@ public class RootController implements Initializable {
 
     }
 
-    /**
-     * Loads a new user image into a circular shape
-     */
-    public void updateImage() {
-
-        final Circle clip = new Circle(imageDP.getFitWidth() - 25.0, imageDP.getFitHeight() - 25.0, 50.0);
-        imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
-        clip.setRadius(25.0);
-        imageDP.setClip(clip);
-
-        SnapshotParameters parameters = new SnapshotParameters();
-        parameters.setFill(Color.TRANSPARENT);
-        WritableImage image = imageDP.snapshot(parameters, null);
-
-        imageDP.setClip(null);
-        imageDP.setEffect(new DropShadow(5, Color.BLACK));
-
-        imageDP.setImage(image);
-        imageDP.setOnMouseClicked(event -> {
-
-            try {
-                showUserPage();
-            } catch (Exception e) {
-
-            }
-        });
-    }
-
 
     /**
      * Display or hide the main GUI window.
@@ -175,15 +171,34 @@ public class RootController implements Initializable {
     public void showWindow(Boolean show) {
         if (show) {
 
-            applyTheme();
-            stage.show();
-            resizeSplitPane(1.0);
-            menuTranscript.setSelected(false);
-            toggleTranscript();
-            try {
-                showUserPage();
-            } catch (IOException e) {
-                e.printStackTrace();
+            boolean isTeacher = env.getUserHandler().getCurrentTeacher() != null;
+
+            if (isTeacher) {
+                applyTeacherTheme();
+                stage.show();
+                resizeSplitPane(1.0);
+                menuTranscript.setSelected(false);
+                toggleTranscript();
+                keyboardPaneController.hideWholeKeyboard();
+                splitPane.setDividerPosition(0, 1.0);
+                try {
+                    showTeacherPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                applyTheme();
+                stage.show();
+                resizeSplitPane(1.0);
+                menuTranscript.setSelected(false);
+                toggleTranscript();
+                keyboardPaneController.showWholeKeyboard();
+                try {
+                    showUserPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 
@@ -198,6 +213,15 @@ public class RootController implements Initializable {
         //Apply user theme
         env.getThemeHandler().setBaseNode(paneMain);
         String[] themeColours = env.getUserHandler().getCurrentUser().getThemeColours();
+        env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
+    }
+
+    /**
+     * Apply the logged in teacher's theme to the main window
+     */
+    private void applyTeacherTheme() {
+        env.getThemeHandler().setBaseNode(paneMain);
+        String[] themeColours = env.getUserHandler().getCurrentTeacher().getThemeColours();
         env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
@@ -220,8 +244,6 @@ public class RootController implements Initializable {
      * @param option close option either 'close' or 'logout'.
      */
     protected void showCloseWindow(String option) {
-
-
         if (env.getUserHandler().getCurrentUser() != null && !((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
 
             String closeText = option.equals("close") ? "Quit" : "Logout";
@@ -260,7 +282,7 @@ public class RootController implements Initializable {
 
 
         } else if (env.getTranscriptManager().unsavedChanges) {
-            ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+            ( env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             if (option.equals("close")) System.exit(0);
             else if (option.equals("logout")) logOutUser();
@@ -311,6 +333,8 @@ public class RootController implements Initializable {
      * Opens the user page.
      */
     public void showUserPage() throws IOException {
+
+
         showUserBar(false);
         setHeader("Summary");
 
@@ -331,8 +355,41 @@ public class RootController implements Initializable {
         userPageController.setEnvironment(env);
         userPageController.load();
 
+        viewMenu.setVisible(true);
+        editMenu.setVisible(true);
+        fileMenu.setVisible(true);
+        teacherMenu.setVisible(false);
+
+
     }
 
+    public void showTeacherPage() throws IOException {
+        showUserBar(false);
+        setHeader("Summary");
+
+        FXMLLoader teacherLoader = new FXMLLoader();
+        teacherLoader.setLocation(getClass().getResource("/Views/TeacherPage.fxml"));
+
+
+        AnchorPane teacherPage = teacherLoader.load();
+
+        centerPane.getChildren().add(teacherPage);
+
+        AnchorPane.setRightAnchor(teacherPage, 0.0);
+        AnchorPane.setLeftAnchor(teacherPage, 0.0);
+        AnchorPane.setBottomAnchor(teacherPage, 0.0);
+        AnchorPane.setTopAnchor(teacherPage, 0.0);
+
+        TeacherPageController teacherPageController = teacherLoader.getController();
+        teacherPageController.setEnvironment(env);
+        teacherPageController.load();
+
+        viewMenu.setVisible(false);
+        editMenu.setVisible(false);
+        fileMenu.setVisible(false);
+        teacherMenu.setVisible(true);
+
+    }
 
 
     public void setHeader(String text) {
@@ -611,6 +668,29 @@ public class RootController implements Initializable {
     }
 
     /**
+     * Launches a classroom creator window, that allows the teacher to name and create a classroom.
+     */
+    @FXML
+    public void newClassroom() {
+        //launch the clasroom creator
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/ClassroomCreator.fxml"));
+
+        try {
+            AnchorPane classCreator = loader.load();
+
+            Stage classroomCreatorStage = new Stage();
+            classroomCreatorStage.setTitle("Create New Classroom");
+            classroomCreatorStage.setScene(new Scene(classCreator, 400, 200));
+            classroomCreatorStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ClassroomCreatorController classroomCreatorController = loader.getController();
+        classroomCreatorController.create(env);
+    }
+
+    /**
      * Saves project information
      */
     @FXML
@@ -648,6 +728,26 @@ public class RootController implements Initializable {
             menuOpenProjects.getItems().add(projectItem); //Add to Open projects menu
         }
 
+    }
+
+    /**
+     * Generates a list of menu items, where each menu item is a classroom belonging to the current teacher
+     *
+     * @param classes A list of classrooms belonging to the current teacher
+     */
+    public void updateClassroomsList(List<String> classes) {
+        menuOpenClassroom.getItems().clear();
+        for (String className : classes) {
+            MenuItem classMenuItem = new MenuItem(className);
+            classMenuItem.setOnAction(event -> {
+                env.getUserHandler().setClassRoom(classMenuItem.getText());
+                setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
+                env.getTeacherPageController().updateDisplay();
+            });
+
+            menuOpenClassroom.getItems().add(classMenuItem);
+
+        }
     }
 
 
@@ -732,6 +832,31 @@ public class RootController implements Initializable {
         try {
             AnchorPane settingsPage = loader.load();
 
+            settingsStage = new Stage();
+            settingsStage.setTitle("Settings");
+            settingsStage.setScene(new Scene(settingsPage, 1000, 700));
+            settingsStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        settingsController = loader.getController();
+        settingsController.create(env);
+
+    }
+
+    /**
+     * Launches a new window containing all user settings for a teacher.
+     */
+    @FXML
+    public void launchTeacherSettings() {
+        showUserBar(true);
+
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/TeacherSettings.fxml"));
+
+        try {
+            AnchorPane settingsPage = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Settings");
             stage.setScene(new Scene(settingsPage, 1000, 700));
@@ -739,8 +864,10 @@ public class RootController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        settingsController = loader.getController();
-        settingsController.create(env);
+
+
+        TeacherSettingsController teacherSettingsController = loader.getController();
+        teacherSettingsController.create(env);
 
     }
 
@@ -784,6 +911,59 @@ public class RootController implements Initializable {
 
     public void allowTranscript() {
         menuTranscript.setDisable(false);
+    }
+
+    /**
+     * Adds a single classroom to the menu of available teacher classrooms
+     * @param newClassroom The name of the classroom to be added
+     */
+    public void addClassroomToMenu(String newClassroom) {
+        MenuItem classMenuItem = new MenuItem(newClassroom);
+        classMenuItem.setOnAction(clickEvent -> {
+            env.getUserHandler().setClassRoom(classMenuItem.getText());
+            env.getRootController().setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
+            env.getTeacherPageController().updateDisplay();
+        });
+
+        menuOpenClassroom.getItems().add(classMenuItem);
+
+    }
+
+    /**
+     * Opens the microphone input popover
+     */
+    @FXML
+    private void openMicrophonePopover() {
+        PopOver microphonePopover = new PopOver();
+        microphonePopover.setDetachable(true);
+        microphonePopover.setArrowLocation(PopOver.ArrowLocation.TOP_LEFT);
+
+        try {
+            FXMLLoader micInputPopLoader = new FXMLLoader();
+            micInputPopLoader.setLocation(getClass().getResource("/Views/MicrophoneInputPopover.fxml"));
+            Node loadedPane = (Node) micInputPopLoader.load();
+            MicrophoneInputPopoverController micInputPopController = micInputPopLoader.getController();
+            micInputPopController.create(env);
+            microphonePopover.setContentNode(loadedPane);
+            microphonePopover.show(paneMain);
+            microphonePopover.setTitle("Microphone Input");
+            microphonePopover.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    env.getMicrophoneInput().addPopover(null);
+                    try {
+                        env.getMicrophoneInput().stopRecording();
+                    } catch (Exception e) {
+                        // mic input was not recording.
+                        System.out.println("failed");
+                    }
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
     }
 
 }

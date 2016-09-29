@@ -130,21 +130,25 @@ public class BadgeManager {
         sessionBadges.add(10);
         sessionBadges.add(25);
         sessionBadges.add(100);
+        sessionBadges.add(-1);
 
         ArrayList<Integer> questionBadges = new ArrayList<>();
-        questionBadges.add(1);
         questionBadges.add(10);
         questionBadges.add(50);
         questionBadges.add(120);
         questionBadges.add(600);
+        questionBadges.add(-1);
 
         ArrayList<Integer> musicianBadges = new ArrayList<>();
         musicianBadges.add(1);
         musicianBadges.add(3);
         musicianBadges.add(10);
+        musicianBadges.add(12);
+        musicianBadges.add(-1);
 
         ArrayList<Integer> tutorTotal = new ArrayList<>();
         tutorTotal.add(10);
+        tutorTotal.add(-1);
 
         //intalize tutor badges
 
@@ -246,18 +250,22 @@ public class BadgeManager {
      * @param answered  the number of questions answered
      */
     public void updateTutorBadges(String tutorName, int correct, int answered) {
-        ArrayList badges = tutorBadgeMap.get(tutorName);
+        try {
+            ArrayList badges = tutorBadgeMap.get(tutorName);
 
-        for (Object badge : badges) {
+            for (Object badge : badges) {
 
-            Badge b = (Badge) badge;
-            if (b.name.equals("Correct Questions")) {
-                b.updateBadgeProgress(env, correct);
-            } else if (b.name.equals("Completed Sessions")) {
-                b.updateBadgeProgress(env, 1);
-            } else if (b.name.equals("100% Sessions") && (correct == answered)) {
-                b.updateBadgeProgress(env, 1);
+                Badge b = (Badge) badge;
+                if (b.name.equals("Correct Questions")) {
+                    b.updateBadgeProgress(env, correct);
+                } else if (b.name.equals("Completed Sessions")) {
+                    b.updateBadgeProgress(env, 1);
+                } else if (b.name.equals("100% Sessions") && (correct == answered)) {
+                    b.updateBadgeProgress(env, 1);
+                }
             }
+        } catch (Exception e) {
+            System.err.println("No badges... :'(");
         }
     }
 

@@ -31,6 +31,8 @@ public class BaseSettingsController {
 
     private FXMLLoader userSettingsLoader, themeLoader, projectSettingsLoader;
 
+    private MicInputSettingsController micInputSettingsController;
+
 
     @FXML
     private AnchorPane settingsPane;
@@ -98,6 +100,7 @@ public class BaseSettingsController {
         options.add("User Settings");
         options.add("Theme Settings");
         options.add("Project Settings");
+        options.add("Microphone Input");
         options.add("Musical Terms");
 
         settingsOptions.getItems().addAll(FXCollections.observableArrayList(options));
@@ -134,6 +137,10 @@ public class BaseSettingsController {
 
             case "Project Settings":
                 openProjectSettings();
+                break;
+
+            case "Microphone Input":
+                openMicInput();
                 break;
 
             case "Musical Terms":
@@ -182,6 +189,28 @@ public class BaseSettingsController {
             projectSettingsController = projectSettingsLoader.getController();
             projectSettingsController.create(env);
 
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+
+    /**
+     * Displays the project settings view where the user will be able to change their instrument,
+     * tempo, rhythm, and mode.
+     */
+    private void openMicInput() {
+        try {
+            FXMLLoader micSettingsLoader = new FXMLLoader();
+            micSettingsLoader.setLocation(getClass().getResource("/Views/MicInputSettings.fxml"));
+            Node loadedPane = (Node) micSettingsLoader.load();
+            settingsPane.getChildren().setAll(loadedPane);
+            this.setAnchors(loadedPane);
+            micInputSettingsController = micSettingsLoader.getController();
+            micInputSettingsController.create(env);
 
         } catch (IOException e) {
             e.printStackTrace();

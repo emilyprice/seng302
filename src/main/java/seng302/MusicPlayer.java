@@ -1,25 +1,12 @@
 package seng302;
 
+import seng302.data.Note;
+import seng302.utility.musicNotation.RhythmHandler;
+
+import javax.sound.midi.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
-import javax.sound.midi.Instrument;
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MetaMessage;
-import javax.sound.midi.MidiChannel;
-import javax.sound.midi.MidiEvent;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Patch;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
-import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Synthesizer;
-import javax.sound.midi.Track;
-
-import seng302.data.Note;
-import seng302.utility.musicNotation.RhythmHandler;
 
 /**
  * The Music Player class handles all sound that is produced by the program.
@@ -233,6 +220,44 @@ public class MusicPlayer {
         }
 
     }
+
+    /**
+     * Helper method used in the pitchComparisonTutor when the chord is played in both arpeggio
+     * and unison
+     * @param arpeggioChord the chord in arpeggio arraylist
+     * @param unisonChord the chord in unison collection
+     */
+    public void playArpeggioUnison(ArrayList<Note> arpeggioChord, Collection<Note> unisonChord) {
+        int ticks = rh.getBeatResolution();
+        try {
+            // 16 ticks per crotchet note.
+            Sequence sequence = new Sequence(Sequence.PPQ, ticks);
+            Track track = sequence.createTrack();
+
+            ShortMessage sm = new ShortMessage();
+            sm.setMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentInt, 0);
+            track.add(new MidiEvent(sm, 0));
+
+            int currentTick = 0;
+            rh.resetIndex(); //Reset rhythm to first crotchet.
+            for (Note note : arpeggioChord) { // Arpeggio notes to play
+                int timing = rh.getNextTickTiming();
+                addNote(track, currentTick, timing, note.getMidi(), 64); //velocity 64
+                currentTick += timing;
+            }
+
+            currentTick += 40;
+            for (Note note : unisonChord) { // Unison notes to play
+                addNote(track, currentTick, rh.getNextTickTiming() + 8, note.getMidi(), 64);
+            }
+
+            playSequence(sequence);
+
+        } catch (InvalidMidiDataException e) {
+            System.err.println("The notes you are trying to play were invalid");
+        }
+    }
+
 
     /**
      * Convenience method to convert a single note into an array list so the method playNotes() can

@@ -78,10 +78,15 @@ public class UISkinnerController {
             env.getThemeHandler().setTheme(baseRGB, newSecondary);
         }
 
-        env.getUserHandler().getCurrentUser().saveProperties();
-        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Creative").currentBadgeType == 0) {
-            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
+        try {
+            env.getUserHandler().getCurrentUser().saveProperties();
+            if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().getBadge("Creative").currentBadgeType == 0) {
+                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
+            }
+        } catch (NullPointerException e) {
+            env.getUserHandler().getCurrentTeacher().saveProperties();
         }
+
 
     }
 
@@ -170,7 +175,11 @@ public class UISkinnerController {
 
     public void generateSecondaryColour(ActionEvent actionEvent) {
         env.getThemeHandler().setTheme(baseRGB, lighterOrDarker);
-        env.getUserHandler().getCurrentUser().saveProperties();
-        env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
+        try {
+            env.getUserHandler().getCurrentUser().saveProperties();
+            env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getBadgeManager().unlockBadge("Creative");
+        } catch (NullPointerException e) {
+            env.getUserHandler().getCurrentTeacher().saveProperties();
+        }
     }
 }

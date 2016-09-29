@@ -4,6 +4,24 @@ import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
+
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Alert;
+
+
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Optional;
+
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -24,6 +42,7 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.action.Action;
 import seng302.Environment;
 
 import java.io.IOException;
@@ -88,6 +107,9 @@ public class UserPageController {
     private JFXButton timeSliderButton;
 
 
+    @FXML
+    JFXButton logoutButton;
+
     private PopOver timePopover;
 
     private Environment env;
@@ -146,8 +168,17 @@ public class UserPageController {
 
     @FXML
     public void onLogoutClick() {
-        env.getRootController().logOutUser();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Log Out Confirmation");
+        alert.setContentText("Are you sure you want to log out?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            env.getRootController().logOutUser();
+        } else {
+            alert.close();
+        }
     }
+
 
     /**
      * Refreshes the display of the level indicator badge so that it matches the level of the user's
@@ -168,6 +199,7 @@ public class UserPageController {
         ArrayList<String> options = new ArrayList<>();
         options.add("Summary");
         options.add("Musical Terms Tutor");
+        options.add("Microphone Input Tutor");
         options.add("Pitch Comparison Tutor");
         options.add("Scale Recognition Tutor");
         options.add("Chord Recognition Tutor");
@@ -178,7 +210,7 @@ public class UserPageController {
         options.add("Scale Modes Tutor");
         options.add("Scale Spelling Tutor");
 
-        Image lockImg = new Image(getClass().getResourceAsStream("/images/lock-blocked-medium.png"), 20, 20, true, true);
+        Image lockImg = new Image("/images/lock.png", 20, 20, true, true);
         listView.getItems().clear();
         listView.getItems().addAll(FXCollections.observableArrayList(options));
 
@@ -255,7 +287,6 @@ public class UserPageController {
                 }
             }
         });
-
     }
 
     @FXML
@@ -266,6 +297,7 @@ public class UserPageController {
             timePopover.show(timeSliderButton);
         }
     }
+
 
 
     /**
@@ -383,7 +415,15 @@ public class UserPageController {
      */
     @FXML
     public void openSettings() {
-        env.getRootController().launchSettings();
+        try {
+            if (!env.getRootController().settingsStage.isShowing()) {
+                env.getRootController().launchSettings();
+            } else {
+                env.getRootController().settingsStage.toFront();
+            }
+        } catch (NullPointerException e) {
+            env.getRootController().launchSettings();
+        }
     }
 
     /**
@@ -583,9 +623,9 @@ public class UserPageController {
         FXMLLoader summaryLoader = new FXMLLoader(getClass().getResource("/Views/UserSummary.fxml"));
 
         try {
-            FlowPane summaryPage = summaryLoader.load();
+            GridPane summaryPage = summaryLoader.load();
 
-            scrollPaneAnchorPage.getChildren().setAll(summaryPage);
+            currentPage.setContent(summaryPage);
             AnchorPane.setLeftAnchor(summaryPage, 0.0);
             AnchorPane.setTopAnchor(summaryPage, 0.0);
             AnchorPane.setBottomAnchor(summaryPage, 0.0);
@@ -616,7 +656,7 @@ public class UserPageController {
         FXMLLoader tutorStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
         VBox all = new VBox();
 
-        if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+        if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
             FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
             try {
                 VBox stats = tutorbasicStatsLoader.load();
@@ -628,7 +668,7 @@ public class UserPageController {
                 basicStatsController = tutorbasicStatsLoader.getController();
 
                 basicStatsController.create(env);
-                basicStatsController.displayGraphs( tutor + " (Basic)", convert.toString(timeSlider.getValue()));
+                basicStatsController.displayGraphs(tutor + " (Basic)", convert.toString(timeSlider.getValue()));
 
 
             } catch (IOException e) {
@@ -642,7 +682,7 @@ public class UserPageController {
             try {
                 VBox stats = tutorStatsLoader.load();
                 all.getChildren().add(stats);
-                scrollPaneAnchorPage.getChildren().clear();
+                currentPage.setContent(null);
                 AnchorPane.setLeftAnchor(stats, 0.0);
                 AnchorPane.setTopAnchor(stats, 0.0);
                 AnchorPane.setBottomAnchor(stats, 0.0);
@@ -660,7 +700,8 @@ public class UserPageController {
             }
         }
 
-        scrollPaneAnchorPage.getChildren().setAll(all);
+
+        currentPage.setContent(all);
 
         listView.getSelectionModel().select(tutor);
 

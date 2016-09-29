@@ -127,7 +127,7 @@ public abstract class TutorController {
         questions.setText(Integer.toString(selectedQuestions));
 
         // The listener for the number of questions selected
-        numQuestions.valueProperty().addListener((observable, newValue, oldValue) -> {
+        numQuestions.valueProperty().addListener((observable, oldValue, newValue) -> {
             selectedQuestions = newValue.intValue();
             questions.setText(Integer.toString(selectedQuestions));
         });
@@ -141,29 +141,29 @@ public abstract class TutorController {
         });
     }
 
-    /**
-     * If the user chooses to re-test their self on their failed questions, this function sets up
-     * the tutoring environment for that.
-     */
-    public void retest() {
-        record = new TutorRecord();
-        ArrayList<Pair> tempIncorrectResponses = new ArrayList<>(manager.getTempIncorrectResponses());
-        manager.clearTempIncorrect();
-        Collections.shuffle(tempIncorrectResponses);
-        manager.questions = tempIncorrectResponses.size();
-        List retestPanes = new ArrayList<>();
-
-        for (Pair pair : tempIncorrectResponses) {
-            HBox questionRow = generateQuestionPane(pair);
-            TitledPane qPane = new TitledPane("Question " + (tempIncorrectResponses.indexOf(pair) + 1), questionRow);
-            qPane.setPadding(new Insets(2, 2, 2, 2));
-            retestPanes.add(qPane);
-            VBox.setMargin(questionRow, new Insets(10, 10, 10, 10));
-        }
-        qAccordion.getPanes().remove(0, qAccordion.getPanes().size());
-        qAccordion.getPanes().addAll(retestPanes);
-        questionRows.getChildren().add(qAccordion);
-    }
+//    /**
+//     * If the user chooses to re-test their self on their failed questions, this function sets up
+//     * the tutoring environment for that.
+//     */
+//    public void retest() {
+//        record = new TutorRecord();
+//        ArrayList<Pair> tempIncorrectResponses = new ArrayList<>(manager.getTempIncorrectResponses());
+//        manager.clearTempIncorrect();
+//        Collections.shuffle(tempIncorrectResponses);
+//        manager.questions = tempIncorrectResponses.size();
+//        List retestPanes = new ArrayList<>();
+//
+//        for (Pair pair : tempIncorrectResponses) {
+//            HBox questionRow = generateQuestionPane(pair);
+//            TitledPane qPane = new TitledPane("Question " + (tempIncorrectResponses.indexOf(pair) + 1), questionRow);
+//            qPane.setPadding(new Insets(2, 2, 2, 2));
+//            retestPanes.add(qPane);
+//            VBox.setMargin(questionRow, new Insets(10, 10, 10, 10));
+//        }
+//        qAccordion.getPanes().remove(0, qAccordion.getPanes().size());
+//        qAccordion.getPanes().addAll(retestPanes);
+//        questionRows.getChildren().add(qAccordion);
+//    }
 
     /**
      * Run whenever a tutoring session ends. Saves information about that session
@@ -218,10 +218,6 @@ public abstract class TutorController {
         manager.resetStats();
     }
 
-    /**
-     * An empty function which is overridden by each tutor
-     */
-    abstract HBox generateQuestionPane(Pair data);
 
     /**
      * A function for disabling a selection of buttons. For example, disable all inputs but not the

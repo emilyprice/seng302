@@ -52,14 +52,33 @@ public class Badge {
      * @param progress the amount of progress the badge as increased in
      */
     public void updateBadgeProgress(seng302.Environment env, double progress){
+        Image unlock = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
         badgeProgress += progress;
 
         while (badgeProgress >= badgeLevels.get(currentBadgeType)){
+            currentBadgeType += 1;
+            try {
+                if (badgeLevels.get(currentBadgeType) == - 1) {
+                    // Badge progress is complete
+                    badgeProgress = badgeLevels.get(currentBadgeType);
+                    currentBadgeType = 4;
+                    Notifications.create()
+                            .title("New Badge")
+                            .text("Well done! \nYou have completed " + tutorName + ": " + name + " (Platinum)")
+                            .hideAfter(new Duration(10000))
+                            .graphic(new ImageView(unlock))
+                            .show();
+                    return;
+                }
+            } catch (IndexOutOfBoundsException i) {
+                currentBadgeType = 4;
+                badgeProgress = badgeLevels.get(currentBadgeType - 1);
+                return;
+            }
             try {
                 env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().addExperience(expWorth * currentBadgeType);
             } catch (NullPointerException e) {}
-            currentBadgeType += 1;
-            Image unlock = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
+
             List<String> badgeTypes = new ArrayList<>();
             badgeTypes.add("Locked");
             badgeTypes.add("Bronze");

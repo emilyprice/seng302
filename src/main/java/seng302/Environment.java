@@ -9,6 +9,7 @@ import javafx.util.Pair;
 import seng302.Users.UserHandler;
 import seng302.gui.RootController;
 import seng302.gui.StageMapController;
+import seng302.gui.TeacherPageController;
 import seng302.gui.UserPageController;
 import seng302.managers.ThemeHandler;
 import seng302.managers.TranscriptManager;
@@ -26,6 +27,7 @@ public class Environment {
     private BooleanProperty shiftPressed;
     private ThemeHandler themeHandler;
     private Pair currentFocussed;
+    private MicrophoneInput microphoneInput;
 
 
     private AnchorPane stagePane;
@@ -44,6 +46,14 @@ public class Environment {
 
     public UserPageController getUserPageController() {
         return userPageController;
+    }
+
+    public TeacherPageController getTeacherPageController() {
+        return teacherPageController;
+    }
+
+    public void setTeacherPageController(TeacherPageController teacherPageController) {
+        this.teacherPageController = teacherPageController;
     }
 
     public void setRootController(RootController rootController) {
@@ -67,6 +77,8 @@ public class Environment {
 
     //userpage
     private UserPageController userPageController;
+
+    private TeacherPageController teacherPageController;
 
 
     private FirebaseUpdater firebaseUpdater;
@@ -94,6 +106,7 @@ public class Environment {
         firebaseUpdater = new FirebaseUpdater(this);
         userHandler = new UserHandler(this);
         themeHandler = new ThemeHandler();
+        microphoneInput = new MicrophoneInput();
 
 
     }
@@ -118,6 +131,7 @@ public class Environment {
 
 
 
+        microphoneInput = new MicrophoneInput();
     }
 
     /**
@@ -132,6 +146,7 @@ public class Environment {
         recordLocation = null;
         themeHandler = new ThemeHandler();
         em = new EditHistory(this);
+        microphoneInput = new MicrophoneInput();
         stageMapController = new StageMapController();
         stageMapController.generateLockingStatus();
 
@@ -207,6 +222,10 @@ public class Environment {
 
     public void setShiftPressed(boolean shiftPressed) {
         this.shiftPressed.setValue(shiftPressed);
+    }
+
+    public MicrophoneInput getMicrophoneInput() {
+        return microphoneInput;
     }
 
 
