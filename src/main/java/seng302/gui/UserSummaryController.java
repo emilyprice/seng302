@@ -119,6 +119,7 @@ public class UserSummaryController {
     public void create(Environment env) {
         this.env = env;
         this.user = env.getUserHandler().getCurrentUser();
+        setSecretInfo(env, this.user.getUserName(), this.user.getProjectHandler().getCurrentProject().projectName);
 
         updateProgressBar();
         updateGraphs();
@@ -520,9 +521,8 @@ public class UserSummaryController {
 
     @FXML
     public void submitFeedback() {
-
         env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").child(String.valueOf(new Date().getTime())).setValue(feedbackInput.getText());
-
+        feedbackInput.setText("");
     }
 
     public void setupFirebaseListener() {
@@ -534,17 +534,14 @@ public class UserSummaryController {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                System.out.println(dataSnapshot);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                System.out.println(dataSnapshot);
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                System.out.println(dataSnapshot);
             }
 
             @Override
