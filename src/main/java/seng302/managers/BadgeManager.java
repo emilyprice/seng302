@@ -59,6 +59,7 @@ public class BadgeManager {
     private void populateTutorList() {
         allTutors.add("Pitch Comparison Tutor");
         allTutors.add("Interval Recognition Tutor");
+        allTutors.add("Microphone Input Tutor");
         allTutors.add("Musical Terms Tutor");
         allTutors.add("Scale Recognition Tutor");
         allTutors.add("Scale Recognition Tutor (Basic)");
@@ -77,6 +78,7 @@ public class BadgeManager {
         tutorImages = new HashMap<>();
         tutorImages.put("Pitch Comparison Tutor", "tuning-fork");
         tutorImages.put("Interval Recognition Tutor", "rest-note");
+        tutorImages.put("Microphone Input Tutor", "microphone");
         tutorImages.put("Musical Terms Tutor", "open-book");
         tutorImages.put("Scale Recognition Tutor", "scale");
         tutorImages.put("Scale Recognition Tutor (Basic)", "scale");
@@ -96,6 +98,7 @@ public class BadgeManager {
         masterTutors = new HashMap<>();
         masterTutors.put("Pitch Comparison Tutor", false);
         masterTutors.put("Interval Recognition Tutor", false);
+        masterTutors.put("Microphone Input Tutor",false);
         masterTutors.put("Musical Terms Tutor", false);
         masterTutors.put("Scale Recognition Tutor", false);
         masterTutors.put("Chord Recognition Tutor", false);
@@ -141,19 +144,18 @@ public class BadgeManager {
 
         ArrayList<Integer> musicianBadges = new ArrayList<>();
         musicianBadges.add(1);
-        musicianBadges.add(3);
-        musicianBadges.add(10);
+        musicianBadges.add(5);
         musicianBadges.add(12);
+        musicianBadges.add(25);
         musicianBadges.add(-1);
 
         ArrayList<Integer> tutorTotal = new ArrayList<>();
-        tutorTotal.add(10);
+        tutorTotal.add(12);
         tutorTotal.add(-1);
 
         //intalize tutor badges
 
         for (String tutor : allTutors) {
-
 
             ArrayList<Badge> badges = new ArrayList<>();
             badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, tutorImages.get(tutor), 10));
@@ -167,7 +169,7 @@ public class BadgeManager {
         }
 
         //initialise overall badges
-        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 2, 0, "completist", 400));
+        overallBadges.add(new Badge("Completist", null, "Unlock all tutors", tutorTotal, 3, 0, "completist", 400));
         overallBadges.add(new Badge("Tutor master", null, "100% in all tutors", tutorTotal, 0, 0, "gradHat", 350));
         overallBadges.add(new Badge("Instrument master", null, "Use different instruments", musicianBadges, 0, 0, "saxophone-man", 20));
         overallBadges.add(new Badge("Creative", null, "Change your theme", null, 0, 0, "paint-brush", 20));
