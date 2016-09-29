@@ -150,6 +150,8 @@ public class Environment {
         stageMapController = new StageMapController();
         stageMapController.generateLockingStatus();
 
+        getUserHandler().removeCurrentUser();
+        getUserHandler().removeCurrentTeacher();
 
 
     }
