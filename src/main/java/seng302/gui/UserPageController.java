@@ -655,7 +655,7 @@ public class UserPageController {
 
                 basicStatsController.create(env);
                 basicStatsController.displayGraphs(tutor + " (Basic)", convert.toString(timeSlider.getValue()));
-
+                basicStatsController.updateBadgesDisplay();
 
             } catch (IOException e) {
                 e.printStackTrace();

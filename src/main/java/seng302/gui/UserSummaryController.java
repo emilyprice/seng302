@@ -157,7 +157,14 @@ public class UserSummaryController {
         overallCorrectAnim.play();
         overallCorrect.setWidth(overallWidthCorrect);
         overallCorrect.setFill(Color.web("00b004"));
-        double overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
+        double widthIncorrect;
+        double overallWidthIncorrect;
+        if (correctIncorrectOverall.getValue() != 0) {
+            overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
+        } else {
+            overallWidthIncorrect = 500;
+        }
+
         Timeline overallIncorrectAnim = new Timeline(
                 new KeyFrame(Duration.millis(800), new KeyValue(overallIncorrect.widthProperty(), overallWidthIncorrect, Interpolator.EASE_OUT)));
         overallIncorrectAnim.play();
@@ -513,7 +520,7 @@ public class UserSummaryController {
         VBox badgeBox = new VBox();
         Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label tutorName = new Label(b.tutorName);
+        Label tutorName = getTutorName(b.tutorName);
         Label description = new Label(b.description);
         Label progressDesc = new Label();
         ProgressBar progressBar = new ProgressBar();
@@ -588,7 +595,7 @@ public class UserSummaryController {
 
 
                 // show a notification
-                if (dataSnapshot.child("seen").exists() && !(boolean) dataSnapshot.child("seen").getValue() && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
+                if (dataSnapshot.child("seen").exists() && !((boolean) dataSnapshot.child("seen").getValue()) && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
                     Platform.runLater(() -> {
                         Notifications.create()
                                 .title("New Message")
@@ -604,7 +611,7 @@ public class UserSummaryController {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
                 // show a notification
-                if (dataSnapshot.child("seen").exists() && !(boolean) dataSnapshot.child("seen").getValue() && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
+                if (dataSnapshot.child("seen").exists() && !((boolean) dataSnapshot.child("seen").getValue()) && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
                     Platform.runLater(() -> {
                         Notifications.create()
                                 .title("New Message")
@@ -642,9 +649,24 @@ public class UserSummaryController {
 
     private void updateFeedbackView(DataSnapshot newMessage) {
         Date timestamp = new Date(Long.valueOf(newMessage.getKey()));
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 
         feedbackView.appendText(DATE_FORMAT.format(timestamp) + "\n" + newMessage.child("message").getValue() + "\n\n");
 
+    }
+
+    /**
+     * Helper function to get the tutor name label
+     * @param tutorName the name of the tutor the badge belongs to
+     * @return tutorNameLabel the badge label text
+     */
+    private Label getTutorName(String tutorName) {
+        Label tutorNameLabel = new Label();
+        if (tutorName.equals("Scale Recognition Tutor") || tutorName.equals("Chord Recognition Tutor")) {
+            tutorNameLabel.setText(tutorName + " (Advanced)");
+        } else {
+            tutorNameLabel.setText(tutorName);
+        }
+        return tutorNameLabel;
     }
 }
