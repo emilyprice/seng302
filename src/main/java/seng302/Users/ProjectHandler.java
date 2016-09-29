@@ -106,7 +106,7 @@ public class ProjectHandler {
             String newProject = result.get();
             JSONArray projects = getProjectList();
             if (!projects.contains(newProject)) {
-                //new Project(env, newProject, this);
+
                 setCurrentProject(newProject);
             } else {
                 env.getRootController().errorAlert("The project: " + newProject + " already exists.");
