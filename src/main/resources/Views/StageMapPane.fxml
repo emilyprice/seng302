@@ -4,6 +4,11 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
@@ -71,18 +76,19 @@
                      <font>
                         <Font size="12.0" />
                      </font></Button>
-                  <Label layoutX="236.0" layoutY="45.0" prefHeight="15.0" prefWidth="139.0" text="Musical Terms Tutor" />
-                  <Label layoutX="296.0" layoutY="126.0" prefHeight="15.0" prefWidth="76.0" text="Pitch Tutor" />
-                  <Label layoutX="152.0" layoutY="208.0" prefHeight="15.0" prefWidth="205.0" text="Scale Recognition Tutor (Basic)" />
+                  <Label layoutX="242.0" layoutY="50.0" prefHeight="15.0" prefWidth="139.0" text="Musical Terms Tutor" />
+                  <Label layoutX="296.0" layoutY="130.0" prefHeight="15.0" prefWidth="76.0" text="Pitch Tutor" />
+                  <Label layoutX="172.0" layoutY="214.0" prefHeight="15.0" prefWidth="205.0" text="Scale Recognition Tutor (Basic)" />
                   <Label layoutX="566.0" layoutY="112.0" prefHeight="15.0" prefWidth="153.0" text="Diatonic Chord Tutor" />
                   <Label layoutX="653.0" layoutY="34.0" prefHeight="15.0" prefWidth="139.0" text="Scale Modes Tutor" />
                   <Label layoutX="474.0" layoutY="164.0" prefHeight="15.0" prefWidth="153.0" text="Key Signature Tutor" />
                   <Label layoutX="474.0" layoutY="334.0" prefHeight="15.0" prefWidth="139.0" text="Chord Spelling Tutor" />
                   <Label layoutX="419.0" layoutY="419.0" prefHeight="15.0" prefWidth="242.0" text="Chord Recognition Tutor (Advanced)" />
-                  <Label layoutX="-5.0" layoutY="421.0" prefHeight="15.0" prefWidth="242.0" text="Scale Recognition Tutor (Advanced)" />
-                  <Label layoutX="94.0" layoutY="265.0" prefHeight="15.0" prefWidth="214.0" text="Chord Recognition Tutor (Basic)" />
+                  <Label layoutX="15.0" layoutY="421.0" prefHeight="15.0" prefWidth="242.0" text="Scale Recognition Tutor (Advanced)" />
+                  <Label layoutX="94.0" layoutY="270.0" prefHeight="15.0" prefWidth="214.0" text="Chord Recognition Tutor (Basic)" />
                   <Label layoutX="38.0" layoutY="329.0" prefHeight="15.0" prefWidth="173.0" text="Interval Recognition Tutor" />
-                  <Button fx:id="scaleSpellingTutorButton" layoutX="426.0" layoutY="233.0" mnemonicParsing="false" onAction="#launchScaleSpellingTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="9">
+                  <Button fx:id="scaleSpellingTutorButton" layoutX="426.0" layoutY="233.0" mnemonicParsing="false" onAction="#launchScaleSpellingTutor" prefHeight="36.0" prefWidth="41.0" style="-fx-background-radius: 100;" styleClass="primary" text="9" >
+                  <Label layoutX="474.0" layoutY="245.0" prefHeight="15.0" prefWidth="242.0" text="Scale Spelling Tutor" />
                      <font>
                         <Font size="12.0" />
                      </font></Button>

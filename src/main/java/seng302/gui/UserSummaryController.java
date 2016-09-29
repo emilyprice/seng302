@@ -472,17 +472,21 @@ public class UserSummaryController {
         String ribbonPath = "/images/ribbonAward.png";
         String lockImagePath = "/images/lock.png";
         String badgeImagePath = "/images/" + b.imageName + ".png";
+        String platBadgePath = "/images/plat-badge.png";
 
         ImageView rView = new ImageView(imageCache.retrieve(ribbonPath, 70));
         rView.fitHeightProperty().setValue(70);
         rView.fitWidthProperty().setValue(70);
-
 
         ImageView bView = new ImageView(imageCache.retrieve(badgeImagePath, 26));
         bView.fitHeightProperty().setValue(26);
         bView.fitWidthProperty().setValue(26);
 
         ImageView lockView = new ImageView(imageCache.retrieve(lockImagePath, 40));
+
+        ImageView pView = new ImageView(imageCache.retrieve(platBadgePath, 70));
+        pView.fitHeightProperty().setValue(70);
+        pView.fitWidthProperty().setValue(70);
 
         ColorAdjust badgeEffect = new ColorAdjust();
         if (b.isLocked()) {
@@ -500,19 +504,35 @@ public class UserSummaryController {
             badgeEffect.setHue(-0.687);
             badgeEffect.setSaturation(1);
             badgeEffect.setBrightness(0.1);
+        } else if (b.currentBadgeType == 4) {
+            rView = pView;
         }
         rView.setEffect(badgeEffect);
-        StackPane badgeStack = new StackPane(rView, bView);
-        badgeStack.getChildren().get(1).setTranslateY(-13);
-        badgeStack.getChildren().get(1).setTranslateX(-0.6);
 
         VBox badgeBox = new VBox();
         Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
         Label tutorName = new Label(b.tutorName);
         Label description = new Label(b.description);
+        Label progressDesc = new Label();
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
+
+        StackPane badgeStack;
+        if (b.currentBadgeType >= 4) {
+            badgeStack = new StackPane(pView, bView);
+
+            badgeStack.getChildren().get(1).setTranslateY(-1);
+            progressDesc.setText("Complete");
+            progressBar.setProgress(1);
+        } else {
+            badgeStack = new StackPane(rView, bView);
+            badgeStack.getChildren().get(1).setTranslateY(-13);
+            progressDesc.setText((int) b.badgeProgress + " out of " + b.badgeLevels.get(b.currentBadgeType));
+            progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
+        }
+        badgeStack.getChildren().get(1).setTranslateX(-0.6);
+
+
         badgeBox.getChildren().addAll(badgeStack, tutorName, badgeName, progressBar, description);
         badgeBox.setAlignment(Pos.CENTER);
         badgeBox.setSpacing(4);
