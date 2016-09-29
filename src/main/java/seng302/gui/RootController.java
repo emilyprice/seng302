@@ -1,6 +1,9 @@
 package seng302.gui;
 
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +21,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import org.json.simple.JSONArray;
 import seng302.Environment;
 import seng302.Users.Student;
@@ -208,6 +213,7 @@ public class RootController implements Initializable {
                 }
 
             } else {
+                createListener();
                 applyTheme();
                 stage.show();
                 resizeSplitPane(1.0);
@@ -935,6 +941,7 @@ public class RootController implements Initializable {
 
     /**
      * Adds a single classroom to the menu of available teacher classrooms
+     *
      * @param newClassroom The name of the classroom to be added
      */
     public void addClassroomToMenu(String newClassroom) {
@@ -946,6 +953,51 @@ public class RootController implements Initializable {
         });
 
         menuOpenClassroom.getItems().add(classMenuItem);
+
+    }
+
+    private void createListener() {
+        String student = env.getUserHandler().getCurrentUser().getUserName();
+        String project = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName;
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + student + "/projects/" + project + "/feedback").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                try {
+                    env.getUserPageController().getSummaryController().updateFeedbackView(dataSnapshot);
+                } catch (Exception e) {
+                    //probably not created
+                }
+
+                // show a notification
+                if (dataSnapshot.child("seen").exists() && !(boolean) dataSnapshot.child("seen").getValue() && env.getUserHandler().getCurrentTeacher() == null) {
+                    Platform.runLater(() -> {
+                        Notifications.create()
+                                .title("New Message")
+                                .text(dataSnapshot.child("message").getValue().toString())
+                                .hideAfter(new Duration(10000))
+                                .show();
+                    });
+                    env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + student + "/projects/" + project + "/feedback/" + dataSnapshot.getKey()).child("seen").setValue(true);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
