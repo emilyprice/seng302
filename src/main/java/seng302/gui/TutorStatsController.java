@@ -274,9 +274,16 @@ public class TutorStatsController {
                     dateAndTime = handler.getTimeAndScores("scaleSpellingTutor", timePeriod);
                     break;
                 case "Microphone Input Tutor":
-                    correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("microphoneInputTutor");
-                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("microphoneInputTutor", timePeriod);
-                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("microphoneInputTutor", timePeriod);
+                    if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode() == false) {
+
+                        if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().recentPracticeTutorRecordMap.get(tutor) != null) {
+                            correctIncorrectRecent = new Pair(env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsCorrect").intValue(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getRecentPracticeTutorRecordMap().get(tutor).getStats().get("questionsIncorrect").intValue());
+                        }
+                    } else {
+                        correctIncorrectRecent = handler.getRecentTutorTotals("microphoneInputTutor");
+                    }
+                    correctIncorrectOverall = handler.getTutorTotals("microphoneInputTutor", timePeriod);
+                    dateAndTime = handler.getTimeAndScores("microphoneInputTutor", timePeriod);
                     break;
 
             }

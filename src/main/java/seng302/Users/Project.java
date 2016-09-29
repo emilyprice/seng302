@@ -245,12 +245,16 @@ public class Project {
             if (mode.equals("true")) {
 
                 this.isCompetitiveMode = true;
+                env.getRootController().disallowMicrophonePopover();
+                env.getRootController().disallowTranscript();
             } else {
-
+                env.getRootController().allowMicrophonePopover();
+                env.getRootController().allowTranscript();
                 this.isCompetitiveMode = false;
             }
         } catch (Exception e) {
-
+            env.getRootController().disallowMicrophonePopover();
+            env.getRootController().disallowTranscript();
             this.isCompetitiveMode = true;
         }
 
@@ -454,6 +458,7 @@ public class Project {
             env.getRootController().getKeyboardPaneController().displayScalesButton.setDisable(true); //disable display scales
             env.getRootController().getKeyboardPaneController().disableLabels(true); //disable keyboard labels
             env.getRootController().disallowTranscript();
+            env.getRootController().disallowMicrophonePopover();
             env.getRootController().getTranscriptController().hideTranscript();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle().replace(" [Practice Mode]", ""));
             env.getUserPageController().getSummaryController().loadStageMap();
@@ -472,6 +477,7 @@ public class Project {
             env.getRootController().getKeyboardPaneController().disableLabels(false); //enable keyboard labels
             this.isCompetitiveMode = false;
             env.getRootController().allowTranscript();
+            env.getRootController().allowMicrophonePopover();
             env.getRootController().setWindowTitle(env.getRootController().getWindowTitle() + " [Practice Mode]");
             env.getUserPageController().getSummaryController().loadStageMap();
             env.getUserPageController().populateUserOptions();

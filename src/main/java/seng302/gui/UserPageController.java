@@ -295,6 +295,7 @@ public class UserPageController {
             timePopover.hide();
         } else {
             timePopover.show(timeSliderButton);
+            timePopover.setDetachable(false);
         }
     }
 
@@ -383,11 +384,15 @@ public class UserPageController {
      * @param timePeriod The time period to display data from in the summary stats graphs
      */
     public void updateGraphs(String timePeriod) {
-        if (env.getRootController().getHeader().equals("Summary")) {
-            summaryController.updateGraphs();
-        } else {
-            statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
-            basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", timePeriod);
+        try {
+            if (env.getRootController().getHeader().equals("Summary")) {
+                summaryController.updateGraphs();
+            } else {
+                statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
+                basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", timePeriod);
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -435,6 +440,7 @@ public class UserPageController {
             metronomePop.hide();
         } else {
             metronomePop.show(metroButton);
+            metronomePop.setDetachable(false);
         }
     }
 
