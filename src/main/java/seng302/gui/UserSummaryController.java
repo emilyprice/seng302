@@ -480,7 +480,7 @@ public class UserSummaryController {
         VBox badgeBox = new VBox();
         Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label tutorName = new Label(b.tutorName);
+        Label tutorName = getTutorName(b.tutorName);
         Label description = new Label(b.description);
         Label progressDesc = new Label();
         ProgressBar progressBar = new ProgressBar();
@@ -520,5 +520,20 @@ public class UserSummaryController {
     public void hideBadges() {
         badgesContainer.setVisible(false);
         badgesContainer.setManaged(false);
+    }
+
+    /**
+     * Helper function to get the tutor name label
+     * @param tutorName the name of the tutor the badge belongs to
+     * @return tutorNameLabel the badge label text
+     */
+    private Label getTutorName(String tutorName) {
+        Label tutorNameLabel = new Label();
+        if (tutorName.equals("Scale Recognition Tutor") || tutorName.equals("Chord Recognition Tutor")) {
+            tutorNameLabel.setText(tutorName + " (Advanced)");
+        } else {
+            tutorNameLabel.setText(tutorName);
+        }
+        return tutorNameLabel;
     }
 }

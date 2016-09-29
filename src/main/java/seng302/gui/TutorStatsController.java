@@ -557,7 +557,7 @@ public class TutorStatsController {
         VBox badgeBox = new VBox();
         Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label tutorName = new Label(this.tutorName.getText());
+        Label tutorName = getTutorName(this.tutorName.getText());
         Label description = new Label(b.description);
         Label progressDesc = new Label();
         ProgressBar progressBar = new ProgressBar();
@@ -599,6 +599,21 @@ public class TutorStatsController {
 
         env.getRootController().getTutorFactory().openTutor(tutorName);
 
+    }
+
+    /**
+     * Helper function to get the tutor name label
+     * @param tutorName the name of the tutor the badge belongs to
+     * @return tutorNameLabel the badge label text
+     */
+    private Label getTutorName(String tutorName) {
+        Label tutorNameLabel = new Label();
+        if (tutorName.equals("Scale Recognition Tutor") || tutorName.equals("Chord Recognition Tutor")) {
+            tutorNameLabel.setText(tutorName + " (Advanced)");
+        } else {
+            tutorNameLabel.setText(tutorName);
+        }
+        return tutorNameLabel;
     }
 
 
