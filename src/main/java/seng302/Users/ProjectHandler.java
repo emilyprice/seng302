@@ -75,6 +75,18 @@ public class ProjectHandler {
 
     }
 
+    public void deleteProject(String projName){
+
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom()+ "/users/" +
+                env.getUserHandler().getCurrentUser().getUserName()
+                +"/projects/"+projName).removeValue();
+
+        env.getRootController().getStage().close();
+
+        this.env.getRootController().logOutUser();
+
+    }
+
 
 
     /**
