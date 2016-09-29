@@ -1,6 +1,15 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -31,9 +40,6 @@ import seng302.Users.TutorHandler;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 import seng302.utility.TutorRecord;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Controller for the tutor stats pane,  used in the user page for all tutors.
@@ -329,6 +335,7 @@ public class TutorStatsController {
             overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
 
             // Figure out class average
+            displayClassAverage(handler, tutor, timePeriod);
             makeLineGraph(dateAndTime, timePeriod);
         } catch (IndexOutOfBoundsException e) {
             System.err.println("There are no records for the " + tutor);
@@ -342,12 +349,13 @@ public class TutorStatsController {
      * the line in the correct place on the graph.
      *
      * @param handler           The current tutorHandler.
-     * @param tutorNameNoSpaces The current tutorName.
+     * @param tutorName The current tutorName.
      * @param timePeriod        the time period of data to display.
      */
-    private void displayClassAverage(TutorHandler handler, String tutorNameNoSpaces, String timePeriod) {
+    private void displayClassAverage(TutorHandler handler, String tutorName, String timePeriod) {
         DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
         ArrayList<Pair<Integer, Integer>> classTotals = new ArrayList<>();
+        String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
 
         classroomData.getChildren().forEach(user -> {
             DataSnapshot projects = user.child("projects");
