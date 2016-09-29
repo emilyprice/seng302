@@ -73,6 +73,7 @@ public abstract class User {
             themeSecondary = "white";
         }
 
+
         try {
             //profile pic
             profilePicUrl = (properties.get("profilePicUrl")).toString();
