@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.input.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import com.jfoenix.controls.JFXBadge?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -23,7 +15,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 <AnchorPane fx:id="paneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="457.0" minWidth="700.0" prefHeight="457.0" prefWidth="700.0" style="-fx-border-style: none;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.RootController">
     <children>
         <VBox prefHeight="457.0" prefWidth="700.0" style="-fx-border-style: none;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -31,7 +22,7 @@
                 <!--<children>-->
                 <MenuBar fx:id="menuFileBar" minHeight="-Infinity" prefHeight="29.0" prefWidth="500.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <menus>
-                        <Menu mnemonicParsing="false" onShowing="#bindOpenObjects" text="File">
+                        <Menu fx:id="fileMenu" mnemonicParsing="false" onShowing="#bindOpenObjects" text="File">
                             <items>
                                 <MenuItem fx:id="menuQuit" accelerator="Shortcut+Q" mnemonicParsing="false" onAction="#closeApplication" text="Quit" />
                                 <Menu fx:id="menuOpenProjects" mnemonicParsing="false" text="Open Project" />
@@ -47,23 +38,22 @@
 
                                     </items>
                                 </Menu>
-                                <Menu mnemonicParsing="false" text="Save...">
+                                <Menu mnemonicParsing="false" text="Export">
                                     <items>
-                                        <MenuItem fx:id="menuSaveProject" accelerator="Shortcut+S" mnemonicParsing="false" onAction="#saveProject" text="Save Project" />
                                         <MenuItem fx:id="MenuSave" mnemonicParsing="false" onAction="#saveTranscript" text="Export Transcript" />
                                         <MenuItem fx:id="menuSaveCommands" mnemonicParsing="false" onAction="#saveCommands" text="Export Commands Only" />
                                     </items>
                                 </Menu>
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Edit">
+                        <Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
                             <items>
                                 <MenuItem fx:id="menuClearTranscript" mnemonicParsing="false" onAction="#clearTranscript" text="Clear Transcript" />
                                 <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#undo" text="Undo" />
                                 <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#redo" text="Redo" />
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="View">
+                        <Menu fx:id="viewMenu" mnemonicParsing="false" text="View">
                             <items>
                                 <Menu mnemonicParsing="false" text="Keyboard Options">
                                     <items>
@@ -87,6 +77,17 @@
 
                             </items>
                         </Menu>
+                  <Menu fx:id="teacherMenu" mnemonicParsing="false" text="File" visible="false">
+                     <items>
+                        <MenuItem fx:id="teacherMenuQuit" accelerator="Shortcut+Q" mnemonicParsing="false" onAction="#closeApplication" text="Quit" />
+                        <Menu mnemonicParsing="false" text="New..">
+                           <items>
+                              <MenuItem accelerator="Shortcut+N" mnemonicParsing="false" onAction="#newClassroom" text="Classroom" />
+                           </items>
+                        </Menu>
+                        <Menu fx:id="menuOpenClassroom" mnemonicParsing="false" text="Switch Classroom" />
+                     </items>
+                  </Menu>
 
                     </menus>
                 </MenuBar>

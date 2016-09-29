@@ -1,25 +1,12 @@
 package seng302;
 
+import seng302.data.Note;
+import seng302.utility.musicNotation.RhythmHandler;
+
+import javax.sound.midi.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
-import javax.sound.midi.Instrument;
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MetaMessage;
-import javax.sound.midi.MidiChannel;
-import javax.sound.midi.MidiEvent;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Patch;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
-import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Synthesizer;
-import javax.sound.midi.Track;
-
-import seng302.data.Note;
-import seng302.utility.musicNotation.RhythmHandler;
 
 /**
  * The Music Player class handles all sound that is produced by the program.

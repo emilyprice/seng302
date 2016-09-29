@@ -303,6 +303,7 @@ singleTerm ::= keyword:s {: RESULT = s;:}
        | CHORD_TYPE:s  {:RESULT = s;:}
        | DIRECTION:s   {:RESULT = s;:}
        | INTERVAL:i    {:RESULT = i;:}
+       | ROMAN_NUMERALS: s {:RESULT = s;:}
 ;
 
 term ::= singleTerm:s {:RESULT =s;:}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="dialogBox" maxHeight="200.0" maxWidth="400.0" minHeight="200.0" minWidth="400.0" prefHeight="200.0"
+            prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="seng302.gui.ClassroomCreatorController">
+    <children>
+        <JFXTextField fx:id="nameInput" layoutX="115.0" layoutY="85.0" AnchorPane.rightAnchor="20.0"/>
+        <JFXButton layoutX="324.0" layoutY="161.0" onAction="#submitClassroom" text="Create"
+                   AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0"/>
+        <Label layoutX="26.0" layoutY="93.0" text="Classroom Name:" AnchorPane.leftAnchor="20.0"/>
+        <Label fx:id="errorMessage" layoutX="35.0" layoutY="160.0" styleClass="errorMessage"
+               text="Cannot contain '.', '#', '$', '[', or ']'" visible="false" AnchorPane.bottomAnchor="20.0"
+               AnchorPane.leftAnchor="20.0"/>
+    </children>
+</AnchorPane>

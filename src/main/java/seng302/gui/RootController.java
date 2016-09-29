@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -94,6 +95,9 @@ public class RootController implements Initializable {
     private Menu menuOpenProjects;
 
     @FXML
+    private Menu menuOpenClassroom;
+
+    @FXML
     private Menu helpMenu;
 
     @FXML
@@ -117,6 +121,18 @@ public class RootController implements Initializable {
     public void showDslRef() {
         dslRefControl.getPopover().show(paneMain);
     }
+
+    @FXML
+    private Menu viewMenu;
+
+    @FXML
+    private Menu editMenu;
+
+    @FXML
+    private Menu fileMenu;
+
+    @FXML
+    private Menu teacherMenu;
 
     private DslReferenceController dslRefControl;
 
@@ -176,15 +192,34 @@ public class RootController implements Initializable {
     public void showWindow(Boolean show) {
         if (show) {
 
-            applyTheme();
-            stage.show();
-            resizeSplitPane(1.0);
-            menuTranscript.setSelected(false);
-            toggleTranscript();
-            try {
-                showUserPage();
-            } catch (IOException e) {
-                e.printStackTrace();
+            boolean isTeacher = env.getUserHandler().getCurrentTeacher() != null;
+
+            if (isTeacher) {
+                applyTeacherTheme();
+                stage.show();
+                resizeSplitPane(1.0);
+                menuTranscript.setSelected(false);
+                toggleTranscript();
+                keyboardPaneController.hideWholeKeyboard();
+                splitPane.setDividerPosition(0, 1.0);
+                try {
+                    showTeacherPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                applyTheme();
+                stage.show();
+                resizeSplitPane(1.0);
+                menuTranscript.setSelected(false);
+                toggleTranscript();
+                keyboardPaneController.showWholeKeyboard();
+                try {
+                    showUserPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 
@@ -199,6 +234,15 @@ public class RootController implements Initializable {
         //Apply user theme
         env.getThemeHandler().setBaseNode(paneMain);
         String[] themeColours = env.getUserHandler().getCurrentUser().getThemeColours();
+        env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
+    }
+
+    /**
+     * Apply the logged in teacher's theme to the main window
+     */
+    private void applyTeacherTheme() {
+        env.getThemeHandler().setBaseNode(paneMain);
+        String[] themeColours = env.getUserHandler().getCurrentTeacher().getThemeColours();
         env.getThemeHandler().setTheme(themeColours[0], themeColours[1]);
     }
 
@@ -221,8 +265,6 @@ public class RootController implements Initializable {
      * @param option close option either 'close' or 'logout'.
      */
     protected void showCloseWindow(String option) {
-
-
         if (env.getUserHandler().getCurrentUser() != null && !((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().isSaved()) {
 
             String closeText = option.equals("close") ? "Quit" : "Logout";
@@ -312,6 +354,8 @@ public class RootController implements Initializable {
      * Opens the user page.
      */
     public void showUserPage() throws IOException {
+
+
         showUserBar(false);
         setHeader("Summary");
 
@@ -332,8 +376,41 @@ public class RootController implements Initializable {
         userPageController.setEnvironment(env);
         userPageController.load();
 
+        viewMenu.setVisible(true);
+        editMenu.setVisible(true);
+        fileMenu.setVisible(true);
+        teacherMenu.setVisible(false);
+
+
     }
 
+    public void showTeacherPage() throws IOException {
+        showUserBar(false);
+        setHeader("Summary");
+
+        FXMLLoader teacherLoader = new FXMLLoader();
+        teacherLoader.setLocation(getClass().getResource("/Views/TeacherPage.fxml"));
+
+
+        AnchorPane teacherPage = teacherLoader.load();
+
+        centerPane.getChildren().add(teacherPage);
+
+        AnchorPane.setRightAnchor(teacherPage, 0.0);
+        AnchorPane.setLeftAnchor(teacherPage, 0.0);
+        AnchorPane.setBottomAnchor(teacherPage, 0.0);
+        AnchorPane.setTopAnchor(teacherPage, 0.0);
+
+        TeacherPageController teacherPageController = teacherLoader.getController();
+        teacherPageController.setEnvironment(env);
+        teacherPageController.load();
+
+        viewMenu.setVisible(false);
+        editMenu.setVisible(false);
+        fileMenu.setVisible(false);
+        teacherMenu.setVisible(true);
+
+    }
 
 
     public void setHeader(String text) {
@@ -612,6 +689,29 @@ public class RootController implements Initializable {
     }
 
     /**
+     * Launches a classroom creator window, that allows the teacher to name and create a classroom.
+     */
+    @FXML
+    public void newClassroom() {
+        //launch the clasroom creator
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/ClassroomCreator.fxml"));
+
+        try {
+            AnchorPane classCreator = loader.load();
+
+            Stage classroomCreatorStage = new Stage();
+            classroomCreatorStage.setTitle("Create New Classroom");
+            classroomCreatorStage.setScene(new Scene(classCreator, 400, 200));
+            classroomCreatorStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ClassroomCreatorController classroomCreatorController = loader.getController();
+        classroomCreatorController.create(env);
+    }
+
+    /**
      * Saves project information
      */
     @FXML
@@ -649,6 +749,26 @@ public class RootController implements Initializable {
             menuOpenProjects.getItems().add(projectItem); //Add to Open projects menu
         }
 
+    }
+
+    /**
+     * Generates a list of menu items, where each menu item is a classroom belonging to the current teacher
+     *
+     * @param classes A list of classrooms belonging to the current teacher
+     */
+    public void updateClassroomsList(List<String> classes) {
+        menuOpenClassroom.getItems().clear();
+        for (String className : classes) {
+            MenuItem classMenuItem = new MenuItem(className);
+            classMenuItem.setOnAction(event -> {
+                env.getUserHandler().setClassRoom(classMenuItem.getText());
+                setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
+                env.getTeacherPageController().updateDisplay();
+            });
+
+            menuOpenClassroom.getItems().add(classMenuItem);
+
+        }
     }
 
 
@@ -745,6 +865,33 @@ public class RootController implements Initializable {
 
     }
 
+    /**
+     * Launches a new window containing all user settings for a teacher.
+     */
+    @FXML
+    public void launchTeacherSettings() {
+        showUserBar(true);
+
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Views/TeacherSettings.fxml"));
+
+        try {
+            AnchorPane settingsPage = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Settings");
+            stage.setScene(new Scene(settingsPage, 1000, 700));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        TeacherSettingsController teacherSettingsController = loader.getController();
+        teacherSettingsController.create(env);
+
+    }
+
     @FXML
     public void toggleTranscript() {
         transcriptSplitPane.setDividerPositions(1.0);
@@ -785,6 +932,22 @@ public class RootController implements Initializable {
 
     public void allowTranscript() {
         menuTranscript.setDisable(false);
+    }
+
+    /**
+     * Adds a single classroom to the menu of available teacher classrooms
+     * @param newClassroom The name of the classroom to be added
+     */
+    public void addClassroomToMenu(String newClassroom) {
+        MenuItem classMenuItem = new MenuItem(newClassroom);
+        classMenuItem.setOnAction(clickEvent -> {
+            env.getUserHandler().setClassRoom(classMenuItem.getText());
+            env.getRootController().setWindowTitle("Allegro - " + env.getUserHandler().getClassRoom());
+            env.getTeacherPageController().updateDisplay();
+        });
+
+        menuOpenClassroom.getItems().add(classMenuItem);
+
     }
 
 }

@@ -5,10 +5,22 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Alert;
 
+
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
@@ -20,25 +32,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.action.Action;
 import seng302.Environment;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -99,6 +107,9 @@ public class UserPageController {
     private JFXButton timeSliderButton;
 
 
+    @FXML
+    JFXButton logoutButton;
+
     private PopOver timePopover;
 
     private Environment env;
@@ -157,8 +168,17 @@ public class UserPageController {
 
     @FXML
     public void onLogoutClick() {
-        env.getRootController().logOutUser();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Log Out Confirmation");
+        alert.setContentText("Are you sure you want to log out?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            env.getRootController().logOutUser();
+        } else {
+            alert.close();
+        }
     }
+
 
     /**
      * Refreshes the display of the level indicator badge so that it matches the level of the user's
@@ -635,7 +655,7 @@ public class UserPageController {
         FXMLLoader tutorStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
         VBox all = new VBox();
 
-        if(tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor") ){
+        if (tutor.equals("Scale Recognition Tutor") || tutor.equals("Chord Recognition Tutor")) {
             FXMLLoader tutorbasicStatsLoader = new FXMLLoader(getClass().getResource("/Views/TutorStats.fxml"));
             try {
                 VBox stats = tutorbasicStatsLoader.load();
@@ -647,7 +667,7 @@ public class UserPageController {
                 basicStatsController = tutorbasicStatsLoader.getController();
 
                 basicStatsController.create(env);
-                basicStatsController.displayGraphs( tutor + " (Basic)", convert.toString(timeSlider.getValue()));
+                basicStatsController.displayGraphs(tutor + " (Basic)", convert.toString(timeSlider.getValue()));
 
 
             } catch (IOException e) {
@@ -656,7 +676,7 @@ public class UserPageController {
         }
 
 
-        if((Boolean)(env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))) {
+        if ((Boolean) (env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))) {
             try {
                 VBox stats = tutorStatsLoader.load();
                 all.getChildren().add(stats);
