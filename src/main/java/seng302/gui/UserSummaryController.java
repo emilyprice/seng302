@@ -1,12 +1,30 @@
 package seng302.gui;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
+
+import org.controlsfx.control.Notifications;
+
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.LoadException;
@@ -17,7 +35,11 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -30,12 +52,6 @@ import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 import seng302.utility.ImageCache;
 import seng302.utility.LevelCalculator;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 
 /**
  * Controller for the GUI page which displays a user's summary information.
@@ -72,6 +88,15 @@ public class UserSummaryController {
     @FXML
     private Line classAverage;
 
+    @FXML
+    private JFXTextArea feedbackView;
+
+    @FXML
+    private JFXTextField feedbackInput;
+
+    @FXML
+    private JFXButton submitButton;
+
     private Environment env;
 
     private Student user;
@@ -101,6 +126,8 @@ public class UserSummaryController {
     private int gridY = 0;
 
     public static final ImageCache imageCache = new ImageCache();
+    private String secretStudent;
+    private String secretProject;
 
     /**
      * Initializes the user summary controller and draws its graphs
@@ -110,9 +137,11 @@ public class UserSummaryController {
     public void create(Environment env) {
         this.env = env;
         this.user = env.getUserHandler().getCurrentUser();
+        setSecretInfo(env, this.user.getUserName(), this.user.getProjectHandler().getCurrentProject().projectName);
 
         updateProgressBar();
         updateGraphs();
+        setupFirebaseListener();
 
     }
 
@@ -128,7 +157,14 @@ public class UserSummaryController {
         overallCorrectAnim.play();
         overallCorrect.setWidth(overallWidthCorrect);
         overallCorrect.setFill(Color.web("00b004"));
-        double overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
+        double widthIncorrect;
+        double overallWidthIncorrect;
+        if (correctIncorrectOverall.getValue() != 0) {
+            overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
+        } else {
+            overallWidthIncorrect = 500;
+        }
+
         Timeline overallIncorrectAnim = new Timeline(
                 new KeyFrame(Duration.millis(800), new KeyValue(overallIncorrect.widthProperty(), overallWidthIncorrect, Interpolator.EASE_OUT)));
         overallIncorrectAnim.play();
@@ -146,7 +182,8 @@ public class UserSummaryController {
     }
 
     /**
-     * Generates the user summary controller when there is no current user (ie a teacher is logged in)
+     * Generates the user summary controller when there is no current user (ie a teacher is logged
+     * in)
      *
      * @param env        The environment
      * @param userName   The name of the user whose summary page is to be created
@@ -206,8 +243,10 @@ public class UserSummaryController {
     }
 
     /**
-     * Updates the progress bar GUI element for a given student and project, when a teacher is logged in.
-     * @param studentName The name of the student to display info about
+     * Updates the progress bar GUI element for a given student and project, when a teacher is
+     * logged in.
+     *
+     * @param studentName    The name of the student to display info about
      * @param studentProject The name of student's project to display info about
      */
     public void updateProgressBarStudent(String studentName, String studentProject) {
@@ -261,7 +300,8 @@ public class UserSummaryController {
 
     /**
      * Shows the stage map for a provided user and project, when a teacher is logged in
-     * @param userName The user whose stagemap is to be displayed
+     *
+     * @param userName    The user whose stagemap is to be displayed
      * @param userProject The project for which the stagemap will be displayed
      */
     public void showStudentStagemap(String userName, String userProject) {
@@ -480,7 +520,7 @@ public class UserSummaryController {
         VBox badgeBox = new VBox();
         Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label tutorName = new Label(b.tutorName);
+        Label tutorName = getTutorName(b.tutorName);
         Label description = new Label(b.description);
         Label progressDesc = new Label();
         ProgressBar progressBar = new ProgressBar();
@@ -496,7 +536,7 @@ public class UserSummaryController {
             badgeStack = new StackPane(rView, bView);
             badgeStack.getChildren().get(1).setTranslateY(-13);
             progressDesc.setText((int) b.badgeProgress + " out of " + b.badgeLevels.get(b.currentBadgeType));
-            progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
+            progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
         }
         badgeStack.getChildren().get(1).setTranslateX(-0.6);
 
@@ -515,10 +555,118 @@ public class UserSummaryController {
     }
 
     /**
-     * Used for displaying the user summary in teacher mode. The teacher does not care about a student's badges
+     * Used for displaying the user summary in teacher mode. The teacher does not care about a
+     * student's badges
      */
     public void hideBadges() {
         badgesContainer.setVisible(false);
         badgesContainer.setManaged(false);
+    }
+
+    /**
+     * To show or hide the feedback entry field (Should only be shown for teachers).
+     */
+    public void displayFeedbackInput(boolean isDisplayed) {
+        feedbackInput.setVisible(isDisplayed);
+        feedbackInput.setManaged(isDisplayed);
+        submitButton.setVisible(isDisplayed);
+        submitButton.setManaged(isDisplayed);
+    }
+
+    @FXML
+    /**
+     * Adds the feedback to firebase.
+     */
+    public void submitFeedback() {
+        String time = String.valueOf(new Date().getTime());
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback/" + time).child("message").setValue(feedbackInput.getText());
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback/" + time).child("seen").setValue(false);
+        feedbackInput.setText("");
+    }
+
+    /**
+     * Creates a message listener
+     */
+    public void setupFirebaseListener() {
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                updateFeedbackView(dataSnapshot);
+
+
+                // show a notification
+                if (dataSnapshot.child("seen").exists() && !((boolean) dataSnapshot.child("seen").getValue()) && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
+                    Platform.runLater(() -> {
+                        Notifications.create()
+                                .title("New Message")
+                                .text(dataSnapshot.child("message").getValue().toString())
+                                .hideAfter(new Duration(10000))
+                                .show();
+                    });
+                    env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback/" + dataSnapshot.getKey()).child("seen").setValue(true);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                // show a notification
+                if (dataSnapshot.child("seen").exists() && !((boolean) dataSnapshot.child("seen").getValue()) && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
+                    Platform.runLater(() -> {
+                        Notifications.create()
+                                .title("New Message")
+                                .text(dataSnapshot.child("message").getValue().toString())
+                                .hideAfter(new Duration(10000))
+                                .show();
+                    });
+                    env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback/" + dataSnapshot.getKey()).child("seen").setValue(true);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Sets up some fields used for firebase if you are a teacher.
+     */
+    public void setSecretInfo(Environment env, String student, String project) {
+        this.env = env;
+        this.secretStudent = student;
+        this.secretProject = project;
+    }
+
+    private void updateFeedbackView(DataSnapshot newMessage) {
+        Date timestamp = new Date(Long.valueOf(newMessage.getKey()));
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+
+        feedbackView.appendText(DATE_FORMAT.format(timestamp) + "\n" + newMessage.child("message").getValue() + "\n\n");
+
+    }
+
+    /**
+     * Helper function to get the tutor name label
+     * @param tutorName the name of the tutor the badge belongs to
+     * @return tutorNameLabel the badge label text
+     */
+    private Label getTutorName(String tutorName) {
+        Label tutorNameLabel = new Label();
+        if (tutorName.equals("Scale Recognition Tutor") || tutorName.equals("Chord Recognition Tutor")) {
+            tutorNameLabel.setText(tutorName + " (Advanced)");
+        } else {
+            tutorNameLabel.setText(tutorName);
+        }
+        return tutorNameLabel;
     }
 }

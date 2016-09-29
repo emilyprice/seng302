@@ -192,7 +192,6 @@ public abstract class TutorController {
 
 
         if (currentProject != null) {
-
             if (isCompMode) {
                 String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
                 tutorHandler.saveTutorRecordsToFile(tutorNameNoSpaces, record);

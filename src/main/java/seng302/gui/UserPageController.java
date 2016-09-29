@@ -4,24 +4,6 @@ import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
-
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import org.controlsfx.control.PopOver;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Alert;
-
-
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Optional;
-
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -42,11 +24,11 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.action.Action;
 import seng302.Environment;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -295,6 +277,7 @@ public class UserPageController {
             timePopover.hide();
         } else {
             timePopover.show(timeSliderButton);
+            timePopover.setDetachable(false);
         }
     }
 
@@ -383,11 +366,15 @@ public class UserPageController {
      * @param timePeriod The time period to display data from in the summary stats graphs
      */
     public void updateGraphs(String timePeriod) {
-        if (env.getRootController().getHeader().equals("Summary")) {
-            summaryController.updateGraphs();
-        } else {
-            statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
-            basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", timePeriod);
+        try {
+            if (env.getRootController().getHeader().equals("Summary")) {
+                summaryController.updateGraphs();
+            } else {
+                statsController.displayGraphs((String) listView.getSelectionModel().getSelectedItem(), timePeriod);
+                basicStatsController.displayGraphs(listView.getSelectionModel().getSelectedItem() + " (Basic)", timePeriod);
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -402,6 +389,7 @@ public class UserPageController {
         if (pageName.equals("Summary")) {
             showSummaryPage();
         } else {
+
             showTutorStats(pageName);
         }
 
@@ -434,6 +422,7 @@ public class UserPageController {
             metronomePop.hide();
         } else {
             metronomePop.show(metroButton);
+            metronomePop.setDetachable(false);
         }
     }
 
@@ -632,10 +621,8 @@ public class UserPageController {
 
             summaryController = summaryLoader.getController();
             summaryController.create(env);
+            summaryController.displayFeedbackInput(false);
             summaryController.loadStageMap();
-            if (!env.getFirebase().getUserSnapshot().child("projects/" + env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/unlockMap").exists()) {
-                env.getUserHandler().getCurrentUser().saveAll();
-            }
 
 
         } catch (IOException e) {
@@ -669,7 +656,7 @@ public class UserPageController {
 
                 basicStatsController.create(env);
                 basicStatsController.displayGraphs(tutor + " (Basic)", convert.toString(timeSlider.getValue()));
-
+                basicStatsController.updateBadgesDisplay();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -677,7 +664,8 @@ public class UserPageController {
         }
 
 
-        if ((Boolean) (env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))) {
+        if((Boolean)(env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))
+         || !env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             try {
                 GridPane stats = tutorStatsLoader.load();
                 all.getChildren().add(stats);
@@ -689,6 +677,7 @@ public class UserPageController {
                 statsController = tutorStatsLoader.getController();
 
                 statsController.create(env);
+
                 statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
                 statsController.updateBadgesDisplay();
 
