@@ -12,6 +12,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.LoadException;
@@ -224,7 +225,8 @@ public class UserSummaryController {
 
     /**
      * Updates the progress bar GUI element for a given student and project, when a teacher is logged in.
-     * @param studentName The name of the student to display info about
+     *
+     * @param studentName    The name of the student to display info about
      * @param studentProject The name of student's project to display info about
      */
     public void updateProgressBarStudent(String studentName, String studentProject) {
@@ -278,7 +280,8 @@ public class UserSummaryController {
 
     /**
      * Shows the stage map for a provided user and project, when a teacher is logged in
-     * @param userName The user whose stagemap is to be displayed
+     *
+     * @param userName    The user whose stagemap is to be displayed
      * @param userProject The project for which the stagemap will be displayed
      */
     public void showStudentStagemap(String userName, String userProject) {
@@ -542,12 +545,14 @@ public class UserSummaryController {
                 updateFeedbackView(dataSnapshot);
 
                 // show a notification
-                if (!(boolean) dataSnapshot.child("seen").getValue() && env.getUserHandler().getCurrentTeacher() == null) {
-                    Notifications.create()
-                            .title("New Message")
-                            .text(dataSnapshot.child("message").getValue().toString())
-                            .hideAfter(new Duration(10000))
-                            .show();
+                if (dataSnapshot.child("seen").exists() && !(boolean) dataSnapshot.child("seen").getValue() && env.getUserHandler().getCurrentTeacher() == null) {
+                    Platform.runLater(() -> {
+                        Notifications.create()
+                                .title("New Message")
+                                .text(dataSnapshot.child("message").getValue().toString())
+                                .hideAfter(new Duration(10000))
+                                .show();
+                    });
                     env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback/" + dataSnapshot.getKey()).child("seen").setValue(true);
                 }
             }
