@@ -130,6 +130,7 @@ public class UserSummaryController {
 
         updateProgressBar();
         updateGraphs();
+        setupFirebaseListener();
 
     }
 
@@ -584,7 +585,7 @@ public class UserSummaryController {
         this.secretProject = project;
     }
 
-    public void updateFeedbackView(DataSnapshot newMessage) {
+    private void updateFeedbackView(DataSnapshot newMessage) {
         Date timestamp = new Date(Long.valueOf(newMessage.getKey()));
         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
