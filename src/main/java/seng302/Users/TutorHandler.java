@@ -247,10 +247,19 @@ public class TutorHandler {
      * Saves the tutor records to disc.
      */
     public void saveTutorRecordsToFile(String tutorName, TutorRecord currentRecord) {
-        DatabaseReference ref = env.getFirebase().getUserRef().child("projects/" +
-                env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/" + tutorName);
+
         currentRecord.updateDate();
-        ref.getRef().child(String.valueOf(currentRecord.getDate().getTime())).setValue(currentRecord);
+
+        env.getFirebase().getUserRef().getRef().child("projects/"
+                +env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName
+                +"/"+tutorName+"/"+
+                String.valueOf(currentRecord.getDate().getTime())).setValue(currentRecord);
+        while(!env.getFirebase().getUserSnapshot().child("projects/"
+                +env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName
+                +"/"+tutorName+"/"+
+                String.valueOf(currentRecord.getDate().getTime())).exists()){
+
+        }
     }
 
     /**

@@ -340,6 +340,7 @@ public class StageMapController {
      */
     public static void generateLockingStatus() {
         //pitch tutor and musical terms tutor are unlocked by default
+
         unlockStatus.put("musicalTermsTutor", true);
         unlockStatus.put("microphoneInputTutor", true);
         unlockStatus.put("pitchTutor", true);
@@ -353,6 +354,7 @@ public class StageMapController {
         unlockStatus.put("keySignatureTutor", false);
         unlockStatus.put("diatonicChordTutor", false);
         unlockStatus.put("scaleModesTutor", false);
+
 
 
     }
