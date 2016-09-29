@@ -138,7 +138,6 @@ public class Environment {
     public void resetEnvironment() {
 
         firebaseUpdater = new FirebaseUpdater(this);
-
         executor = new DslExecutor(this);
         player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();
@@ -148,7 +147,12 @@ public class Environment {
         em = new EditHistory(this);
         microphoneInput = new MicrophoneInput();
         stageMapController = new StageMapController();
-        stageMapController.generateLockingStatus();
+        if(getUserHandler().getCurrentTeacher() == null){
+
+            stageMapController.generateLockingStatus();
+        }
+
+
 
 
 
