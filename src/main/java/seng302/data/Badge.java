@@ -86,12 +86,21 @@ public class Badge {
             badgeTypes.add("Gold");
             badgeTypes.add("Platinum");
 
-            Notifications.create()
-                    .title("New Badge")
-                    .text("Well done! \nYou have unlocked " + tutorName + ": " + name + " (" + badgeTypes.get(currentBadgeType) + ")")
-                    .hideAfter(new Duration(10000))
-                    .graphic(new ImageView(unlock))
-                    .show();
+            if (name.equals("Instrument master")) {
+                Notifications.create()
+                        .title("New Badge")
+                        .text("Well done! \nYou have unlocked " + name + " (" + badgeTypes.get(currentBadgeType) + ")")
+                        .hideAfter(new Duration(10000))
+                        .graphic(new ImageView(unlock))
+                        .show();
+            } else {
+                Notifications.create()
+                        .title("New Badge")
+                        .text("Well done! \nYou have unlocked " + tutorName + ": " + name + " (" + badgeTypes.get(currentBadgeType) + ")")
+                        .hideAfter(new Duration(10000))
+                        .graphic(new ImageView(unlock))
+                        .show();
+            }
         }
     }
 }
