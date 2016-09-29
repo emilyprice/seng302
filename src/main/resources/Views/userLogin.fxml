@@ -40,7 +40,7 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
                <effect>
-                  <DropShadow />
+                  <DropShadow height="5.0" radius="2.0" width="5.0" />
                </effect>
             </HBox>
             <VBox alignment="CENTER" onKeyPressed="#handleKeyPressed" prefHeight="329.0" prefWidth="460.0" style="-fx-background-color: rgba(255, 255, 255, 1);">
@@ -102,7 +102,7 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" />
                </VBox.margin>
                <effect>
-                  <DropShadow />
+                  <DropShadow height="5.0" radius="2.0" width="5.0" />
                </effect>
             </VBox>
          </children>
