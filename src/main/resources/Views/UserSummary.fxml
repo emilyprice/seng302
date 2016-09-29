@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
@@ -123,7 +125,7 @@
         </VBox>
         <VBox fx:id="badgesContainer" alignment="TOP_CENTER" maxWidth="900.0" prefHeight="1056.0" prefWidth="900.0"
               style="-fx-background-color: white;" GridPane.columnSpan="2147483647"
-              GridPane.halignment="CENTER" GridPane.rowIndex="2">
+              GridPane.halignment="CENTER" GridPane.rowIndex="3">
             <children>
                 <Label alignment="CENTER" maxWidth="300.0" prefHeight="27.0" prefWidth="130.0"
                        text="Achievements" textAlignment="CENTER">
@@ -174,6 +176,32 @@
             <FlowPane.margin>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </FlowPane.margin>
+        </VBox>
+        <VBox prefHeight="200.0" prefWidth="900.0" style="-fx-background-color: white;" GridPane.columnSpan="2"
+              GridPane.rowIndex="2" GridPane.halignment="CENTER" maxWidth="900">
+            <children>
+                <StackPane>
+                    <children>
+                        <Label text="Feedback">
+                            <font>
+                                <Font name="System Bold" size="18.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                </StackPane>
+                <JFXTextArea fx:id="feedbackView" editable="false">
+                    <padding>
+                        <Insets bottom="10.0"/>
+                    </padding>
+                    <VBox.margin>
+                        <Insets left="5.0" right="5.0"/>
+                    </VBox.margin>
+                </JFXTextArea>
+                <JFXTextField fx:id="feedbackInput"/>
+            </children>
+            <effect>
+                <DropShadow height="5.0" radius="2.0" width="5.0"/>
+            </effect>
         </VBox>
     </children>
     <columnConstraints>
