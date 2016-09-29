@@ -538,6 +538,9 @@ public class UserSummaryController {
         feedbackInput.setText("");
     }
 
+    /**
+     * Creates a message listener
+     */
     public void setupFirebaseListener() {
         env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(new ChildEventListener() {
             @Override
