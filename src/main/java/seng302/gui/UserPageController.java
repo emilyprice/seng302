@@ -414,7 +414,15 @@ public class UserPageController {
      */
     @FXML
     public void openSettings() {
-        env.getRootController().launchSettings();
+        try {
+            if (!env.getRootController().settingsStage.isShowing()) {
+                env.getRootController().launchSettings();
+            } else {
+                env.getRootController().settingsStage.toFront();
+            }
+        } catch (NullPointerException e) {
+            env.getRootController().launchSettings();
+        }
     }
 
     /**
