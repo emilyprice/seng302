@@ -33,6 +33,10 @@ public class ProjectHandler {
         this.userName = user;
 
         this.env = env;
+        String temp = String.valueOf(env.getFirebase().getUserSnapshot().child("properties/lastProject").getValue());
+        if(!temp.equals("null")){
+            lastOpened = temp;
+        }
 
         loadDefaultProject();
 
@@ -67,7 +71,8 @@ public class ProjectHandler {
             env.getUserPageController().updateLevelBadge();
             env.getUserPageController().updateGraphs(env.getUserPageController().getTimePeriod());
             env.getUserPageController().getSummaryController().updateProgressBar();
-
+            lastOpened = projName;
+            env.getFirebase().getUserRef().child("/properties/lastProject").setValue(lastOpened);
 
         } catch (Exception e) {
             System.err.println("Root controller not initialised. (updating level badge, update graphs and progress bar failed");
