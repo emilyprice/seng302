@@ -152,7 +152,7 @@ public class KeyboardPaneController {
     @FXML
     public void initialize() {
         keyboardBox.setMaxHeight(200);
-        keyboardBox.setMinHeight(200);
+        keyboardBox.setMinHeight(250);
         blackKeys.setMaxHeight(130);
         playMode = "play";
         HBox.setHgrow(rightStack, Priority.ALWAYS);

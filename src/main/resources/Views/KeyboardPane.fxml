@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <TitledPane fx:id="keyPane" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" maxHeight="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.KeyboardPaneController">
    <content>
-       <StackPane fx:id="keyboardStack" alignment="TOP_LEFT" focusTraversable="true" maxHeight="200.0" minHeight="200.0" prefHeight="0.0" styleClass="noDivider">
+       <StackPane fx:id="keyboardStack" alignment="TOP_LEFT" focusTraversable="true" maxHeight="200.0" minHeight="250.0" prefHeight="0.0" styleClass="noDivider">
           <padding>
               <Insets bottom="0" left="0" right="0" top="0" />
           </padding>
