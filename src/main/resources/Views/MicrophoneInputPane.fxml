@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane fx:id="microphoneTutorAnchor" prefHeight="300.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.gui.MicrophoneInputTutorController">
+    <children>
+        <HBox fx:id="settings" alignment="CENTER" layoutY="36.0" minWidth="400.0" prefHeight="362.0" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="56.0">
+            <children>
+                <VBox fx:id="paneInit" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="362.0" spacing="10.0">
+                    <children>
+                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="600.0" spacing="5">
+                            <children>
+                                <Label alignment="CENTER" contentDisplay="CENTER"
+                                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0"
+                                       text="Number of Questions: "/>
+                                <Label fx:id="questions" contentDisplay="CENTER" prefHeight="30.0">
+                                    <font>
+                                        <Font name="System Bold" size="13.0" />
+                                    </font>
+                                </Label>
+                                <JFXSlider fx:id="numQuestions" blockIncrement="1.0" majorTickUnit="49.0" max="50.0" min="1.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" value="5.0" prefWidth="250">
+                                    <padding>
+                                        <Insets top="15.0" />
+                                    </padding>
+                                </JFXSlider>
+                            </children>
+                            <padding>
+                                <Insets left="5.0" />
+                            </padding>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                            <children>
+                                <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" text="Note Range:" />
+                                <Label fx:id="notes" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0">
+                                    <HBox.margin>
+                                        <Insets left="3.0" />
+                                    </HBox.margin>
+                                    <font>
+                                        <Font name="System Bold" size="13.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="5.0" left="5.0" />
+                            </VBox.margin>
+                        </HBox>
+                        <BorderPane>
+                            <bottom>
+                                <JFXButton id="btnGo" fx:id="btnGo" buttonType="RAISED"
+                                           alignment="CENTER" onAction="#goAction" prefHeight="30.0"
+                                           prefWidth="90.0" styleClass="primaryControl" text="Go"
+                                           BorderPane.alignment="CENTER">
+                                    <BorderPane.margin>
+                                        <Insets bottom="5.0" left="20.0" />
+                                    </BorderPane.margin>
+                                </JFXButton>
+                            </bottom>
+                        </BorderPane>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <ScrollPane fx:id="paneQuestions" fitToHeight="true" fitToWidth="true" layoutY="45.0"
+                    minHeight="10.0" minWidth="10.0" prefHeight="481.0" prefViewportHeight="60.0"
+                    prefViewportWidth="680.0" prefWidth="722.0" visible="false"
+                    AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+                    AnchorPane.topAnchor="0">
+            <content>
+                <StackPane alignment="CENTER">
+                    <children>
+                        <VBox fx:id="questionRows" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="486.0" prefWidth="719.0">
+                            <children>
+                                <Accordion fx:id="qAccordion" prefHeight="150.0" prefWidth="650.0">
+                                    <panes></panes>
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </padding>
+                                </Accordion>
+                            </children>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding></VBox>
+                    </children>
+                </StackPane>
+            </content>
+        </ScrollPane>
+        <JFXButton fx:id="back" text="Back" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="10"
+                   prefWidth="100"
+                   prefHeight="20" styleClass="primary" buttonType="RAISED" onAction="#backAction">
+            <graphic>
+                <ImageView fitHeight="20.0" fitWidth="30.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/left-arrow.png"/>
+                    </image>
+                </ImageView>
+            </graphic>
+        </JFXButton>
+    </children>
+</AnchorPane>

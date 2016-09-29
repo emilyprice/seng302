@@ -59,7 +59,7 @@
                   </VBox>
                </children>
             </HBox>
-             <HBox prefHeight="30.0" />
+             <HBox fx:id="micIn" prefHeight="30.0"/>
          </children>
       </VBox>
    </children>

@@ -34,7 +34,7 @@ import seng302.utility.TutorRecord;
 
 public class Project {
 
-    HashMap<String, Object> projectSettings;
+    HashMap<String, Object> projectSettings = new HashMap<>();
 
     ProjectHandler projectHandler;
 
@@ -47,6 +47,7 @@ public class Project {
     public TutorHandler tutorHandler;
     private BadgeManager badgeManager;
 
+    private double inputVolumeThreshold;
 
     private Boolean isCompetitiveMode, visualiserOn;
     Boolean saved = true;
@@ -131,6 +132,10 @@ public class Project {
             System.err.println("cant save unlock map descriptions");
         }
 
+        projectSettings.put("inputVolumeThreshold", gson.toJson(inputVolumeThreshold));
+
+
+
     }
 
 
@@ -140,6 +145,22 @@ public class Project {
      */
     private void loadProperties() {
 
+
+        while(!env.getFirebase().getUserSnapshot().child("projects/" + projectName).exists()){
+            //Hack, which keeps looping untill the firebase has been updated.
+            int count = 0;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            count ++;
+
+            if(count > 100){
+                System.err.println("Failed to collect project data from firebase.");
+                return;
+            }
+        }
 
         DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/" + projectName);
 
@@ -156,6 +177,12 @@ public class Project {
 
         env.getPlayer().setTempo(tempo);
 
+
+        try {
+            inputVolumeThreshold = Double.valueOf(projectSettings.get("inputVolumeThreshold").toString());
+        } catch (Exception e) {
+            inputVolumeThreshold = -60.0;
+        }
 
         //Transcript
         ArrayList<OutputTuple> transcript;
@@ -216,13 +243,15 @@ public class Project {
         try {
             String mode = gson.fromJson((String) projectSettings.get("competitionMode"), String.class);
             if (mode.equals("true")) {
-                setToCompetitionMode();
+
+                this.isCompetitiveMode = true;
             } else {
-                setToPracticeMode();
+
+                this.isCompetitiveMode = false;
             }
         } catch (Exception e) {
-            // Defaults to comp mode
-            setToCompetitionMode();
+
+            this.isCompetitiveMode = true;
         }
 
         try {
@@ -296,8 +325,7 @@ public class Project {
             }
         } catch (Exception e) {
             e.printStackTrace();
-
-        }
+       }
 
         try {
             Gson gson = new Gson();
@@ -395,16 +423,14 @@ public class Project {
      */
     public void loadProject(String pName) {
         DataSnapshot project = env.getFirebase().getUserSnapshot().child("projects/" + pName);
-        env.resetProjectEnvironment();
+
         if (project.exists()) {
 
         } else {
-            System.err.println("Tried to load project but it didn't exist");
             saveProject(pName);
 
         }
         this.projectName = pName;
-        loadProperties();
         env.getRootController().setWindowTitle("Allegro - " + pName);
 
 
@@ -520,6 +546,14 @@ public class Project {
 
     public BadgeManager getBadgeManager() {
         return badgeManager;
+    }
+
+    public void setInputVolumeThreshold(double threshold) {
+        this.inputVolumeThreshold = threshold;
+    }
+
+    public double getInputVolumeThreshold() {
+        return inputVolumeThreshold;
     }
 
 }

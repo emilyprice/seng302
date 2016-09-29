@@ -11,10 +11,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.PopOver;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -35,8 +40,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import javafx.stage.WindowEvent;
 import seng302.Environment;
 import seng302.Users.Student;
+import seng302.gui.MicrophoneInputPopoverController;
 import seng302.managers.TranscriptManager;
 import seng302.utility.OutputTuple;
 
@@ -163,34 +171,6 @@ public class RootController implements Initializable {
 
     }
 
-    /**
-     * Loads a new user image into a circular shape
-     */
-    public void updateImage() {
-
-        final Circle clip = new Circle(imageDP.getFitWidth() - 25.0, imageDP.getFitHeight() - 25.0, 50.0);
-        imageDP.setImage(env.getUserHandler().getCurrentUser().getUserPicture());
-        clip.setRadius(25.0);
-        imageDP.setClip(clip);
-
-        SnapshotParameters parameters = new SnapshotParameters();
-        parameters.setFill(Color.TRANSPARENT);
-        WritableImage image = imageDP.snapshot(parameters, null);
-
-        imageDP.setClip(null);
-        imageDP.setEffect(new DropShadow(5, Color.BLACK));
-
-        imageDP.setImage(image);
-        imageDP.setOnMouseClicked(event -> {
-
-            try {
-                showUserPage();
-            } catch (Exception e) {
-
-            }
-        });
-    }
-
 
     /**
      * Display or hide the main GUI window.
@@ -311,7 +291,7 @@ public class RootController implements Initializable {
 
 
         } else if (env.getTranscriptManager().unsavedChanges) {
-            ((Student) env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
+            ( env.getUserHandler().getCurrentUser()).getProjectHandler().getCurrentProject().saveCurrentProject();
 
             if (option.equals("close")) System.exit(0);
             else if (option.equals("logout")) logOutUser();
@@ -956,6 +936,43 @@ public class RootController implements Initializable {
         });
 
         menuOpenClassroom.getItems().add(classMenuItem);
+
+    }
+
+    /**
+     * Opens the microphone input popover
+     */
+    @FXML
+    private void openMicrophonePopover() {
+        PopOver microphonePopover = new PopOver();
+        microphonePopover.setDetachable(true);
+        microphonePopover.setArrowLocation(PopOver.ArrowLocation.TOP_LEFT);
+
+        try {
+            FXMLLoader micInputPopLoader = new FXMLLoader();
+            micInputPopLoader.setLocation(getClass().getResource("/Views/MicrophoneInputPopover.fxml"));
+            Node loadedPane = (Node) micInputPopLoader.load();
+            MicrophoneInputPopoverController micInputPopController = micInputPopLoader.getController();
+            micInputPopController.create(env);
+            microphonePopover.setContentNode(loadedPane);
+            microphonePopover.show(paneMain);
+            microphonePopover.setTitle("Microphone Input");
+            microphonePopover.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    env.getMicrophoneInput().addPopover(null);
+                    try {
+                        env.getMicrophoneInput().stopRecording();
+                    } catch (Exception e) {
+                        // mic input was not recording.
+                        System.err.println("failed");
+                    }
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
 
     }
 

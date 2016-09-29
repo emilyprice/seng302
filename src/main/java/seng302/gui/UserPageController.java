@@ -181,15 +181,16 @@ public class UserPageController {
         ArrayList<String> options = new ArrayList<>();
         options.add("Summary");
         options.add("Musical Terms Tutor");
+        options.add("Microphone Input Tutor");
         options.add("Pitch Comparison Tutor");
         options.add("Scale Recognition Tutor");
         options.add("Chord Recognition Tutor");
         options.add("Interval Recognition Tutor");
         options.add("Chord Spelling Tutor");
+        options.add("Scale Spelling Tutor");
         options.add("Key Signature Tutor");
         options.add("Diatonic Chord Tutor");
         options.add("Scale Modes Tutor");
-        options.add("Scale Spelling Tutor");
 
         Image lockImg = new Image("/images/lock.png", 20, 20, true, true);
         listView.getItems().clear();
@@ -268,7 +269,6 @@ public class UserPageController {
                 }
             }
         });
-
     }
 
     @FXML
@@ -384,6 +384,7 @@ public class UserPageController {
         if (pageName.equals("Summary")) {
             showSummaryPage();
         } else {
+
             showTutorStats(pageName);
         }
 
@@ -616,9 +617,6 @@ public class UserPageController {
             summaryController.create(env);
             summaryController.displayFeedbackInput(false);
             summaryController.loadStageMap();
-            if (!env.getFirebase().getUserSnapshot().child("projects/" + env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/unlockMap").exists()) {
-                env.getUserHandler().getCurrentUser().saveAll();
-            }
 
 
         } catch (IOException e) {
@@ -659,7 +657,8 @@ public class UserPageController {
         }
 
 
-        if ((Boolean) (env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))) {
+        if((Boolean)(env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))
+         || !env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             try {
                 VBox stats = tutorStatsLoader.load();
                 all.getChildren().add(stats);
@@ -671,6 +670,7 @@ public class UserPageController {
                 statsController = tutorStatsLoader.getController();
 
                 statsController.create(env);
+
                 statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
                 statsController.updateBadgesDisplay();
 

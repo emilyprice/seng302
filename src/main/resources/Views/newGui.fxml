@@ -72,8 +72,12 @@
                                         <RadioMenuItem mnemonicParsing="false" onAction="#stopShowingNotesOnKeyboard" selected="true" text="Do not show note names" toggleGroup="$keyboardOptions" />
                                     </items>
                                 </Menu>
-                                <RadioMenuItem fx:id="menuTranscript" mnemonicParsing="false" onAction="#toggleTranscript" text="Show Transcript" />
-                                <MenuItem fx:id="menuHelpWindow" mnemonicParsing="false" onAction="#showDslRef" text="DSL Reference Card" />
+                                <RadioMenuItem fx:id="menuTranscript" mnemonicParsing="false"
+                                               onAction="#toggleTranscript" text="Show Transcript"/>
+                                <MenuItem fx:id="menuHelpWindow" mnemonicParsing="false"
+                                          onAction="#showDslRef" text="DSL Reference Card"/>
+                                <MenuItem mnemonicParsing="false" onAction="#openMicrophonePopover"
+                                          text="Microphone Popover"/>
 
                             </items>
                         </Menu>

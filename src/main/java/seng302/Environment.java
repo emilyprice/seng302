@@ -27,6 +27,7 @@ public class Environment {
     private BooleanProperty shiftPressed;
     private ThemeHandler themeHandler;
     private Pair currentFocussed;
+    private MicrophoneInput microphoneInput;
 
 
     private AnchorPane stagePane;
@@ -105,6 +106,7 @@ public class Environment {
         firebaseUpdater = new FirebaseUpdater(this);
         userHandler = new UserHandler(this);
         themeHandler = new ThemeHandler();
+        microphoneInput = new MicrophoneInput();
 
 
     }
@@ -124,15 +126,19 @@ public class Environment {
         transcriptManager = new TranscriptManager();
         recordLocation = null;
         em = new EditHistory(this);
+        stageMapController.generateLockingStatus();
+        stageMapController = new StageMapController();
 
-
+        microphoneInput = new MicrophoneInput();
     }
 
     /**
      * Resets the environment so it clears the existing saved information.
      */
     public void resetEnvironment() {
+
         firebaseUpdater = new FirebaseUpdater(this);
+
         executor = new DslExecutor(this);
         player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();
@@ -140,6 +146,10 @@ public class Environment {
         recordLocation = null;
         themeHandler = new ThemeHandler();
         em = new EditHistory(this);
+        microphoneInput = new MicrophoneInput();
+        stageMapController = new StageMapController();
+        stageMapController.generateLockingStatus();
+
         getUserHandler().removeCurrentUser();
         getUserHandler().removeCurrentTeacher();
 
@@ -214,6 +224,10 @@ public class Environment {
 
     public void setShiftPressed(boolean shiftPressed) {
         this.shiftPressed.setValue(shiftPressed);
+    }
+
+    public MicrophoneInput getMicrophoneInput() {
+        return microphoneInput;
     }
 
 

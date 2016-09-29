@@ -58,6 +58,9 @@ public class StageMapController {
     private Button musicalTermsTutorButton;
 
     @FXML
+    private Button microphoneInputTutorButton;
+
+    @FXML
     private Button chordRecognitionTutorButton;
 
     @FXML
@@ -92,7 +95,7 @@ public class StageMapController {
     /**
      * stores the unlock order of the tutors
      */
-    private static ArrayList<String> tutorOrder; //the order in which the tutors unlock
+    public static ArrayList<String> tutorOrder; //the order in which the tutors unlock
 
     /**
      * stores the conversion of tutor name to a shortened tutor string that is used for
@@ -114,9 +117,12 @@ public class StageMapController {
         converted.put("Key Signature Tutor", "keySignatureTutor");
         converted.put("Diatonic Chord Tutor", "diatonicChordTutor");
         converted.put("Scale Modes Tutor", "scaleModesTutor");
+        converted.put("Microphone Input Tutor", "microphoneInputTutor");
+
 
         tutorOrder = new ArrayList<>();
         tutorOrder.add("musicalTermsTutor");
+        tutorOrder.add("microphoneInputTutor");
         tutorOrder.add("pitchTutor");
         tutorOrder.add("basicScaleTutor");
         tutorOrder.add("basicChordTutor");
@@ -137,7 +143,7 @@ public class StageMapController {
 
     Environment env; //declare the environment
 
-    private String nextUnlockTutor = "scaleTutor";
+    private String nextUnlockTutor = "basicScaleTutor"; //Is this correct? Should it be scaleTutor?
 
 
     /**
@@ -198,6 +204,24 @@ public class StageMapController {
                 nextTutorName = t;
             }
         }
+
+        if(nextUnlockTutor.equals("scaleTutor")) {
+            if (checkLast3Records("basicScaleTutor")) {
+
+                unlockDescriptions.get(nextUnlockTutor).put("basicScaleTutor", true);
+
+            }
+        }
+        else if(nextUnlockTutor.equals("chordTutor")) {
+            if (checkLast3Records("basicChordTutor")) {
+
+                unlockDescriptions.get(nextUnlockTutor).put("basicChordTutor", true);
+
+            }
+        }
+
+
+
         unlockHeader.setText("To unlock the " + nextTutorName + ":");
         if (descriptionVbox.getChildren().size() > 1) {
             descriptionVbox.getChildren().remove(1, descriptionVbox.getChildren().size());
@@ -276,7 +300,7 @@ public class StageMapController {
     private void generateDescriptions() {
 
         unlockDescriptions = new HashMap<>();
-        for (String tutor : tutorOrder.subList(2, tutorOrder.size())) {
+        for (String tutor : tutorOrder.subList(3, tutorOrder.size())) {
             HashMap<String, Boolean> temp = new HashMap<>();
             temp.put(tutorOrder.get(tutorOrder.indexOf(tutor) - 1), false);
             if (tutor.equals("scaleTutor") || tutor.equals("chordTutor")) {
@@ -295,6 +319,7 @@ public class StageMapController {
     public void generateTutorAndButtonNames() {
         tutorAndButton = new HashMap<>();
         tutorAndButton.put("musicalTermsTutor", musicalTermsTutorButton);
+        tutorAndButton.put("microphoneInputTutor" , microphoneInputTutorButton);
         tutorAndButton.put("pitchTutor", pitchTutorButton);
         tutorAndButton.put("basicScaleTutor", basicScaleRecognitionTutorButton);
         tutorAndButton.put("basicChordTutor", basicChordRecognitionTutorButton);
@@ -313,9 +338,10 @@ public class StageMapController {
      * Generates the hash map that stores the locking status of each tutor (whether it is unlocked
      * or locked)
      */
-    private void generateLockingStatus() {
+    public static void generateLockingStatus() {
         //pitch tutor and musical terms tutor are unlocked by default
         unlockStatus.put("musicalTermsTutor", true);
+        unlockStatus.put("microphoneInputTutor", true);
         unlockStatus.put("pitchTutor", true);
         unlockStatus.put("basicScaleTutor", false);
         unlockStatus.put("basicChordTutor", false);
@@ -349,21 +375,26 @@ public class StageMapController {
         //If in competitive mode, relevant stages should be locked
         if (env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             for (String tutor : unlockStatus.keySet()) {
-                tutorAndButton.get(tutor).setDisable(false);
-                tutorAndButton.get(tutor).setGraphic(null);
-                if (unlockStatus.get(tutor) == false) {
-                    tutorAndButton.get(tutor).setDisable(true);
-                    ImageView iv1 = new ImageView();
-                    iv1.setImage(padlock);
-                    tutorAndButton.get(tutor).setGraphic(iv1);
 
-                }
+                    tutorAndButton.get(tutor).setDisable(false);
+                    tutorAndButton.get(tutor).setGraphic(null);
+                    if (unlockStatus.get(tutor) == false) {
+                        tutorAndButton.get(tutor).setDisable(true);
+                        ImageView iv1 = new ImageView();
+                        iv1.setImage(padlock);
+                        tutorAndButton.get(tutor).setGraphic(iv1);
+
+                    }
+
             }
             //else if in practice mode, all of the levels should be unlocked
         } else {
             for (String tutor : unlockStatus.keySet()) {
-                tutorAndButton.get(tutor).setDisable(false);
-                tutorAndButton.get(tutor).setGraphic(null);
+
+                    tutorAndButton.get(tutor).setDisable(false);
+                    tutorAndButton.get(tutor).setGraphic(null);
+
+
             }
 
         }
@@ -372,41 +403,59 @@ public class StageMapController {
 
 
     /**
+     * Helper function to check the last three records for a given tutor name
+     * and verify if that tutor meets unlock criteria.
+     * @param tutor tutor to check unlock criteria for.
+     * @return
+     */
+    private Boolean checkLast3Records(String tutor){
+        ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
+        boolean unlock = true;
+        int requiredScore = 7; //7
+        if(nextUnlockTutor.equals("scaleTutor")||nextUnlockTutor.equals("chordTutor")){
+            if(tutor.equals("basicScaleTutor")|| tutor.equals("basicChordTutor")){
+                requiredScore = 9; //9
+            }
+
+        }
+
+        if (records.size() < 3) {
+            unlock = false;
+            //if there are less than 3 existing files
+        } else {
+            for (int i = records.size() - 3; i < records.size(); i++) {
+                TutorRecord record = records.get(i);
+                if (!(record.getStats().get("questionsCorrect").intValue() >= requiredScore)) {
+                    unlock = false;
+                }
+
+
+            }
+        }
+        return unlock;
+    }
+
+
+    /**
      * Fetches 3 most recent tutor score files for tutor of interest and checks scores
      */
     public void fetchTutorFile(String tutorId) {
 
-        for (String tutor : unlockDescriptions.get(nextUnlockTutor).keySet()) {
-            ArrayList<TutorRecord> records = tutorHandler.getTutorData(tutor);
-            boolean unlock = true;
+        for(String tutor: unlockDescriptions.get(nextUnlockTutor).keySet()) {
 
-            int requiredScore = 7; //7
-            if (nextUnlockTutor.equals("scaleTutor") || nextUnlockTutor.equals("chordTutor")) {
-                if (tutor.equals("basicScaleTutor") || tutor.equals("basicChordTutor")) {
-                    requiredScore = 9; //9
-                }
-            }
+            if (checkLast3Records(tutor)) {
 
-            if (records.size() < 1) {
-                unlock = false;
-                //if there are less than 3 existing files
-            } else {
-                for (int i = records.size() - 1; i < records.size(); i++) {
-                    TutorRecord record = records.get(i);
-                    if (!(record.getStats().get("questionsCorrect").intValue() >= requiredScore)) {
-                        unlock = false;
-                    }
-                }
-            }
-
-            if (unlock) {
                 unlockDescriptions.get(nextUnlockTutor).put(tutor, true);
+
             }
 
 
         }
 
-        if (!(unlockDescriptions.get(nextUnlockTutor).values().contains(false))) {
+
+        if (!(unlockDescriptions.get(nextUnlockTutor).values().contains(false))
+                && env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()
+                && !tutorId.equals("Scale Modes Tutor")) {
 
             unlockTutor(tutorOrder.get(tutorOrder.indexOf(converted.get(tutorId)) + 1));
             visualiseLockedTutors();
@@ -416,6 +465,9 @@ public class StageMapController {
                     nextTutorName = t;
                 }
             }
+
+
+
             Image unlockImage = new Image(getClass().getResourceAsStream("/images/unlock.png"), 75, 75, true, true);
             Notifications.create()
                     .title("Tutor Unlocked")
@@ -438,7 +490,7 @@ public class StageMapController {
                 ("/images/lock.png"), 10, 10, true, true);
 
         for (String tutor : tutorOrder) {
-            if (tutor.equals("musicalTermsTutor") || tutor.equals("pitchTutor")) {
+            if (tutor.equals("musicalTermsTutor") || tutor.equals("pitchTutor") || tutor.equals("microphoneInputTutor")) {
                 tutorAndButton.get(tutor).setDisable(false);
             } else {
                 tutorAndButton.get(tutor).setDisable(true);
@@ -479,9 +531,9 @@ public class StageMapController {
     }
 
 
-    /*
-    //FXML methods below give actions to the buttons on the stage map. When a stage on the stage map is selected,
-    //the corresponding tutor will launch
+    /**
+    *FXML methods below give actions to the buttons on the stage map. When a stage on the stage map is selected,
+    *the corresponding tutor will launch
      */
     @FXML
     private void launchMusicalTermsTutor() {
@@ -543,6 +595,11 @@ public class StageMapController {
     @FXML
     private void launchMajorModesTutor() {
         env.getRootController().getTutorFactory().openTutor("Scale Modes Tutor");
+    }
+
+    @FXML
+    private void launchMicrophoneInputTutor() {
+        env.getRootController().getTutorFactory().openTutor("Microphone Input Tutor");
     }
 
 

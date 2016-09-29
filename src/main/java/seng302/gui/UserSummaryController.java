@@ -315,14 +315,13 @@ public class UserSummaryController {
         controller.setEnvOnly(env);
         controller.generateTutorAndButtonNames();
 
-        String unlockData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + userName + "/projects/" + userProject + "/unlockMap").getValue().toString();
-        Type mapType = new TypeToken<HashMap<String, Boolean>>() {
-        }.getType();
-        HashMap<String, Boolean> unlockStuff = new Gson().fromJson(unlockData, mapType);
-
-        if (unlockStuff != null) {
+        try {
+            String unlockData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users/" + userName + "/projects/" + userProject + "/unlockMap").getValue().toString();
+            Type mapType = new TypeToken<HashMap<String, Boolean>>() {
+            }.getType();
+            HashMap<String, Boolean> unlockStuff = new Gson().fromJson(unlockData, mapType);
             controller.loadStudentMap(unlockStuff);
-        } else {
+        } catch (Exception e) {
             //create the standard unlock map
             controller.loadStudentMap();
         }

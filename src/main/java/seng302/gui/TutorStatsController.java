@@ -273,6 +273,11 @@ public class TutorStatsController {
                     correctIncorrectOverall = handler.getTutorTotals("scaleSpellingTutor", timePeriod);
                     dateAndTime = handler.getTimeAndScores("scaleSpellingTutor", timePeriod);
                     break;
+                case "Microphone Input Tutor":
+                    correctIncorrectRecent = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getRecentTutorTotals("microphoneInputTutor");
+                    correctIncorrectOverall = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTutorTotals("microphoneInputTutor", timePeriod);
+                    dateAndTime = env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().tutorHandler.getTimeAndScores("microphoneInputTutor", timePeriod);
+                    break;
 
             }
 
