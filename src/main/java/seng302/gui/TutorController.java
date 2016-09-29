@@ -1,5 +1,6 @@
 package seng302.gui;
 
+import com.google.firebase.database.DataSnapshot;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
 import javafx.fxml.FXML;
@@ -198,7 +199,7 @@ public abstract class TutorController {
             } else {
                 currentProject.addRecentPracticeTutorRecordMap(tutorName, record);
             }
-            currentProject.saveCurrentProject();
+
 
         }
 
