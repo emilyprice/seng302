@@ -255,8 +255,8 @@ public class TeacherPageController {
             //statsController = tutorStatsLoader.getController();
 
             userSummaryController.hideBadges();
-            userSummaryController.setSecretInfo(userName, project);
-            userSummaryController.setupFirebaseListener(userName, project);
+            userSummaryController.setSecretInfo(env, userName, project);
+            userSummaryController.setupFirebaseListener();
             //change to be the user that was clicked on
             userSummaryController.createStudent(env, userName, "All Time", project);
             userSummaryController.showStudentStagemap(userName, project);

@@ -122,7 +122,7 @@ public class UserSummaryController {
 
         updateProgressBar();
         updateGraphs();
-        setupFirebaseListener(env.getUserHandler().getCurrentUser().getUserName(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName);
+        setupFirebaseListener();
 
     }
 
@@ -525,7 +525,7 @@ public class UserSummaryController {
 
     }
 
-    public void setupFirebaseListener(String student, String project) {
+    public void setupFirebaseListener() {
         env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -554,7 +554,8 @@ public class UserSummaryController {
         });
     }
 
-    public void setSecretInfo(String student, String project) {
+    public void setSecretInfo(Environment env, String student, String project) {
+        this.env = env;
         this.secretStudent = student;
         this.secretProject = project;
     }
