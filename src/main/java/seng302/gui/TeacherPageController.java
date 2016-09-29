@@ -1,10 +1,24 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -13,10 +27,6 @@ import javafx.scene.shape.Circle;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import seng302.Environment;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TeacherPageController {
 
@@ -280,6 +290,14 @@ public class TeacherPageController {
 
     @FXML
     public void onLogoutClick() {
-        env.getRootController().logOutUser();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Log Out Confirmation");
+        alert.setContentText("Are you sure you want to log out?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            env.getRootController().logOutUser();
+        } else {
+            alert.close();
+        }
     }
 }

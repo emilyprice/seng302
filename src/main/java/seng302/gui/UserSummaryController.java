@@ -175,7 +175,8 @@ public class UserSummaryController {
     }
 
     /**
-     * Generates the user summary controller when there is no current user (ie a teacher is logged in)
+     * Generates the user summary controller when there is no current user (ie a teacher is logged
+     * in)
      *
      * @param env        The environment
      * @param userName   The name of the user whose summary page is to be created
@@ -235,7 +236,8 @@ public class UserSummaryController {
     }
 
     /**
-     * Updates the progress bar GUI element for a given student and project, when a teacher is logged in.
+     * Updates the progress bar GUI element for a given student and project, when a teacher is
+     * logged in.
      *
      * @param studentName    The name of the student to display info about
      * @param studentProject The name of student's project to display info about
@@ -527,7 +529,7 @@ public class UserSummaryController {
             badgeStack = new StackPane(rView, bView);
             badgeStack.getChildren().get(1).setTranslateY(-13);
             progressDesc.setText((int) b.badgeProgress + " out of " + b.badgeLevels.get(b.currentBadgeType));
-            progressBar.setProgress(b.badgeProgress/b.badgeLevels.get(b.currentBadgeType));
+            progressBar.setProgress(b.badgeProgress / b.badgeLevels.get(b.currentBadgeType));
         }
         badgeStack.getChildren().get(1).setTranslateX(-0.6);
 
@@ -546,7 +548,8 @@ public class UserSummaryController {
     }
 
     /**
-     * Used for displaying the user summary in teacher mode. The teacher does not care about a student's badges
+     * Used for displaying the user summary in teacher mode. The teacher does not care about a
+     * student's badges
      */
     public void hideBadges() {
         badgesContainer.setVisible(false);
@@ -628,6 +631,9 @@ public class UserSummaryController {
         });
     }
 
+    /**
+     * Sets up some fields used for firebase if you are a teacher.
+     */
     public void setSecretInfo(Environment env, String student, String project) {
         this.env = env;
         this.secretStudent = student;
