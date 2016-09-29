@@ -345,6 +345,7 @@ public class TutorStatsController {
             overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
 
             // Figure out class average
+            displayClassAverage(handler, tutor, timePeriod);
             makeLineGraph(dateAndTime, timePeriod);
         } catch (IndexOutOfBoundsException e) {
             System.err.println("There are no records for the " + tutor);
@@ -358,12 +359,13 @@ public class TutorStatsController {
      * the line in the correct place on the graph.
      *
      * @param handler           The current tutorHandler.
-     * @param tutorNameNoSpaces The current tutorName.
+     * @param tutorName The current tutorName.
      * @param timePeriod        the time period of data to display.
      */
-    private void displayClassAverage(TutorHandler handler, String tutorNameNoSpaces, String timePeriod) {
+    private void displayClassAverage(TutorHandler handler, String tutorName, String timePeriod) {
         DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
         ArrayList<Pair<Integer, Integer>> classTotals = new ArrayList<>();
+        String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
 
         classroomData.getChildren().forEach(user -> {
             DataSnapshot projects = user.child("projects");

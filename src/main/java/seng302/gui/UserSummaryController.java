@@ -595,7 +595,7 @@ public class UserSummaryController {
 
 
                 // show a notification
-                if (dataSnapshot.child("seen").exists() && !(boolean) dataSnapshot.child("seen").getValue() && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
+                if (dataSnapshot.child("seen").exists() && !((boolean) dataSnapshot.child("seen").getValue()) && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
                     Platform.runLater(() -> {
                         Notifications.create()
                                 .title("New Message")
@@ -611,7 +611,7 @@ public class UserSummaryController {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
                 // show a notification
-                if (dataSnapshot.child("seen").exists() && !(boolean) dataSnapshot.child("seen").getValue() && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
+                if (dataSnapshot.child("seen").exists() && !((boolean) dataSnapshot.child("seen").getValue()) && env.getUserHandler().getCurrentTeacher() == null && env.getUserHandler().getCurrentUser() != null) {
                     Platform.runLater(() -> {
                         Notifications.create()
                                 .title("New Message")
@@ -649,7 +649,7 @@ public class UserSummaryController {
 
     private void updateFeedbackView(DataSnapshot newMessage) {
         Date timestamp = new Date(Long.valueOf(newMessage.getKey()));
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 
         feedbackView.appendText(DATE_FORMAT.format(timestamp) + "\n" + newMessage.child("message").getValue() + "\n\n");
 
