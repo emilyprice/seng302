@@ -5,9 +5,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+
+import org.controlsfx.control.Notifications;
+
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -23,13 +35,16 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.Pair;
-import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.Users.Student;
 import seng302.Users.TutorHandler;
@@ -37,10 +52,6 @@ import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 import seng302.utility.ImageCache;
 import seng302.utility.LevelCalculator;
-
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Controller for the GUI page which displays a user's summary information.
@@ -545,7 +556,16 @@ public class UserSummaryController {
         env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 updateFeedbackView(dataSnapshot);
+                System.out.println(dataSnapshot.child("seen").exists());
+                if (dataSnapshot.child("seen").exists()) {
+                    System.out.println(!((boolean) dataSnapshot.child("seen").getValue()));
+                }
+                System.out.println(env.getUserHandler().getCurrentTeacher() == null);
 
                 // show a notification
                 if (dataSnapshot.child("seen").exists() && !(boolean) dataSnapshot.child("seen").getValue() && env.getUserHandler().getCurrentTeacher() == null) {
@@ -558,10 +578,6 @@ public class UserSummaryController {
                     });
                     env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback/" + dataSnapshot.getKey()).child("seen").setValue(true);
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             }
 
             @Override
