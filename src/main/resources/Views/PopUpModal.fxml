@@ -12,7 +12,7 @@
    <top>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="415.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="lblHeader" text="Are you sure you wish to delete this user?">
+            <Label fx:id="lblHeader" text="Are you sure you wish to delete this user?" minWidth="500" alignment="CENTER">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
