@@ -243,15 +243,14 @@ public class Project {
         try {
             String mode = gson.fromJson((String) projectSettings.get("competitionMode"), String.class);
             if (mode.equals("true")) {
-                //setToCompetitionMode();
+
                 this.isCompetitiveMode = true;
             } else {
-                //setToPracticeMode();
+
                 this.isCompetitiveMode = false;
             }
         } catch (Exception e) {
-            // Defaults to comp mode
-            //setToCompetitionMode();
+
             this.isCompetitiveMode = true;
         }
 
@@ -325,9 +324,8 @@ public class Project {
                 env.getStageMapController().setDescription();
             }
         } catch (Exception e) {
-            //Remove? Not sure if neccessary
-            env.getStageMapController().generateLockingStatus();
-        }
+            e.printStackTrace();
+       }
 
         try {
             Gson gson = new Gson();
@@ -429,12 +427,10 @@ public class Project {
         if (project.exists()) {
 
         } else {
-
             saveProject(pName);
 
         }
         this.projectName = pName;
-
         env.getRootController().setWindowTitle("Allegro - " + pName);
 
 
@@ -451,7 +447,6 @@ public class Project {
     public boolean getIsCompetitiveMode() {
         return isCompetitiveMode;
     }
-
 
     private void setToCompetitionMode() {
         try {

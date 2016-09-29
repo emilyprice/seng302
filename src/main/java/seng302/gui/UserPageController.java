@@ -205,10 +205,10 @@ public class UserPageController {
         options.add("Chord Recognition Tutor");
         options.add("Interval Recognition Tutor");
         options.add("Chord Spelling Tutor");
+        options.add("Scale Spelling Tutor");
         options.add("Key Signature Tutor");
         options.add("Diatonic Chord Tutor");
         options.add("Scale Modes Tutor");
-        options.add("Scale Spelling Tutor");
 
         Image lockImg = new Image("/images/lock.png", 20, 20, true, true);
         listView.getItems().clear();
