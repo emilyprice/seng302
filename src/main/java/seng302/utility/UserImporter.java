@@ -3,6 +3,7 @@ package seng302.utility;
 import com.google.gson.Gson;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import seng302.Environment;
@@ -11,14 +12,36 @@ import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Utility class used to import local user profiles from previous versions of the application before
  * cloud storage.
  */
 public class UserImporter {
+    static HashMap<String, String> converted = new HashMap<>();
+
+    static{
+
+        converted.put("MusicalTermsTutor.json", "musicalTermsTutor");
+        converted.put("PitchComparisonTutor.json", "PitchComparisonTutor");
+        converted.put("DiatonicChordTutor.json", "diatonicChordTutor");
+        converted.put("ScaleRecognitionTutor.json", "basicScaleTutor");
+        converted.put("ChordRecognitionTutor.json", "basicChordTutor");
+        converted.put("IntervalRecognitionTutor.json", "intervalTutor");
+        converted.put("ChordSpellingTutor.json", "chordSpellingTutor");
+        converted.put("ScaleSpellingTutor.json", "scaleSpellingTutor");
+        converted.put("KeySignatureTutor.json", "keySignatureTutor");
+        converted.put("DiatonicChordsTutor.json", "diatonicChordTutor");
+
+        converted.put("ScaleModesTutor.json", "scaleModesTutor");
+
+    }
 
     /**
      * Imports locally stored user data into firebase
@@ -26,7 +49,7 @@ public class UserImporter {
      * @param env The environment the application runs in
      * @param stage The stage on which to show the directory chooser
      */
-    public static void importUser(Environment env, String classroom, Window stage) {
+    public static String[] importUser(Environment env, String classroom, Window stage) {
         DirectoryChooser dirChooser = new DirectoryChooser();
 
         dirChooser.setTitle("Select a project directory");
@@ -35,11 +58,13 @@ public class UserImporter {
         dirChooser.setInitialDirectory(path.toFile());
 
         File folder = dirChooser.showDialog(stage);
+        String[] ret;
 
         if (validUserFolder(folder)) {
             if (!env.getUserHandler().getUserNames().contains(folder.getName())) {
-                uploadUserProperties(env, classroom, folder);
+                ret = uploadUserProperties(env, classroom, folder);
                 uploadUserProjects(env, new File(folder.getPath() + "/Projects"));
+                return ret;
             } else {
                 System.err.println("Classroom already contains a user of the selected username");
                 env.getRootController().errorAlert("Could not import the given user." +
@@ -47,6 +72,7 @@ public class UserImporter {
             }
 
         }
+        return new String[]{};
 
     }
 
@@ -57,7 +83,7 @@ public class UserImporter {
      * @param env  Environment
      * @param path User folder path.
      */
-    public static void uploadUserProperties(Environment env, String classroom, File path) {
+    public static String[] uploadUserProperties(Environment env, String classroom, File path) {
 
         String userFirstName, userLastName, userName, themePrimary, themeSecondary, userPassword;
         Date lastSignIn;
@@ -72,9 +98,12 @@ public class UserImporter {
         }
 
         userName = (properties.get("userName")).toString();
+        userPassword = (properties.get("password")).toString();
 
         env.getFirebase().createStudentSnapshot(classroom, userName, true);
         env.getFirebase().getUserRef().child("properties").updateChildren(properties);
+
+        return new String[] {userName, userPassword};
 
 
     }
@@ -106,19 +135,48 @@ public class UserImporter {
             } else if (projectFile.getName().endsWith(".json")) {
                 //Handle tutor data upload
                 try {
-                    JSONObject tutorRecords = (JSONObject) parser.parse(new FileReader(f.getPath() + "/" + projectFile.getName()));
-                    tutorData.put(projectFile.getName(), tutorRecords);
+
+                    JSONArray tutorRecords = (JSONArray) parser.parse(new FileReader(f.getPath() + "/" + projectFile.getName()));
+//
+                        //tutorData.put(projectFile.getName(), tutorRecords);
+                    for(Object record: tutorRecords){
+                        TutorRecord rclass = new TutorRecord();
+
+                        JSONObject r = (JSONObject) record;
+                        List questionList = new ArrayList<>();
+                        JSONArray questions = (JSONArray) r.get("questions");
+
+                        for(Object questionMap : questions ){
+                            HashMap<String, Object> question = (HashMap<String, Object>) questionMap;
+                            questionList.add(question);
+
+                        }
+                        HashMap<String, Number> stats = (HashMap) r.get("stats");
+                        rclass.setStats(stats);
+
+                        String dateString = (String) r.get("date");
+
+                        DateFormat df = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a");
+                        Date d = df.parse(dateString);
+                        rclass.setDate(d);
+
+                        rclass.setQuestions(questionList);
+                        env.getFirebase().getUserRef().child("projects/" + f.getName()+"/" + converted.get(projectFile.getName()) +"/"+rclass.getDate().getTime()).setValue(rclass);
+                        //tutorData.put(projectFile.getName(), rclass);
+
+
+
+                    }
+
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                     System.err.println("Could not load the tutor properties for tutor: " + projectFile.getName());
                 }
 
             }
         }
-        for (String key : tutorData.keySet()) {
-            projectSettings.put(key, tutorData.get(key));
 
-        }
         env.getFirebase().getUserRef().child("projects/" + f.getName()).updateChildren(projectSettings);
 
     }

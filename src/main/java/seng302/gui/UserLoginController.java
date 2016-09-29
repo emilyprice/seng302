@@ -271,7 +271,24 @@ public class UserLoginController {
     @FXML
     void importUser() {
         if (classroomSelected()) {
-            UserImporter.importUser(this.env, ddClassroom.getValue().toString(), btnLogin.getScene().getWindow());
+            String[] usernamepassword = UserImporter.importUser(this.env, ddClassroom.getValue().toString(), btnLogin.getScene().getWindow());
+
+            env.getUserHandler().createUser(usernamepassword[0], usernamepassword[1]);
+            env.getUserHandler().removeCurrentTeacher();
+
+
+
+
+
+            env.getUserHandler().getCurrentUser().saveProperties();
+
+            ((Stage) btnRegister.getScene().getWindow()).close();
+            env.getRootController().showWindow(true);
+
+            env.getRootController().showWindow(true);
+
+
+
         }
 
     }
