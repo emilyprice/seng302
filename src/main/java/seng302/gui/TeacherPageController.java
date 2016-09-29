@@ -255,9 +255,11 @@ public class TeacherPageController {
             //statsController = tutorStatsLoader.getController();
 
             userSummaryController.hideBadges();
+            userSummaryController.setupFirebaseListener(userName, project);
             //change to be the user that was clicked on
             userSummaryController.createStudent(env, userName, "All Time", project);
             userSummaryController.showStudentStagemap(userName, project);
+            userSummaryController.displayFeedbackInput(true);
 
         } catch (IOException e) {
             e.printStackTrace();

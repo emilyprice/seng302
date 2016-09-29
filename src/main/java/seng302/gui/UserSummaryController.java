@@ -1,8 +1,12 @@
 package seng302.gui;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -32,10 +36,7 @@ import seng302.utility.ImageCache;
 import seng302.utility.LevelCalculator;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Controller for the GUI page which displays a user's summary information.
@@ -72,6 +73,12 @@ public class UserSummaryController {
     @FXML
     private Line classAverage;
 
+    @FXML
+    private JFXTextArea feedbackView;
+
+    @FXML
+    private JFXTextField feedbackInput;
+
     private Environment env;
 
     private Student user;
@@ -101,6 +108,8 @@ public class UserSummaryController {
     private int gridY = 0;
 
     public static final ImageCache imageCache = new ImageCache();
+    private String secretStudent;
+    private String secretProject;
 
     /**
      * Initializes the user summary controller and draws its graphs
@@ -113,6 +122,7 @@ public class UserSummaryController {
 
         updateProgressBar();
         updateGraphs();
+        setupFirebaseListener(env.getUserHandler().getCurrentUser().getUserName(), env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName);
 
     }
 
@@ -501,5 +511,56 @@ public class UserSummaryController {
     public void hideBadges() {
         badgesContainer.setVisible(false);
         badgesContainer.setManaged(false);
+    }
+
+    public void displayFeedbackInput(boolean isDisplayed) {
+        feedbackInput.setVisible(isDisplayed);
+        feedbackInput.setManaged(isDisplayed);
+    }
+
+    @FXML
+    public void submitFeedback() {
+
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").child(String.valueOf(new Date().getTime())).setValue(feedbackInput.getText());
+
+    }
+
+    public void setupFirebaseListener(String student, String project) {
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + student + "/projects/" + project + "/feedback").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                System.out.println(dataSnapshot);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                System.out.println(dataSnapshot);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                System.out.println(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void setSecretInfo(String student, String project) {
+        this.secretStudent = student;
+        this.secretProject = project;
+    }
+
+    private void updateFeedbackView(String student, String project) {
+
+
     }
 }
