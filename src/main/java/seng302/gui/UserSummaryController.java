@@ -28,6 +28,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import org.controlsfx.control.Notifications;
 import seng302.Environment;
 import seng302.Users.Student;
 import seng302.Users.TutorHandler;
@@ -528,7 +529,9 @@ public class UserSummaryController {
 
     @FXML
     public void submitFeedback() {
-        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").child(String.valueOf(new Date().getTime())).setValue(feedbackInput.getText());
+        String time = String.valueOf(new Date().getTime());
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback/" + time).child("message").setValue(feedbackInput.getText());
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback/" + time).child("seen").setValue(false);
         feedbackInput.setText("");
     }
 
@@ -537,6 +540,16 @@ public class UserSummaryController {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 updateFeedbackView(dataSnapshot);
+
+                // show a notification
+                if (!(boolean) dataSnapshot.child("seen").getValue() && env.getUserHandler().getCurrentTeacher() == null) {
+                    Notifications.create()
+                            .title("New Message")
+                            .text(dataSnapshot.child("message").getValue().toString())
+                            .hideAfter(new Duration(10000))
+                            .show();
+                    env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback/" + dataSnapshot.getKey()).child("seen").setValue(true);
+                }
             }
 
             @Override
@@ -568,8 +581,7 @@ public class UserSummaryController {
         Date timestamp = new Date(Long.valueOf(newMessage.getKey()));
         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
-        feedbackView.appendText(DATE_FORMAT.format(timestamp) + "\n" + newMessage.getValue() + "\n\n");
-
+        feedbackView.appendText(DATE_FORMAT.format(timestamp) + "\n" + newMessage.child("message").getValue() + "\n\n");
 
     }
 }
