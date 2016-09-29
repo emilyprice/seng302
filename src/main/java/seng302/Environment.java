@@ -114,8 +114,8 @@ public class Environment {
         recordLocation = null;
         em = new EditHistory(this);
         stageMapController.generateLockingStatus();
-        System.out.println("after reset project");
-        System.out.println(stageMapController.getUnlockStatus());
+        stageMapController = new StageMapController();
+
 
 
     }
@@ -132,6 +132,9 @@ public class Environment {
         recordLocation = null;
         themeHandler = new ThemeHandler();
         em = new EditHistory(this);
+        stageMapController = new StageMapController();
+        stageMapController.generateLockingStatus();
+
 
 
     }

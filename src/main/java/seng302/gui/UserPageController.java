@@ -370,7 +370,7 @@ public class UserPageController {
         if (pageName.equals("Summary")) {
             showSummaryPage();
         } else {
-            System.out.println(pageName);
+
             showTutorStats(pageName);
         }
 
@@ -650,7 +650,7 @@ public class UserPageController {
                 statsController = tutorStatsLoader.getController();
 
                 statsController.create(env);
-                System.out.println("in display graphs" + tutor);
+
                 statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
                 statsController.updateBadgesDisplay();
 
@@ -660,11 +660,8 @@ public class UserPageController {
             }
         }
 
-        System.out.println(all.getChildren().size());
         scrollPaneAnchorPage.getChildren().setAll(all);
 
-
-        System.out.println("tutor at the end: " + tutor);
         listView.getSelectionModel().select(tutor);
 
     }

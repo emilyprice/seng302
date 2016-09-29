@@ -127,6 +127,7 @@ public class Project {
             System.err.println("cant save unlock map");
         }
 
+
         try {
             projectSettings.put("unlockMapDescriptions", gson.toJson(env.getStageMapController().getUnlockDescriptions()));
         } catch (Exception e) {
@@ -142,30 +143,36 @@ public class Project {
      */
     private void loadProperties() {
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+//        try {
+//            Thread.sleep(500);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+
+        while(!env.getFirebase().getUserSnapshot().child("projects/" + projectName).exists()){
+            //Hack, which keeps looping untill the firebase has been updated.
+            int count = 0;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            count ++;
+
+            if(count > 100){
+                System.err.println("Failed to collect project data from firebase.");
+                return;
+            }
         }
-        System.out.println(env.getFirebase().getUserSnapshot());
 
-        while(env.getFirebase().getUserRef().child("projects/"+projectName) == null){
-
-        }
-        System.out.println("beyong the UserRef issue");
-        while(env.getFirebase().getUserSnapshot().child("projects/" + projectName) == null){
-
-        }System.out.println(env.getFirebase().getUserSnapshot().child("projects/"+projectName));
-
-        System.out.println("beyong the snapshot issue");
         DataSnapshot projectSnapshot = env.getFirebase().getUserSnapshot().child("projects/" + projectName);
-        System.out.println(projectSnapshot.exists());
+
 
 
 
         projectSettings = (HashMap<String, Object>) projectSnapshot.getValue();
-        System.out.println("IMPORTANT OUTPUT BELOW");
-        System.out.println(projectSettings);
+
 
         int tempo;
         Gson gson = new Gson();
@@ -239,16 +246,18 @@ public class Project {
 
         try {
             String mode = gson.fromJson((String) projectSettings.get("competitionMode"), String.class);
-            System.out.println("mode");
-            System.out.println(mode);
+
             if (mode.equals("true")) {
-                setToCompetitionMode();
+                //setToCompetitionMode();
+                this.isCompetitiveMode = true;
             } else {
-                setToPracticeMode();
+                //setToPracticeMode();
+                this.isCompetitiveMode = false;
             }
         } catch (Exception e) {
             // Defaults to comp mode
-            setToCompetitionMode();
+            //setToCompetitionMode();
+            this.isCompetitiveMode = true;
         }
 
         try {
@@ -333,14 +342,16 @@ public class Project {
             HashMap<String, HashMap<String, Boolean>> unlockMapDescriptions;
             Type mapType = new TypeToken<HashMap<String, HashMap<String, Boolean>>>() {
             }.getType();
-            System.out.println(projectSettings);
-            if (projectSettings != null) { //HACK
-                unlockMapDescriptions = gson.fromJson((String) projectSettings.get("unlockMapDescriptions"), mapType);
-                if (unlockMapDescriptions != null) {
-                    env.getStageMapController().unlockDescriptions = unlockMapDescriptions;
-                    env.getStageMapController().setDescription();
-                }
+
+            System.out.println("load stage map data: " );
+            System.out.println( projectSettings.get("unlockMapDescriptions"));
+
+            unlockMapDescriptions = gson.fromJson((String) projectSettings.get("unlockMapDescriptions"), mapType);
+            if (unlockMapDescriptions != null) {
+                env.getStageMapController().unlockDescriptions = unlockMapDescriptions;
+                env.getStageMapController().setDescription();
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
