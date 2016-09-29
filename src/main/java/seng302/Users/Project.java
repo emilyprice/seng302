@@ -78,7 +78,6 @@ public class Project {
         recentPracticeTutorRecordMap = new HashMap<String, TutorRecord>();
         loadProject(projectName);
         loadProperties();
-        saveProperties();
     }
 
 
