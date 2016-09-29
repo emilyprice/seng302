@@ -525,8 +525,8 @@ public class TutorStatsController {
         lockView.fitWidthProperty().setValue(40);
 
         ImageView pView = new ImageView(UserSummaryController.imageCache.retrieve(platBadgePath, 70));
-        bView.fitHeightProperty().setValue(70);
-        bView.fitWidthProperty().setValue(70);
+        pView.fitHeightProperty().setValue(70);
+        pView.fitWidthProperty().setValue(70);
 
         ColorAdjust badgeEffect = new ColorAdjust();
         if (b.currentBadgeType == 0) {
@@ -546,7 +546,6 @@ public class TutorStatsController {
             badgeEffect.setBrightness(0.1);
         } else if (b.currentBadgeType == 4) {
             rView = pView;
-//            b.badgeProgress = b.badgeLevels.get(3);
         }
         rView.setEffect(badgeEffect);
 

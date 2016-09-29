@@ -156,7 +156,7 @@ public class BadgeManager {
 
 
             ArrayList<Badge> badges = new ArrayList<>();
-            badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", musicianBadges, 0, 0, tutorImages.get(tutor), 10));
+            badges.add(new Badge("Correct Questions", tutor, "Number of questions correctly answered", questionBadges, 0, 0, tutorImages.get(tutor), 10));
             badges.add(new Badge("Completed Sessions", tutor, "Number of tutor sessions completed", sessionBadges, 0, 0, tutorImages.get(tutor), 10));
             badges.add(new Badge("100% Sessions", tutor, "Number of 100% tutor sessions", sessionBadges, 0, 0, tutorImages.get(tutor), 15));
 
