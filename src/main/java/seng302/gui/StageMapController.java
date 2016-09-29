@@ -95,7 +95,7 @@ public class StageMapController {
     /**
      * stores the unlock order of the tutors
      */
-    private static ArrayList<String> tutorOrder; //the order in which the tutors unlock
+    public static ArrayList<String> tutorOrder; //the order in which the tutors unlock
 
     /**
      * stores the conversion of tutor name to a shortened tutor string that is used for
@@ -451,7 +451,7 @@ public class StageMapController {
                 ("/images/lock.png"), 10, 10, true, true);
 
         for (String tutor : tutorOrder) {
-            if (tutor.equals("musicalTermsTutor") || tutor.equals("pitchTutor")) {
+            if (tutor.equals("musicalTermsTutor") || tutor.equals("pitchTutor") || tutor.equals("microphoneInputTutor")) {
                 tutorAndButton.get(tutor).setDisable(false);
             } else {
                 tutorAndButton.get(tutor).setDisable(true);
