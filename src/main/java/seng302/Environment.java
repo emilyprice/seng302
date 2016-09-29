@@ -154,6 +154,8 @@ public class Environment {
 
 
 
+        getUserHandler().removeCurrentUser();
+        getUserHandler().removeCurrentTeacher();
 
 
     }

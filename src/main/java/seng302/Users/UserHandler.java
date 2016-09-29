@@ -1,10 +1,10 @@
 package seng302.Users;
 
 import com.google.firebase.database.DataSnapshot;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import seng302.Environment;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,6 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import seng302.Environment;
 
 /**
  * Handles Users.
@@ -205,10 +207,6 @@ public class UserHandler {
         return currentTeacher;
     }
 
-    public Path getCurrentUserPath() {
-        return Paths.get("UserData/classrooms/group5/users/" + getCurrentUser().getUserName());
-    }
-
 
     /**
      * Sets the current user and loads user related properties.
@@ -226,6 +224,10 @@ public class UserHandler {
 
     }
 
+
+    public void removeCurrentUser() {
+        this.currentUser = null;
+    }
     public void removeCurrentTeacher() {
         this.currentTeacher = null;
     }

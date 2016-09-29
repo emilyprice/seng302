@@ -1,6 +1,15 @@
 package seng302.gui;
 
 import com.google.firebase.database.DataSnapshot;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -31,9 +40,6 @@ import seng302.Users.TutorHandler;
 import seng302.data.Badge;
 import seng302.managers.BadgeManager;
 import seng302.utility.TutorRecord;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Controller for the tutor stats pane,  used in the user page for all tutors.
@@ -288,7 +294,6 @@ public class TutorStatsController {
 
             }
 
-
             latestAttempt.setVisible(true);
             overallStats.setVisible(true);
 
@@ -301,7 +306,12 @@ public class TutorStatsController {
             correctAnim.play();
             correct.setWidth(widthCorrect);
             correct.setFill(Color.web("00b004"));
-            double widthIncorrect = 500 * (correctIncorrectRecent.getValue() / total);
+            double widthIncorrect;
+            if (correctIncorrectOverall.getValue() != 0) {
+                widthIncorrect = 500 * (correctIncorrectRecent.getValue() / total);
+            } else {
+                widthIncorrect = 500;
+            }
             Timeline incorrectAnim = new Timeline(
                     new KeyFrame(Duration.millis(800), new KeyValue(incorrect.widthProperty(), widthIncorrect, Interpolator.EASE_OUT)));
             incorrectAnim.play();
@@ -319,7 +329,13 @@ public class TutorStatsController {
             overallCorrectAnim.play();
             overallCorrect.setWidth(overallWidthCorrect);
             overallCorrect.setFill(Color.web("00b004"));
-            double overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
+            double overallWidthIncorrect;
+            if (correctIncorrectOverall.getValue() != 0) {
+                overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
+            } else {
+                overallWidthIncorrect = 500;
+            }
+
             Timeline overallIncorrectAnim = new Timeline(
                     new KeyFrame(Duration.millis(800), new KeyValue(overallIncorrect.widthProperty(), overallWidthIncorrect, Interpolator.EASE_OUT)));
             overallIncorrectAnim.play();
@@ -329,6 +345,7 @@ public class TutorStatsController {
             overallIncorrectLabel.setText(correctIncorrectOverall.getValue() + " \nincorrect");
 
             // Figure out class average
+            displayClassAverage(handler, tutor, timePeriod);
             makeLineGraph(dateAndTime, timePeriod);
         } catch (IndexOutOfBoundsException e) {
             System.err.println("There are no records for the " + tutor);
@@ -342,12 +359,13 @@ public class TutorStatsController {
      * the line in the correct place on the graph.
      *
      * @param handler           The current tutorHandler.
-     * @param tutorNameNoSpaces The current tutorName.
+     * @param tutorName The current tutorName.
      * @param timePeriod        the time period of data to display.
      */
-    private void displayClassAverage(TutorHandler handler, String tutorNameNoSpaces, String timePeriod) {
+    private void displayClassAverage(TutorHandler handler, String tutorName, String timePeriod) {
         DataSnapshot classroomData = env.getFirebase().getClassroomsSnapshot().child(env.getUserHandler().getClassRoom() + "/users");
         ArrayList<Pair<Integer, Integer>> classTotals = new ArrayList<>();
+        String tutorNameNoSpaces = tutorName.replaceAll("\\s", "");
 
         classroomData.getChildren().forEach(user -> {
             DataSnapshot projects = user.child("projects");
@@ -564,7 +582,7 @@ public class TutorStatsController {
         VBox badgeBox = new VBox();
         Label badgeName = new Label(b.name);
         badgeName.setFont(javafx.scene.text.Font.font(16));
-        Label tutorName = new Label(this.tutorName.getText());
+        Label tutorName = getTutorName(this.tutorName.getText());
         Label description = new Label(b.description);
         Label progressDesc = new Label();
         ProgressBar progressBar = new ProgressBar();
@@ -606,6 +624,21 @@ public class TutorStatsController {
 
         env.getRootController().getTutorFactory().openTutor(tutorName);
 
+    }
+
+    /**
+     * Helper function to get the tutor name label
+     * @param tutorName the name of the tutor the badge belongs to
+     * @return tutorNameLabel the badge label text
+     */
+    private Label getTutorName(String tutorName) {
+        Label tutorNameLabel = new Label();
+        if (tutorName.equals("Scale Recognition Tutor") || tutorName.equals("Chord Recognition Tutor")) {
+            tutorNameLabel.setText(tutorName + " (Advanced)");
+        } else {
+            tutorNameLabel.setText(tutorName);
+        }
+        return tutorNameLabel;
     }
 
 
