@@ -70,8 +70,20 @@ public class ProjectHandler {
 
 
         } catch (Exception e) {
-            System.err.println("Root controller not initialised asdsad");
+            System.err.println("Root controller not initialised. (updating level badge, update graphs and progress bar failed");
         }
+
+    }
+
+    public void deleteProject(String projName){
+
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom()+ "/users/" +
+                env.getUserHandler().getCurrentUser().getUserName()
+                +"/projects/"+projName).removeValue();
+
+        env.getRootController().getStage().close();
+
+        this.env.getRootController().logOutUser();
 
     }
 
@@ -94,7 +106,7 @@ public class ProjectHandler {
             String newProject = result.get();
             JSONArray projects = getProjectList();
             if (!projects.contains(newProject)) {
-                new Project(env, newProject, this);
+
                 setCurrentProject(newProject);
             } else {
                 env.getRootController().errorAlert("The project: " + newProject + " already exists.");

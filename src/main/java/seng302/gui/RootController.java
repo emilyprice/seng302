@@ -451,11 +451,11 @@ public class RootController implements Initializable {
      */
     public void logOutUser() {
         try {
-
+            env.resetEnvironment();
             stage.close();
             showLoginWindow();
             settingsController.closeWindow();
-            env.resetEnvironment();
+
 
         } catch (Exception e) {
 
@@ -955,7 +955,7 @@ public class RootController implements Initializable {
                         env.getMicrophoneInput().stopRecording();
                     } catch (Exception e) {
                         // mic input was not recording.
-                        System.out.println("failed");
+                        System.err.println("failed");
                     }
                 }
             });

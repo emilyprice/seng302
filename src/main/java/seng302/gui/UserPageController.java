@@ -402,6 +402,7 @@ public class UserPageController {
         if (pageName.equals("Summary")) {
             showSummaryPage();
         } else {
+
             showTutorStats(pageName);
         }
 
@@ -633,9 +634,6 @@ public class UserPageController {
             summaryController = summaryLoader.getController();
             summaryController.create(env);
             summaryController.loadStageMap();
-            if (!env.getFirebase().getUserSnapshot().child("projects/" + env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().projectName + "/unlockMap").exists()) {
-                env.getUserHandler().getCurrentUser().saveAll();
-            }
 
 
         } catch (IOException e) {
@@ -676,7 +674,8 @@ public class UserPageController {
         }
 
 
-        if ((Boolean) (env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))) {
+        if((Boolean)(env.getStageMapController().getUnlockStatus().get(env.getStageMapController().converted.get(tutor)))
+         || !env.getUserHandler().getCurrentUser().getProjectHandler().getCurrentProject().getIsCompetitiveMode()) {
             try {
                 VBox stats = tutorStatsLoader.load();
                 all.getChildren().add(stats);
@@ -688,6 +687,7 @@ public class UserPageController {
                 statsController = tutorStatsLoader.getController();
 
                 statsController.create(env);
+
                 statsController.displayGraphs(tutor, convert.toString(timeSlider.getValue()));
                 statsController.updateBadgesDisplay();
 

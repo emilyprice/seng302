@@ -57,8 +57,6 @@ public class Student extends User {
 
         }
 
-        //Load musical terms property
-
         Type termsType = new TypeToken<ArrayList<Term>>() {
         }.getType();
         ArrayList<Term> terms = new ArrayList<>();
@@ -126,6 +124,9 @@ public class Student extends User {
     public void delete() {
         this.projectHandler = null;
     }
+
+
+
 
 
     public ProjectHandler getProjectHandler() {
