@@ -100,7 +100,7 @@ public class BaseSettingsController {
         options.add("User Settings");
         options.add("Theme Settings");
         options.add("Project Settings");
-        options.add("Mic Input");
+        options.add("Microphone Input");
         options.add("Musical Terms");
 
         settingsOptions.getItems().addAll(FXCollections.observableArrayList(options));
@@ -139,7 +139,7 @@ public class BaseSettingsController {
                 openProjectSettings();
                 break;
 
-            case "Mic Input":
+            case "Microphone Input":
                 openMicInput();
                 break;
 
