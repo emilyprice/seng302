@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import seng302.Environment;
+import seng302.FirebaseUpdater;
+import seng302.Users.UserHandler;
 import seng302.managers.TranscriptManager;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -20,7 +22,9 @@ public class PlayNoteTest {
 
     @Before
     public void setUp() throws Exception {
-        env = new Environment();
+        FirebaseUpdater mockFireBase = mock(FirebaseUpdater.class);
+        UserHandler mockUserH = mock(UserHandler.class);
+        env = new Environment(mockFireBase, mockUserH);
         env.setTranscriptManager(transcriptManager);
     }
 

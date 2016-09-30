@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import seng302.Users.UserHandler;
 import seng302.gui.RootController;
 import seng302.gui.StageMapController;
@@ -105,6 +106,19 @@ public class Environment {
         shiftPressed = new SimpleBooleanProperty(false);
         firebaseUpdater = new FirebaseUpdater(this);
         userHandler = new UserHandler(this);
+        themeHandler = new ThemeHandler();
+        microphoneInput = new MicrophoneInput();
+
+
+    }
+    public Environment(FirebaseUpdater fireBase,  UserHandler userH) {
+        executor = new DslExecutor(this);
+        player = new MusicPlayer(new Visualiser(this));
+        transcriptManager = new TranscriptManager();
+        mttDataManager = new MusicalTermsTutorBackEnd();
+        shiftPressed = new SimpleBooleanProperty(false);
+        firebaseUpdater = fireBase;
+        userHandler = userH;
         themeHandler = new ThemeHandler();
         microphoneInput = new MicrophoneInput();
 

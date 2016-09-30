@@ -4,10 +4,13 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import seng302.Environment;
+import seng302.FirebaseUpdater;
+import seng302.Users.UserHandler;
 import seng302.gui.RootController;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by isabelle on 29/07/16.
@@ -18,7 +21,9 @@ public class MajorModesSteps {
 
     @Given("I am on the transcript pane")
     public void createEnvironment() {
-        env = new Environment();
+        FirebaseUpdater mockFireBase = mock(FirebaseUpdater.class);
+        UserHandler mockUserH = mock(UserHandler.class);
+        env = new Environment(mockFireBase, mockUserH);
         RootController rootController = new RootController();
         env.setRootController(rootController);
 

@@ -6,6 +6,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import seng302.Environment;
+import seng302.FirebaseUpdater;
+import seng302.Users.UserHandler;
 import seng302.data.Note;
 import seng302.managers.TranscriptManager;
 import seng302.utility.musicNotation.OctaveUtil;
@@ -13,6 +15,7 @@ import seng302.utility.musicNotation.OctaveUtil;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -29,8 +32,11 @@ public class ChordFinderTest {
 
     @Before
     public void setUp() throws Exception {
-        env = new Environment();
+        FirebaseUpdater mockFireBase = mock(FirebaseUpdater.class);
+        UserHandler mockUserH = mock(UserHandler.class);
+        env = new Environment(mockFireBase, mockUserH);
         env.setTranscriptManager(transcriptManager);
+        //FirebaseUpdater mockCommand = mock(FirebaseUpdater.class);
 
     }
 

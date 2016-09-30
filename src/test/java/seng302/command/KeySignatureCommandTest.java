@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import seng302.Environment;
+import seng302.FirebaseUpdater;
+import seng302.Users.UserHandler;
 import seng302.managers.TranscriptManager;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -26,7 +29,9 @@ public class KeySignatureCommandTest {
 
     @Before
     public void setUp() throws Exception {
-        env = new Environment();
+        FirebaseUpdater mockFireBase = mock(FirebaseUpdater.class);
+        UserHandler mockUserH = mock(UserHandler.class);
+        env = new Environment(mockFireBase, mockUserH);
         env.setTranscriptManager(transcriptManager);
     }
 

@@ -12,10 +12,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 
 import seng302.Environment;
+import seng302.FirebaseUpdater;
+import seng302.Users.UserHandler;
 import seng302.data.Term;
 import seng302.managers.TranscriptManager;
 import seng302.utility.MusicalTermsTutorBackEnd;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
@@ -37,7 +40,9 @@ public class MusicalTermTest extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        env = new Environment();
+        FirebaseUpdater mockFireBase = mock(FirebaseUpdater.class);
+        UserHandler mockUserH = mock(UserHandler.class);
+        env = new Environment(mockFireBase, mockUserH);
         env.setTranscriptManager(transcriptManager);
         env.setMttDataManager(tutorDataManger);
     }
