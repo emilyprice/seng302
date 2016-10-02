@@ -5,9 +5,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -133,8 +133,8 @@ public class ThemeHandler {
         String line = null;
 
         try {
-            FileReader fileReader =
-                    new FileReader(getClass().getResource("/css/templatecss.txt").getFile());
+            InputStreamReader fileReader =
+                    new InputStreamReader(getClass().getResourceAsStream("/css/templatecss.txt"));
 
             BufferedReader bufferedReader =
                     new BufferedReader(fileReader);
