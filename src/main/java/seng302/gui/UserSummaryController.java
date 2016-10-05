@@ -160,10 +160,10 @@ public class UserSummaryController {
         overallCorrect.setFill(Color.web("00b004"));
         double widthIncorrect;
         double overallWidthIncorrect;
-        if (correctIncorrectOverall.getValue() != 0) {
-            overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
-        } else {
+        if ((correctIncorrectOverall.getValue()+correctIncorrectOverall.getKey()) == 0) {
             overallWidthIncorrect = 500;
+        } else {
+            overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
         }
 
         Timeline overallIncorrectAnim = new Timeline(
