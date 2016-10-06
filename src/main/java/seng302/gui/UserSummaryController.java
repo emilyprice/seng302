@@ -118,6 +118,7 @@ public class UserSummaryController {
 
     @FXML
     StackPane stageMap;
+    ChildEventListener firebaseListener;
 
 
     private ColorAdjust blackout;
@@ -597,7 +598,7 @@ public class UserSummaryController {
      * Creates a message listener
      */
     public void setupFirebaseListener() {
-        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(new ChildEventListener() {
+        firebaseListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 updateFeedbackView(dataSnapshot);
@@ -644,7 +645,12 @@ public class UserSummaryController {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(firebaseListener);
+    }
+
+    public void detachFirebaseListener() {
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").removeEventListener(firebaseListener);
     }
 
     /**

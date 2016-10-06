@@ -6,7 +6,6 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import seng302.Users.UserHandler;
 import seng302.gui.RootController;
 import seng302.gui.StageMapController;
@@ -150,8 +149,8 @@ public class Environment {
      * Resets the environment so it clears the existing saved information.
      */
     public void resetEnvironment() {
-
-        firebaseUpdater = new FirebaseUpdater(this);
+        firebaseUpdater.createClassroomSnapshot(true);
+        firebaseUpdater.createTeacherSnapshot(true);
         executor = new DslExecutor(this);
         player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();
