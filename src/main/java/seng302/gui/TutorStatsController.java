@@ -307,10 +307,10 @@ public class TutorStatsController {
             correct.setWidth(widthCorrect);
             correct.setFill(Color.web("00b004"));
             double widthIncorrect;
-            if (correctIncorrectOverall.getValue() != 0) {
-                widthIncorrect = 500 * (correctIncorrectRecent.getValue() / total);
-            } else {
+            if ((correctIncorrectOverall.getValue()+correctIncorrectOverall.getKey()) == 0) {
                 widthIncorrect = 500;
+            } else {
+                widthIncorrect = 500 * (correctIncorrectRecent.getValue() / total);
             }
             Timeline incorrectAnim = new Timeline(
                     new KeyFrame(Duration.millis(800), new KeyValue(incorrect.widthProperty(), widthIncorrect, Interpolator.EASE_OUT)));
@@ -330,10 +330,10 @@ public class TutorStatsController {
             overallCorrect.setWidth(overallWidthCorrect);
             overallCorrect.setFill(Color.web("00b004"));
             double overallWidthIncorrect;
-            if (correctIncorrectOverall.getValue() != 0) {
-                overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
-            } else {
+            if ((correctIncorrectOverall.getValue()+correctIncorrectOverall.getKey()) == 0) {
                 overallWidthIncorrect = 500;
+            } else {
+                overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
             }
 
             Timeline overallIncorrectAnim = new Timeline(

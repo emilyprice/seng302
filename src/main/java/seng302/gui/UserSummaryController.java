@@ -118,6 +118,7 @@ public class UserSummaryController {
 
     @FXML
     StackPane stageMap;
+    ChildEventListener firebaseListener;
 
 
     private ColorAdjust blackout;
@@ -160,10 +161,10 @@ public class UserSummaryController {
         overallCorrect.setFill(Color.web("00b004"));
         double widthIncorrect;
         double overallWidthIncorrect;
-        if (correctIncorrectOverall.getValue() != 0) {
-            overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
-        } else {
+        if ((correctIncorrectOverall.getValue()+correctIncorrectOverall.getKey()) == 0) {
             overallWidthIncorrect = 500;
+        } else {
+            overallWidthIncorrect = 500 * (correctIncorrectOverall.getValue() / overallTotal);
         }
 
         Timeline overallIncorrectAnim = new Timeline(
@@ -597,7 +598,7 @@ public class UserSummaryController {
      * Creates a message listener
      */
     public void setupFirebaseListener() {
-        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(new ChildEventListener() {
+        firebaseListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 updateFeedbackView(dataSnapshot);
@@ -644,7 +645,12 @@ public class UserSummaryController {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").addChildEventListener(firebaseListener);
+    }
+
+    public void detachFirebaseListener() {
+        env.getFirebase().getFirebase().child("classrooms/" + env.getUserHandler().getClassRoom() + "/users/" + secretStudent + "/projects/" + secretProject + "/feedback").removeEventListener(firebaseListener);
     }
 
     /**
