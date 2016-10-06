@@ -149,6 +149,8 @@ public class Environment {
      * Resets the environment so it clears the existing saved information.
      */
     public void resetEnvironment() {
+        firebaseUpdater.createClassroomSnapshot(true);
+        firebaseUpdater.createTeacherSnapshot(true);
         executor = new DslExecutor(this);
         player = new MusicPlayer(new Visualiser(this));
         transcriptManager = new TranscriptManager();
